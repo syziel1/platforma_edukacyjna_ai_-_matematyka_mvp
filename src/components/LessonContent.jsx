@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Play, ArrowRight, CheckCircle } from 'lucide-react';
 import InteractiveVisualization from './InteractiveVisualization';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -81,14 +81,14 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
               </p>
               <div className="bg-bg-light p-4 rounded-md mb-4">
                 <p className="font-mono text-sm text-text-color">
-                  Znajdź maksimum funkcji: P(x) = x(20-x)<br/>
-                  gdzie x to długość jednego boku, a 20 to połowa obwodu.
+                  Znajdź maksimum funkcji: P(x) = x(L-x)<br/>
+                  gdzie x to długość jednego boku, a L to połowa obwodu.
                 </p>
               </div>
               <p className="leading-relaxed">
                 Jest to funkcja kwadratowa, której wykres to parabola. Maksymalna wartość funkcji (czyli największa powierzchnia) znajduje się w wierzchołku tej paraboli.
                 Współrzędna x wierzchołka paraboli o równaniu ax² + bx + c wynosi: x = -b / (2a).
-                W naszym przypadku, po rozwinięciu P(x) = 20x - x², mamy a = -1, b = 20, c = 0.
+                W naszym przypadku, po rozwinięciu P(x) = Lx - x², mamy a = -1, b = L, c = 0.
               </p>
             </div>
             <button
@@ -123,7 +123,7 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
                 </label>
                 <input
                   type="text"
-                  placeholder="y = 20 - x = ..."
+                  placeholder="y = L - x = ..."
                   className="w-full p-3 border border-bg-neutral rounded-md focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color"
                 />
               </div>
@@ -131,7 +131,6 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
                 <label className="block text-sm font-medium text-text-color mb-2">
                   Krok 3: Podaj optymalne wymiary kurnika (x × y)
                 </label>
-                {/* Placeholder uses comma as requested */}
                 <input
                   type="text"
                   placeholder="__ × __ metrów (np. 10,0 × 10,0)"

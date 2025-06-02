@@ -29,7 +29,7 @@ const translations = {
     'step4Title': 'Narzędzia Matematyczne',
     'step5Title': 'Formalne Rozwiązanie',
     
-    'problemText': 'Masz 40 metrów siatki ogrodzeniowej i chcesz zbudować prostokątny kurnik o największej możliwej powierzchni. Jakie powinny być wymiary tego kurnika?',
+    'problemText': 'Masz pewną długość siatki ogrodzeniowej i chcesz zbudować prostokątny kurnik o największej możliwej powierzchni. Jakie powinny być wymiary tego kurnika?',
     'understood': 'Zrozumiałem, chcę eksperymentować',
     'endExploration': 'Zakończ Eksplorację / Przejdź do Teorii',
     'goToFormal': 'Przejdź do Zadania Formalnego',
@@ -69,7 +69,7 @@ const translations = {
     'step4Title': 'Mathematical Tools',
     'step5Title': 'Formal Solution',
     
-    'problemText': 'You have 40 meters of fence and want to build a rectangular chicken coop with the largest possible area. What should be the dimensions of this coop?',
+    'problemText': 'You have a certain length of fence and want to build a rectangular chicken coop with the largest possible area. What should be the dimensions of this coop?',
     'understood': 'I understand, I want to experiment',
     'endExploration': 'End Exploration / Go to Theory',
     'goToFormal': 'Go to Formal Task',
