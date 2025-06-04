@@ -3,10 +3,10 @@ import React from 'react';
 const MapGrid = ({ boardData, playerPosition, currentLevelSize }) => {
   const getDirectionRotation = (direction) => {
     switch (direction) {
-      case 'N': return '0deg';
-      case 'E': return '90deg';
-      case 'S': return '180deg';
-      case 'W': return '270deg';
+      case 'N': return '180deg';  // Changed from 0deg
+      case 'E': return '-90deg';  // Changed from 90deg
+      case 'S': return '0deg';    // Changed from 180deg
+      case 'W': return '90deg';   // Changed from 270deg
       default: return '0deg';
     }
   };
