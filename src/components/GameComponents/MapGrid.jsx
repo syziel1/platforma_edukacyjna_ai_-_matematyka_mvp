@@ -5,7 +5,8 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize }) => {
     <div 
       className="grid border border-gray-400 shadow-md"
       style={{ 
-        gridTemplateColumns: `repeat(${currentLevelSize}, 1fr)` 
+        gridTemplateColumns: `repeat(${currentLevelSize}, 1fr)`,
+        gap: '1px'
       }}
     >
       {boardData.map((cellData) => {
@@ -21,11 +22,11 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize }) => {
                 : cellData.grass <= 100 
                   ? '#78B134' // Green for normal grass
                   : '#A0522D', // Brown for overgrown grass
-              transition: 'background-color 0.3s ease'
+              transition: 'all 0.3s ease'
             }}
           >
             {cellData.isBonus && !cellData.bonusCollected && (
-              <span className="absolute top-0.5 right-0.5 text-yellow-400 text-sm\" style={{ textShadow: '0 0 2px black' }}>
+              <span className="absolute top-0.5 right-0.5 text-yellow-400 text-sm" style={{ textShadow: '0 0 2px black' }}>
                 ⭐
               </span>
             )}
@@ -37,7 +38,14 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize }) => {
                   ${playerPosition.direction === 'E' && 'border-l-[10px] border-l-red-500'} 
                   ${playerPosition.direction === 'S' && 'border-t-[10px] border-t-red-500'} 
                   ${playerPosition.direction === 'W' && 'border-r-[10px] border-r-red-500'}`}
-                style={{ transition: 'transform 0.3s ease' }}
+                style={{ 
+                  transition: 'all 0.3s ease',
+                  transform: `rotate(${
+                    playerPosition.direction === 'N' ? '0deg' :
+                    playerPosition.direction === 'E' ? '90deg' :
+                    playerPosition.direction === 'S' ? '180deg' : '270deg'
+                  })`
+                }}
               />
             )}
           </div>

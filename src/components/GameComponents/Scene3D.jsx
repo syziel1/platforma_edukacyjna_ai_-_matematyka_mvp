@@ -47,7 +47,7 @@ const Scene3D = ({ boardData, playerPosition }) => {
   return (
     <div 
       className="flex justify-center items-end gap-0 mt-10 mb-10 w-full h-[250px] p-0 box-border perspective-[800px] relative"
-      style={{ backgroundColor: '#87CEEB' }} // Sky blue background
+      style={{ backgroundColor: '#87CEEB' }}
     >
       {displayOrderCoords.map((coords, index) => {
         const cellData = getCell(coords.r, coords.c);
@@ -59,11 +59,12 @@ const Scene3D = ({ boardData, playerPosition }) => {
             style={{
               backgroundColor: getCellColor(cellData.grass),
               height: `${Math.min(100, (cellData.grass / 100) * 100)}%`,
-              transition: 'all 0.3s ease'
+              transition: 'all 0.3s ease',
+              boxShadow: 'inset 0 -10px 20px rgba(0,0,0,0.2)'
             }}
           >
             {cellData.isBonus && !cellData.bonusCollected && (
-              <div className="absolute top-2 right-2 text-yellow-400 text-xl\" style={{ textShadow: '0 0 3px black' }}>
+              <div className="absolute top-2 right-2 text-yellow-400 text-xl" style={{ textShadow: '0 0 3px black' }}>
                 ⭐
               </div>
             )}
