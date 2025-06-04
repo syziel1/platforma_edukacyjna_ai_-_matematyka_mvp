@@ -82,8 +82,8 @@ const Scene3D = ({ boardData, playerPosition }) => {
               height: '200px',
               opacity: 0.9,
               transform: index === 0 
-                ? 'rotateY(50deg) translateX(55px)'
-                : 'rotateY(-50deg) translateX(-55px)',
+                ? 'rotateY(65deg) translateX(55px)'
+                : 'rotateY(-65deg) translateX(-55px)',
               transformOrigin: index === 0 ? 'left center' : 'right center',
               left: index === 0 ? 0 : 'auto',
               right: index === 4 ? 0 : 'auto',
