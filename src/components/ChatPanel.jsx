@@ -27,7 +27,6 @@ const ChatPanel = () => {
       return "Błąd konfiguracji - brak klucza API.";
     }
 
-    // Budowanie kontekstu dla AI
     const contextPrompt = `
       Kontekst rozmowy:
       - Jesteś mentorem AI na platformie edukacyjnej do nauki matematyki
@@ -44,9 +43,10 @@ const ChatPanel = () => {
       4. W języku ${currentLanguage === 'pl' ? 'polskim' : 'angielskim'}
     `;
 
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
     const payload = {
       contents: [{
+        role: "user",
         parts: [{
           text: contextPrompt
         }]
