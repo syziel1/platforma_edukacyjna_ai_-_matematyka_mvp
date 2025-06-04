@@ -65,7 +65,7 @@ const Scene3D = ({ boardData, playerPosition }) => {
             }}
           >
             {cellData.isBonus && !cellData.bonusCollected && (
-              <div className="absolute top-2 right-2 text-yellow-400 text-xl" style={{ textShadow: '0 0 3px black' }}>
+              <div className="absolute top-2 right-2 text-yellow-400 text-xl\" style={{ textShadow: '0 0 3px black' }}>
                 ⭐
               </div>
             )}
