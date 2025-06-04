@@ -38,9 +38,16 @@ const Scene3D = ({ boardData, playerPosition }) => {
     return boardData.find(cell => cell.row === row && cell.col === col);
   };
 
+  const getCellColor = (grass) => {
+    if (grass < 10) return '#F0E68C'; // Light khaki for cleared cells
+    if (grass <= 100) return '#78B134'; // Green for normal grass
+    return '#A0522D'; // Brown for overgrown grass
+  };
+
   return (
     <div 
       className="flex justify-center items-end gap-0 mt-10 mb-10 w-full h-[250px] p-0 box-border perspective-[800px] relative"
+      style={{ backgroundColor: '#87CEEB' }} // Sky blue background
     >
       {displayOrderCoords.map((coords, index) => {
         const cellData = getCell(coords.r, coords.c);
@@ -50,10 +57,17 @@ const Scene3D = ({ boardData, playerPosition }) => {
           <div 
             className="scene-cell-content"
             style={{
-              backgroundColor: cellData.grass < 10 ? '#F0E68C' : cellData.grass <= 100 ? '#78B134' : '#A0522D',
-              height: `${Math.min(100, (cellData.grass / 100) * 100)}%`
+              backgroundColor: getCellColor(cellData.grass),
+              height: `${Math.min(100, (cellData.grass / 100) * 100)}%`,
+              transition: 'all 0.3s ease'
             }}
-          />
+          >
+            {cellData.isBonus && !cellData.bonusCollected && (
+              <div className="absolute top-2 right-2 text-yellow-400 text-xl" style={{ textShadow: '0 0 3px black' }}>
+                ⭐
+              </div>
+            )}
+          </div>
         );
 
         if (isInFrontGroup) {
@@ -65,7 +79,8 @@ const Scene3D = ({ boardData, playerPosition }) => {
                 width: '33.33%',
                 height: '180px',
                 opacity: 1,
-                transform: 'rotateY(0deg) translateZ(0px) translateX(0px)'
+                transform: 'rotateY(0deg) translateZ(0px) translateX(0px)',
+                transition: 'all 0.3s ease'
               }}
             >
               {cellContent}
@@ -88,7 +103,8 @@ const Scene3D = ({ boardData, playerPosition }) => {
               left: index === 0 ? 0 : 'auto',
               right: index === 4 ? 0 : 'auto',
               bottom: 0,
-              zIndex: index === 0 ? 10 : 5
+              zIndex: index === 0 ? 10 : 5,
+              transition: 'all 0.3s ease'
             }}
           >
             {cellContent}

@@ -36,3 +36,43 @@ body {
 .perspective-[800px] {
   perspective: 800px;
 }
+
+/* Game-specific styles */
+.game-container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background-color: #87CEEB;
+}
+
+.view-3d {
+  flex: 1;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-right: 2px solid #3A3A3A;
+  position: relative;
+  padding: 15px;
+  box-sizing: border-box;
+  transition: background 0.5s linear;
+}
+
+.controls-2d {
+  flex: 1;
+  background-color: #F5F5DC;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.map-grid-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
