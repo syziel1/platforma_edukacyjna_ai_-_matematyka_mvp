@@ -40,9 +40,13 @@ body {
 /* Game-specific styles */
 .game-container {
   display: flex;
-  width: 100vw;
-  height: 100vh;
+  width: calc(100vw - 4rem); /* Account for side panel */
+  height: calc(100vh - 5rem); /* Account for top margin and padding */
   background-color: #87CEEB;
+  margin: 1rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .view-3d {
