@@ -19,6 +19,10 @@ function App() {
 
   const handleProblemSelect = (problemId) => {
     setSelectedProblem(problemId);
+    if (problemId === 'multiplication-game') {
+      window.location.href = '/multiplication-game.html';
+      return;
+    }
     const savedProgress = localStorage.getItem('lessonProgress');
     const progress = savedProgress ? JSON.parse(savedProgress)[problemId] || 1 : 1;
     setCurrentStep(progress);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Star, Trophy, Zap } from 'lucide-react';
+import { BookOpen, Star, Trophy, Zap, Calculator } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useProgress } from '../contexts/ProgressContext';
 
@@ -34,6 +34,15 @@ const StartScreen = ({ onProblemSelect }) => {
       icon: Trophy,
       color: 'nav-bg',
       totalSteps: 5
+    },
+    {
+      id: 'multiplication-game',
+      title: translate('multiplicationGameTitle'),
+      description: translate('multiplicationGameDesc'),
+      difficulty: 'medium',
+      icon: Calculator,
+      color: 'accent-secondary',
+      totalSteps: 1
     }
   ];
 

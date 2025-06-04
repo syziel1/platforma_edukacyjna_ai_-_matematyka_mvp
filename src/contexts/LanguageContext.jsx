@@ -27,6 +27,8 @@ const translations = {
     'gardenFenceDesc': 'Zaprojektuj ogród o maksymalnej powierzchni przy zadanym obwodzie.',
     'waterTankTitle': 'Zadanie: Zbiornik na wodę',
     'waterTankDesc': 'Oblicz optymalne wymiary cylindrycznego zbiornika na wodę.',
+    'multiplicationGameTitle': 'Gra: Szlakami tabliczki mnożenia',
+    'multiplicationGameDesc': 'Odkrywaj tajemniczą dżunglę, ucząc się tabliczki mnożenia w formie gry przygodowej.',
     
     // Navigation
     'myTasks': 'Moje zadania',
@@ -116,6 +118,8 @@ const translations = {
     'gardenFenceDesc': 'Design a garden with maximum area given a fixed perimeter.',
     'waterTankTitle': 'Task: Water Tank',
     'waterTankDesc': 'Calculate optimal dimensions for a cylindrical water tank.',
+    'multiplicationGameTitle': 'Game: Multiplication Table Trails',
+    'multiplicationGameDesc': 'Explore a mysterious jungle while learning multiplication tables in an adventure game.',
     
     // Navigation
     'myTasks': 'My Tasks',

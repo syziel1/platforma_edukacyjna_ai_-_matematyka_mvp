@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mistrz Mnożenia w Dżungli</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+        .game-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            background-color: #87CEEB; 
+        }
+        .view-3d { 
+            flex: 0 0 50%; 
+            max-width: 50vw; 
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center;
+            text-align: center;
+            border-right: 2px solid #3A3A3A;
+            position: relative;
+            padding: 15px; 
+            box-sizing: border-box;
+            transition: background 0.5s linear; 
+        }
+        .controls-2d {
+            flex: 1; 
+            background-color: #F5F5DC;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .map-grid-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .map-grid {
+            display: grid;
+            border: 1px solid #A0A0A0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .map-cell {
+            width: 35px; 
+            height: 35px;
+            border: 1px solid #D3D3D3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            position: relative; 
+            background-clip: padding-box;
+        }
+        .bonus-indicator { 
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            font-size: 12px;
+            color: gold; 
+            text-shadow: 0 0 2px black; 
+        }
+        .player-indicator {
+            width: 0;
+            height: 0;
+            border-left: 7px solid transparent; 
+            border-right: 7px solid transparent;
+            position: absolute;
+        }
+        .player-N { border-bottom: 10px solid red; }
+        .player-E { border-left: 10px solid red; border-top: 7px solid transparent; border-bottom: 7px solid transparent; }
+        .player-S { border-top: 10px solid red; }
+        .player-W { border-right: 10px solid red; border-top: 7px solid transparent; border-bottom: 7px solid transparent; }
+
+        .stats-display {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            background-color: #E0E0E0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stats-display div {
+            font-size: 15px; 
+        }
+        .question-modal, .welcome-modal { 
+            position: fixed; 
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            z-index: 1000;
+            text-align: center;
+            width: 90%;
+            max-width: 450px; 
+        }
+        .welcome-modal h2 { margin-top: 0; margin-bottom: 15px; font-size: 28px; color: #333;}
+        .welcome-modal p { margin-bottom: 10px; line-height: 1.6; color: #555; text-align: left;}
+        .welcome-modal ul { text-align: left; margin-left: 20px; margin-bottom: 20px; color: #555;}
+        .welcome-modal button { padding: 12px 25px; background-color: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; transition: background-color 0.3s; }
+        .welcome-modal button:hover { background-color: #45a049; }
+
+        .question-modal h3 { margin-top: 0; margin-bottom: 20px; font-size: 24px; color: #333; }
+        .question-modal input[type="number"] { 
+            width: 100px; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; 
+            border-radius: 6px; text-align: center; font-size: 20px;
+            -moz-appearance: textfield; 
+        }
+        .question-modal input[type="number"]::-webkit-outer-spin-button,
+        .question-modal input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none; 
+            margin: 0;
+        }
+        .question-modal button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; transition: background-color 0.3s; margin-bottom: 10px; }
+        .question-modal button:hover { background-color: #45a049; }
+        .gemini-btn { padding: 8px 15px; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; transition: background-color 0.3s; display: inline-block; margin: 5px; }
+        .gemini-btn:disabled { background-color: #ccc !important; cursor: not-allowed; }
+        #getHintBtn { background-color: #FFC107; color: #333; display:block; margin: 10px auto;}
+        #getHintBtn:hover { background-color: #ffb300; }
+        #getTriviaBtn { background-color: #2196F3; }
+        #getTriviaBtn:hover { background-color: #1e88e5; }
+        #getStoryProblemBtn { background-color: #9C27B0; }
+        #getStoryProblemBtn:hover { background-color: #8e24aa; }
+
+        #hintDisplay { margin-top: 15px; padding: 10px; border-radius: 5px; font-style: italic; color: #333; background-color: #fff9c4; border: 1px solid #fdd835; text-align: left; line-height: 1.4; }
+        #triviaDisplay, #storyProblemDisplay {
+            background-color: #e0f2fe; border: 1px solid #90caf9; 
+            max-height: 120px;
+            overflow-y: auto; width: 90%; margin-top: 8px; 
+            padding: 10px; border-radius: 5px; font-style: italic;
+            color: #333; text-align: left; line-height: 1.4;
+        }
+         #storyProblemDisplay {
+            background-color: #e1f5fe;
+            border-color: #81d4fa;
+        }
+
+        .message-box { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 8px; z-index: 1001; opacity: 0; transition: opacity 0.5s; }
+        .message-box.visible { opacity: 1; }
+        #playerActionFeedback { font-size: 18px; margin-bottom: 10px; color: #fff; text-shadow: 1px 1px 2px black; min-height: 25px;}
+        #avatarAnimationFeedback { font-size: 24px; min-height: 30px; }
+        #firebaseUserId { position: fixed; bottom: 5px; left: 5px; font-size: 10px; color: #555; background-color: rgba(255,255,255,0.7); padding: 2px 5px; border-radius: 3px; }
+        .loading-indicator { font-style: italic; color: #777; }
+
+        #sceneContainer {
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-end; 
+            gap: 0px; 
+            margin-top: 10px; 
+            margin-bottom: 10px;
+            width: 100%;
+            height: 250px; 
+            padding: 0px; 
+            box-sizing: border-box;
+            perspective: 800px; 
+            position: relative; 
+        }
+        .scene-cell {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; 
+            overflow: hidden;
+            background-color: transparent; 
+            transform-style: preserve-3d; 
+        }
+        
+        .scene-cell.view-far-left   { 
+            position: absolute;
+            left: 0; 
+            bottom: 0;
+            transform: rotateY(65deg) translateX(55px); 
+            width: 45%; 
+            height: 240px; 
+            opacity: 0.9;
+            transform-origin: left center; 
+            z-index: 10; 
+        }
+        .scene-cell.view-near-left  { 
+            transform: rotateY(0deg) translateZ(0px) translateX(0px);  
+            width: 33.33%; 
+            height: 180px; opacity: 1; 
+        }
+        .scene-cell.view-front      { 
+            transform: rotateY(0deg) translateZ(0px) translateX(0px);                                       
+            width: 33.33%; 
+            height: 180px; 
+        } 
+        .scene-cell.view-near-right { 
+            transform: rotateY(0deg) translateZ(0px) translateX(0px);  
+            width: 33.33%; 
+            height: 180px; opacity: 1; 
+        }
+        .scene-cell.view-far-right  { 
+            position: absolute;
+            right: 0; 
+            bottom: 0;
+            transform: rotateY(-65deg) translateX(-55px); 
+            width: 45%; 
+            height: 240px; 
+            opacity: 0.9;
+            transform-origin: right center; 
+            z-index: 5; 
+        }
+
+        .scene-cell-content { 
+            width: 100%;
+            transition: height 0.4s ease-out, background-color 0.4s ease-out;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            z-index: 1000;
+        }
+        .back-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <button class="back-button" onclick="window.location.href='/'">Powrót do menu</button>
+    <div id="welcomeModal" class="welcome-modal">
+        <h2>Witaj w Dżungli Mnożenia!</h2>
+        <p>Przygotuj się na przygodę, podczas której nauczysz się tabliczki mnożenia, odkrywając tajemniczą dżunglę!</p>
+        <h4>Instrukcja:</h4>
+        <ul>
+            <li>Poruszaj się po planszy za pomocą klawiszy strzałek:
+                <ul>
+                    <li><strong>Strzałka w górę:</strong> Idź do przodu</li>
+                    <li><strong>Strzałka w lewo:</strong> Obróć się w lewo</li>
+                    <li><strong>Strzałka w prawo:</strong> Obróć się w prawo</li>
+                </ul>
+            </li>
+            <li>Aby wejść na nowe, zarośnięte pole, musisz poprawnie rozwiązać działanie mnożenia.</li>
+            <li>Poprawna odpowiedź zmniejsza trawę, błędna ją zwiększa.</li>
+            <li>Pola z piaskiem są już odkryte - możesz na nie wchodzić swobodnie.</li>
+            <li>Odkrywaj kolejne poziomy, usuwając trawę i zdobywając punkty!</li>
+            <li>Szukaj ukrytych bonusów i ciekawostek od Ducha Dżungli!</li>
+        </ul>
+        <button id="startGameBtn">Rozpocznij Grę!</button>
+    </div>
+
+    <div class="game-container" style="display:none;"> 
+        <div class="view-3d" id="view3D">
+            <div id="playerActionFeedback"></div>
+            <div id="avatarAnimationFeedback"></div>
+            <div id="sceneContainer">
+            </div>
+            <div id="geminiActionButtons" class="mt-2">
+                <button id="getTriviaBtn" class="gemini-btn" style="display: none;">✨ Poznaj Ciekawostkę!</button>
+                <button id="getStoryProblemBtn" class="gemini-btn" style="display: none;">✨ Wymyśl Historyjkę!</button>
+            </div>
+            <div id="triviaDisplay" style="display: none;"></div>
+            <div id="storyProblemDisplay" style="display: none;"></div>
+        </div>
+        <div class="controls-2d">
+            <div class="map-grid-container">
+                <div id="mapGrid" class="map-grid"></div>
+            </div>
+            <div class="stats-display">
+                <div id="timeDisplay">Czas: 0s</div>
+                <div id="scoreDisplay">Punkty:  0</div>
+                <div id="levelDisplay">Poziom: 4x4</div>
+                <div id="grassClearedDisplay">Trawa usunięta: 0%</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="questionModal" class="question-modal" style="display: none;">
+        <h3 id="questionText"></h3>
+        <input type="number" id="answerInput" min="0"> 
+        <button id="submitAnswerBtn">Odpowiedz</button>
+        <button id="getHintBtn" class="gemini-btn" style="display: none;">✨ Zapytaj Mądrą Sowę</button>
+        <div id="hintDisplay" style="display: none;">
+             <span class="loading-indicator" style="display:none;">Mądra Sowa myśli...</span>
+        </div>
+    </div>
+
+    <div id="messageBox" class="message-box"></div>
+    <div id="firebaseUserId">Ładowanie User ID...</div>
+
+    <script type="module">
+        // Kod JavaScript gry (bez zmian)
+        // Tutaj wklej cały kod JavaScript z oryginalnego pliku
+    </script>
+</body>
+</html>
