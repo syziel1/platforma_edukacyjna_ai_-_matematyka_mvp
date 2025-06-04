@@ -16,11 +16,19 @@ const NavigationPanel = ({ onLoginClick }) => {
     }
   };
 
+  const handleTasks = () => {
+    if (user) {
+      window.open('https://tasks.google.com', '_blank');
+    } else {
+      alert('Please log in with Google to access your tasks.');
+    }
+  };
+
   const menuItems = [
     { 
       icon: CheckSquare, 
       label: translate('myTasks'), 
-      action: () => window.location.href = '/' 
+      action: handleTasks
     },
     { 
       icon: Calendar, 
