@@ -6,6 +6,7 @@ import WaterTankContent from './components/WaterTankContent';
 import ChatPanel from './components/ChatPanel';
 import StartScreen from './components/StartScreen';
 import LoginScreen from './components/LoginScreen';
+import MultiplicationGame from './components/MultiplicationGame';
 import { useAuth } from './contexts/AuthContext';
 import { useProgress } from './contexts/ProgressContext';
 
@@ -19,10 +20,6 @@ function App() {
 
   const handleProblemSelect = (problemId) => {
     setSelectedProblem(problemId);
-    if (problemId === 'multiplication-game') {
-      window.location.href = '/multiplication-game.html';
-      return;
-    }
     const savedProgress = localStorage.getItem('lessonProgress');
     const progress = savedProgress ? JSON.parse(savedProgress)[problemId] || 1 : 1;
     setCurrentStep(progress);
@@ -41,6 +38,8 @@ function App() {
         return <LessonContent currentStep={currentStep} setCurrentStep={handleStepChange} />;
       case 'water-tank':
         return <WaterTankContent currentStep={currentStep} setCurrentStep={handleStepChange} />;
+      case 'multiplication-game':
+        return <MultiplicationGame />;
       default:
         return null;
     }
@@ -55,19 +54,25 @@ function App() {
       <NavigationPanel onLoginClick={() => setShowLogin(true)} />
 
       {selectedProblem ? (
-        <>
-          <div className="flex-1 flex flex-col">
-            <LessonHeader 
-              currentStep={currentStep} 
-              totalSteps={totalSteps} 
-              onBack={() => setSelectedProblem(null)}
-            />
-            <div className="flex-1 overflow-y-auto">
-              {renderContent()}
-            </div>
+        selectedProblem === 'multiplication-game' ? (
+          <div className="flex-1">
+            <MultiplicationGame onBack={() => setSelectedProblem(null)} />
           </div>
-          <ChatPanel />
-        </>
+        ) : (
+          <>
+            <div className="flex-1 flex flex-col">
+              <LessonHeader 
+                currentStep={currentStep} 
+                totalSteps={totalSteps} 
+                onBack={() => setSelectedProblem(null)}
+              />
+              <div className="flex-1 overflow-y-auto">
+                {renderContent()}
+              </div>
+            </div>
+            <ChatPanel />
+          </>
+        )
       ) : (
         <StartScreen onProblemSelect={handleProblemSelect} />
       )}
