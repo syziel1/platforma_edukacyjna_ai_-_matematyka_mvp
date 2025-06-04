@@ -12,10 +12,43 @@ const ChatPanel = () => {
     }
   ]);
   const [inputValue, setInputValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { translate } = useLanguage();
 
-  const handleSendMessage = () => {
-    if (!inputValue.trim()) return;
+  const generateGeminiResponse = async (prompt) => {
+    if (isLoading) return "Proszę czekać...";
+    setIsLoading(true);
+
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
+      }
+
+      const result = await response.json();
+      if (result.candidates?.[0]?.content?.parts?.[0]?.text) {
+        return result.candidates[0].content.parts[0].text;
+      }
+      return "Przepraszam, nie udało mi się wygenerować odpowiedzi.";
+    } catch (error) {
+      console.error('Gemini API Error:', error);
+      return "Przepraszam, wystąpił błąd podczas komunikacji z AI.";
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSendMessage = async () => {
+    if (!inputValue.trim() || isLoading) return;
 
     const userMessage = {
       id: Date.now(),
@@ -27,16 +60,16 @@ const ChatPanel = () => {
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse = {
-        id: Date.now() + 1,
-        type: 'ai',
-        content: 'To bardzo interesujące pytanie! W tym problemie kluczowe jest zrozumienie, że szukamy maksimum funkcji kwadratowej. Czy chcesz, żebym wyjaśnił to krok po kroku?',
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, aiResponse]);
-    }, 1000);
+    const aiResponse = await generateGeminiResponse(inputValue);
+    
+    const aiMessage = {
+      id: Date.now() + 1,
+      type: 'ai',
+      content: aiResponse,
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, aiMessage]);
   };
 
   const handleKeyPress = (e) => {
@@ -88,10 +121,11 @@ const ChatPanel = () => {
             placeholder={translate('typeMessage')}
             className="flex-1 p-2 border border-bg-neutral rounded-md resize-none text-sm focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color bg-white"
             rows="2"
+            disabled={isLoading}
           />
           <button
             onClick={handleSendMessage}
-            disabled={!inputValue.trim()}
+            disabled={!inputValue.trim() || isLoading}
             className="px-3 py-2 bg-accent-primary text-white rounded-md hover:bg-accent-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <Send className="w-4 h-4" />
