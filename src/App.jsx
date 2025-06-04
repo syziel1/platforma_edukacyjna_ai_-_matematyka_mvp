@@ -5,11 +5,14 @@ import LessonContent from './components/LessonContent';
 import WaterTankContent from './components/WaterTankContent';
 import ChatPanel from './components/ChatPanel';
 import StartScreen from './components/StartScreen';
+import LoginScreen from './components/LoginScreen';
+import { useAuth } from './contexts/AuthContext';
 
 function App() {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedProblem, setSelectedProblem] = useState(null);
   const totalSteps = 5;
+  const { user } = useAuth();
 
   const handleProblemSelect = (problemId) => {
     setSelectedProblem(problemId);
@@ -26,6 +29,10 @@ function App() {
         return null;
     }
   };
+
+  if (!user) {
+    return <LoginScreen />;
+  }
 
   return (
     <div className="min-h-screen bg-bg-main flex">
