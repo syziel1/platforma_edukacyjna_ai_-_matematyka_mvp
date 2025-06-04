@@ -1,6 +1,16 @@
 import React from 'react';
 
 const MapGrid = ({ boardData, playerPosition, currentLevelSize }) => {
+  const getDirectionRotation = (direction) => {
+    switch (direction) {
+      case 'N': return '0deg';
+      case 'E': return '90deg';
+      case 'S': return '180deg';
+      case 'W': return '270deg';
+      default: return '0deg';
+    }
+  };
+
   return (
     <div 
       className="grid border border-gray-400 shadow-md"
@@ -26,25 +36,19 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize }) => {
             }}
           >
             {cellData.isBonus && !cellData.bonusCollected && (
-              <span className="absolute top-0.5 right-0.5 text-yellow-400 text-sm\" style={{ textShadow: '0 0 2px black' }}>
+              <span className="absolute top-0.5 right-0.5 text-yellow-400 text-sm" style={{ textShadow: '0 0 2px black' }}>
                 ⭐
               </span>
             )}
             
             {isPlayerHere && (
               <div 
-                className={`absolute w-0 h-0 border-[7px] border-transparent
-                  ${playerPosition.direction === 'N' && 'border-b-[10px] border-b-red-500'} 
-                  ${playerPosition.direction === 'E' && 'border-l-[10px] border-l-red-500'} 
-                  ${playerPosition.direction === 'S' && 'border-t-[10px] border-t-red-500'} 
-                  ${playerPosition.direction === 'W' && 'border-r-[10px] border-r-red-500'}`}
-                style={{ 
-                  transition: 'all 0.3s ease',
-                  transform: `rotate(${
-                    playerPosition.direction === 'N' ? '0deg' :
-                    playerPosition.direction === 'E' ? '90deg' :
-                    playerPosition.direction === 'S' ? '180deg' : '270deg'
-                  })`
+                className="absolute w-0 h-0 border-[7px] border-transparent"
+                style={{
+                  borderTopWidth: '10px',
+                  borderTopColor: '#ef4444',
+                  transform: `rotate(${getDirectionRotation(playerPosition.direction)})`,
+                  transition: 'transform 0.3s ease'
                 }}
               />
             )}
