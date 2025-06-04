@@ -49,6 +49,12 @@ const NavigationPanel = ({ onLoginClick }) => {
     }
   ];
 
+  const decodeHtmlEntities = (str) => {
+    const txt = document.createElement('textarea');
+    txt.innerHTML = str;
+    return txt.value;
+  };
+
   return (
     <div className={`bg-nav-bg text-white shadow-lg transition-all duration-300 ${
       isExpanded ? 'w-64' : 'w-16'
@@ -70,13 +76,15 @@ const NavigationPanel = ({ onLoginClick }) => {
             {user.picture && (
               <img 
                 src={user.picture} 
-                alt={user.name} 
+                alt={decodeHtmlEntities(user.name)} 
                 className="w-10 h-10 rounded-full"
               />
             )}
             <div>
               <p className="text-sm text-white/70">{translate('welcome')}</p>
-              <p className="font-medium text-white">{user.name}</p>
+              <p className="font-medium text-white overflow-hidden text-ellipsis">
+                {decodeHtmlEntities(user.name)}
+              </p>
             </div>
           </div>
         </div>
@@ -132,4 +140,4 @@ const NavigationPanel = ({ onLoginClick }) => {
   );
 };
 
-export default NavigationPanel
+export default NavigationPanel;
