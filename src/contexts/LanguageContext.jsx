@@ -29,7 +29,7 @@ const translations = {
     'waterTankDesc': 'Oblicz optymalne wymiary cylindrycznego zbiornika na wodę.',
     
     // Navigation
-    'myTasks': 'Lista zadań',
+    'myTasks': 'Moje zadania',
     'dayPlan': 'Plan dnia',
     'settings': 'Ustawienia',
     'logout': 'Wyloguj się',
@@ -40,11 +40,30 @@ const translations = {
     'lessonTitle': 'Zadanie: Optymalny kurnik',
     'nextBreak': 'Następna przerwa za:',
     
+    // Steps
+    'step1Title': 'Wprowadzenie do zadania',
+    'step2Title': 'Opis problemu',
+    'step3Title': 'Eksperymentowanie',
+    'step4Title': 'Analiza matematyczna',
+    'step5Title': 'Rozwiązanie formalne',
+    'understood': 'Rozumiem',
+    'endExploration': 'Zakończ eksperymentowanie',
+    'goToFormal': 'Przejdź do rozwiązania',
+    'checkAnswer': 'Sprawdź odpowiedź',
+    'problemText': 'Mamy do dyspozycji 40 metrów ogrodzenia. Chcemy zbudować prostokątny kurnik o jak największej powierzchni. Jakie powinny być jego wymiary?',
+    
+    // Interactive elements
+    'sideA': 'Długość boku A',
+    'sideB': 'Długość boku B',
+    'usedFence': 'Wykorzystane ogrodzenie',
+    'chickenArea': 'Powierzchnia kurnika',
+    'tryMaximize': 'Spróbuj zmaksymalizować powierzchnię!',
+    'isMaximum': 'Świetnie! Jesteś blisko optymalnego rozwiązania!',
+    
     // Water Tank Problem
     'waterTankProblem': 'Opis zadania',
     'waterTankDescription': 'Twoim zadaniem jest zaprojektowanie cylindrycznego zbiornika na wodę o określonej objętości, używając jak najmniej materiału na jego konstrukcję. Jakie powinny być wymiary tego zbiornika?',
     'waterTankHint': 'Zastanów się nad relacją między wysokością a promieniem zbiornika. Jak te wymiary wpływają na objętość i powierzchnię?',
-    'hint': 'Wskazówka',
     'startExploration': 'Rozpocznij eksperymentowanie',
     'waterTankExploration': 'Eksperymentuj z wymiarami',
     'tankRadius': 'Promień zbiornika',
@@ -63,9 +82,6 @@ const translations = {
     'step1WaterTank': 'Krok 1: Oblicz pochodną względem promienia',
     'step2WaterTank': 'Krok 2: Oblicz pochodną względem wysokości',
     'step3WaterTank': 'Krok 3: Podaj optymalne proporcje',
-    'endExploration': 'Zakończ eksperymentowanie',
-    'goToFormal': 'Przejdź do rozwiązania',
-    'checkAnswer': 'Sprawdź odpowiedź',
     
     // Chat
     'aiMentor': 'Asystent AI',
@@ -78,7 +94,11 @@ const translations = {
     // Auth
     'loginPrompt': 'Zaloguj się kontem Google, aby zapisywać swoje postępy.',
     'loginError': 'Błąd logowania. Spróbuj ponownie.',
-    'welcome': 'Witaj'
+    'welcome': 'Witaj',
+
+    // Navigation buttons
+    'back': 'Wstecz',
+    'next': 'Dalej'
   },
   en: {
     // Start Screen
@@ -98,21 +118,21 @@ const translations = {
     'waterTankDesc': 'Calculate optimal dimensions for a cylindrical water tank.',
     
     // Navigation
-    'myTasks': 'Tasks list',
-    'dayPlan': 'Day plan',
+    'myTasks': 'My Tasks',
+    'dayPlan': 'Day Plan',
     'settings': 'Settings',
     'logout': 'Sign out',
     'login': 'Sign in',
     'skipLogin': 'Continue without signing in',
     
-    // Lesson Header
-    'lessonTitle': 'Task: Optimal Chicken Coop',
-    'nextBreak': 'Next break in:',
-    
     // Auth
     'loginPrompt': 'Sign in with Google to save your progress.',
     'loginError': 'Login failed. Please try again.',
-    'welcome': 'Welcome'
+    'welcome': 'Welcome',
+
+    // Navigation buttons
+    'back': 'Back',
+    'next': 'Next'
   }
 };
 
