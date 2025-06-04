@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Send, Bot } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const ChatPanel = () => {
   const [messages, setMessages] = useState([
@@ -13,23 +14,41 @@ const ChatPanel = () => {
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { translate } = useLanguage();
+  const { translate, currentLanguage } = useLanguage();
+  const { user } = useAuth();
 
-  const generateGeminiResponse = async (prompt) => {
+  const generateGeminiResponse = async (userInput) => {
     if (isLoading) return "Proszę czekać...";
     setIsLoading(true);
 
-    const apiKey =  import.meta.env.VITE_GEMINI_API_KEY;
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
     if (!apiKey) {
       console.error('Missing Gemini API key');
       return "Błąd konfiguracji - brak klucza API.";
     }
 
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    // Budowanie kontekstu dla AI
+    const contextPrompt = `
+      Kontekst rozmowy:
+      - Jesteś mentorem AI na platformie edukacyjnej do nauki matematyki
+      - Język użytkownika: ${currentLanguage === 'pl' ? 'polski' : 'angielski'}
+      ${user ? `- Użytkownik: ${user.name}` : '- Użytkownik: niezalogowany'}
+      - Historia konwersacji: ${messages.map(m => `${m.type}: ${m.content}`).join(' | ')}
+      
+      Pytanie użytkownika: ${userInput}
+      
+      Odpowiedz w sposób:
+      1. Pomocny i przyjazny
+      2. Dostosowany do poziomu ucznia
+      3. Z naciskiem na zrozumienie konceptów matematycznych
+      4. W języku ${currentLanguage === 'pl' ? 'polskim' : 'angielskim'}
+    `;
+
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
     const payload = {
       contents: [{
         parts: [{
-          text: prompt
+          text: contextPrompt
         }]
       }]
     };
