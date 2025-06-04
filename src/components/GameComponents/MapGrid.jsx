@@ -36,7 +36,7 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize }) => {
             }}
           >
             {cellData.isBonus && !cellData.bonusCollected && (
-              <span className="absolute top-0.5 right-0.5 text-yellow-400 text-sm" style={{ textShadow: '0 0 2px black' }}>
+              <span className="absolute top-0.5 right-0.5 text-yellow-400 text-sm\" style={{ textShadow: '0 0 2px black' }}>
                 ⭐
               </span>
             )}
