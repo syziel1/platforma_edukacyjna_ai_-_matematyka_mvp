@@ -8,11 +8,38 @@ const NavigationPanel = () => {
   const { translate, switchLanguage, currentLanguage } = useLanguage();
   const { user, logout } = useAuth();
 
+  const handleDayPlan = () => {
+    if (user && user.email !== 'temp@example.com') {
+      window.open('https://calendar.google.com', '_blank');
+    } else {
+      alert('Please log in with Google to access your calendar.');
+    }
+  };
+
   const menuItems = [
-    { icon: CheckSquare, label: translate('myTasks'), action: () => {} },
-    { icon: Calendar, label: translate('dayPlan'), action: () => {} },
-    { icon: Settings, label: translate('settings'), action: () => {} },
-    { icon: LogOut, label: translate('logout'), action: logout }
+    { 
+      icon: CheckSquare, 
+      label: translate('myTasks'), 
+      action: () => window.location.href = '/' 
+    },
+    { 
+      icon: Calendar, 
+      label: translate('dayPlan'), 
+      action: handleDayPlan 
+    },
+    { 
+      icon: Settings, 
+      label: translate('settings'), 
+      action: () => {
+        // Open settings modal or navigate to settings page
+        alert('Language settings: Click the globe icon below to switch language');
+      }
+    },
+    { 
+      icon: LogOut, 
+      label: translate('logout'), 
+      action: logout 
+    }
   ];
 
   return (
@@ -50,9 +77,12 @@ const NavigationPanel = () => {
 
       {/* Logo/Brand */}
       {isExpanded && (
-        <div className="p-4 border-b border-nav-bg/50">
+        <button 
+          onClick={() => window.location.href = '/'}
+          className="p-4 border-b border-nav-bg/50 hover:bg-nav-bg/80 transition-colors text-left"
+        >
           <h2 className="text-lg font-bold text-white">Platforma AI</h2>
-        </div>
+        </button>
       )}
 
       {/* Menu Items */}
