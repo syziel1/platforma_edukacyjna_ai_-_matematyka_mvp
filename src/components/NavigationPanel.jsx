@@ -50,9 +50,9 @@ const NavigationPanel = ({ onLoginClick }) => {
   ];
 
   const decodeHtmlEntities = (str) => {
-    const txt = document.createElement('textarea');
-    txt.innerHTML = str;
-    return txt.value;
+    const parser = new DOMParser();
+    const dom = parser.parseFromString('<!doctype html><body>' + str, 'text/html');
+    return dom.body.textContent || '';
   };
 
   return (
