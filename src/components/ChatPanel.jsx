@@ -19,12 +19,12 @@ const ChatPanel = () => {
     if (isLoading) return "Proszę czekać...";
     setIsLoading(true);
 
-    const apiKey = "" // import.meta.env.VITE_GEMINI_API_KEY;
+    const apiKey = "" /* import.meta.env.VITE_GEMINI_API_KEY;
     if (!apiKey) {
       console.error('Missing Gemini API key');
       return "Błąd konfiguracji - brak klucza API.";
     }
-
+*/
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
     const payload = {
       contents: [{
