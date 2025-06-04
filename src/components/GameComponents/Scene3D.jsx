@@ -79,11 +79,11 @@ const Scene3D = ({ boardData, playerPosition }) => {
             className={`scene-cell ${viewClasses[index]} absolute border border-[#1a1a1a]`}
             style={{
               width: '45%',
-              height: '240px',
+              height: '200px',
               opacity: 0.9,
               transform: index === 0 
-                ? 'rotateY(65deg) translateX(55px)'
-                : 'rotateY(-65deg) translateX(-55px)',
+                ? 'rotateY(50deg) translateX(55px)'
+                : 'rotateY(-50deg) translateX(-55px)',
               transformOrigin: index === 0 ? 'left center' : 'right center',
               left: index === 0 ? 0 : 'auto',
               right: index === 4 ? 0 : 'auto',
