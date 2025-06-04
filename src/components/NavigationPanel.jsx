@@ -123,3 +123,5 @@ const NavigationPanel = ({ onLoginClick }) => {
     </div>
   );
 };
+
+export default NavigationPanel
