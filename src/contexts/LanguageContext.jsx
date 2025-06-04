@@ -13,69 +13,104 @@ export const useLanguage = () => {
 const translations = {
   pl: {
     // Start Screen
-    'welcomeTitle': 'Witaj w Platformie Edukacyjnej AI',
-    'welcomeDesc': 'Wybierz problem matematyczny, który chcesz rozwiązać. Każde zadanie zawiera interaktywne elementy i wsparcie AI.',
-    'startLesson': 'Rozpocznij lekcję',
-    'continueLesson': 'Kontynuuj lekcję',
-    'backToProblems': 'Powrót do listy problemów',
-    'connectWithMentor': 'Połącz się wideo z mentorem',
+    'welcomeTitle': 'Platforma Edukacyjna AI - Matematyka',
+    'welcomeDesc': 'Wybierz zadanie matematyczne, które chcesz rozwiązać. Każde zadanie zawiera interaktywne elementy i wsparcie sztucznej inteligencji.',
+    'startLesson': 'Rozpocznij zadanie',
+    'continueLesson': 'Kontynuuj zadanie',
+    'backToProblems': 'Powrót do listy zadań',
+    'connectWithMentor': 'Połącz się z mentorem',
     
     // Problems
-    'chickenCoopTitle': 'Optymalny Kurnik',
-    'chickenCoopDesc': 'Znajdź najlepsze wymiary kurnika przy ograniczonej długości siatki.',
-    'gardenFenceTitle': 'Geometryczny Ogród',
+    'chickenCoopTitle': 'Zadanie: Optymalny kurnik',
+    'chickenCoopDesc': 'Znajdź najlepsze wymiary kurnika przy ograniczonej długości ogrodzenia.',
+    'gardenFenceTitle': 'Zadanie: Geometryczny ogród',
     'gardenFenceDesc': 'Zaprojektuj ogród o maksymalnej powierzchni przy zadanym obwodzie.',
-    'waterTankTitle': 'Zbiornik na Wodę',
+    'waterTankTitle': 'Zadanie: Zbiornik na wodę',
     'waterTankDesc': 'Oblicz optymalne wymiary cylindrycznego zbiornika na wodę.',
     
     // Navigation
-    'myTasks': 'Moje Zadania',
-    'dayPlan': 'Plan Dnia',
+    'myTasks': 'Lista zadań',
+    'dayPlan': 'Plan dnia',
     'settings': 'Ustawienia',
     'logout': 'Wyloguj się',
     'login': 'Zaloguj się',
-    'skipLogin': 'Pomiń logowanie',
+    'skipLogin': 'Kontynuuj bez logowania',
     
     // Lesson Header
-    'lessonTitle': 'Problem: Optymalny Kurnik - Poziom 1',
+    'lessonTitle': 'Zadanie: Optymalny kurnik',
     'nextBreak': 'Następna przerwa za:',
     
+    // Water Tank Problem
+    'waterTankProblem': 'Opis zadania',
+    'waterTankDescription': 'Twoim zadaniem jest zaprojektowanie cylindrycznego zbiornika na wodę o określonej objętości, używając jak najmniej materiału na jego konstrukcję. Jakie powinny być wymiary tego zbiornika?',
+    'waterTankHint': 'Zastanów się nad relacją między wysokością a promieniem zbiornika. Jak te wymiary wpływają na objętość i powierzchnię?',
+    'hint': 'Wskazówka',
+    'startExploration': 'Rozpocznij eksperymentowanie',
+    'waterTankExploration': 'Eksperymentuj z wymiarami',
+    'tankRadius': 'Promień zbiornika',
+    'tankHeight': 'Wysokość zbiornika',
+    'surfaceArea': 'Powierzchnia materiału',
+    'tankVolume': 'Objętość zbiornika',
+    'tryMaximizeVolume': 'Spróbuj zminimalizować użycie materiału!',
+    'isMaximumVolume': 'Świetnie! Jesteś blisko optymalnego rozwiązania!',
+    'waterTankIntro': 'Wprowadzenie do zadania',
+    'continue': 'Dalej',
+    'waterTankTheory': 'Teoria matematyczna',
+    'waterTankTheoryText': 'Problem optymalizacji zbiornika można rozwiązać używając rachunku różniczkowego. Kluczowe wzory to:',
+    'whereFormula': 'gdzie r to promień, a h to wysokość',
+    'waterTankOptimization': 'Aby znaleźć optymalne wymiary, musimy zminimalizować powierzchnię przy stałej objętości.',
+    'waterTankSolution': 'Rozwiązanie formalne',
+    'step1WaterTank': 'Krok 1: Oblicz pochodną względem promienia',
+    'step2WaterTank': 'Krok 2: Oblicz pochodną względem wysokości',
+    'step3WaterTank': 'Krok 3: Podaj optymalne proporcje',
+    'endExploration': 'Zakończ eksperymentowanie',
+    'goToFormal': 'Przejdź do rozwiązania',
+    'checkAnswer': 'Sprawdź odpowiedź',
+    
+    // Chat
+    'aiMentor': 'Asystent AI',
+    'typeMessage': 'Napisz pytanie...',
+    'send': 'Wyślij',
+    
+    // Break suggestions
+    'breakSuggestions': 'Sugestie na przerwę:\n• Krótki spacer\n• Ćwiczenia oczu\n• Napij się wody\n• Rozciągnij się',
+
     // Auth
-    'loginPrompt': 'Zaloguj się swoim kontem Google, aby rozpocząć naukę.',
+    'loginPrompt': 'Zaloguj się kontem Google, aby zapisywać swoje postępy.',
     'loginError': 'Błąd logowania. Spróbuj ponownie.',
     'welcome': 'Witaj'
   },
   en: {
     // Start Screen
-    'welcomeTitle': 'Welcome to AI Education Platform',
+    'welcomeTitle': 'AI Education Platform - Mathematics',
     'welcomeDesc': 'Choose a mathematical problem you want to solve. Each task includes interactive elements and AI support.',
-    'startLesson': 'Start lesson',
-    'continueLesson': 'Continue lesson',
-    'backToProblems': 'Back to problems list',
-    'connectWithMentor': 'Connect with mentor via video',
+    'startLesson': 'Start task',
+    'continueLesson': 'Continue task',
+    'backToProblems': 'Back to tasks list',
+    'connectWithMentor': 'Connect with mentor',
     
     // Problems
-    'chickenCoopTitle': 'Optimal Chicken Coop',
+    'chickenCoopTitle': 'Task: Optimal Chicken Coop',
     'chickenCoopDesc': 'Find the best dimensions for a chicken coop with limited fence length.',
-    'gardenFenceTitle': 'Geometric Garden',
+    'gardenFenceTitle': 'Task: Geometric Garden',
     'gardenFenceDesc': 'Design a garden with maximum area given a fixed perimeter.',
-    'waterTankTitle': 'Water Tank',
+    'waterTankTitle': 'Task: Water Tank',
     'waterTankDesc': 'Calculate optimal dimensions for a cylindrical water tank.',
     
     // Navigation
-    'myTasks': 'My Tasks',
-    'dayPlan': 'Day Plan',
+    'myTasks': 'Tasks list',
+    'dayPlan': 'Day plan',
     'settings': 'Settings',
     'logout': 'Sign out',
     'login': 'Sign in',
-    'skipLogin': 'Skip login',
+    'skipLogin': 'Continue without signing in',
     
     // Lesson Header
-    'lessonTitle': 'Problem: Optimal Chicken Coop - Level 1',
+    'lessonTitle': 'Task: Optimal Chicken Coop',
     'nextBreak': 'Next break in:',
     
     // Auth
-    'loginPrompt': 'Sign in with your Google account to start learning.',
+    'loginPrompt': 'Sign in with Google to save your progress.',
     'loginError': 'Login failed. Please try again.',
     'welcome': 'Welcome'
   }
