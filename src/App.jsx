@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import NavigationPanel from './components/NavigationPanel';
 import LessonHeader from './components/LessonHeader';
 import LessonContent from './components/LessonContent';
+import WaterTankContent from './components/WaterTankContent';
 import ChatPanel from './components/ChatPanel';
 import StartScreen from './components/StartScreen';
 
@@ -13,6 +14,17 @@ function App() {
   const handleProblemSelect = (problemId) => {
     setSelectedProblem(problemId);
     setCurrentStep(1);
+  };
+
+  const renderContent = () => {
+    switch (selectedProblem) {
+      case 'chicken-coop':
+        return <LessonContent currentStep={currentStep} setCurrentStep={setCurrentStep} />;
+      case 'water-tank':
+        return <WaterTankContent currentStep={currentStep} setCurrentStep={setCurrentStep} />;
+      default:
+        return null;
+    }
   };
 
   return (
@@ -28,10 +40,7 @@ function App() {
               onBack={() => setSelectedProblem(null)}
             />
             <div className="flex-1 overflow-y-auto">
-              <LessonContent
-                currentStep={currentStep}
-                setCurrentStep={setCurrentStep}
-              />
+              {renderContent()}
             </div>
           </div>
           <ChatPanel />
