@@ -1,7 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { ArrowLeft } from 'lucide-react';
 import Scene3D from './GameComponents/Scene3D';
 import MapGrid from './GameComponents/MapGrid';
@@ -24,16 +21,6 @@ const MultiplicationGame = ({ onBack }) => {
     showMessage: false
   });
 
-  const [userId, setUserId] = useState(null);
-  const [db, setDb] = useState(null);
-
-  const showMessage = (text, duration = 2000) => {
-    setGameState(prev => ({ ...prev, message: text, showMessage: true }));
-    setTimeout(() => {
-      setGameState(prev => ({ ...prev, showMessage: false }));
-    }, duration);
-  };
-
   const createNewCellData = useCallback((r, c, isStartCell) => {
     return {
       row: r,
@@ -42,51 +29,37 @@ const MultiplicationGame = ({ onBack }) => {
       question: `${r + 1} x ${c + 1}`,
       originalMultiplier1: r + 1,
       originalMultiplier2: c + 1,
-      isBonus: false,
+      isBonus: Math.random() < 0.1, // 10% chance for bonus
       isRevealed: isStartCell,
       bonusCollected: false,
-      hintGivenForHardReset: false,
-      wasEverZeroGrass: isStartCell
+      wasEverZeroGrass: isStartCell,
+      hintGivenForHardReset: false
     };
   }, []);
 
-  const initializeGame = useCallback((newSize) => {
-    const oldBoardDataSnapshot = gameState.boardData.length > 0 
-      ? JSON.parse(JSON.stringify(gameState.boardData)) 
-      : [];
-    const previousLevelSize = oldBoardDataSnapshot.length > 0 
-      ? Math.sqrt(oldBoardDataSnapshot.length) 
-      : 0;
-
+  const initializeGame = useCallback(() => {
     const newBoardData = [];
+    const size = gameState.currentLevelSize;
 
-    for (let r = 0; r < newSize; r++) {
-      for (let c = 0; c < newSize; c++) {
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
         const isStartCell = r === 0 && c === 0;
-        let cellDataToPush;
-
-        if (r < previousLevelSize && c < previousLevelSize && oldBoardDataSnapshot.length > 0) {
-          const existingCell = oldBoardDataSnapshot.find(cell => cell.row === r && cell.col === c);
-          if (existingCell) {
-            cellDataToPush = { ...existingCell };
-            cellDataToPush.question = `${r + 1} x ${c + 1}`;
-          } else {
-            cellDataToPush = createNewCellData(r, c, isStartCell);
-          }
-        } else {
-          cellDataToPush = createNewCellData(r, c, isStartCell);
-        }
-        newBoardData.push(cellDataToPush);
+        newBoardData.push(createNewCellData(r, c, isStartCell));
       }
     }
 
     setGameState(prev => ({
       ...prev,
-      currentLevelSize: newSize,
       boardData: newBoardData,
       playerPosition: { row: 0, col: 0, direction: 'S' }
     }));
-  }, [createNewCellData, gameState.boardData]);
+  }, [gameState.currentLevelSize, createNewCellData]);
+
+  useEffect(() => {
+    if (!gameState.showWelcome && gameState.boardData.length === 0) {
+      initializeGame();
+    }
+  }, [gameState.showWelcome, gameState.boardData.length, initializeGame]);
 
   const handleAnswer = (answer) => {
     const currentCell = gameState.boardData.find(
@@ -103,7 +76,8 @@ const MultiplicationGame = ({ onBack }) => {
             ...cell,
             grass: newGrass,
             isRevealed: true,
-            hintGivenForHardReset: false
+            hintGivenForHardReset: false,
+            wasEverZeroGrass: newGrass === 0 ? true : cell.wasEverZeroGrass
           };
         }
         return cell;
@@ -207,6 +181,13 @@ const MultiplicationGame = ({ onBack }) => {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [handleKeyPress]);
 
+  const showMessage = (text, duration = 2000) => {
+    setGameState(prev => ({ ...prev, message: text, showMessage: true }));
+    setTimeout(() => {
+      setGameState(prev => ({ ...prev, showMessage: false }));
+    }, duration);
+  };
+
   return (
     <div className="min-h-screen bg-bg-main relative">
       <button
@@ -217,8 +198,41 @@ const MultiplicationGame = ({ onBack }) => {
         Powrót do menu
       </button>
 
-      {gameState.showWelcome && (
+      {gameState.showWelcome ? (
         <WelcomeModal onStart={() => setGameState(prev => ({ ...prev, showWelcome: false }))} />
+      ) : (
+        <div className="game-container">
+          <div className="view-3d">
+            <div id="playerActionFeedback" className="text-lg mb-2 text-white text-shadow min-h-[25px]" />
+            <div id="avatarAnimationFeedback" className="text-2xl min-h-[30px]" />
+            
+            <Scene3D 
+              boardData={gameState.boardData}
+              playerPosition={gameState.playerPosition}
+            />
+          </div>
+
+          <div className="controls-2d">
+            <div className="map-grid-container">
+              <MapGrid 
+                boardData={gameState.boardData}
+                playerPosition={gameState.playerPosition}
+                currentLevelSize={gameState.currentLevelSize}
+              />
+            </div>
+
+            <div className="flex justify-around p-3 bg-gray-200 rounded-lg shadow">
+              <div>Czas: {gameState.timeElapsed}s</div>
+              <div>Punkty: {gameState.score}</div>
+              <div>Poziom: {gameState.currentLevelSize}x{gameState.currentLevelSize}</div>
+              <div>
+                Trawa usunięta: {Math.round((gameState.boardData.filter(cell => 
+                  cell.row === 0 && cell.col === 0 ? 0 : Math.min(100, cell.grass)
+                ).length / (gameState.currentLevelSize * gameState.currentLevelSize - 1)) * 100)}%
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {gameState.showQuestion && (
@@ -235,37 +249,6 @@ const MultiplicationGame = ({ onBack }) => {
           {gameState.message}
         </div>
       )}
-
-      <div className="flex min-h-screen">
-        <div className="flex-1 bg-[#87CEEB] flex flex-col items-center justify-center border-r-2 border-[#3A3A3A] relative p-4">
-          <div id="playerActionFeedback" className="text-lg mb-2 text-white text-shadow min-h-[25px]" />
-          <div id="avatarAnimationFeedback" className="text-2xl min-h-[30px]" />
-          
-          <Scene3D 
-            boardData={gameState.boardData}
-            playerPosition={gameState.playerPosition}
-          />
-        </div>
-
-        <div className="w-1/2 bg-[#F5F5DC] flex flex-col p-5">
-          <div className="flex-1 flex justify-center items-center mb-5">
-            <MapGrid 
-              boardData={gameState.boardData}
-              playerPosition={gameState.playerPosition}
-              currentLevelSize={gameState.currentLevelSize}
-            />
-          </div>
-
-          <div className="flex justify-around p-3 bg-gray-200 rounded-lg shadow">
-            <div>Czas: {gameState.timeElapsed}s</div>
-            <div>Punkty: {gameState.score}</div>
-            <div>Poziom: {gameState.currentLevelSize}x{gameState.currentLevelSize}</div>
-            <div>Trawa usunięta: {Math.round((gameState.boardData.reduce((sum, cell) => 
-              sum + (cell.row === 0 && cell.col === 0 ? 0 : Math.min(100, cell.grass)), 0) / 
-              ((gameState.currentLevelSize * gameState.currentLevelSize - 1) * 100)) * 100)}%</div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
