@@ -37,26 +37,36 @@ const translations = {
     'lessonTitle': 'Problem: Optymalny Kurnik - Poziom 1',
     'nextBreak': 'Następna przerwa za:',
     
-    // Lesson Steps
-    'step1Title': 'Wprowadzenie Wideo',
-    'step2Title': 'Opis Problemu',
-    'step3Title': 'Interaktywna Eksploracja',
-    'step4Title': 'Narzędzia Matematyczne',
-    'step5Title': 'Formalne Rozwiązanie',
+    // Water Tank Scenario
+    'waterTankIntro': 'Wprowadzenie do Problemu Zbiornika',
+    'waterTankProblem': 'Opis Problemu',
+    'waterTankDescription': 'Masz określoną ilość materiału na budowę cylindrycznego zbiornika na wodę. Twoim zadaniem jest znalezienie takich wymiarów zbiornika (promienia podstawy i wysokości), aby jego objętość była największa przy zadanej powierzchni całkowitej.',
+    'waterTankHint': 'Zastanów się nad relacją między promieniem podstawy a wysokością zbiornika. Jak te wymiary wpływają na objętość i powierzchnię całkowitą?',
+    'waterTankExploration': 'Eksperymentuj z Wymiarami',
+    'waterTankTheory': 'Analiza Matematyczna',
+    'waterTankTheoryText': 'Problem można rozwiązać używając rachunku różniczkowego. Musimy znaleźć maksimum funkcji objętości przy warunku ograniczającym powierzchnię całkowitą.',
+    'waterTankOptimization': 'Aby znaleźć optymalne wymiary, należy użyć metody mnożników Lagrange\'a lub zbadać pochodne cząstkowe funkcji objętości.',
+    'waterTankSolution': 'Rozwiązanie Formalne',
+    'whereFormula': 'gdzie r to promień podstawy, a h to wysokość',
     
-    'problemText': 'Masz pewną długość siatki ogrodzeniowej i chcesz zbudować prostokątny kurnik o największej możliwej powierzchni. Jakie powinny być wymiary tego kurnika?',
-    'understood': 'Zrozumiałem, chcę eksperymentować',
-    'endExploration': 'Zakończ Eksplorację / Przejdź do Teorii',
-    'goToFormal': 'Przejdź do Zadania Formalnego',
-    'checkAnswer': 'Sprawdź Odpowiedź / Zakończ Poziom',
+    // Interactive Elements
+    'tankRadius': 'Promień podstawy',
+    'tankHeight': 'Wysokość',
+    'surfaceArea': 'Powierzchnia całkowita',
+    'tankVolume': 'Objętość zbiornika',
+    'tryMaximizeVolume': 'Spróbuj zmaksymalizować objętość!',
+    'isMaximumVolume': 'Świetnie! Jesteś blisko maksymalnej objętości!',
     
-    // Interactive Visualization
-    'sideA': 'Bok A',
-    'sideB': 'Bok B',
-    'usedFence': 'Użyta siatka',
-    'chickenArea': 'Powierzchnia kurnika',
-    'tryMaximize': 'Spróbuj znaleźć największe pole!',
-    'isMaximum': 'Czy to już maksimum?',
+    // Steps
+    'step1WaterTank': 'Krok 1: Oblicz pochodną cząstkową względem r',
+    'step2WaterTank': 'Krok 2: Oblicz pochodną cząstkową względem h',
+    'step3WaterTank': 'Krok 3: Podaj optymalne wymiary',
+    'continue': 'Dalej',
+    'startExploration': 'Rozpocznij eksperymentowanie',
+    'endExploration': 'Zakończ eksplorację',
+    'goToFormal': 'Przejdź do rozwiązania',
+    'checkAnswer': 'Sprawdź odpowiedź',
+    'hint': 'Wskazówka',
     
     // Chat
     'aiMentor': 'Mentor AI 🤖',
@@ -89,29 +99,39 @@ const translations = {
     'logout': 'Logout',
     
     // Lesson Header
-    'lessonTitle': 'Problem: Optimal Chicken Coop - Level 1',
+    'lessonTitle': 'Problem: Water Tank - Level 1',
     'nextBreak': 'Next break in:',
     
-    // Lesson Steps
-    'step1Title': 'Video Introduction',
-    'step2Title': 'Problem Description',
-    'step3Title': 'Interactive Exploration',
-    'step4Title': 'Mathematical Tools',
-    'step5Title': 'Formal Solution',
+    // Water Tank Scenario
+    'waterTankIntro': 'Introduction to Tank Problem',
+    'waterTankProblem': 'Problem Description',
+    'waterTankDescription': 'You have a fixed amount of material to build a cylindrical water tank. Your task is to find the dimensions (base radius and height) that maximize the tank\'s volume while maintaining the given total surface area.',
+    'waterTankHint': 'Think about the relationship between the base radius and height. How do these dimensions affect volume and total surface area?',
+    'waterTankExploration': 'Experiment with Dimensions',
+    'waterTankTheory': 'Mathematical Analysis',
+    'waterTankTheoryText': 'This problem can be solved using calculus. We need to find the maximum of the volume function subject to the surface area constraint.',
+    'waterTankOptimization': 'To find optimal dimensions, we can use Lagrange multipliers or examine partial derivatives of the volume function.',
+    'waterTankSolution': 'Formal Solution',
+    'whereFormula': 'where r is base radius and h is height',
     
-    'problemText': 'You have a certain length of fence and want to build a rectangular chicken coop with the largest possible area. What should be the dimensions of this coop?',
-    'understood': 'I understand, I want to experiment',
-    'endExploration': 'End Exploration / Go to Theory',
-    'goToFormal': 'Go to Formal Task',
-    'checkAnswer': 'Check Answer / Complete Level',
+    // Interactive Elements
+    'tankRadius': 'Base radius',
+    'tankHeight': 'Height',
+    'surfaceArea': 'Total surface area',
+    'tankVolume': 'Tank volume',
+    'tryMaximizeVolume': 'Try to maximize the volume!',
+    'isMaximumVolume': 'Great! You\'re close to maximum volume!',
     
-    // Interactive Visualization
-    'sideA': 'Side A',
-    'sideB': 'Side B',
-    'usedFence': 'Used fence',
-    'chickenArea': 'Chicken coop area',
-    'tryMaximize': 'Try to find the largest area!',
-    'isMaximum': 'Is this the maximum?',
+    // Steps
+    'step1WaterTank': 'Step 1: Calculate partial derivative with respect to r',
+    'step2WaterTank': 'Step 2: Calculate partial derivative with respect to h',
+    'step3WaterTank': 'Step 3: State optimal dimensions',
+    'continue': 'Continue',
+    'startExploration': 'Start experimenting',
+    'endExploration': 'End exploration',
+    'goToFormal': 'Go to solution',
+    'checkAnswer': 'Check answer',
+    'hint': 'Hint',
     
     // Chat
     'aiMentor': 'AI Mentor 🤖',
