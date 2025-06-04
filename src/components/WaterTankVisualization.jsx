@@ -4,7 +4,6 @@ import { useLanguage } from '../contexts/LanguageContext';
 const WaterTankVisualization = () => {
   const { translate } = useLanguage();
   
-  // Generate random material amount between 10 and 100
   const [maxMaterial] = useState(() => Math.floor(Math.random() * (100 - 10 + 1)) + 10);
   const minDimension = 0.5;
   const maxDimension = maxMaterial / 2;
@@ -31,27 +30,45 @@ const WaterTankVisualization = () => {
       </h3>
 
       <div className="mb-6 flex justify-center">
-        <div className="relative">
-          <div
-            className="bg-nav-bg/20 border-2 border-nav-bg rounded-lg"
-            style={{
-              width: `${radius * 16}px`,
-              height: `${height * 8}px`,
-              maxWidth: '300px',
-              maxHeight: '400px',
-              minWidth: '20px',
-              minHeight: '20px'
-            }}
-          >
-            <div className="bg-nav-bg/40 border border-nav-bg w-full h-full">
+        <div className="relative" style={{ perspective: '800px' }}>
+          {/* Container for 3D cylinder */}
+          <div className="relative" style={{ transform: 'rotateX(45deg) rotateZ(-45deg)' }}>
+            {/* Top circle (lid) */}
+            <div
+              className="absolute top-0 left-1/2 -translate-x-1/2 rounded-full border-2 border-gray-400 bg-gradient-to-br from-gray-200 to-gray-300"
+              style={{
+                width: `${radius * 16}px`,
+                height: `${radius * 16}px`,
+                transform: 'rotateX(-25deg)',
+              }}
+            >
+              {/* Radius line */}
+              <div className="absolute top-1/2 left-1/2 bg-nav-bg/50 h-0.5"
+                style={{
+                  width: '50%',
+                  transformOrigin: 'left center',
+                }}>
+                <span className="absolute -top-6 right-0 transform rotate-45 text-sm text-text-color whitespace-nowrap">
+                  r = {formatNumber(radius)}m
+                </span>
+              </div>
             </div>
-          </div>
-          
-          <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-sm text-text-color">
-            {formatNumber(radius * 2)}m
-          </div>
-          <div className="absolute -right-12 top-1/2 transform -translate-y-1/2 rotate-90 origin-left text-sm text-text-color">
-            {formatNumber(height)}m
+
+            {/* Cylinder body */}
+            <div
+              className="relative bg-gradient-to-r from-gray-300 to-gray-400 border-2 border-gray-400"
+              style={{
+                width: `${radius * 16}px`,
+                height: `${height * 8}px`,
+                transform: 'translateY(2px)',
+                borderRadius: '0',
+              }}
+            >
+              {/* Height indicator */}
+              <div className="absolute -right-12 top-1/2 transform -translate-y-1/2 rotate-90 origin-left text-sm text-text-color">
+                h = {formatNumber(height)}m
+              </div>
+            </div>
           </div>
         </div>
       </div>
