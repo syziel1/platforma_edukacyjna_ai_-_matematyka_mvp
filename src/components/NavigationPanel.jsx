@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { Menu, CheckSquare, Calendar, Settings, LogOut, Globe } from 'lucide-react';
+import { Menu, CheckSquare, Calendar, Settings, LogOut, Globe, LogIn } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 
-const NavigationPanel = () => {
+const NavigationPanel = ({ onLoginClick }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { translate, switchLanguage, currentLanguage } = useLanguage();
   const { user, logout } = useAuth();
 
   const handleDayPlan = () => {
-    if (user && user.email !== 'temp@example.com') {
+    if (user) {
       window.open('https://calendar.google.com', '_blank');
     } else {
       alert('Please log in with Google to access your calendar.');
@@ -31,14 +31,13 @@ const NavigationPanel = () => {
       icon: Settings, 
       label: translate('settings'), 
       action: () => {
-        // Open settings modal or navigate to settings page
         alert('Language settings: Click the globe icon below to switch language');
       }
     },
     { 
-      icon: LogOut, 
-      label: translate('logout'), 
-      action: logout 
+      icon: user ? LogOut : LogIn, 
+      label: user ? translate('logout') : translate('login'), 
+      action: user ? logout : onLoginClick
     }
   ];
 
@@ -124,5 +123,3 @@ const NavigationPanel = () => {
     </div>
   );
 };
-
-export default NavigationPanel;

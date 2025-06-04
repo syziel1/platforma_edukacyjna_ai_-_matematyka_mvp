@@ -13,6 +13,7 @@ function App() {
   const [selectedProblem, setSelectedProblem] = useState(null);
   const totalSteps = 5;
   const { user } = useAuth();
+  const [showLogin, setShowLogin] = useState(false);
 
   const handleProblemSelect = (problemId) => {
     setSelectedProblem(problemId);
@@ -30,13 +31,13 @@ function App() {
     }
   };
 
-  if (!user) {
-    return <LoginScreen />;
+  if (showLogin) {
+    return <LoginScreen onSkip={() => setShowLogin(false)} />;
   }
 
   return (
     <div className="min-h-screen bg-bg-main flex">
-      <NavigationPanel />
+      <NavigationPanel onLoginClick={() => setShowLogin(true)} />
 
       {selectedProblem ? (
         <>
@@ -58,5 +59,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

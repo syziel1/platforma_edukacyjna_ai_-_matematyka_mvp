@@ -12,26 +12,14 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  // Temporarily set a default user to bypass authentication
-  const [user, setUser] = useState({
-    id: 'temp-user',
-    email: 'temp@example.com',
-    name: 'Temporary User',
-    picture: null
-  });
+  const [user, setUser] = useState(null);
 
   const login = (userData) => {
     setUser(userData);
   };
 
   const logout = () => {
-    // Temporarily prevent logout by setting back to default user
-    setUser({
-      id: 'temp-user',
-      email: 'temp@example.com',
-      name: 'Temporary User',
-      picture: null
-    });
+    setUser(null);
   };
 
   return (
