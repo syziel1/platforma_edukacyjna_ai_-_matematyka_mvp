@@ -189,19 +189,21 @@ const MultiplicationGame = ({ onBack }) => {
   };
 
   return (
-    <div className="min-h-screen bg-bg-main relative">
-      <button
-        onClick={onBack}
-        className="absolute top-4 left-4 flex items-center gap-2 text-text-color hover:text-accent-primary transition-colors"
-      >
-        <ArrowLeft className="w-5 h-5" />
-        Powrót do menu
-      </button>
+    <div className="h-screen flex flex-col bg-bg-main">
+      <div className="flex items-center p-4 border-b border-bg-neutral">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 text-text-color hover:text-accent-primary transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          Powrót do menu
+        </button>
+      </div>
 
       {gameState.showWelcome ? (
         <WelcomeModal onStart={() => setGameState(prev => ({ ...prev, showWelcome: false }))} />
       ) : (
-        <div className="game-container">
+        <div className="flex-1 flex overflow-hidden">
           <div className="view-3d">
             <div id="playerActionFeedback" className="text-lg mb-2 text-white text-shadow min-h-[25px]" />
             <div id="avatarAnimationFeedback" className="text-2xl min-h-[30px]" />
