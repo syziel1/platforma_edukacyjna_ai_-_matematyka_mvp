@@ -5,8 +5,16 @@ const QuestionModal = ({ question, onAnswer, wrongAnswersCount, isGeminiLoading 
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!answer || parseInt(answer) <= 0) return;
     onAnswer(answer);
     setAnswer('');
+  };
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    if (value === '' || (parseInt(value) > 0 && !isNaN(parseInt(value)))) {
+      setAnswer(value);
+    }
   };
 
   return (
@@ -19,15 +27,17 @@ const QuestionModal = ({ question, onAnswer, wrongAnswersCount, isGeminiLoading 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="number"
+            min="1"
             value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
+            onChange={handleChange}
             className="w-full p-3 border border-gray-300 rounded-md text-center text-xl focus:outline-none focus:ring-2 focus:ring-accent-primary/50"
             autoFocus
           />
           
           <button
             type="submit"
-            className="w-full bg-accent-primary text-white py-3 px-6 rounded-md hover:bg-accent-primary/90 transition-colors"
+            disabled={!answer || parseInt(answer) <= 0}
+            className="w-full bg-accent-primary text-white py-3 px-6 rounded-md hover:bg-accent-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Odpowiedz
           </button>

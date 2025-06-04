@@ -3,7 +3,6 @@ import React from 'react';
 const Scene3D = ({ boardData, playerPosition }) => {
   const { row: pr, col: pc, direction: pdir } = playerPosition;
 
-  // Configure which cells to show based on player direction
   const viewCoordsConfig = {
     'N': { 
       frontView: [{r: pr - 1, c: pc - 1}, {r: pr - 1, c: pc}, {r: pr - 1, c: pc + 1}],
@@ -31,8 +30,6 @@ const Scene3D = ({ boardData, playerPosition }) => {
     currentViewConfig.frontView[2], 
     currentViewConfig.sideView[1]   
   ];
-  
-  const viewClasses = ['view-far-left', 'view-near-left', 'view-front', 'view-near-right', 'view-far-right'];
 
   const getCell = (row, col) => {
     if (row < 0 || row >= Math.sqrt(boardData.length) || col < 0 || col >= Math.sqrt(boardData.length)) return null;
@@ -46,10 +43,7 @@ const Scene3D = ({ boardData, playerPosition }) => {
   };
 
   return (
-    <div 
-      className="flex justify-center items-end gap-0 mt-10 mb-10 w-full h-[250px] p-0 box-border perspective-[800px] relative"
-      style={{ backgroundColor: '#87CEEB' }}
-    >
+    <div className="flex justify-center items-end gap-0 mt-10 mb-10 w-full h-[250px] p-0 box-border perspective-[800px] relative">
       {displayOrderCoords.map((coords, index) => {
         const cellData = getCell(coords.r, coords.c);
         const isInFrontGroup = index > 0 && index < 4;
@@ -65,7 +59,7 @@ const Scene3D = ({ boardData, playerPosition }) => {
             }}
           >
             {cellData.isBonus && !cellData.bonusCollected && (
-              <div className="absolute top-2 right-2 text-yellow-400 text-xl\" style={{ textShadow: '0 0 3px black' }}>
+              <div className="absolute top-2 right-2 text-yellow-400 text-xl" style={{ textShadow: '0 0 3px black' }}>
                 ⭐
               </div>
             )}
@@ -75,8 +69,8 @@ const Scene3D = ({ boardData, playerPosition }) => {
         if (isInFrontGroup) {
           return (
             <div
-              key={`${coords.r}-${coords.c}`}
-              className={`scene-cell ${viewClasses[index]} border border-[#1a1a1a]`}
+              key={`${coords.r}-${coords.col}`}
+              className="scene-cell border border-[#1a1a1a]"
               style={{
                 width: '33.33%',
                 height: '180px',
@@ -92,8 +86,8 @@ const Scene3D = ({ boardData, playerPosition }) => {
 
         return (
           <div
-            key={`${coords.r}-${coords.c}`}
-            className={`scene-cell ${viewClasses[index]} absolute border border-[#1a1a1a]`}
+            key={`${coords.r}-${coords.col}`}
+            className="scene-cell absolute border border-[#1a1a1a]"
             style={{
               width: '45%',
               height: '240px',
