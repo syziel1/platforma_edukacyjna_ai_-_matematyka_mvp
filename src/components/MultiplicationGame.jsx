@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import LessonHeader from './LessonHeader';
 import Scene3D from './GameComponents/Scene3D';
 import MapGrid from './GameComponents/MapGrid';
 import QuestionModal from './GameComponents/QuestionModal';
@@ -190,15 +190,12 @@ const MultiplicationGame = ({ onBack }) => {
 
   return (
     <div className="h-screen flex flex-col bg-bg-main">
-      <div className="flex items-center p-4 border-b border-bg-neutral">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-2 text-text-color hover:text-accent-primary transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          Powrót do menu
-        </button>
-      </div>
+      <LessonHeader 
+        currentStep={1} 
+        totalSteps={1} 
+        onBack={onBack}
+        title="Gra: Szlakami tabliczki mnożenia"
+      />
 
       {gameState.showWelcome ? (
         <WelcomeModal onStart={() => setGameState(prev => ({ ...prev, showWelcome: false }))} />

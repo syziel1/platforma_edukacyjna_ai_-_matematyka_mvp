@@ -4,7 +4,7 @@ import BreakTimer from './BreakTimer';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Video, ArrowLeft } from 'lucide-react';
 
-const LessonHeader = ({ currentStep, totalSteps, onBack }) => {
+const LessonHeader = ({ currentStep, totalSteps, onBack, title }) => {
   const { translate } = useLanguage();
 
   const handleVideoCall = () => {
@@ -23,7 +23,7 @@ const LessonHeader = ({ currentStep, totalSteps, onBack }) => {
             <ArrowLeft className="w-5 h-5" />
           </button>
           <h1 className="text-xl font-bold text-text-color">
-            {translate('lessonTitle')}
+            {title || translate('lessonTitle')}
           </h1>
         </div>
         <div className="flex items-center gap-4">
