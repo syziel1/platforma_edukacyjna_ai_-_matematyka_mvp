@@ -7,25 +7,36 @@ import ChatPanel from './components/ChatPanel';
 import StartScreen from './components/StartScreen';
 import LoginScreen from './components/LoginScreen';
 import { useAuth } from './contexts/AuthContext';
+import { useProgress } from './contexts/ProgressContext';
 
 function App() {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedProblem, setSelectedProblem] = useState(null);
+  const [showLogin, setShowLogin] = useState(false);
   const totalSteps = 5;
   const { user } = useAuth();
-  const [showLogin, setShowLogin] = useState(false);
+  const { updateProgress } = useProgress();
 
   const handleProblemSelect = (problemId) => {
     setSelectedProblem(problemId);
-    setCurrentStep(1);
+    const savedProgress = localStorage.getItem('lessonProgress');
+    const progress = savedProgress ? JSON.parse(savedProgress)[problemId] || 1 : 1;
+    setCurrentStep(progress);
+  };
+
+  const handleStepChange = (step) => {
+    setCurrentStep(step);
+    if (selectedProblem) {
+      updateProgress(selectedProblem, step);
+    }
   };
 
   const renderContent = () => {
     switch (selectedProblem) {
       case 'chicken-coop':
-        return <LessonContent currentStep={currentStep} setCurrentStep={setCurrentStep} />;
+        return <LessonContent currentStep={currentStep} setCurrentStep={handleStepChange} />;
       case 'water-tank':
-        return <WaterTankContent currentStep={currentStep} setCurrentStep={setCurrentStep} />;
+        return <WaterTankContent currentStep={currentStep} setCurrentStep={handleStepChange} />;
       default:
         return null;
     }
@@ -60,4 +71,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
