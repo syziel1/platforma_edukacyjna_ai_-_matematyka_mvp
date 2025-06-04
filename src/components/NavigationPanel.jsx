@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { Menu, CheckSquare, Calendar, Settings, LogOut, Globe } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const NavigationPanel = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { translate, switchLanguage, currentLanguage } = useLanguage();
+  const { user, logout } = useAuth();
 
   const menuItems = [
     { icon: CheckSquare, label: translate('myTasks'), action: () => {} },
     { icon: Calendar, label: translate('dayPlan'), action: () => {} },
     { icon: Settings, label: translate('settings'), action: () => {} },
-    { icon: LogOut, label: translate('logout'), action: () => {} }
+    { icon: LogOut, label: translate('logout'), action: logout }
   ];
 
   return (
@@ -26,6 +28,25 @@ const NavigationPanel = () => {
           <Menu className="w-5 h-5 text-white" />
         </button>
       </div>
+
+      {/* User Info */}
+      {isExpanded && user && (
+        <div className="p-4 border-b border-nav-bg/50">
+          <div className="flex items-center gap-3">
+            {user.picture && (
+              <img 
+                src={user.picture} 
+                alt={user.name} 
+                className="w-10 h-10 rounded-full"
+              />
+            )}
+            <div>
+              <p className="text-sm text-white/70">{translate('welcome')}</p>
+              <p className="font-medium text-white">{user.name}</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Logo/Brand */}
       {isExpanded && (
