@@ -48,3 +48,5 @@ const LoginScreen = ({ onSkip }) => {
     </div>
   );
 };
+
+export default LoginScreen

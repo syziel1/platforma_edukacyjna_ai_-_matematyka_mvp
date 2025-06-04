@@ -75,7 +75,9 @@ const translations = {
     // Auth
     'loginPrompt': 'Zaloguj się swoim kontem Google, aby rozpocząć naukę.',
     'loginError': 'Błąd logowania. Spróbuj ponownie.',
-    'welcome': 'Witaj'
+    'welcome': 'Witaj',
+    'login': 'Zaloguj się',
+    'skipLogin': 'Pomiń logowanie'
   },
   en: {
     // Start Screen
@@ -141,7 +143,9 @@ const translations = {
     // Auth
     'loginPrompt': 'Sign in with your Google account to start learning.',
     'loginError': 'Login failed. Please try again.',
-    'welcome': 'Welcome'
+    'welcome': 'Welcome',
+    'login': 'Sign in',
+    'skipLogin': 'Skip login'
   }
 };
 
