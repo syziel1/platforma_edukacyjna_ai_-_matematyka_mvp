@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, ArrowRight, CheckCircle } from 'lucide-react';
+import { Play, ArrowRight, ArrowLeft, CheckCircle } from 'lucide-react';
 import InteractiveVisualization from './InteractiveVisualization';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -45,12 +45,20 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => setCurrentStep(3)}
-              className="bg-accent-primary text-white px-6 py-2 rounded-md hover:bg-accent-primary/90 transition-colors flex items-center gap-2"
-            >
-              {translate('understood')} <ArrowRight className="w-4 h-4" />
-            </button>
+            <div className="flex justify-between">
+              <button
+                onClick={() => setCurrentStep(1)}
+                className="bg-nav-bg/20 text-text-color px-6 py-2 rounded-md hover:bg-nav-bg/40 transition-colors flex items-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" /> Wstecz
+              </button>
+              <button
+                onClick={() => setCurrentStep(3)}
+                className="bg-accent-primary text-white px-6 py-2 rounded-md hover:bg-accent-primary/90 transition-colors flex items-center gap-2"
+              >
+                {translate('understood')} <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         );
 
@@ -58,10 +66,16 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
         return (
           <div className="space-y-6">
             <InteractiveVisualization />
-            <div className="text-center">
+            <div className="flex justify-between">
+              <button
+                onClick={() => setCurrentStep(2)}
+                className="bg-nav-bg/20 text-text-color px-6 py-2 rounded-md hover:bg-nav-bg/40 transition-colors flex items-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" /> Wstecz
+              </button>
               <button
                 onClick={() => setCurrentStep(4)}
-                className="bg-accent-primary text-white px-6 py-2 rounded-md hover:bg-accent-primary/90 transition-colors flex items-center gap-2 mx-auto"
+                className="bg-accent-primary text-white px-6 py-2 rounded-md hover:bg-accent-primary/90 transition-colors flex items-center gap-2"
               >
                 {translate('endExploration')} <ArrowRight className="w-4 h-4" />
               </button>
@@ -91,12 +105,20 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
                 W naszym przypadku, po rozwinięciu P(x) = Lx - x², mamy a = -1, b = L, c = 0.
               </p>
             </div>
-            <button
-              onClick={() => setCurrentStep(5)}
-              className="bg-accent-primary text-white px-6 py-2 rounded-md hover:bg-accent-primary/90 transition-colors flex items-center gap-2"
-            >
-              {translate('goToFormal')} <ArrowRight className="w-4 h-4" />
-            </button>
+            <div className="flex justify-between">
+              <button
+                onClick={() => setCurrentStep(3)}
+                className="bg-nav-bg/20 text-text-color px-6 py-2 rounded-md hover:bg-nav-bg/40 transition-colors flex items-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" /> Wstecz
+              </button>
+              <button
+                onClick={() => setCurrentStep(5)}
+                className="bg-accent-primary text-white px-6 py-2 rounded-md hover:bg-accent-primary/90 transition-colors flex items-center gap-2"
+              >
+                {translate('goToFormal')} <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         );
 
@@ -138,12 +160,20 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
                 />
               </div>
             </div>
-            <button
-              className="bg-nav-bg text-white px-6 py-2 rounded-md hover:bg-nav-bg/90 transition-colors flex items-center gap-2"
-            >
-              <CheckCircle className="w-4 h-4" />
-              {translate('checkAnswer')}
-            </button>
+            <div className="flex justify-between">
+              <button
+                onClick={() => setCurrentStep(4)}
+                className="bg-nav-bg/20 text-text-color px-6 py-2 rounded-md hover:bg-nav-bg/40 transition-colors flex items-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" /> Wstecz
+              </button>
+              <button
+                className="bg-nav-bg text-white px-6 py-2 rounded-md hover:bg-nav-bg/90 transition-colors flex items-center gap-2"
+              >
+                <CheckCircle className="w-4 h-4" />
+                {translate('checkAnswer')}
+              </button>
+            </div>
           </div>
         );
 
