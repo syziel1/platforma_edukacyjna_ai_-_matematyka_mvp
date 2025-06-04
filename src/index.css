@@ -4,11 +4,35 @@
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: theme('colors.bg-main'); /* Use the new main background color */
-  color: theme('colors.text-color'); /* Use the new text color */
+  background-color: theme('colors.bg-main');
+  color: theme('colors.text-color');
 }
 
-/* Ensure prose styles use the new text color */
 .prose p {
   color: theme('colors.text-color');
+}
+
+.scene-cell {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  background-color: transparent;
+  transform-style: preserve-3d;
+}
+
+.scene-cell-content {
+  width: 100%;
+  transition: height 0.4s ease-out, background-color 0.4s ease-out;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.text-shadow {
+  text-shadow: 1px 1px 2px black;
+}
+
+.perspective-[800px] {
+  perspective: 800px;
 }
