@@ -20,28 +20,49 @@ const ChatPanel = () => {
     setIsLoading(true);
 
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-    const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+    if (!apiKey) {
+      console.error('Missing Gemini API key');
+      return "Błąd konfiguracji - brak klucza API.";
+    }
+
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+    const payload = {
+      contents: [{
+        parts: [{
+          text: prompt
+        }]
+      }]
+    };
 
     try {
       const response = await fetch(apiUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(payload)
       });
 
       if (!response.ok) {
-        throw new Error(`API Error: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(`API Error: ${response.status} - ${errorText}`);
       }
 
       const result = await response.json();
-      if (result.candidates?.[0]?.content?.parts?.[0]?.text) {
-        return result.candidates[0].content.parts[0].text;
+      
+      if (!result.candidates || !result.candidates[0]?.content?.parts) {
+        throw new Error('Invalid API response structure');
       }
-      return "Przepraszam, nie udało mi się wygenerować odpowiedzi.";
+
+      const text = result.candidates[0].content.parts[0]?.text;
+      if (!text) {
+        throw new Error('No text in API response');
+      }
+
+      return text;
     } catch (error) {
       console.error('Gemini API Error:', error);
-      return "Przepraszam, wystąpił błąd podczas komunikacji z AI.";
+      return "Przepraszam, wystąpił błąd podczas komunikacji z AI. Spróbuj ponownie za chwilę.";
     } finally {
       setIsLoading(false);
     }
@@ -81,7 +102,6 @@ const ChatPanel = () => {
 
   return (
     <div className="bg-ai-bg shadow-lg w-80 min-h-screen flex flex-col">
-      {/* Header */}
       <div className="p-4 border-b border-ai-bg/50 bg-ai-bg">
         <div className="flex items-center gap-2">
           <Bot className="w-5 h-5 text-nav-bg" />
@@ -91,7 +111,6 @@ const ChatPanel = () => {
         </div>
       </div>
 
-      {/* Messages */}
       <div className="flex-1 p-4 overflow-y-auto space-y-4">
         {messages.map((message) => (
           <div
@@ -111,7 +130,6 @@ const ChatPanel = () => {
         ))}
       </div>
 
-      {/* Input */}
       <div className="p-4 border-t border-ai-bg/50">
         <div className="flex gap-2">
           <textarea
