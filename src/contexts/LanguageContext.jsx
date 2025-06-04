@@ -12,6 +12,21 @@ export const useLanguage = () => {
 
 const translations = {
   pl: {
+    // Start Screen
+    'welcomeTitle': 'Witaj w Platformie Edukacyjnej AI',
+    'welcomeDesc': 'Wybierz problem matematyczny, który chcesz rozwiązać. Każde zadanie zawiera interaktywne elementy i wsparcie AI.',
+    'startLesson': 'Rozpocznij lekcję',
+    'backToProblems': 'Powrót do listy problemów',
+    'connectWithMentor': 'Połącz się wideo z mentorem',
+    
+    // Problems
+    'chickenCoopTitle': 'Optymalny Kurnik',
+    'chickenCoopDesc': 'Znajdź najlepsze wymiary kurnika przy ograniczonej długości siatki.',
+    'gardenFenceTitle': 'Geometryczny Ogród',
+    'gardenFenceDesc': 'Zaprojektuj ogród o maksymalnej powierzchni przy zadanym obwodzie.',
+    'waterTankTitle': 'Zbiornik na Wodę',
+    'waterTankDesc': 'Oblicz optymalne wymiary cylindrycznego zbiornika na wodę.',
+    
     // Navigation
     'myTasks': 'Moje Zadania',
     'dayPlan': 'Plan Dnia',
@@ -52,6 +67,21 @@ const translations = {
     'breakSuggestions': 'Sugestie na przerwę:\n• Krótki spacer\n• Ćwiczenia oczu\n• Napij się wody\n• Rozciągnij się'
   },
   en: {
+    // Start Screen
+    'welcomeTitle': 'Welcome to AI Education Platform',
+    'welcomeDesc': 'Choose a mathematical problem you want to solve. Each task includes interactive elements and AI support.',
+    'startLesson': 'Start lesson',
+    'backToProblems': 'Back to problems list',
+    'connectWithMentor': 'Connect with mentor via video',
+    
+    // Problems
+    'chickenCoopTitle': 'Optimal Chicken Coop',
+    'chickenCoopDesc': 'Find the best dimensions for a chicken coop with limited fence length.',
+    'gardenFenceTitle': 'Geometric Garden',
+    'gardenFenceDesc': 'Design a garden with maximum area given a fixed perimeter.',
+    'waterTankTitle': 'Water Tank',
+    'waterTankDesc': 'Calculate optimal dimensions for a cylindrical water tank.',
+    
     // Navigation
     'myTasks': 'My Tasks',
     'dayPlan': 'Day Plan',

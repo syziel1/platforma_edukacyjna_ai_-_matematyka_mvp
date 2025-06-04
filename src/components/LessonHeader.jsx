@@ -2,35 +2,38 @@ import React from 'react';
 import ProgressIndicator from './ProgressIndicator';
 import BreakTimer from './BreakTimer';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Video } from 'lucide-react'; // Import Video icon
+import { Video, ArrowLeft } from 'lucide-react';
 
-const LessonHeader = ({ currentStep, totalSteps }) => {
+const LessonHeader = ({ currentStep, totalSteps, onBack }) => {
   const { translate } = useLanguage();
 
   const handleVideoCall = () => {
-    // Placeholder action for video call
     alert('Symulacja połączenia wideo z mentorem!');
-    // W rzeczywistej aplikacji tutaj byłaby logika inicjująca połączenie wideo
   };
 
   return (
     <div className="bg-bg-card shadow-sm border-b border-bg-neutral p-4 sticky top-0 z-10">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold text-text-color">
-          {translate('lessonTitle')}
-        </h1>
-        {/* Right-aligned items: Break Timer and Video Call */}
-        <div className="flex items-center gap-4"> {/* Container for grouping right items */}
+        <div className="flex items-center gap-4">
+          <button
+            onClick={onBack}
+            className="text-text-color hover:text-accent-primary transition-colors"
+            title={translate('backToProblems')}
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <h1 className="text-xl font-bold text-text-color">
+            {translate('lessonTitle')}
+          </h1>
+        </div>
+        <div className="flex items-center gap-4">
           <BreakTimer />
-          {/* Video Call Button */}
           <button
             onClick={handleVideoCall}
-            className="flex items-center gap-2 text-text-color hover:text-accent-primary transition-colors p-2 rounded-md hover:bg-bg-neutral" // Added padding and hover background for better click area
-            title="Połącz się wideo z mentorem" // Tooltip
+            className="flex items-center gap-2 text-text-color hover:text-accent-primary transition-colors p-2 rounded-md hover:bg-bg-neutral"
+            title={translate('connectWithMentor')}
           >
             <Video className="w-5 h-5" />
-            {/* Można dodać tekst "Mentor" obok ikony, jeśli jest miejsce */}
-            {/* <span className="text-sm">Mentor</span> */}
           </button>
         </div>
       </div>
