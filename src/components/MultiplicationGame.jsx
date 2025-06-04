@@ -5,6 +5,8 @@ import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from 'firebase/fir
 import { ArrowLeft } from 'lucide-react';
 import Scene3D from './GameComponents/Scene3D';
 import MapGrid from './GameComponents/MapGrid';
+import QuestionModal from './GameComponents/QuestionModal';
+import WelcomeModal from './GameComponents/WelcomeModal';
 
 const MultiplicationGame = ({ onBack }) => {
   const [gameState, setGameState] = useState({
@@ -17,11 +19,20 @@ const MultiplicationGame = ({ onBack }) => {
     showQuestion: false,
     currentQuestion: null,
     wrongAnswersCount: 0,
-    isGeminiLoading: false
+    isGeminiLoading: false,
+    message: '',
+    showMessage: false
   });
 
   const [userId, setUserId] = useState(null);
   const [db, setDb] = useState(null);
+
+  const showMessage = (text, duration = 2000) => {
+    setGameState(prev => ({ ...prev, message: text, showMessage: true }));
+    setTimeout(() => {
+      setGameState(prev => ({ ...prev, showMessage: false }));
+    }, duration);
+  };
 
   const createNewCellData = useCallback((r, c, isStartCell) => {
     return {
@@ -77,9 +88,63 @@ const MultiplicationGame = ({ onBack }) => {
     }));
   }, [createNewCellData, gameState.boardData]);
 
-  useEffect(() => {
-    initializeGame(4);
-  }, [initializeGame]);
+  const handleAnswer = (answer) => {
+    const currentCell = gameState.boardData.find(
+      cell => cell.row === gameState.currentQuestion.row && cell.col === gameState.currentQuestion.col
+    );
+    
+    const correctAnswer = currentCell.originalMultiplier1 * currentCell.originalMultiplier2;
+    
+    if (parseInt(answer) === correctAnswer) {
+      const newBoardData = gameState.boardData.map(cell => {
+        if (cell.row === currentCell.row && cell.col === currentCell.col) {
+          const newGrass = Math.max(0, cell.grass - Math.ceil(cell.grass * 0.50));
+          return {
+            ...cell,
+            grass: newGrass,
+            isRevealed: true,
+            hintGivenForHardReset: false
+          };
+        }
+        return cell;
+      });
+
+      setGameState(prev => ({
+        ...prev,
+        boardData: newBoardData,
+        score: prev.score + 10,
+        showQuestion: false,
+        currentQuestion: null,
+        playerPosition: {
+          ...prev.playerPosition,
+          row: currentCell.row,
+          col: currentCell.col
+        }
+      }));
+
+      showMessage('Świetnie! Trawa ścięta!', 2000);
+    } else {
+      const newBoardData = gameState.boardData.map(cell => {
+        if (cell.row === currentCell.row && cell.col === currentCell.col) {
+          const newGrass = Math.min(200, cell.grass + Math.ceil(cell.grass * 0.20));
+          return {
+            ...cell,
+            grass: newGrass
+          };
+        }
+        return cell;
+      });
+
+      setGameState(prev => ({
+        ...prev,
+        boardData: newBoardData,
+        score: Math.max(0, prev.score - 5),
+        wrongAnswersCount: prev.wrongAnswersCount + 1
+      }));
+
+      showMessage('Niestety, źle. Trawa odrasta...', 2000);
+    }
+  };
 
   const handleKeyPress = useCallback((e) => {
     if (gameState.showWelcome || gameState.showQuestion) return;
@@ -96,18 +161,36 @@ const MultiplicationGame = ({ onBack }) => {
         case 'W': newCol--; break;
         default: break;
       }
-      moved = true;
+
+      if (newRow >= 0 && newRow < gameState.currentLevelSize && 
+          newCol >= 0 && newCol < gameState.currentLevelSize) {
+        const targetCell = gameState.boardData.find(cell => cell.row === newRow && cell.col === newCol);
+        
+        if (targetCell.grass < 10) {
+          moved = true;
+        } else {
+          setGameState(prev => ({
+            ...prev,
+            showQuestion: true,
+            currentQuestion: targetCell
+          }));
+        }
+      } else {
+        showMessage("Nie możesz tam iść (ściana!)", 1500);
+      }
     } else if (e.key === 'ArrowLeft') {
       const dirs = ['N', 'W', 'S', 'E'];
       const currentIndex = dirs.indexOf(pdir);
       newDirection = dirs[(currentIndex + 1) % 4];
+      moved = true;
     } else if (e.key === 'ArrowRight') {
       const dirs = ['N', 'E', 'S', 'W'];
       const currentIndex = dirs.indexOf(pdir);
       newDirection = dirs[(currentIndex + 1) % 4];
+      moved = true;
     }
 
-    if (moved || newDirection !== pdir) {
+    if (moved) {
       setGameState(prev => ({
         ...prev,
         playerPosition: {
@@ -117,7 +200,7 @@ const MultiplicationGame = ({ onBack }) => {
         }
       }));
     }
-  }, [gameState.showWelcome, gameState.showQuestion, gameState.playerPosition]);
+  }, [gameState.showWelcome, gameState.showQuestion, gameState.playerPosition, gameState.currentLevelSize, gameState.boardData]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
@@ -133,6 +216,25 @@ const MultiplicationGame = ({ onBack }) => {
         <ArrowLeft className="w-5 h-5" />
         Powrót do menu
       </button>
+
+      {gameState.showWelcome && (
+        <WelcomeModal onStart={() => setGameState(prev => ({ ...prev, showWelcome: false }))} />
+      )}
+
+      {gameState.showQuestion && (
+        <QuestionModal
+          question={gameState.currentQuestion}
+          onAnswer={handleAnswer}
+          wrongAnswersCount={gameState.wrongAnswersCount}
+          isGeminiLoading={gameState.isGeminiLoading}
+        />
+      )}
+
+      {gameState.showMessage && (
+        <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-black/80 text-white px-5 py-3 rounded-lg z-50">
+          {gameState.message}
+        </div>
+      )}
 
       <div className="flex min-h-screen">
         <div className="flex-1 bg-[#87CEEB] flex flex-col items-center justify-center border-r-2 border-[#3A3A3A] relative p-4">
