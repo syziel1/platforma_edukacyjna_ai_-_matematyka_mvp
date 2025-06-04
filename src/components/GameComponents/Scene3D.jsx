@@ -3,6 +3,7 @@ import React from 'react';
 const Scene3D = ({ boardData, playerPosition }) => {
   const { row: pr, col: pc, direction: pdir } = playerPosition;
 
+  // Configure which cells to show based on player direction
   const viewCoordsConfig = {
     'N': { 
       frontView: [{r: pr - 1, c: pc - 1}, {r: pr - 1, c: pc}, {r: pr - 1, c: pc + 1}],
@@ -64,7 +65,7 @@ const Scene3D = ({ boardData, playerPosition }) => {
             }}
           >
             {cellData.isBonus && !cellData.bonusCollected && (
-              <div className="absolute top-2 right-2 text-yellow-400 text-xl\" style={{ textShadow: '0 0 3px black' }}>
+              <div className="absolute top-2 right-2 text-yellow-400 text-xl" style={{ textShadow: '0 0 3px black' }}>
                 ⭐
               </div>
             )}
