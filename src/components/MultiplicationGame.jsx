@@ -21,6 +21,22 @@ const MultiplicationGame = ({ onBack }) => {
     showMessage: false
   });
 
+  // Add timer effect
+  useEffect(() => {
+    let timer;
+    if (!gameState.showWelcome && !gameState.showQuestion) {
+      timer = setInterval(() => {
+        setGameState(prev => ({
+          ...prev,
+          timeElapsed: prev.timeElapsed + 1
+        }));
+      }, 1000);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [gameState.showWelcome, gameState.showQuestion]);
+
   const createNewCellData = useCallback((r, c, isStartCell) => {
     return {
       row: r,
@@ -188,6 +204,13 @@ const MultiplicationGame = ({ onBack }) => {
     }, duration);
   };
 
+  // Format time to mm:ss
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div className="h-screen flex flex-col bg-bg-main">
       <LessonHeader 
@@ -208,6 +231,7 @@ const MultiplicationGame = ({ onBack }) => {
             <Scene3D 
               boardData={gameState.boardData}
               playerPosition={gameState.playerPosition}
+              currentLevelSize={gameState.currentLevelSize}
             />
           </div>
 
@@ -221,7 +245,7 @@ const MultiplicationGame = ({ onBack }) => {
             </div>
 
             <div className="flex justify-around p-3 bg-gray-200 rounded-lg shadow">
-              <div>Czas: {gameState.timeElapsed}s</div>
+              <div>Czas: {formatTime(gameState.timeElapsed)}</div>
               <div>Punkty: {gameState.score}</div>
               <div>Poziom: {gameState.currentLevelSize}x{gameState.currentLevelSize}</div>
               <div>
