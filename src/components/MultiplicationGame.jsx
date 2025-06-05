@@ -223,8 +223,8 @@ const MultiplicationGame = ({ onBack }) => {
       {gameState.showWelcome ? (
         <WelcomeModal onStart={() => setGameState(prev => ({ ...prev, showWelcome: false }))} />
       ) : (
-        <div className="flex-1 flex overflow-hidden">
-          <div className="view-3d">
+        <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
+          <div className="h-1/2 md:h-auto md:flex-1 view-3d">
             <div id="playerActionFeedback" className="text-lg mb-2 text-white text-shadow min-h-[25px]" />
             <div id="avatarAnimationFeedback" className="text-2xl min-h-[30px]" />
             
@@ -235,7 +235,7 @@ const MultiplicationGame = ({ onBack }) => {
             />
           </div>
 
-          <div className="controls-2d">
+          <div className="h-1/2 md:h-auto md:w-1/2 controls-2d">
             <div className="map-grid-container">
               <MapGrid 
                 boardData={gameState.boardData}
