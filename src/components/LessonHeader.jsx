@@ -8,7 +8,7 @@ const LessonHeader = ({ currentStep, totalSteps, onBack, title }) => {
   const { translate } = useLanguage();
 
   const handleVideoCall = () => {
-    alert('Symulacja połączenia wideo z mentorem!');
+    window.location.href = 'http://strefaedukacji.zrozoomai.pl/';
   };
 
   return (

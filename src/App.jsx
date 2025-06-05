@@ -59,7 +59,7 @@ function App() {
             <MultiplicationGame onBack={() => setSelectedProblem(null)} />
           </div>
         ) : (
-          <>
+          <div className="flex-1 flex flex-col">
             <div className="flex-1 flex flex-col pt-16 md:pt-0">
               <LessonHeader 
                 currentStep={currentStep} 
@@ -70,8 +70,13 @@ function App() {
                 {renderContent()}
               </div>
             </div>
-            <ChatPanel />
-          </>
+            <div className="hidden md:block">
+              <ChatPanel />
+            </div>
+            <div className="md:hidden">
+              <ChatPanel isMobile={true} />
+            </div>
+          </div>
         )
       ) : (
         <div className="flex-1 pt-16 md:pt-0">
@@ -80,6 +85,6 @@ function App() {
       )}
     </div>
   );
-}
+};
 
 export default App;
