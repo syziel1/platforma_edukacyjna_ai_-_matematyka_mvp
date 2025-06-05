@@ -305,6 +305,9 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize, level, playSound
 
     // Enhanced side cells with improved 3D perspective
     const isLeftSide = index === 0;
+    const startRotation = isLeftSide ? '65deg' : '-65deg';
+    const endRotation = isLeftSide ? '45deg' : '-45deg';
+
     return (
       <div
         key={`${coords.r}-${coords.c}-${index}-${animationTrigger}`}
@@ -331,7 +334,9 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize, level, playSound
           boxShadow: isLeftSide 
             ? '12px 6px 24px rgba(0,0,0,0.5), inset -3px 0 6px rgba(0,0,0,0.3)'
             : '-12px 6px 24px rgba(0,0,0,0.5), inset 3px 0 6px rgba(0,0,0,0.3)',
-          animation: `sideSlide 0.6s ease-out ${index * 0.1}s both`
+          '--start-rotation': startRotation,
+          '--end-rotation': endRotation,
+          animation: 'sideSlide 0.6s ease-out both'
         }}
       >
         {/* Enhanced sky with animated elements */}
@@ -489,12 +494,12 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize, level, playSound
         
         @keyframes sideSlide {
           0% { 
-            transform: perspective(500px) rotateY(${index === 0 ? '65deg' : '-65deg'}) 
+            transform: perspective(500px) rotateY(var(--start-rotation)) 
                       rotateX(-5deg) translateZ(40px) scale(0.8);
             opacity: 0.6;
           }
           100% { 
-            transform: perspective(500px) rotateY(${index === 0 ? '45deg' : '-45deg'}) 
+            transform: perspective(500px) rotateY(var(--end-rotation)) 
                       rotateX(-3deg) translateZ(25px) scale(0.95);
             opacity: 1;
           }
@@ -514,11 +519,11 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize, level, playSound
         
         @keyframes bonusFloatSide {
           0%, 100% { 
-            transform: perspective(150px) rotateY(${index === 0 ? '25deg' : '-25deg'}) 
+            transform: perspective(150px) rotateY(var(--end-rotation)) 
                       rotateX(10deg) translateY(0px); 
           }
           50% { 
-            transform: perspective(150px) rotateY(${index === 0 ? '25deg' : '-25deg'}) 
+            transform: perspective(150px) rotateY(var(--end-rotation)) 
                       rotateX(10deg) translateY(-4px); 
           }
         }
