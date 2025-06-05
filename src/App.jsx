@@ -59,22 +59,24 @@ function App() {
             <MultiplicationGame onBack={() => setSelectedProblem(null)} />
           </div>
         ) : (
-          <div className="flex-1 flex flex-col">
-            <div className="flex-1 flex flex-col pt-16 md:pt-0">
-              <LessonHeader 
-                currentStep={currentStep} 
-                totalSteps={totalSteps} 
-                onBack={() => setSelectedProblem(null)}
-              />
-              <div className="flex-1 overflow-y-auto">
-                {renderContent()}
+          <div className="flex flex-1">
+            <div className="flex-1 flex flex-col">
+              <div className="flex-1 flex flex-col pt-16 md:pt-0">
+                <LessonHeader 
+                  currentStep={currentStep} 
+                  totalSteps={totalSteps} 
+                  onBack={() => setSelectedProblem(null)}
+                />
+                <div className="flex-1 overflow-y-auto">
+                  {renderContent()}
+                </div>
+              </div>
+              <div className="md:hidden">
+                <ChatPanel isMobile={true} />
               </div>
             </div>
             <div className="hidden md:block">
               <ChatPanel />
-            </div>
-            <div className="md:hidden">
-              <ChatPanel isMobile={true} />
             </div>
           </div>
         )
@@ -85,6 +87,6 @@ function App() {
       )}
     </div>
   );
-};
+}
 
 export default App;
