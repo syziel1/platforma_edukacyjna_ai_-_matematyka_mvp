@@ -64,7 +64,7 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize }) => {
     return `${Math.min(100, Math.max(20, (cellData.grass / 100) * 100))}%`;
   };
 
-  const render3DCell = (coords, index, isInFrontGroup) => {
+  const render3DCell = (coords, index, isInFrontGroup, currentCellColor) => {
     const cellData = getCell(coords.r, coords.c);
     const isOutOfBounds = coords.r < 0 || coords.r >= currentLevelSize || coords.c < 0 || coords.c >= currentLevelSize;
     const grassHeight = cellData ? Math.min(100, Math.max(20, (cellData.grass / 100) * 100)) : 60;
@@ -79,7 +79,7 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize }) => {
             height: '180px',
             border: '2px solid #2a2a2a',
             borderRadius: '4px',
-            background: 'linear-gradient(180deg, #87CEEB 0%, #E0F6FF 30%, #F0E68C 100%)',
+            background: `linear-gradient(180deg, #87CEEB 0%, #E0F6FF 30%, ${currentCellColor} 100%)`,
             transition: 'all 0.3s ease'
           }}
         >
@@ -164,7 +164,7 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize }) => {
           transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
           border: '2px solid #1a1a1a',
           borderRadius: '6px',
-          background: 'linear-gradient(135deg, #87CEEB 0%, #B0E0E6 20%, #F0F8FF 40%, #F0E68C 100%)',
+          background: `linear-gradient(135deg, #87CEEB 0%, #B0E0E6 20%, #F0F8FF 40%, ${currentCellColor} 100%)`,
           boxShadow: isLeftSide 
             ? '8px 4px 16px rgba(0,0,0,0.4), inset -2px 0 4px rgba(0,0,0,0.2)'
             : '-8px 4px 16px rgba(0,0,0,0.4), inset 2px 0 4px rgba(0,0,0,0.2)'
@@ -174,7 +174,7 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize }) => {
         <div 
           className="absolute inset-0"
           style={{
-            background: 'linear-gradient(180deg, #87CEEB 0%, #B0E0E6 30%, #E0F6FF 60%, #F5F5DC 100%)'
+            background: `linear-gradient(180deg, #87CEEB 0%, #B0E0E6 30%, #E0F6FF 60%, ${currentCellColor} 100%)`
           }}
         />
         
@@ -273,6 +273,10 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize }) => {
     );
   };
 
+  // Get current player position cell data for background color
+  const currentPlayerCell = getCell(pr, pc);
+  const currentCellColor = getCellBackgroundColor(currentPlayerCell);
+
   return (
     <div 
       className="flex justify-center items-end gap-0 mt-10 mb-10 w-full h-[250px] p-0 box-border relative"
@@ -285,7 +289,7 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize }) => {
     >
       {displayOrderCoords.map((coords, index) => {
         const isInFrontGroup = index > 0 && index < 4;
-        return render3DCell(coords, index, isInFrontGroup);
+        return render3DCell(coords, index, isInFrontGroup, currentCellColor);
       })}
     </div>
   );
