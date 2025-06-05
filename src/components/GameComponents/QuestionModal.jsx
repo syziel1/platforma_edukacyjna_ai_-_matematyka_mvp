@@ -12,11 +12,11 @@ const QuestionModal = ({ question, onAnswer, wrongAnswersCount, isGeminiLoading 
 
   const handleChange = (e) => {
     const value = e.target.value;
-    if (value === '' || (parseInt(value) > 0 && !isNaN(parseInt(value)))) {
+    if (value === '' || (/^\d+$/.test(value) && parseInt(value) > 0)) {
       setAnswer(value);
     }
   };
-
+  
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
