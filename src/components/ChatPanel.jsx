@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Send, Bot } from 'lucide-react';
+import { Send, Bot, ChevronUp } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 
-const ChatPanel = () => {
+const ChatPanel = ({ isMobile = false }) => {
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -14,6 +14,7 @@ const ChatPanel = () => {
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const { translate, currentLanguage } = useLanguage();
   const { user } = useAuth();
 
@@ -118,6 +119,69 @@ const ChatPanel = () => {
       handleSendMessage();
     }
   };
+
+  if (isMobile) {
+    return (
+      <div className={`bg-ai-bg shadow-lg transition-all duration-300 ${isExpanded ? 'h-96' : 'h-16'}`}>
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="w-full p-4 flex items-center justify-between border-b border-ai-bg/50"
+        >
+          <div className="flex items-center gap-2">
+            <Bot className="w-5 h-5 text-nav-bg" />
+            <h3 className="font-semibold text-text-color">
+              {translate('aiMentor')}
+            </h3>
+          </div>
+          <ChevronUp className={`w-5 h-5 text-nav-bg transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+        </button>
+
+        {isExpanded && (
+          <>
+            <div className="h-64 p-4 overflow-y-auto space-y-4">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[80%] p-3 rounded-lg ${
+                      message.type === 'user'
+                        ? 'bg-accent-primary text-white'
+                        : 'bg-bg-card text-text-color'
+                    }`}
+                  >
+                    <p className="text-sm">{message.content}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="p-4 border-t border-ai-bg/50">
+              <div className="flex gap-2">
+                <textarea
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder={translate('typeMessage')}
+                  className="flex-1 p-2 border border-bg-neutral rounded-md resize-none text-sm focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color bg-white"
+                  rows="2"
+                  disabled={isLoading}
+                />
+                <button
+                  onClick={handleSendMessage}
+                  disabled={!inputValue.trim() || isLoading}
+                  className="px-3 py-2 bg-accent-primary text-white rounded-md hover:bg-accent-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <Send className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="bg-ai-bg shadow-lg w-80 min-h-screen flex flex-col">
