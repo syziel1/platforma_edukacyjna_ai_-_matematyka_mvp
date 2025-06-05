@@ -50,8 +50,8 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-bg-main flex">
-      <NavigationPanel onLoginClick={() => setShowLogin(true)} />
+    <div className="min-h-screen bg-bg-main flex relative">
+      <NavigationPanel onLoginClick={() => setShowLogin(false)} />
 
       {selectedProblem ? (
         selectedProblem === 'multiplication-game' ? (
@@ -74,7 +74,9 @@ function App() {
           </>
         )
       ) : (
-        <StartScreen onProblemSelect={handleProblemSelect} />
+        <div className="flex-1">
+          <StartScreen onProblemSelect={handleProblemSelect} />
+        </div>
       )}
     </div>
   );

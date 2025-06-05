@@ -56,9 +56,9 @@ const NavigationPanel = ({ onLoginClick }) => {
   };
 
   return (
-    <div className={`bg-nav-bg text-white shadow-lg transition-all duration-300 ${
-      isExpanded ? 'w-64' : 'w-16'
-    } min-h-screen flex flex-col`}>
+    <div className={`fixed md:relative bg-nav-bg text-white shadow-lg transition-all duration-300 z-50 ${
+      isExpanded ? 'w-full md:w-64' : 'w-16'
+    } min-h-screen flex flex-col ${isExpanded ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
       {/* Header */}
       <div className="p-4 border-b border-nav-bg/50">
         <button
@@ -105,7 +105,12 @@ const NavigationPanel = ({ onLoginClick }) => {
         {menuItems.map((item, index) => (
           <button
             key={index}
-            onClick={item.action}
+            onClick={() => {
+              item.action();
+              if (window.innerWidth < 768) {
+                setIsExpanded(false);
+              }
+            }}
             className={`w-full flex items-center gap-3 p-3 rounded-md hover:bg-nav-bg/80 transition-colors mb-1 ${
               !isExpanded ? 'justify-center' : ''
             }`}
@@ -136,6 +141,14 @@ const NavigationPanel = ({ onLoginClick }) => {
           )}
         </button>
       </div>
+
+      {/* Mobile Menu Toggle Button */}
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="fixed md:hidden top-4 right-4 bg-nav-bg text-white p-2 rounded-full shadow-lg z-50"
+      >
+        <Menu className="w-6 h-6" />
+      </button>
     </div>
   );
 };
