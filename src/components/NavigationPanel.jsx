@@ -26,6 +26,11 @@ const NavigationPanel = ({ onLoginClick }) => {
 
   const menuItems = [
     { 
+      icon: Menu,
+      label: translate('menu'),
+      action: () => setIsExpanded(!isExpanded)
+    },
+    { 
       icon: CheckSquare, 
       label: translate('myTasks'), 
       action: handleTasks
@@ -57,14 +62,6 @@ const NavigationPanel = ({ onLoginClick }) => {
 
   return (
     <>
-      {/* Mobile Menu Toggle Button */}
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="fixed md:hidden top-4 right-4 bg-nav-bg text-white p-2 rounded-full shadow-lg z-50"
-      >
-        <Menu className="w-6 h-6" />
-      </button>
-
       {/* Mobile Top Menu Bar */}
       <div className="fixed md:hidden top-0 left-0 right-0 bg-nav-bg h-16 flex items-center justify-around px-4 z-40">
         {menuItems.map((item, index) => (
@@ -72,7 +69,9 @@ const NavigationPanel = ({ onLoginClick }) => {
             key={index}
             onClick={() => {
               item.action();
-              setIsExpanded(false);
+              if (index !== 0) { // Don't close menu when clicking menu toggle
+                setIsExpanded(false);
+              }
             }}
             className="text-white p-2"
             title={item.label}
@@ -132,7 +131,7 @@ const NavigationPanel = ({ onLoginClick }) => {
 
         {/* Menu Items */}
         <nav className="flex-1 p-2 mt-16 md:mt-0">
-          {menuItems.map((item, index) => (
+          {menuItems.slice(1).map((item, index) => ( // Skip first item (Menu) in sidebar
             <button
               key={index}
               onClick={() => {
