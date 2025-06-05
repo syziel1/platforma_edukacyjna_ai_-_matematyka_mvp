@@ -51,16 +51,16 @@ function App() {
 
   return (
     <div className="min-h-screen bg-bg-main flex relative">
-      <NavigationPanel onLoginClick={() => setShowLogin(false)} />
+      <NavigationPanel onLoginClick={() => setShowLogin(true)} />
 
       {selectedProblem ? (
         selectedProblem === 'multiplication-game' ? (
-          <div className="flex-1">
+          <div className="flex-1 pt-16 md:pt-0">
             <MultiplicationGame onBack={() => setSelectedProblem(null)} />
           </div>
         ) : (
           <>
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col pt-16 md:pt-0">
               <LessonHeader 
                 currentStep={currentStep} 
                 totalSteps={totalSteps} 
@@ -74,7 +74,7 @@ function App() {
           </>
         )
       ) : (
-        <div className="flex-1">
+        <div className="flex-1 pt-16 md:pt-0">
           <StartScreen onProblemSelect={handleProblemSelect} />
         </div>
       )}
