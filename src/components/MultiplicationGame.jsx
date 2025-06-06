@@ -45,7 +45,7 @@ const MultiplicationGame = ({ onBack }) => {
       question: `${r + 1} x ${c + 1}`,
       originalMultiplier1: r + 1,
       originalMultiplier2: c + 1,
-      isBonus: Math.random() < 0.1, // 10% chance for bonus
+      isBonus: Math.random() < 0.15, // 15% chance for bonus
       isRevealed: isStartCell,
       bonusCollected: false,
       wasEverZeroGrass: isStartCell,
@@ -77,6 +77,11 @@ const MultiplicationGame = ({ onBack }) => {
     }
   }, [gameState.showWelcome, gameState.boardData.length, initializeGame]);
 
+  const calculateCellScore = (row, col, isBonus = false) => {
+    const baseScore = row + col;
+    return isBonus ? baseScore * 2 : baseScore;
+  };
+
   const handleAnswer = (answer) => {
     const currentCell = gameState.boardData.find(
       cell => cell.row === gameState.currentQuestion.row && cell.col === gameState.currentQuestion.col
@@ -88,21 +93,28 @@ const MultiplicationGame = ({ onBack }) => {
       const newBoardData = gameState.boardData.map(cell => {
         if (cell.row === currentCell.row && cell.col === currentCell.col) {
           const newGrass = Math.max(0, cell.grass - Math.ceil(cell.grass * 0.50));
+          const wasCleared = newGrass === 0;
+          
           return {
             ...cell,
             grass: newGrass,
             isRevealed: true,
             hintGivenForHardReset: false,
-            wasEverZeroGrass: newGrass === 0 ? true : cell.wasEverZeroGrass
+            wasEverZeroGrass: wasCleared ? true : cell.wasEverZeroGrass,
+            bonusCollected: wasCleared && cell.isBonus ? true : cell.bonusCollected
           };
         }
         return cell;
       });
 
+      // Calculate score based on coordinates and bonus
+      const cellScore = calculateCellScore(currentCell.row, currentCell.col, currentCell.isBonus);
+      const bonusMessage = currentCell.isBonus ? ' (Bonus x2!)' : '';
+
       setGameState(prev => ({
         ...prev,
         boardData: newBoardData,
-        score: prev.score + 10,
+        score: prev.score + cellScore,
         showQuestion: false,
         currentQuestion: null,
         playerPosition: {
@@ -112,7 +124,7 @@ const MultiplicationGame = ({ onBack }) => {
         }
       }));
 
-      showMessage('Świetnie! Trawa ścięta!', 2000);
+      showMessage(`Świetnie! +${cellScore} punktów${bonusMessage}`, 2000);
     } else {
       const newBoardData = gameState.boardData.map(cell => {
         if (cell.row === currentCell.row && cell.col === currentCell.col) {
@@ -128,7 +140,7 @@ const MultiplicationGame = ({ onBack }) => {
       setGameState(prev => ({
         ...prev,
         boardData: newBoardData,
-        score: Math.max(0, prev.score - 5),
+        score: Math.max(0, prev.score - 1),
         wrongAnswersCount: prev.wrongAnswersCount + 1
       }));
 
@@ -157,12 +169,49 @@ const MultiplicationGame = ({ onBack }) => {
         const targetCell = gameState.boardData.find(cell => cell.row === newRow && cell.col === newCol);
         
         if (targetCell.grass < 10) {
+          // Check if stepping on a bonus cell that hasn't been collected
+          if (targetCell.isBonus && !targetCell.bonusCollected && targetCell.grass === 0) {
+            const bonusScore = calculateCellScore(targetCell.row, targetCell.col, true);
+            
+            // Mark bonus as collected
+            const newBoardData = gameState.boardData.map(cell => {
+              if (cell.row === targetCell.row && cell.col === targetCell.col) {
+                return { ...cell, bonusCollected: true };
+              }
+              return cell;
+            });
+
+            setGameState(prev => ({
+              ...prev,
+              boardData: newBoardData,
+              score: prev.score + bonusScore,
+              playerPosition: {
+                ...prev.playerPosition,
+                row: newRow,
+                col: newCol
+              }
+            }));
+
+            showMessage(`Bonus zebrano! +${bonusScore} punktów!`, 2000);
+          } else {
+            // Normal movement to cleared cell
+            setGameState(prev => ({
+              ...prev,
+              playerPosition: {
+                ...prev.playerPosition,
+                row: newRow,
+                col: newCol
+              }
+            }));
+          }
           moved = true;
         } else {
+          // Show question for grassy cell
           setGameState(prev => ({
             ...prev,
             showQuestion: true,
-            currentQuestion: targetCell
+            currentQuestion: targetCell,
+            wrongAnswersCount: 0 // Reset wrong answers for new question
           }));
         }
       } else {
@@ -180,7 +229,7 @@ const MultiplicationGame = ({ onBack }) => {
       moved = true;
     }
 
-    if (moved) {
+    if (moved && !gameState.showQuestion) {
       setGameState(prev => ({
         ...prev,
         playerPosition: {
