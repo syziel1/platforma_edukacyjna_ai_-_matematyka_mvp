@@ -509,8 +509,8 @@ const MultiplicationGame = ({ onBack }) => {
 
           {/* 2D View - Bottom Half, Full Width */}
           <div className="h-1/2 bg-bg-card flex">
-            {/* Left Side - Map */}
-            <div className="flex-1 flex flex-col justify-center items-center p-4">
+            {/* Left Side - Map (60% width) */}
+            <div className="w-3/5 flex flex-col justify-center items-center p-4">
               <MapGrid 
                 boardData={gameState.boardData}
                 playerPosition={gameState.playerPosition}
@@ -519,12 +519,12 @@ const MultiplicationGame = ({ onBack }) => {
               />
             </div>
 
-            {/* Right Side - Stats */}
-            <div className="w-80 p-6 border-l border-bg-neutral">
-              <div className="space-y-4">
+            {/* Right Side - Stats (40% width) */}
+            <div className="w-2/5 p-6 border-l border-bg-neutral">
+              <div className="h-full">
                 {/* Game Mode Display */}
                 {gameState.selectedMode && (
-                  <div className="bg-amber-100 p-4 rounded-lg border border-amber-300">
+                  <div className="bg-amber-100 p-4 rounded-lg border border-amber-300 mb-4">
                     <div className="text-center">
                       <div className="text-amber-800 font-bold text-lg mb-1">{translate('gameMode')}</div>
                       <div className="text-amber-700 text-xl font-bold">
@@ -537,36 +537,50 @@ const MultiplicationGame = ({ onBack }) => {
                   </div>
                 )}
 
-                {/* Points */}
-                <div className="bg-green-100 p-4 rounded-lg border border-green-300">
-                  <div className="text-center">
-                    <div className="text-green-800 font-bold text-lg mb-1">{translate('points')}</div>
-                    <div className="text-green-700 text-2xl font-bold">
-                      {gameState.score}
+                {/* Stats in 2x2 Grid */}
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Points */}
+                  <div className="bg-green-100 p-4 rounded-lg border border-green-300">
+                    <div className="text-center">
+                      <div className="text-green-800 font-bold text-base mb-1">{translate('points')}</div>
+                      <div className="text-green-700 text-xl font-bold">
+                        {gameState.score}
+                      </div>
+                      <div className="text-green-600 text-xs">🏆 {translate('earned')}</div>
                     </div>
-                    <div className="text-green-600 text-sm">🏆 {translate('earned')}</div>
                   </div>
-                </div>
 
-                {/* Time */}
-                <div className="bg-blue-100 p-4 rounded-lg border border-blue-300">
-                  <div className="text-center">
-                    <div className="text-blue-800 font-bold text-lg mb-1">{translate('time')}</div>
-                    <div className="text-blue-700 text-2xl font-bold">
-                      {formatTime(gameState.timeElapsed)}
+                  {/* Time */}
+                  <div className="bg-blue-100 p-4 rounded-lg border border-blue-300">
+                    <div className="text-center">
+                      <div className="text-blue-800 font-bold text-base mb-1">{translate('time')}</div>
+                      <div className="text-blue-700 text-xl font-bold">
+                        {formatTime(gameState.timeElapsed)}
+                      </div>
+                      <div className="text-blue-600 text-xs">⏱️ {translate('elapsed')}</div>
                     </div>
-                    <div className="text-blue-600 text-sm">⏱️ {translate('elapsed')}</div>
                   </div>
-                </div>
 
-                {/* Grass Cleared Percentage */}
-                <div className="bg-purple-100 p-4 rounded-lg border border-purple-300">
-                  <div className="text-center">
-                    <div className="text-purple-800 font-bold text-lg mb-1">{translate('grassCleared')}</div>
-                    <div className="text-purple-700 text-2xl font-bold">
-                      {calculateGrassClearedPercentage()}%
+                  {/* Grass Cleared Percentage */}
+                  <div className="bg-purple-100 p-4 rounded-lg border border-purple-300">
+                    <div className="text-center">
+                      <div className="text-purple-800 font-bold text-base mb-1">{translate('grassCleared')}</div>
+                      <div className="text-purple-700 text-xl font-bold">
+                        {calculateGrassClearedPercentage()}%
+                      </div>
+                      <div className="text-purple-600 text-xs">🌱 {translate('cleared')}</div>
                     </div>
-                    <div className="text-purple-600 text-sm">🌱 {translate('cleared')}</div>
+                  </div>
+
+                  {/* Level */}
+                  <div className="bg-orange-100 p-4 rounded-lg border border-orange-300">
+                    <div className="text-center">
+                      <div className="text-orange-800 font-bold text-base mb-1">{translate('level')}</div>
+                      <div className="text-orange-700 text-xl font-bold">
+                        {gameState.currentLevelSize}×{gameState.currentLevelSize}
+                      </div>
+                      <div className="text-orange-600 text-xs">🌴 Rozmiar</div>
+                    </div>
                   </div>
                 </div>
               </div>
