@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calculator, Plus, Minus, X, Divide, Zap, SquareRoot, ArrowLeft } from 'lucide-react';
+import { Calculator, Plus, Minus, X, Divide, Zap, Square as SquareRoot, ArrowLeft } from 'lucide-react';
 
 const GameModeSelector = ({ onModeSelect, onCancel }) => {
   const gameModes = [
