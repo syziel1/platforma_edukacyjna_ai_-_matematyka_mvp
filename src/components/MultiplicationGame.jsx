@@ -211,6 +211,17 @@ const MultiplicationGame = ({ onBack }) => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Calculate grass cleared percentage correctly
+  const calculateGrassClearedPercentage = () => {
+    if (gameState.boardData.length === 0) return 0;
+    
+    // Count cells that have been cleared (grass < 10)
+    const clearedCells = gameState.boardData.filter(cell => cell.grass < 10).length;
+    const totalCells = gameState.boardData.length;
+    
+    return Math.round((clearedCells / totalCells) * 100);
+  };
+
   return (
     <div className="h-screen flex flex-col bg-bg-main">
       <LessonHeader 
@@ -224,6 +235,7 @@ const MultiplicationGame = ({ onBack }) => {
         <WelcomeModal onStart={() => setGameState(prev => ({ ...prev, showWelcome: false }))} />
       ) : (
         <div className="flex-1 flex flex-col overflow-hidden">
+          {/* 3D View - Top Half */}
           <div className="h-1/2 view-3d">
             <div id="playerActionFeedback" className="text-lg mb-2 text-white text-shadow min-h-[25px]" />
             <div id="avatarAnimationFeedback" className="text-2xl min-h-[30px]" />
@@ -235,23 +247,64 @@ const MultiplicationGame = ({ onBack }) => {
             />
           </div>
 
-          <div className="h-1/2 controls-2d">
-            <div className="map-grid-container">
+          {/* 2D View - Bottom Half, Full Width */}
+          <div className="h-1/2 bg-bg-card flex">
+            {/* Left Side - Map */}
+            <div className="flex-1 flex flex-col justify-center items-center p-4">
               <MapGrid 
                 boardData={gameState.boardData}
                 playerPosition={gameState.playerPosition}
                 currentLevelSize={gameState.currentLevelSize}
+                level={1}
               />
             </div>
 
-            <div className="flex justify-around p-3 bg-gray-200 rounded-lg shadow">
-              <div>Czas: {formatTime(gameState.timeElapsed)}</div>
-              <div>Punkty: {gameState.score}</div>
-              <div>Poziom: {gameState.currentLevelSize}x{gameState.currentLevelSize}</div>
-              <div>
-                Trawa usunięta: {Math.round((gameState.boardData.filter(cell => 
-                  cell.row === 0 && cell.col === 0 ? 0 : Math.min(100, cell.grass)
-                ).length / (gameState.currentLevelSize * gameState.currentLevelSize - 1)) * 100)}%
+            {/* Right Side - Stats */}
+            <div className="w-80 p-6 border-l border-bg-neutral">
+              <div className="space-y-4">
+                {/* Level */}
+                <div className="bg-amber-100 p-4 rounded-lg border border-amber-300">
+                  <div className="text-center">
+                    <div className="text-amber-800 font-bold text-lg mb-1">Poziom</div>
+                    <div className="text-amber-700 text-2xl font-bold">
+                      {gameState.currentLevelSize}×{gameState.currentLevelSize}
+                    </div>
+                    <div className="text-amber-600 text-sm">🌴 Dżungla</div>
+                  </div>
+                </div>
+
+                {/* Points */}
+                <div className="bg-green-100 p-4 rounded-lg border border-green-300">
+                  <div className="text-center">
+                    <div className="text-green-800 font-bold text-lg mb-1">Punkty</div>
+                    <div className="text-green-700 text-2xl font-bold">
+                      {gameState.score}
+                    </div>
+                    <div className="text-green-600 text-sm">🏆 Zdobyte</div>
+                  </div>
+                </div>
+
+                {/* Time */}
+                <div className="bg-blue-100 p-4 rounded-lg border border-blue-300">
+                  <div className="text-center">
+                    <div className="text-blue-800 font-bold text-lg mb-1">Czas</div>
+                    <div className="text-blue-700 text-2xl font-bold">
+                      {formatTime(gameState.timeElapsed)}
+                    </div>
+                    <div className="text-blue-600 text-sm">⏱️ Upłynął</div>
+                  </div>
+                </div>
+
+                {/* Grass Cleared Percentage */}
+                <div className="bg-purple-100 p-4 rounded-lg border border-purple-300">
+                  <div className="text-center">
+                    <div className="text-purple-800 font-bold text-lg mb-1">Trawa usunięta</div>
+                    <div className="text-purple-700 text-2xl font-bold">
+                      {calculateGrassClearedPercentage()}%
+                    </div>
+                    <div className="text-purple-600 text-sm">🌱 Oczyszczone</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
