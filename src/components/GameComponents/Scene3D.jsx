@@ -319,14 +319,6 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize, level, playSound
               }}
             />
           )}
-
-          {/* Level indicator overlay */}
-          <div 
-            className="absolute top-2 left-2 text-xs font-bold text-white/70 bg-black/20 px-1 rounded"
-            style={{ fontSize: '10px' }}
-          >
-            {coords.r},{coords.c}
-          </div>
         </div>
       );
     }
