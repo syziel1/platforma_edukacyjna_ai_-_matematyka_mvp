@@ -117,6 +117,12 @@ const translations = {
     'logout': 'Wyloguj się',
     'login': 'Zaloguj się',
     'skipLogin': 'Kontynuuj bez logowania',
+    'hint': 'Wskazówka',
+    
+    // Settings
+    'soundEffects': 'Efekty dźwiękowe',
+    'volume': 'Głośność',
+    'close': 'Zamknij',
     
     // Lesson Header
     'lessonTitle': 'Zadanie: Optymalny kurnik',
@@ -177,8 +183,7 @@ const translations = {
     // Auth
     'loginPrompt': 'Zaloguj się kontem Google, aby zapisywać swoje postępy.',
     'loginError': 'Błąd logowania. Spróbuj ponownie.',
-    'welcome': 'Witaj',
-    'hint': 'Wskazówka'
+    'welcome': 'Witaj'
   },
   en: {
     // Start Screen
@@ -287,6 +292,11 @@ const translations = {
     'login': 'Sign in',
     'skipLogin': 'Continue without signing in',
     'hint': 'Hint',
+    
+    // Settings
+    'soundEffects': 'Sound Effects',
+    'volume': 'Volume',
+    'close': 'Close',
     
     // Lesson Header
     'lessonTitle': 'Task: Optimal Chicken Coop',

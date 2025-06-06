@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Menu, CheckSquare, Calendar, Settings, LogOut, Globe, LogIn } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
+import SettingsModal from './SettingsModal';
 
 const NavigationPanel = ({ onLoginClick }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const { translate, switchLanguage, currentLanguage } = useLanguage();
   const { user, logout } = useAuth();
 
@@ -21,6 +23,13 @@ const NavigationPanel = ({ onLoginClick }) => {
       window.open('https://tasks.google.com', '_blank');
     } else {
       alert('Please log in with Google to access your tasks.');
+    }
+  };
+
+  const handleSettings = () => {
+    setShowSettings(true);
+    if (window.innerWidth < 768) {
+      setIsExpanded(false);
     }
   };
 
@@ -43,9 +52,7 @@ const NavigationPanel = ({ onLoginClick }) => {
     { 
       icon: Settings, 
       label: translate('settings'), 
-      action: () => {
-        alert('Language settings: Click the globe icon below to switch language');
-      }
+      action: handleSettings
     },
     { 
       icon: user ? LogOut : LogIn, 
@@ -171,6 +178,12 @@ const NavigationPanel = ({ onLoginClick }) => {
           </button>
         </div>
       </div>
+
+      {/* Settings Modal */}
+      <SettingsModal 
+        isOpen={showSettings} 
+        onClose={() => setShowSettings(false)} 
+      />
     </>
   );
 };

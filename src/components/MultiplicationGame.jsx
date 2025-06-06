@@ -7,9 +7,11 @@ import WelcomeModal from './GameComponents/WelcomeModal';
 import InstructionsModal from './GameComponents/InstructionsModal';
 import GameModeSelector from './GameComponents/GameModeSelector';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useSoundEffects } from '../hooks/useSoundEffects';
 
 const MultiplicationGame = ({ onBack }) => {
   const { translate } = useLanguage();
+  const { playSound } = useSoundEffects();
   
   const [gameState, setGameState] = useState({
     currentLevelSize: 4,
@@ -217,6 +219,7 @@ const MultiplicationGame = ({ onBack }) => {
   };
 
   const handleModeSelect = (mode) => {
+    playSound('move');
     setGameState(prev => ({
       ...prev,
       selectedMode: mode,
@@ -226,10 +229,12 @@ const MultiplicationGame = ({ onBack }) => {
   };
 
   const handleCancel = () => {
+    playSound('move');
     onBack();
   };
 
   const handleShowInstructions = () => {
+    playSound('move');
     setGameState(prev => ({
       ...prev,
       showWelcome: false,
@@ -238,6 +243,7 @@ const MultiplicationGame = ({ onBack }) => {
   };
 
   const handleBackToWelcome = () => {
+    playSound('move');
     setGameState(prev => ({
       ...prev,
       showInstructions: false,
@@ -246,6 +252,7 @@ const MultiplicationGame = ({ onBack }) => {
   };
 
   const handleStartGame = () => {
+    playSound('move');
     setGameState(prev => ({
       ...prev,
       showWelcome: false,
@@ -261,6 +268,8 @@ const MultiplicationGame = ({ onBack }) => {
     const correctAnswer = currentCell.correctAnswer;
     
     if (parseInt(answer) === correctAnswer) {
+      playSound('correct');
+      
       const newBoardData = gameState.boardData.map(cell => {
         if (cell.row === currentCell.row && cell.col === currentCell.col) {
           const newGrass = Math.max(0, cell.grass - Math.ceil(cell.grass * 0.50));
@@ -287,6 +296,7 @@ const MultiplicationGame = ({ onBack }) => {
         const bonusPoints = calculateCellScore(currentCell.row, currentCell.col, true) - cellScore;
         cellScore = calculateCellScore(currentCell.row, currentCell.col, true);
         bonusMessage = ` (${translate('bonusPoints')} +${bonusPoints}!)`;
+        playSound('bonus');
       }
 
       setGameState(prev => ({
@@ -305,6 +315,8 @@ const MultiplicationGame = ({ onBack }) => {
 
       showMessage(`${translate('great')} +${cellScore} ${translate('points')}${bonusMessage}`, 2000);
     } else {
+      playSound('wrong');
+      
       const newBoardData = gameState.boardData.map(cell => {
         if (cell.row === currentCell.row && cell.col === currentCell.col) {
           const newGrass = Math.min(200, cell.grass + Math.ceil(cell.grass * 0.20));
@@ -348,6 +360,8 @@ const MultiplicationGame = ({ onBack }) => {
         const targetCell = gameState.boardData.find(cell => cell.row === newRow && cell.col === newCol);
         
         if (targetCell.grass < 10) {
+          playSound('move');
+          
           // Check if stepping on a bonus cell that hasn't been collected
           if (targetCell.isBonus && !targetCell.bonusCollected && targetCell.grass === 0) {
             const bonusScore = calculateCellScore(targetCell.row, targetCell.col, false); // Base score for stepping on bonus
@@ -371,6 +385,7 @@ const MultiplicationGame = ({ onBack }) => {
               }
             }));
 
+            playSound('bonus');
             showMessage(`${translate('bonusCollected')} +${bonusScore} ${translate('points')}!`, 2000);
           } else {
             // Normal movement to cleared cell
@@ -386,6 +401,7 @@ const MultiplicationGame = ({ onBack }) => {
           moved = true;
         } else {
           // Show question for grassy cell
+          playSound('question');
           setGameState(prev => ({
             ...prev,
             showQuestion: true,
@@ -394,6 +410,7 @@ const MultiplicationGame = ({ onBack }) => {
           }));
         }
       } else {
+        playSound('error');
         showMessage(translate('cannotGo'), 1500);
       }
     } else if (e.key === 'ArrowLeft') {
@@ -409,6 +426,9 @@ const MultiplicationGame = ({ onBack }) => {
     }
 
     if (moved && !gameState.showQuestion) {
+      if (e.key !== 'ArrowUp') {
+        playSound('move');
+      }
       setGameState(prev => ({
         ...prev,
         playerPosition: {
@@ -418,7 +438,7 @@ const MultiplicationGame = ({ onBack }) => {
         }
       }));
     }
-  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, gameState.showQuestion, gameState.playerPosition, gameState.currentLevelSize, gameState.boardData, translate]);
+  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, gameState.showQuestion, gameState.playerPosition, gameState.currentLevelSize, gameState.boardData, translate, playSound]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
@@ -502,6 +522,7 @@ const MultiplicationGame = ({ onBack }) => {
               playerPosition={gameState.playerPosition}
               currentLevelSize={gameState.currentLevelSize}
               level={1}
+              playSound={playSound}
               selectedMode={gameState.selectedMode}
               gameModeConfig={gameModeConfig}
             />
@@ -595,6 +616,7 @@ const MultiplicationGame = ({ onBack }) => {
           onAnswer={handleAnswer}
           wrongAnswersCount={gameState.wrongAnswersCount}
           isGeminiLoading={gameState.isGeminiLoading}
+          playSound={playSound}
           selectedMode={gameState.selectedMode}
           gameModeConfig={gameModeConfig}
         />
