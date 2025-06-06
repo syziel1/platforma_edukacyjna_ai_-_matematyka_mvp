@@ -7,7 +7,9 @@ const QuestionModal = ({
   isGeminiLoading,
   onAskWiseOwl,
   wiseOwlAdvice,
-  playSound 
+  playSound,
+  selectedMode,
+  gameModeConfig
 }) => {
   const [answer, setAnswer] = useState('');
   const [showAdvice, setShowAdvice] = useState(false);
@@ -48,7 +50,7 @@ const QuestionModal = ({
 
   const handleChange = (e) => {
     const value = e.target.value;
-    if (value === '' || (/^\d+$/.test(value) && parseInt(value) > 0)) {
+    if (value === '' || (/^\d+$/.test(value) && parseInt(value) >= 0)) {
       setAnswer(value);
     }
   };
@@ -57,14 +59,67 @@ const QuestionModal = ({
     if (playSound) {
       playSound('owl');
     }
-    await onAskWiseOwl(question);
+    if (onAskWiseOwl) {
+      await onAskWiseOwl(question);
+    }
   };
 
-  const getHintLevel = () => {
-    if (wrongAnswersCount >= 3) return 'detailed';
-    if (wrongAnswersCount >= 2) return 'medium';
-    return 'basic';
+  const getModeIcon = (mode) => {
+    switch(mode) {
+      case 'addition': return '➕';
+      case 'subtraction': return '➖';
+      case 'multiplication': return '✖️';
+      case 'division': return '➗';
+      case 'exponentiation': return '⚡';
+      default: return '🧮';
+    }
   };
+
+  const getModeColor = (mode) => {
+    switch(mode) {
+      case 'addition': return 'text-green-600';
+      case 'subtraction': return 'text-red-600';
+      case 'multiplication': return 'text-blue-600';
+      case 'division': return 'text-purple-600';
+      case 'exponentiation': return 'text-yellow-600';
+      default: return 'text-blue-600';
+    }
+  };
+
+  const getGradientColors = (mode) => {
+    switch(mode) {
+      case 'addition': return 'from-green-500 to-green-600';
+      case 'subtraction': return 'from-red-500 to-red-600';
+      case 'multiplication': return 'from-blue-500 to-blue-600';
+      case 'division': return 'from-purple-500 to-purple-600';
+      case 'exponentiation': return 'from-yellow-500 to-yellow-600';
+      default: return 'from-green-500 to-blue-500';
+    }
+  };
+
+  const formatQuestion = () => {
+    if (!question || !question.questionData) {
+      return { display: question?.question || '', symbol: '=' };
+    }
+
+    const { questionData } = question;
+    switch(questionData.operation) {
+      case 'addition':
+        return { display: `${questionData.num1} + ${questionData.num2}`, symbol: '=' };
+      case 'subtraction':
+        return { display: `${questionData.num1} - ${questionData.num2}`, symbol: '=' };
+      case 'multiplication':
+        return { display: `${questionData.num1} × ${questionData.num2}`, symbol: '=' };
+      case 'division':
+        return { display: `${questionData.num1} ÷ ${questionData.num2}`, symbol: '=' };
+      case 'exponentiation':
+        return { display: `${questionData.num1}^${questionData.num2}`, symbol: '=' };
+      default:
+        return { display: question.question, symbol: '=' };
+    }
+  };
+
+  const questionFormat = formatQuestion();
 
   return (
     <>
@@ -148,18 +203,17 @@ const QuestionModal = ({
           {/* Question Header with visual enhancement */}
           <div className="question-highlight mb-6 relative">
             <div className="absolute top-2 right-2 sparkle text-yellow-500">✨</div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2 text-center">
-              🧮 Rozwiąż zadanie
-            </h3>
+            <div className="flex items-center justify-center mb-2">
+              <span className="text-3xl mr-2">{getModeIcon(selectedMode)}</span>
+              <h3 className="text-xl font-bold text-gray-800">
+                Rozwiąż zadanie
+              </h3>
+            </div>
             <div className="text-center">
-              <span className="text-3xl font-bold text-blue-600">
-                {question.originalMultiplier1}
+              <span className={`text-3xl font-bold ${getModeColor(selectedMode)}`}>
+                {questionFormat.display}
               </span>
-              <span className="text-2xl font-bold text-gray-600 mx-3">×</span>
-              <span className="text-3xl font-bold text-blue-600">
-                {question.originalMultiplier2}
-              </span>
-              <span className="text-2xl font-bold text-gray-600 mx-3">=</span>
+              <span className="text-2xl font-bold text-gray-600 mx-3">{questionFormat.symbol}</span>
               <span className="text-2xl font-bold text-green-600">?</span>
             </div>
           </div>
@@ -168,7 +222,7 @@ const QuestionModal = ({
             <div className="relative">
               <input
                 type="number"
-                min="1"
+                min="0"
                 value={answer}
                 onChange={handleChange}
                 className="w-full p-4 border-2 border-blue-300 rounded-lg text-center text-2xl font-bold focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all duration-200"
@@ -184,13 +238,13 @@ const QuestionModal = ({
             
             <button
               type="submit"
-              disabled={!answer || parseInt(answer) <= 0}
-              className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 px-6 rounded-lg hover:from-green-600 hover:to-blue-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg transform hover:scale-105 active:scale-95"
+              disabled={!answer}
+              className={`w-full bg-gradient-to-r ${getGradientColors(selectedMode)} text-white py-3 px-6 rounded-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg transform active:scale-95`}
             >
               ✅ Sprawdź odpowiedź
             </button>
 
-            {wrongAnswersCount >= 1 && (
+            {wrongAnswersCount >= 1 && onAskWiseOwl && (
               <button
                 type="button"
                 onClick={handleWiseOwlClick}
@@ -249,7 +303,7 @@ const QuestionModal = ({
           
           {wrongAnswersCount >= 2 && (
             <p className="text-center text-sm text-gray-600 mt-2">
-              💡 Wskazówka: Spróbuj rozłożyć mnożenie na prostsze części
+              💡 Wskazówka: Spróbuj rozłożyć działanie na prostsze części
             </p>
           )}
         </div>

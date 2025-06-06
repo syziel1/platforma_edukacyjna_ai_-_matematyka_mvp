@@ -65,6 +65,12 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
           50% { transform: translateY(-2px) scale(1.1); }
         }
         
+        @keyframes bonusCollected {
+          0% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.5; transform: scale(1.2); }
+          100% { opacity: 0.3; transform: scale(0.8); }
+        }
+        
         .bonus-glow {
           animation: bonusGlow 2s ease-in-out infinite;
         }
@@ -76,6 +82,11 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
         .bonus-icon {
           animation: bonusBounce 1.5s ease-in-out infinite;
           filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+        
+        .bonus-collected {
+          animation: bonusCollected 0.5s ease-out forwards;
+          filter: grayscale(70%) brightness(0.7);
         }
         
         .grass-wave {
@@ -154,25 +165,30 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
               )}
               
               {/* Bonus indicator with enhanced visual */}
-              {cellData.isBonus && !cellData.bonusCollected && (
+              {cellData.isBonus && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <span 
-                    className="bonus-icon text-lg z-10" 
+                    className={`text-lg z-10 ${cellData.bonusCollected ? 'bonus-collected' : 'bonus-icon'}`}
                     style={{ 
-                      textShadow: '0 0 8px rgba(255,215,0,0.8), 0 0 4px rgba(0,0,0,0.5)',
-                      fontSize: '16px'
+                      textShadow: cellData.bonusCollected 
+                        ? '0 0 4px rgba(0,0,0,0.5)' 
+                        : '0 0 8px rgba(255,215,0,0.8), 0 0 4px rgba(0,0,0,0.5)',
+                      fontSize: '16px',
+                      opacity: cellData.bonusCollected ? 0.4 : 1
                     }}
                   >
                     {getBonusIcon(cellData)}
                   </span>
-                  {/* Bonus glow effect */}
-                  <div 
-                    className="absolute inset-0 rounded-full"
-                    style={{
-                      background: 'radial-gradient(circle, rgba(255,215,0,0.2) 0%, transparent 70%)',
-                      animation: 'bonusGlow 2s ease-in-out infinite'
-                    }}
-                  />
+                  {/* Bonus glow effect - only if not collected */}
+                  {!cellData.bonusCollected && (
+                    <div 
+                      className="absolute inset-0 rounded-full"
+                      style={{
+                        background: 'radial-gradient(circle, rgba(255,215,0,0.2) 0%, transparent 70%)',
+                        animation: 'bonusGlow 2s ease-in-out infinite'
+                      }}
+                    />
+                  )}
                 </div>
               )}
               

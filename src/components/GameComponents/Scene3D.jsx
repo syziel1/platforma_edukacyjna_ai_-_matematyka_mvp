@@ -1,6 +1,14 @@
 import React, { useMemo, useEffect, useState } from 'react';
 
-const Scene3D = ({ boardData, playerPosition, currentLevelSize, level, playSound }) => {
+const Scene3D = ({ 
+  boardData, 
+  playerPosition, 
+  currentLevelSize, 
+  level, 
+  playSound, 
+  selectedMode, 
+  gameModeConfig 
+}) => {
   const { row: pr, col: pc, direction: pdir } = playerPosition;
   const [animationTrigger, setAnimationTrigger] = useState(0);
 
@@ -120,11 +128,74 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize, level, playSound
     );
   };
 
+  const getModeIcon = (mode) => {
+    switch(mode) {
+      case 'addition': return '➕';
+      case 'subtraction': return '➖';
+      case 'multiplication': return '✖️';
+      case 'division': return '➗';
+      case 'exponentiation': return '⚡';
+      default: return '🧮';
+    }
+  };
+
+  const getModeColor = (mode) => {
+    switch(mode) {
+      case 'addition': return '#22c55e'; // green-500
+      case 'subtraction': return '#ef4444'; // red-500
+      case 'multiplication': return '#3b82f6'; // blue-500
+      case 'division': return '#a855f7'; // purple-500
+      case 'exponentiation': return '#eab308'; // yellow-500
+      default: return '#3b82f6';
+    }
+  };
+
+  const formatQuestionDisplay = (cellData) => {
+    if (!cellData || !cellData.questionData) {
+      return cellData?.question || '';
+    }
+
+    const { questionData } = cellData;
+    switch(questionData.operation) {
+      case 'addition':
+        return `${questionData.num1} + ${questionData.num2} = ?`;
+      case 'subtraction':
+        return `${questionData.num1} - ${questionData.num2} = ?`;
+      case 'multiplication':
+        return `${questionData.num1} × ${questionData.num2} = ?`;
+      case 'division':
+        return `${questionData.num1} ÷ ${questionData.num2} = ?`;
+      case 'exponentiation':
+        return `${questionData.num1}^${questionData.num2} = ?`;
+      default:
+        return cellData.question;
+    }
+  };
+
+  // Get the cell directly in front of the player (center front view)
+  const getFrontCenterCell = () => {
+    const frontCenterCoords = currentViewConfig.frontView[1]; // Middle cell of front view
+    return getCell(frontCenterCoords.r, frontCenterCoords.c);
+  };
+
+  const frontCenterCell = getFrontCenterCell();
+
+  // Get current player position cell data for background color
+  const currentCell = getCell(pr, pc);
+  const currentCellColor = getCellBackgroundColor(currentCell);
+
+  // Create gradient background that transitions from sky to current cell color
+  const getBackgroundGradient = () => {
+    const skyColor = '#87CEEB'; // Sky blue
+    return `linear-gradient(180deg, ${skyColor} 0%, ${skyColor} 50%, ${currentCellColor} 100%)`;
+  };
+
   const render3DCell = (coords, index, isInFrontGroup, currentCellColor) => {
     const cellData = getCell(coords.r, coords.c);
     const isOutOfBounds = coords.r < 0 || coords.r >= currentLevelSize || coords.c < 0 || coords.c >= currentLevelSize;
     const grassHeight = cellData ? Math.min(100, Math.max(20, (cellData.grass / 100) * 100)) : 60;
     const bonusData = getBonusIcon(cellData);
+    const isFrontCenter = index === 2; // Center front cell
     
     if (isInFrontGroup) {
       return (
@@ -166,6 +237,37 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize, level, playSound
               }}
             />
           </div>
+
+          {/* Mathematical task display for front center cell */}
+          {isFrontCenter && cellData && cellData.grass >= 10 && (
+            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
+              <div 
+                className="bg-white/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border-2 animate-bounce-gentle"
+                style={{ 
+                  borderColor: getModeColor(selectedMode),
+                  boxShadow: `0 4px 12px rgba(0,0,0,0.2), 0 0 0 2px ${getModeColor(selectedMode)}40`
+                }}
+              >
+                <div className="text-center">
+                  <div className="flex items-center justify-center mb-1">
+                    <span className="text-lg mr-1">{getModeIcon(selectedMode)}</span>
+                    <div className="text-sm font-bold text-gray-800">
+                      Zadanie
+                    </div>
+                  </div>
+                  <div 
+                    className="text-lg font-bold mb-1"
+                    style={{ color: getModeColor(selectedMode) }}
+                  >
+                    {formatQuestionDisplay(cellData)}
+                  </div>
+                  <div className="text-xs text-gray-600">
+                    Naciśnij ↑ aby rozwiązać
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Ground/Grass Layer with enhanced textures */}
           <div 
@@ -291,14 +393,6 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize, level, playSound
               }}
             />
           )}
-
-          {/* Level indicator overlay */}
-          <div 
-            className="absolute top-2 left-2 text-xs font-bold text-white/70 bg-black/20 px-1 rounded"
-            style={{ fontSize: '10px' }}
-          >
-            {coords.r},{coords.c}
-          </div>
         </div>
       );
     }
@@ -480,10 +574,6 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize, level, playSound
     );
   };
 
-  // Get current player position cell data for background color
-  const currentPlayerCell = getCell(pr, pc);
-  const currentCellColor = getCellBackgroundColor(currentPlayerCell);
-
   return (
     <>
       <style jsx>{`
@@ -580,7 +670,8 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize, level, playSound
         style={{ 
           perspective: '900px',
           perspectiveOrigin: 'center center',
-          filter: 'drop-shadow(0 10px 25px rgba(0,0,0,0.3))'
+          filter: 'drop-shadow(0 10px 25px rgba(0,0,0,0.3))',
+          background: getBackgroundGradient()
         }}
         role="img"
         aria-label="Enhanced 3D view of the jungle from player's perspective"

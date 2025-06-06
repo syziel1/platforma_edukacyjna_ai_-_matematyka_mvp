@@ -1,16 +1,80 @@
 import React from 'react';
 
-const WelcomeModal = ({ onStart }) => {
+const WelcomeModal = ({ selectedMode, gameModeConfig, onStart }) => {
+  const modeInfo = gameModeConfig[selectedMode];
+  
+  const getModeIcon = (mode) => {
+    switch(mode) {
+      case 'addition': return '➕';
+      case 'subtraction': return '➖';
+      case 'multiplication': return '✖️';
+      case 'division': return '➗';
+      case 'exponentiation': return '⚡';
+      default: return '🧮';
+    }
+  };
+
+  const getModeColor = (mode) => {
+    switch(mode) {
+      case 'addition': return 'text-green-600';
+      case 'subtraction': return 'text-red-600';
+      case 'multiplication': return 'text-blue-600';
+      case 'division': return 'text-purple-600';
+      case 'exponentiation': return 'text-yellow-600';
+      default: return 'text-gray-600';
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white p-8 rounded-lg shadow-xl max-w-2xl w-full mx-4">
-        <h2 className="text-2xl font-bold text-text-color mb-4">
-          Witaj w Dżungli Mnożenia!
-        </h2>
+        <div className="text-center mb-6">
+          <div className="text-6xl mb-4">{getModeIcon(selectedMode)}</div>
+          <h2 className={`text-3xl font-bold mb-2 ${getModeColor(selectedMode)}`}>
+            Witaj w Dżungli {modeInfo?.name}!
+          </h2>
+          <p className="text-gray-600 text-lg">
+            Przygotuj się na przygodę matematyczną z działaniami {modeInfo?.name.toLowerCase()}!
+          </p>
+        </div>
         
-        <p className="text-text-color/70 mb-4">
-          Przygotuj się na przygodę, podczas której nauczysz się tabliczki mnożenia, odkrywając tajemniczą dżunglę!
-        </p>
+        <div className="bg-gray-50 rounded-lg p-6 mb-6">
+          <h3 className="font-bold text-gray-800 mb-3 text-center">
+            🎯 Przykładowe zadania w tym trybie:
+          </h3>
+          <div className="grid grid-cols-2 gap-4">
+            {selectedMode === 'addition' && (
+              <>
+                <div className="bg-white p-3 rounded text-center font-mono text-lg">2 + 3 = ?</div>
+                <div className="bg-white p-3 rounded text-center font-mono text-lg">5 + 4 = ?</div>
+              </>
+            )}
+            {selectedMode === 'subtraction' && (
+              <>
+                <div className="bg-white p-3 rounded text-center font-mono text-lg">8 - 3 = ?</div>
+                <div className="bg-white p-3 rounded text-center font-mono text-lg">12 - 5 = ?</div>
+              </>
+            )}
+            {selectedMode === 'multiplication' && (
+              <>
+                <div className="bg-white p-3 rounded text-center font-mono text-lg">3 × 4 = ?</div>
+                <div className="bg-white p-3 rounded text-center font-mono text-lg">6 × 2 = ?</div>
+              </>
+            )}
+            {selectedMode === 'division' && (
+              <>
+                <div className="bg-white p-3 rounded text-center font-mono text-lg">12 ÷ 3 = ?</div>
+                <div className="bg-white p-3 rounded text-center font-mono text-lg">20 ÷ 4 = ?</div>
+              </>
+            )}
+            {selectedMode === 'exponentiation' && (
+              <>
+                <div className="bg-white p-3 rounded text-center font-mono text-lg">2³ = ?</div>
+                <div className="bg-white p-3 rounded text-center font-mono text-lg">3² = ?</div>
+              </>
+            )}
+          </div>
+        </div>
 
         <div className="mb-6">
           <h4 className="font-semibold text-text-color mb-2">Instrukcja:</h4>
@@ -23,7 +87,7 @@ const WelcomeModal = ({ onStart }) => {
                 <li><strong>Strzałka w prawo:</strong> Obróć się w prawo</li>
               </ul>
             </li>
-            <li>Aby wejść na nowe, zarośnięte pole, musisz poprawnie rozwiązać działanie mnożenia.</li>
+            <li>Aby wejść na nowe, zarośnięte pole, musisz poprawnie rozwiązać działanie {modeInfo?.name.toLowerCase()}.</li>
             <li>Poprawna odpowiedź zmniejsza trawę, błędna ją zwiększa.</li>
             <li>Pola z piaskiem są już odkryte - możesz na nie wchodzić swobodnie.</li>
             <li>Odkrywaj kolejne poziomy, usuwając trawę i zdobywając punkty!</li>
@@ -33,9 +97,16 @@ const WelcomeModal = ({ onStart }) => {
 
         <button
           onClick={onStart}
-          className="w-full bg-accent-primary text-white py-3 px-6 rounded-md hover:bg-accent-primary/90 transition-colors text-lg font-medium"
+          className={`w-full text-white py-3 px-6 rounded-md transition-colors text-lg font-medium ${
+            selectedMode === 'addition' ? 'bg-green-500 hover:bg-green-600' :
+            selectedMode === 'subtraction' ? 'bg-red-500 hover:bg-red-600' :
+            selectedMode === 'multiplication' ? 'bg-blue-500 hover:bg-blue-600' :
+            selectedMode === 'division' ? 'bg-purple-500 hover:bg-purple-600' :
+            selectedMode === 'exponentiation' ? 'bg-yellow-500 hover:bg-yellow-600' :
+            'bg-accent-primary hover:bg-accent-primary/90'
+          }`}
         >
-          Rozpocznij Grę!
+          🚀 Rozpocznij przygodę z {modeInfo?.name.toLowerCase()}!
         </button>
       </div>
     </div>
