@@ -1,6 +1,6 @@
 import React from 'react';
 
-const WelcomeModal = ({ selectedMode, gameModeConfig, onStart }) => {
+const WelcomeModal = ({ selectedMode, gameModeConfig, onStart, onShowInstructions }) => {
   const modeInfo = gameModeConfig[selectedMode];
   
   const getModeIcon = (mode) => {
@@ -64,61 +64,55 @@ const WelcomeModal = ({ selectedMode, gameModeConfig, onStart }) => {
     }
   };
 
+  const getButtonColor = (mode) => {
+    switch(mode) {
+      case 'addition': return 'bg-green-500 hover:bg-green-600';
+      case 'subtraction': return 'bg-red-500 hover:bg-red-600';
+      case 'multiplication': return 'bg-blue-500 hover:bg-blue-600';
+      case 'division': return 'bg-purple-500 hover:bg-purple-600';
+      case 'exponentiation': return 'bg-yellow-500 hover:bg-yellow-600';
+      case 'square-root': return 'bg-orange-500 hover:bg-orange-600';
+      default: return 'bg-accent-primary hover:bg-accent-primary/90';
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white p-8 rounded-lg shadow-xl max-w-2xl w-full mx-4">
+      <div className="bg-white p-6 md:p-8 rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         <div className="text-center mb-6">
-          <div className="text-6xl mb-4">{getModeIcon(selectedMode)}</div>
-          <h2 className={`text-3xl font-bold mb-2 ${getModeColor(selectedMode)}`}>
+          <div className="text-4xl md:text-6xl mb-4">{getModeIcon(selectedMode)}</div>
+          <h2 className={`text-2xl md:text-3xl font-bold mb-2 ${getModeColor(selectedMode)}`}>
             Witaj w Dżungli {modeInfo?.name}!
           </h2>
-          <p className="text-gray-600 text-lg">
+          <p className="text-gray-600 text-base md:text-lg">
             Przygotuj się na przygodę matematyczną z działaniami {modeInfo?.name.toLowerCase()}!
           </p>
         </div>
         
-        <div className="bg-gray-50 rounded-lg p-6 mb-6">
-          <h3 className="font-bold text-gray-800 mb-3 text-center">
+        <div className="bg-gray-50 rounded-lg p-4 md:p-6 mb-6">
+          <h3 className="font-bold text-gray-800 mb-3 text-center text-sm md:text-base">
             🎯 Przykładowe zadania w tym trybie:
           </h3>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {getExamples(selectedMode)}
           </div>
         </div>
 
-        <div className="mb-6">
-          <h4 className="font-semibold text-text-color mb-2">Instrukcja:</h4>
-          <ul className="space-y-2 text-text-color/70">
-            <li>
-              Poruszaj się po planszy za pomocą klawiszy strzałek:
-              <ul className="ml-4 mt-1 space-y-1">
-                <li><strong>Strzałka w górę:</strong> Idź do przodu</li>
-                <li><strong>Strzałka w lewo:</strong> Obróć się w lewo</li>
-                <li><strong>Strzałka w prawo:</strong> Obróć się w prawo</li>
-              </ul>
-            </li>
-            <li>Aby wejść na nowe, zarośnięte pole, musisz poprawnie rozwiązać działanie {modeInfo?.name.toLowerCase()}.</li>
-            <li>Poprawna odpowiedź zmniejsza trawę, błędna ją zwiększa.</li>
-            <li>Pola z piaskiem są już odkryte - możesz na nie wchodzić swobodnie.</li>
-            <li>Odkrywaj kolejne poziomy, usuwając trawę i zdobywając punkty!</li>
-            <li>Szukaj ukrytych bonusów i ciekawostek od Ducha Dżungli!</li>
-          </ul>
+        <div className="space-y-3">
+          <button
+            onClick={onStart}
+            className={`w-full text-white py-3 px-6 rounded-md transition-colors text-lg font-medium ${getButtonColor(selectedMode)}`}
+          >
+            🚀 Rozpocznij przygodę z {modeInfo?.name.toLowerCase()}!
+          </button>
+          
+          <button
+            onClick={onShowInstructions}
+            className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 px-6 rounded-md transition-colors text-base font-medium"
+          >
+            📖 Pokaż instrukcję gry
+          </button>
         </div>
-
-        <button
-          onClick={onStart}
-          className={`w-full text-white py-3 px-6 rounded-md transition-colors text-lg font-medium ${
-            selectedMode === 'addition' ? 'bg-green-500 hover:bg-green-600' :
-            selectedMode === 'subtraction' ? 'bg-red-500 hover:bg-red-600' :
-            selectedMode === 'multiplication' ? 'bg-blue-500 hover:bg-blue-600' :
-            selectedMode === 'division' ? 'bg-purple-500 hover:bg-purple-600' :
-            selectedMode === 'exponentiation' ? 'bg-yellow-500 hover:bg-yellow-600' :
-            selectedMode === 'square-root' ? 'bg-orange-500 hover:bg-orange-600' :
-            'bg-accent-primary hover:bg-accent-primary/90'
-          }`}
-        >
-          🚀 Rozpocznij przygodę z {modeInfo?.name.toLowerCase()}!
-        </button>
       </div>
     </div>
   );

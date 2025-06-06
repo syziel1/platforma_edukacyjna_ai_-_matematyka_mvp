@@ -4,6 +4,7 @@ import Scene3D from './GameComponents/Scene3D';
 import MapGrid from './GameComponents/MapGrid';
 import QuestionModal from './GameComponents/QuestionModal';
 import WelcomeModal from './GameComponents/WelcomeModal';
+import InstructionsModal from './GameComponents/InstructionsModal';
 import GameModeSelector from './GameComponents/GameModeSelector';
 
 const MultiplicationGame = ({ onBack }) => {
@@ -16,6 +17,7 @@ const MultiplicationGame = ({ onBack }) => {
     showModeSelector: true,
     selectedMode: null,
     showWelcome: false,
+    showInstructions: false,
     showQuestion: false,
     currentQuestion: null,
     wrongAnswersCount: 0,
@@ -116,7 +118,7 @@ const MultiplicationGame = ({ onBack }) => {
   // Add timer effect
   useEffect(() => {
     let timer;
-    if (!gameState.showModeSelector && !gameState.showWelcome && !gameState.showQuestion) {
+    if (!gameState.showModeSelector && !gameState.showWelcome && !gameState.showInstructions && !gameState.showQuestion) {
       timer = setInterval(() => {
         setGameState(prev => ({
           ...prev,
@@ -127,7 +129,7 @@ const MultiplicationGame = ({ onBack }) => {
     return () => {
       if (timer) clearInterval(timer);
     };
-  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showQuestion]);
+  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, gameState.showQuestion]);
 
   // Generate bonus positions - maximum 1 per 8 cells
   const generateBonusPositions = useCallback((size) => {
@@ -201,10 +203,10 @@ const MultiplicationGame = ({ onBack }) => {
   }, [gameState.currentLevelSize, gameState.selectedMode, createNewCellData, generateBonusPositions]);
 
   useEffect(() => {
-    if (!gameState.showModeSelector && !gameState.showWelcome && gameState.boardData.length === 0) {
+    if (!gameState.showModeSelector && !gameState.showWelcome && !gameState.showInstructions && gameState.boardData.length === 0) {
       initializeGame();
     }
-  }, [gameState.showModeSelector, gameState.showWelcome, gameState.boardData.length, initializeGame]);
+  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, gameState.boardData.length, initializeGame]);
 
   const calculateCellScore = (row, col, isBonus = false) => {
     const baseScore = row + col + 2; // +2 because coordinates start from 0
@@ -222,6 +224,30 @@ const MultiplicationGame = ({ onBack }) => {
 
   const handleCancel = () => {
     onBack();
+  };
+
+  const handleShowInstructions = () => {
+    setGameState(prev => ({
+      ...prev,
+      showWelcome: false,
+      showInstructions: true
+    }));
+  };
+
+  const handleBackToWelcome = () => {
+    setGameState(prev => ({
+      ...prev,
+      showInstructions: false,
+      showWelcome: true
+    }));
+  };
+
+  const handleStartGame = () => {
+    setGameState(prev => ({
+      ...prev,
+      showWelcome: false,
+      showInstructions: false
+    }));
   };
 
   const handleAnswer = (answer) => {
@@ -299,7 +325,7 @@ const MultiplicationGame = ({ onBack }) => {
   };
 
   const handleKeyPress = useCallback((e) => {
-    if (gameState.showModeSelector || gameState.showWelcome || gameState.showQuestion) return;
+    if (gameState.showModeSelector || gameState.showWelcome || gameState.showInstructions || gameState.showQuestion) return;
 
     const { row: pr, col: pc, direction: pdir } = gameState.playerPosition;
     let newRow = pr, newCol = pc, newDirection = pdir;
@@ -389,7 +415,7 @@ const MultiplicationGame = ({ onBack }) => {
         }
       }));
     }
-  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showQuestion, gameState.playerPosition, gameState.currentLevelSize, gameState.boardData]);
+  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, gameState.showQuestion, gameState.playerPosition, gameState.currentLevelSize, gameState.boardData]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
@@ -446,7 +472,15 @@ const MultiplicationGame = ({ onBack }) => {
         <WelcomeModal 
           selectedMode={gameState.selectedMode}
           gameModeConfig={gameModeConfig}
-          onStart={() => setGameState(prev => ({ ...prev, showWelcome: false }))} 
+          onStart={handleStartGame}
+          onShowInstructions={handleShowInstructions}
+        />
+      ) : gameState.showInstructions ? (
+        <InstructionsModal 
+          selectedMode={gameState.selectedMode}
+          gameModeConfig={gameModeConfig}
+          onBack={handleBackToWelcome}
+          onStart={handleStartGame}
         />
       ) : (
         <div className="flex-1 flex flex-col overflow-hidden">
