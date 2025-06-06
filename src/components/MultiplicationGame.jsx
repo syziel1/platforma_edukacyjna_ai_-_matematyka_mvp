@@ -6,8 +6,11 @@ import QuestionModal from './GameComponents/QuestionModal';
 import WelcomeModal from './GameComponents/WelcomeModal';
 import InstructionsModal from './GameComponents/InstructionsModal';
 import GameModeSelector from './GameComponents/GameModeSelector';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const MultiplicationGame = ({ onBack }) => {
+  const { translate } = useLanguage();
+  
   const [gameState, setGameState] = useState({
     currentLevelSize: 4,
     boardData: [],
@@ -29,7 +32,7 @@ const MultiplicationGame = ({ onBack }) => {
   // Game mode configurations
   const gameModeConfig = {
     addition: {
-      name: 'Dodawanie',
+      name: translate('addition'),
       symbol: '+',
       generateQuestion: (r, c) => ({
         num1: r + 1,
@@ -40,7 +43,7 @@ const MultiplicationGame = ({ onBack }) => {
       })
     },
     subtraction: {
-      name: 'Odejmowanie', 
+      name: translate('subtraction'), 
       symbol: '-',
       generateQuestion: (r, c) => {
         const num1 = Math.max(r + 1, c + 1) + Math.floor(Math.random() * 5);
@@ -55,7 +58,7 @@ const MultiplicationGame = ({ onBack }) => {
       }
     },
     multiplication: {
-      name: 'Mnożenie',
+      name: translate('multiplication'),
       symbol: '×',
       generateQuestion: (r, c) => ({
         num1: r + 1,
@@ -66,7 +69,7 @@ const MultiplicationGame = ({ onBack }) => {
       })
     },
     division: {
-      name: 'Dzielenie',
+      name: translate('division'),
       symbol: '÷',
       generateQuestion: (r, c) => {
         const divisor = Math.max(1, Math.min(r + 1, c + 1));
@@ -82,7 +85,7 @@ const MultiplicationGame = ({ onBack }) => {
       }
     },
     exponentiation: {
-      name: 'Potęgowanie',
+      name: translate('exponentiation'),
       symbol: '^',
       generateQuestion: (r, c) => {
         const base = Math.max(2, Math.min(r + 1, c + 1, 5)); // Limit base to 2-5
@@ -97,7 +100,7 @@ const MultiplicationGame = ({ onBack }) => {
       }
     },
     'square-root': {
-      name: 'Pierwiastkowanie',
+      name: translate('squareRoot'),
       symbol: '√',
       generateQuestion: (r, c) => {
         // Generate perfect squares for easier calculation
@@ -283,7 +286,7 @@ const MultiplicationGame = ({ onBack }) => {
       if (currentCell.isBonus && newBoardData.find(c => c.row === currentCell.row && c.col === currentCell.col).grass === 0) {
         const bonusPoints = calculateCellScore(currentCell.row, currentCell.col, true) - cellScore;
         cellScore = calculateCellScore(currentCell.row, currentCell.col, true);
-        bonusMessage = ` (Bonus +${bonusPoints}!)`;
+        bonusMessage = ` (${translate('bonusPoints')} +${bonusPoints}!)`;
       }
 
       setGameState(prev => ({
@@ -300,7 +303,7 @@ const MultiplicationGame = ({ onBack }) => {
         }
       }));
 
-      showMessage(`Świetnie! +${cellScore} punktów${bonusMessage}`, 2000);
+      showMessage(`${translate('great')} +${cellScore} ${translate('points')}${bonusMessage}`, 2000);
     } else {
       const newBoardData = gameState.boardData.map(cell => {
         if (cell.row === currentCell.row && cell.col === currentCell.col) {
@@ -320,7 +323,7 @@ const MultiplicationGame = ({ onBack }) => {
         wrongAnswersCount: prev.wrongAnswersCount + 1
       }));
 
-      showMessage('Niestety, źle. Trawa odrasta...', 2000);
+      showMessage(translate('wrong'), 2000);
     }
   };
 
@@ -368,7 +371,7 @@ const MultiplicationGame = ({ onBack }) => {
               }
             }));
 
-            showMessage(`Bonus zebrano! +${bonusScore} punktów!`, 2000);
+            showMessage(`${translate('bonusCollected')} +${bonusScore} ${translate('points')}!`, 2000);
           } else {
             // Normal movement to cleared cell
             setGameState(prev => ({
@@ -391,7 +394,7 @@ const MultiplicationGame = ({ onBack }) => {
           }));
         }
       } else {
-        showMessage("Nie możesz tam iść (ściana!)", 1500);
+        showMessage(translate('cannotGo'), 1500);
       }
     } else if (e.key === 'ArrowLeft') {
       const dirs = ['N', 'W', 'S', 'E'];
@@ -415,7 +418,7 @@ const MultiplicationGame = ({ onBack }) => {
         }
       }));
     }
-  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, gameState.showQuestion, gameState.playerPosition, gameState.currentLevelSize, gameState.boardData]);
+  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, gameState.showQuestion, gameState.playerPosition, gameState.currentLevelSize, gameState.boardData, translate]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
@@ -449,9 +452,9 @@ const MultiplicationGame = ({ onBack }) => {
 
   const getGameTitle = () => {
     if (gameState.selectedMode && gameModeConfig[gameState.selectedMode]) {
-      return `Gra: Szlakami ${gameModeConfig[gameState.selectedMode].name.toLowerCase()}`;
+      return `${translate('multiplicationGameTitle')} - ${gameModeConfig[gameState.selectedMode].name}`;
     }
-    return "Gra: Szlakami matematyki";
+    return translate('multiplicationGameTitle');
   };
 
   return (
@@ -523,12 +526,12 @@ const MultiplicationGame = ({ onBack }) => {
                 {gameState.selectedMode && (
                   <div className="bg-amber-100 p-4 rounded-lg border border-amber-300">
                     <div className="text-center">
-                      <div className="text-amber-800 font-bold text-lg mb-1">Tryb gry</div>
+                      <div className="text-amber-800 font-bold text-lg mb-1">{translate('gameMode')}</div>
                       <div className="text-amber-700 text-xl font-bold">
                         {gameModeConfig[gameState.selectedMode].name}
                       </div>
                       <div className="text-amber-600 text-sm">
-                        {gameModeConfig[gameState.selectedMode].symbol} Działania
+                        {gameModeConfig[gameState.selectedMode].symbol} {translate('operations')}
                       </div>
                     </div>
                   </div>
@@ -537,33 +540,33 @@ const MultiplicationGame = ({ onBack }) => {
                 {/* Points */}
                 <div className="bg-green-100 p-4 rounded-lg border border-green-300">
                   <div className="text-center">
-                    <div className="text-green-800 font-bold text-lg mb-1">Punkty</div>
+                    <div className="text-green-800 font-bold text-lg mb-1">{translate('points')}</div>
                     <div className="text-green-700 text-2xl font-bold">
                       {gameState.score}
                     </div>
-                    <div className="text-green-600 text-sm">🏆 Zdobyte</div>
+                    <div className="text-green-600 text-sm">🏆 {translate('earned')}</div>
                   </div>
                 </div>
 
                 {/* Time */}
                 <div className="bg-blue-100 p-4 rounded-lg border border-blue-300">
                   <div className="text-center">
-                    <div className="text-blue-800 font-bold text-lg mb-1">Czas</div>
+                    <div className="text-blue-800 font-bold text-lg mb-1">{translate('time')}</div>
                     <div className="text-blue-700 text-2xl font-bold">
                       {formatTime(gameState.timeElapsed)}
                     </div>
-                    <div className="text-blue-600 text-sm">⏱️ Upłynął</div>
+                    <div className="text-blue-600 text-sm">⏱️ {translate('elapsed')}</div>
                   </div>
                 </div>
 
                 {/* Grass Cleared Percentage */}
                 <div className="bg-purple-100 p-4 rounded-lg border border-purple-300">
                   <div className="text-center">
-                    <div className="text-purple-800 font-bold text-lg mb-1">Trawa usunięta</div>
+                    <div className="text-purple-800 font-bold text-lg mb-1">{translate('grassCleared')}</div>
                     <div className="text-purple-700 text-2xl font-bold">
                       {calculateGrassClearedPercentage()}%
                     </div>
-                    <div className="text-purple-600 text-sm">🌱 Oczyszczone</div>
+                    <div className="text-purple-600 text-sm">🌱 {translate('cleared')}</div>
                   </div>
                 </div>
               </div>

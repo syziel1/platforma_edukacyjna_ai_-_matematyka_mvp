@@ -1,6 +1,8 @@
 import React from 'react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const InstructionsModal = ({ selectedMode, gameModeConfig, onBack, onStart }) => {
+  const { translate } = useLanguage();
   const modeInfo = gameModeConfig[selectedMode];
   
   const getModeIcon = (mode) => {
@@ -33,39 +35,39 @@ const InstructionsModal = ({ selectedMode, gameModeConfig, onBack, onStart }) =>
         <div className="text-center mb-6">
           <div className="text-3xl md:text-4xl mb-3">{getModeIcon(selectedMode)}</div>
           <h2 className="text-xl md:text-2xl font-bold mb-2 text-gray-800">
-            Instrukcja gry - {modeInfo?.name}
+            {translate('gameInstructions', { operation: modeInfo?.name })}
           </h2>
         </div>
 
         <div className="space-y-4 mb-6 text-sm md:text-base">
           <div>
-            <h4 className="font-semibold text-gray-800 mb-2">🎮 Sterowanie:</h4>
+            <h4 className="font-semibold text-gray-800 mb-2">🎮 {translate('controls')}</h4>
             <div className="bg-gray-50 p-3 rounded-lg">
-              <p className="mb-2">Poruszaj się po planszy za pomocą klawiszy strzałek:</p>
+              <p className="mb-2">{translate('controlsDesc')}</p>
               <ul className="ml-4 space-y-1 text-gray-700">
-                <li><strong>⬆️ Strzałka w górę:</strong> Idź do przodu</li>
-                <li><strong>⬅️ Strzałka w lewo:</strong> Obróć się w lewo</li>
-                <li><strong>➡️ Strzałka w prawo:</strong> Obróć się w prawo</li>
+                <li><strong>⬆️</strong> {translate('arrowUp')}</li>
+                <li><strong>⬅️</strong> {translate('arrowLeft')}</li>
+                <li><strong>➡️</strong> {translate('arrowRight')}</li>
               </ul>
             </div>
           </div>
 
           <div>
-            <h4 className="font-semibold text-gray-800 mb-2">🌱 Zasady gry:</h4>
+            <h4 className="font-semibold text-gray-800 mb-2">🌱 {translate('gameRules')}</h4>
             <div className="bg-gray-50 p-3 rounded-lg space-y-2 text-gray-700">
-              <p>• Aby wejść na nowe, zarośnięte pole, musisz poprawnie rozwiązać działanie {modeInfo?.name.toLowerCase()}.</p>
-              <p>• <span className="text-green-600 font-medium">Poprawna odpowiedź</span> zmniejsza trawę i pozwala przejść dalej.</p>
-              <p>• <span className="text-red-600 font-medium">Błędna odpowiedź</span> zwiększa trawę, utrudniając przejście.</p>
-              <p>• Pola z piaskiem są już odkryte - możesz na nie wchodzić swobodnie.</p>
+              <p>• {translate('solveToMove', { operation: modeInfo?.name.toLowerCase() })}</p>
+              <p>• <span className="text-green-600 font-medium">{translate('correctAnswer')}</span></p>
+              <p>• <span className="text-red-600 font-medium">{translate('wrongAnswer')}</span></p>
+              <p>• {translate('clearedFields')}</p>
             </div>
           </div>
 
           <div>
-            <h4 className="font-semibold text-gray-800 mb-2">🏆 Cel gry:</h4>
+            <h4 className="font-semibold text-gray-800 mb-2">🏆 {translate('gameGoal')}</h4>
             <div className="bg-gray-50 p-3 rounded-lg space-y-2 text-gray-700">
-              <p>• Odkrywaj kolejne poziomy, usuwając trawę i zdobywając punkty!</p>
-              <p>• Szukaj ukrytych bonusów 💎 - dają dodatkowe punkty!</p>
-              <p>• Ćwicz działania {modeInfo?.name.toLowerCase()} w przyjemnej formie gry!</p>
+              <p>• {translate('discoverLevels')}</p>
+              <p>• {translate('findBonuses')}</p>
+              <p>• {translate('practiceOperations', { operation: modeInfo?.name.toLowerCase() })}</p>
             </div>
           </div>
         </div>
@@ -75,14 +77,14 @@ const InstructionsModal = ({ selectedMode, gameModeConfig, onBack, onStart }) =>
             onClick={onStart}
             className={`w-full text-white py-3 px-6 rounded-md transition-colors text-lg font-medium ${getButtonColor(selectedMode)}`}
           >
-            🚀 Rozpocznij grę!
+            🚀 {translate('startGame')}
           </button>
           
           <button
             onClick={onBack}
             className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 px-6 rounded-md transition-colors text-base font-medium"
           >
-            ⬅️ Powrót
+            ⬅️ {translate('back')}
           </button>
         </div>
       </div>

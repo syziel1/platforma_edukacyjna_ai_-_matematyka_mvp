@@ -1,58 +1,61 @@
 import React from 'react';
 import { Calculator, Plus, Minus, X, Divide, Zap, Square as SquareRoot, ArrowLeft } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const GameModeSelector = ({ onModeSelect, onCancel }) => {
+  const { translate } = useLanguage();
+
   const gameModes = [
     {
       id: 'addition',
-      name: 'Dodawanie',
+      name: translate('addition'),
       icon: Plus,
-      description: 'Ucz się dodawania liczb',
+      description: translate('additionDesc'),
       color: 'bg-green-500',
       hoverColor: 'hover:bg-green-600',
       example: '5 + 3 = ?'
     },
     {
       id: 'subtraction',
-      name: 'Odejmowanie',
+      name: translate('subtraction'),
       icon: Minus,
-      description: 'Ćwicz odejmowanie liczb',
+      description: translate('subtractionDesc'),
       color: 'bg-red-500',
       hoverColor: 'hover:bg-red-600',
       example: '8 - 3 = ?'
     },
     {
       id: 'multiplication',
-      name: 'Mnożenie',
+      name: translate('multiplication'),
       icon: X,
-      description: 'Opanuj tabliczkę mnożenia',
+      description: translate('multiplicationDesc'),
       color: 'bg-blue-500',
       hoverColor: 'hover:bg-blue-600',
       example: '4 × 6 = ?'
     },
     {
       id: 'division',
-      name: 'Dzielenie',
+      name: translate('division'),
       icon: Divide,
-      description: 'Naucz się dzielenia liczb',
+      description: translate('divisionDesc'),
       color: 'bg-purple-500',
       hoverColor: 'hover:bg-purple-600',
       example: '12 ÷ 3 = ?'
     },
     {
       id: 'exponentiation',
-      name: 'Potęgowanie',
+      name: translate('exponentiation'),
       icon: Zap,
-      description: 'Poznaj potęgi liczb',
+      description: translate('exponentiationDesc'),
       color: 'bg-yellow-500',
       hoverColor: 'hover:bg-yellow-600',
       example: '2³ = ?'
     },
     {
       id: 'square-root',
-      name: 'Pierwiastkowanie',
+      name: translate('squareRoot'),
       icon: SquareRoot,
-      description: 'Naucz się pierwiastków kwadratowych',
+      description: translate('squareRootDesc'),
       color: 'bg-orange-500',
       hoverColor: 'hover:bg-orange-600',
       example: '√16 = ?'
@@ -67,10 +70,10 @@ const GameModeSelector = ({ onModeSelect, onCancel }) => {
           <button
             onClick={onCancel}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors p-2 rounded-md hover:bg-gray-100"
-            title="Powrót do menu głównego"
+            title={translate('backToMenu')}
           >
             <ArrowLeft className="w-5 h-5" />
-            <span className="text-sm font-medium">Powrót</span>
+            <span className="text-sm font-medium">{translate('backToMenu')}</span>
           </button>
         </div>
 
@@ -79,21 +82,21 @@ const GameModeSelector = ({ onModeSelect, onCancel }) => {
           <button
             onClick={onCancel}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors p-2 rounded-md hover:bg-gray-100"
-            title="Powrót do menu głównego"
+            title={translate('backToMenu')}
           >
             <ArrowLeft className="w-5 h-5" />
-            <span className="text-sm font-medium">Powrót</span>
+            <span className="text-sm font-medium">{translate('backToMenu')}</span>
           </button>
           
           <div className="text-center flex-1">
             <div className="flex items-center justify-center mb-4">
               <Calculator className="w-12 h-12 text-blue-600 mr-3" />
               <h2 className="text-3xl font-bold text-gray-800">
-                Wybierz rodzaj działań matematycznych
+                {translate('chooseMathOperations')}
               </h2>
             </div>
             <p className="text-gray-600 text-lg">
-              Wybierz, które działania chcesz ćwiczyć w dżungli matematycznej!
+              {translate('chooseMathOperationsDesc')}
             </p>
           </div>
           
@@ -106,11 +109,11 @@ const GameModeSelector = ({ onModeSelect, onCancel }) => {
           <div className="flex items-center justify-center mb-4">
             <Calculator className="w-8 h-8 md:w-12 md:h-12 text-blue-600 mr-2 md:mr-3" />
             <h2 className="text-xl md:text-3xl font-bold text-gray-800">
-              Wybierz rodzaj działań matematycznych
+              {translate('chooseMathOperations')}
             </h2>
           </div>
           <p className="text-gray-600 text-base md:text-lg">
-            Wybierz, które działania chcesz ćwiczyć w dżungli matematycznej!
+            {translate('chooseMathOperationsDesc')}
           </p>
         </div>
 
@@ -147,7 +150,7 @@ const GameModeSelector = ({ onModeSelect, onCancel }) => {
         <div className="mt-6 md:mt-8 text-center">
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 md:p-4">
             <p className="text-blue-800 text-xs md:text-sm">
-              💡 <strong>Wskazówka:</strong> Każdy tryb dostosowuje poziom trudności do Twojego wieku i umiejętności!
+              💡 <strong>{translate('tip')}</strong> {translate('difficultyTip')}
             </p>
           </div>
         </div>

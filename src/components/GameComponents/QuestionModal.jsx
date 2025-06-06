@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const QuestionModal = ({ 
   question, 
@@ -11,6 +12,7 @@ const QuestionModal = ({
   selectedMode,
   gameModeConfig
 }) => {
+  const { translate } = useLanguage();
   const [answer, setAnswer] = useState('');
   const [showAdvice, setShowAdvice] = useState(false);
   const [isShaking, setIsShaking] = useState(false);
@@ -211,7 +213,7 @@ const QuestionModal = ({
             <div className="flex items-center justify-center mb-2">
               <span className="text-3xl mr-2">{getModeIcon(selectedMode)}</span>
               <h3 className="text-xl font-bold text-gray-800">
-                Rozwiąż zadanie
+                {translate('solveTask')}
               </h3>
             </div>
             <div className="text-center">
@@ -231,12 +233,12 @@ const QuestionModal = ({
                 value={answer}
                 onChange={handleChange}
                 className="w-full p-4 border-2 border-blue-300 rounded-lg text-center text-2xl font-bold focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all duration-200"
-                placeholder="Twoja odpowiedź..."
+                placeholder={translate('yourAnswer')}
                 autoFocus
               />
               {wrongAnswersCount > 0 && (
                 <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                  Błędów: {wrongAnswersCount}
+                  {translate('errors')} {wrongAnswersCount}
                 </div>
               )}
             </div>
@@ -246,7 +248,7 @@ const QuestionModal = ({
               disabled={!answer}
               className={`w-full bg-gradient-to-r ${getGradientColors(selectedMode)} text-white py-3 px-6 rounded-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg transform active:scale-95`}
             >
-              ✅ Sprawdź odpowiedź
+              ✅ {translate('checkAnswer')}
             </button>
 
             {wrongAnswersCount >= 1 && onAskWiseOwl && (
@@ -258,7 +260,7 @@ const QuestionModal = ({
               >
                 <span className="owl-wing">🦉</span>
                 <span>
-                  {isGeminiLoading ? 'Mądra Sowa myśli...' : '✨ Zapytaj Mądrą Sowę'}
+                  {isGeminiLoading ? translate('wiseOwlThinking') : `✨ ${translate('askWiseOwl')}`}
                 </span>
                 {isGeminiLoading && (
                   <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-600 border-t-transparent"></div>
@@ -276,7 +278,7 @@ const QuestionModal = ({
                 </div>
                 <h4 className="font-bold text-blue-800 mb-2 flex items-center">
                   <span className="mr-2">💡</span>
-                  Rada od Mądrej Sowy:
+                  {translate('adviceFromOwl')}
                 </h4>
                 <p className="text-blue-700 text-sm leading-relaxed">
                   {wiseOwlAdvice}
@@ -308,7 +310,7 @@ const QuestionModal = ({
           
           {wrongAnswersCount >= 2 && (
             <p className="text-center text-sm text-gray-600 mt-2">
-              💡 Wskazówka: Spróbuj rozłożyć działanie na prostsze części
+              💡 {translate('hint')}: {translate('tryBreakDown')}
             </p>
           )}
         </div>
