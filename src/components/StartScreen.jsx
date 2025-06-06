@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Star, Trophy, Zap, Calculator } from 'lucide-react';
+import { BookOpen, Star, Trophy, Zap, Calculator, TrendingUp } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useProgress } from '../contexts/ProgressContext';
 import GlobalHeader from './GlobalHeader';
@@ -28,12 +28,12 @@ const StartScreen = ({ onProblemSelect }) => {
       totalSteps: 5
     },
     {
-      id: 'garden-fence',
-      title: t('gardenFenceTitle'),
-      description: t('gardenFenceDesc'),
+      id: 'eco-tshirt',
+      title: t('ecoTshirtTitle'),
+      description: t('ecoTshirtDesc'),
       difficulty: 'medium',
-      icon: Zap,
-      color: 'accent-secondary',
+      icon: TrendingUp,
+      color: 'nav-bg',
       totalSteps: 5
     },
     {

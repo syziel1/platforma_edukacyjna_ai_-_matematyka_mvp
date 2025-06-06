@@ -3,6 +3,7 @@ import NavigationPanel from './components/NavigationPanel';
 import LessonHeader from './components/LessonHeader';
 import LessonContent from './components/LessonContent';
 import WaterTankContent from './components/WaterTankContent';
+import EcoTshirtContent from './components/EcoTshirtContent';
 import ChatPanel from './components/ChatPanel';
 import StartScreen from './components/StartScreen';
 import LoginScreen from './components/LoginScreen';
@@ -38,6 +39,8 @@ function App() {
         return <LessonContent currentStep={currentStep} setCurrentStep={handleStepChange} />;
       case 'water-tank':
         return <WaterTankContent currentStep={currentStep} setCurrentStep={handleStepChange} />;
+      case 'eco-tshirt':
+        return <EcoTshirtContent currentStep={currentStep} setCurrentStep={handleStepChange} />;
       case 'multiplication-game':
         return <MultiplicationGame />;
       default:
