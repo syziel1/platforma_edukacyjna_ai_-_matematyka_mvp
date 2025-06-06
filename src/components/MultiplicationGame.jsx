@@ -4,6 +4,7 @@ import Scene3D from './GameComponents/Scene3D';
 import MapGrid from './GameComponents/MapGrid';
 import QuestionModal from './GameComponents/QuestionModal';
 import WelcomeModal from './GameComponents/WelcomeModal';
+import GameModeSelector from './GameComponents/GameModeSelector';
 
 const MultiplicationGame = ({ onBack }) => {
   const [gameState, setGameState] = useState({
@@ -12,7 +13,9 @@ const MultiplicationGame = ({ onBack }) => {
     playerPosition: { row: 0, col: 0, direction: 'S' },
     score: 0,
     timeElapsed: 0,
-    showWelcome: true,
+    showModeSelector: true,
+    selectedMode: null,
+    showWelcome: false,
     showQuestion: false,
     currentQuestion: null,
     wrongAnswersCount: 0,
@@ -21,10 +24,82 @@ const MultiplicationGame = ({ onBack }) => {
     showMessage: false
   });
 
+  // Game mode configurations
+  const gameModeConfig = {
+    addition: {
+      name: 'Dodawanie',
+      symbol: '+',
+      generateQuestion: (r, c) => ({
+        num1: r + 1,
+        num2: c + 1,
+        operation: 'addition',
+        answer: (r + 1) + (c + 1),
+        display: `${r + 1} + ${c + 1}`
+      })
+    },
+    subtraction: {
+      name: 'Odejmowanie', 
+      symbol: '-',
+      generateQuestion: (r, c) => {
+        const num1 = Math.max(r + 1, c + 1) + Math.floor(Math.random() * 5);
+        const num2 = Math.min(r + 1, c + 1);
+        return {
+          num1,
+          num2,
+          operation: 'subtraction',
+          answer: num1 - num2,
+          display: `${num1} - ${num2}`
+        };
+      }
+    },
+    multiplication: {
+      name: 'Mnożenie',
+      symbol: '×',
+      generateQuestion: (r, c) => ({
+        num1: r + 1,
+        num2: c + 1,
+        operation: 'multiplication',
+        answer: (r + 1) * (c + 1),
+        display: `${r + 1} × ${c + 1}`
+      })
+    },
+    division: {
+      name: 'Dzielenie',
+      symbol: '÷',
+      generateQuestion: (r, c) => {
+        const divisor = Math.max(1, Math.min(r + 1, c + 1));
+        const quotient = Math.max(r + 1, c + 1);
+        const dividend = divisor * quotient;
+        return {
+          num1: dividend,
+          num2: divisor,
+          operation: 'division',
+          answer: quotient,
+          display: `${dividend} ÷ ${divisor}`
+        };
+      }
+    },
+    exponentiation: {
+      name: 'Potęgowanie',
+      symbol: '^',
+      generateQuestion: (r, c) => {
+        const base = Math.max(2, Math.min(r + 1, c + 1, 5)); // Limit base to 2-5
+        const exponent = Math.max(1, Math.min(Math.max(r, c), 3)); // Limit exponent to 1-3
+        return {
+          num1: base,
+          num2: exponent,
+          operation: 'exponentiation',
+          answer: Math.pow(base, exponent),
+          display: `${base}^${exponent}`
+        };
+      }
+    }
+  };
+
   // Add timer effect
   useEffect(() => {
     let timer;
-    if (!gameState.showWelcome && !gameState.showQuestion) {
+    if (!gameState.showModeSelector && !gameState.showWelcome && !gameState.showQuestion) {
       timer = setInterval(() => {
         setGameState(prev => ({
           ...prev,
@@ -35,25 +110,33 @@ const MultiplicationGame = ({ onBack }) => {
     return () => {
       if (timer) clearInterval(timer);
     };
-  }, [gameState.showWelcome, gameState.showQuestion]);
+  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showQuestion]);
 
   const createNewCellData = useCallback((r, c, isStartCell) => {
+    const questionData = gameState.selectedMode 
+      ? gameModeConfig[gameState.selectedMode].generateQuestion(r, c)
+      : { num1: r + 1, num2: c + 1, answer: (r + 1) * (c + 1), display: `${r + 1} × ${c + 1}` };
+
     return {
       row: r,
       col: c,
       grass: isStartCell ? 0 : 100,
-      question: `${r + 1} x ${c + 1}`,
-      originalMultiplier1: r + 1,
-      originalMultiplier2: c + 1,
+      question: questionData.display,
+      questionData: questionData,
+      originalMultiplier1: questionData.num1,
+      originalMultiplier2: questionData.num2,
+      correctAnswer: questionData.answer,
       isBonus: Math.random() < 0.15, // 15% chance for bonus
       isRevealed: isStartCell,
       bonusCollected: false,
       wasEverZeroGrass: isStartCell,
       hintGivenForHardReset: false
     };
-  }, []);
+  }, [gameState.selectedMode]);
 
   const initializeGame = useCallback(() => {
+    if (!gameState.selectedMode) return;
+    
     const newBoardData = [];
     const size = gameState.currentLevelSize;
 
@@ -69,17 +152,26 @@ const MultiplicationGame = ({ onBack }) => {
       boardData: newBoardData,
       playerPosition: { row: 0, col: 0, direction: 'S' }
     }));
-  }, [gameState.currentLevelSize, createNewCellData]);
+  }, [gameState.currentLevelSize, gameState.selectedMode, createNewCellData]);
 
   useEffect(() => {
-    if (!gameState.showWelcome && gameState.boardData.length === 0) {
+    if (!gameState.showModeSelector && !gameState.showWelcome && gameState.boardData.length === 0) {
       initializeGame();
     }
-  }, [gameState.showWelcome, gameState.boardData.length, initializeGame]);
+  }, [gameState.showModeSelector, gameState.showWelcome, gameState.boardData.length, initializeGame]);
 
   const calculateCellScore = (row, col, isBonus = false) => {
     const baseScore = row + col;
     return isBonus ? baseScore * 2 : baseScore;
+  };
+
+  const handleModeSelect = (mode) => {
+    setGameState(prev => ({
+      ...prev,
+      selectedMode: mode,
+      showModeSelector: false,
+      showWelcome: true
+    }));
   };
 
   const handleAnswer = (answer) => {
@@ -87,7 +179,7 @@ const MultiplicationGame = ({ onBack }) => {
       cell => cell.row === gameState.currentQuestion.row && cell.col === gameState.currentQuestion.col
     );
     
-    const correctAnswer = currentCell.originalMultiplier1 * currentCell.originalMultiplier2;
+    const correctAnswer = currentCell.correctAnswer;
     
     if (parseInt(answer) === correctAnswer) {
       const newBoardData = gameState.boardData.map(cell => {
@@ -149,7 +241,7 @@ const MultiplicationGame = ({ onBack }) => {
   };
 
   const handleKeyPress = useCallback((e) => {
-    if (gameState.showWelcome || gameState.showQuestion) return;
+    if (gameState.showModeSelector || gameState.showWelcome || gameState.showQuestion) return;
 
     const { row: pr, col: pc, direction: pdir } = gameState.playerPosition;
     let newRow = pr, newCol = pc, newDirection = pdir;
@@ -239,7 +331,7 @@ const MultiplicationGame = ({ onBack }) => {
         }
       }));
     }
-  }, [gameState.showWelcome, gameState.showQuestion, gameState.playerPosition, gameState.currentLevelSize, gameState.boardData]);
+  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showQuestion, gameState.playerPosition, gameState.currentLevelSize, gameState.boardData]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
@@ -271,17 +363,30 @@ const MultiplicationGame = ({ onBack }) => {
     return Math.round((clearedCells / totalCells) * 100);
   };
 
+  const getGameTitle = () => {
+    if (gameState.selectedMode && gameModeConfig[gameState.selectedMode]) {
+      return `Gra: Szlakami ${gameModeConfig[gameState.selectedMode].name.toLowerCase()}`;
+    }
+    return "Gra: Szlakami matematyki";
+  };
+
   return (
     <div className="h-screen flex flex-col bg-bg-main">
       <LessonHeader 
         currentStep={1} 
         totalSteps={1} 
         onBack={onBack}
-        title="Gra: Szlakami tabliczki mnożenia"
+        title={getGameTitle()}
       />
 
-      {gameState.showWelcome ? (
-        <WelcomeModal onStart={() => setGameState(prev => ({ ...prev, showWelcome: false }))} />
+      {gameState.showModeSelector ? (
+        <GameModeSelector onModeSelect={handleModeSelect} />
+      ) : gameState.showWelcome ? (
+        <WelcomeModal 
+          selectedMode={gameState.selectedMode}
+          gameModeConfig={gameModeConfig}
+          onStart={() => setGameState(prev => ({ ...prev, showWelcome: false }))} 
+        />
       ) : (
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* 3D View - Top Half */}
@@ -299,6 +404,8 @@ const MultiplicationGame = ({ onBack }) => {
               playerPosition={gameState.playerPosition}
               currentLevelSize={gameState.currentLevelSize}
               level={1}
+              selectedMode={gameState.selectedMode}
+              gameModeConfig={gameModeConfig}
             />
           </div>
 
@@ -317,6 +424,21 @@ const MultiplicationGame = ({ onBack }) => {
             {/* Right Side - Stats */}
             <div className="w-80 p-6 border-l border-bg-neutral">
               <div className="space-y-4">
+                {/* Game Mode Display */}
+                {gameState.selectedMode && (
+                  <div className="bg-amber-100 p-4 rounded-lg border border-amber-300">
+                    <div className="text-center">
+                      <div className="text-amber-800 font-bold text-lg mb-1">Tryb gry</div>
+                      <div className="text-amber-700 text-xl font-bold">
+                        {gameModeConfig[gameState.selectedMode].name}
+                      </div>
+                      <div className="text-amber-600 text-sm">
+                        {gameModeConfig[gameState.selectedMode].symbol} Działania
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Points */}
                 <div className="bg-green-100 p-4 rounded-lg border border-green-300">
                   <div className="text-center">
@@ -361,6 +483,8 @@ const MultiplicationGame = ({ onBack }) => {
           onAnswer={handleAnswer}
           wrongAnswersCount={gameState.wrongAnswersCount}
           isGeminiLoading={gameState.isGeminiLoading}
+          selectedMode={gameState.selectedMode}
+          gameModeConfig={gameModeConfig}
         />
       )}
 
