@@ -1,10 +1,79 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Play, ArrowRight, ArrowLeft, CheckCircle, TrendingUp } from 'lucide-react';
 import EcoTshirtSimulator from './EcoTshirtSimulator';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
   const { t } = useLanguage();
+  
+  // State for answers
+  const [answers, setAnswers] = useState({
+    maxQuantity: '',
+    netPrice: '',
+    grossPrice: '',
+    revenue: '',
+    profit: ''
+  });
+  
+  const [feedback, setFeedback] = useState({});
+  const [showResults, setShowResults] = useState(false);
+
+  // Correct answers (calculated based on the business case)
+  const correctAnswers = {
+    maxQuantity: 47, // 1000 / (25 * 0.85) = 47.06, rounded down
+    netPrice: 32.31, // 21.25 / (1 - 0.35) = 32.31
+    grossPrice: 39.74, // 32.31 * 1.23 = 39.74
+    revenue: 913.68, // 47 * (3/5) * 32.31 = 28.2 * 32.31 = 913.68
+    profit: -86.32 // 913.68 - 1000 = -86.32 (loss)
+  };
+
+  const handleAnswerChange = (field, value) => {
+    setAnswers(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const checkAnswers = () => {
+    const newFeedback = {};
+    let allCorrect = true;
+
+    // Check each answer with tolerance
+    Object.keys(correctAnswers).forEach(key => {
+      const userAnswer = parseFloat(answers[key].replace(',', '.'));
+      const correctAnswer = correctAnswers[key];
+      const tolerance = Math.abs(correctAnswer * 0.05); // 5% tolerance
+      
+      if (isNaN(userAnswer)) {
+        newFeedback[key] = {
+          correct: false,
+          message: 'Wprowadź liczbę'
+        };
+        allCorrect = false;
+      } else if (Math.abs(userAnswer - correctAnswer) <= tolerance) {
+        newFeedback[key] = {
+          correct: true,
+          message: 'Poprawnie! ✅'
+        };
+      } else {
+        newFeedback[key] = {
+          correct: false,
+          message: `Niepoprawnie. Prawidłowa odpowiedź: ${correctAnswer.toFixed(2).replace('.', ',')}`
+        };
+        allCorrect = false;
+      }
+    });
+
+    setFeedback(newFeedback);
+    setShowResults(true);
+
+    // Show overall feedback
+    if (allCorrect) {
+      alert('🎉 Gratulacje! Wszystkie odpowiedzi są poprawne! Masz talent do biznesu!');
+    } else {
+      alert('📚 Niektóre odpowiedzi wymagają poprawy. Sprawdź wskazówki i spróbuj ponownie.');
+    }
+  };
 
   const renderStep = () => {
     switch (currentStep) {
@@ -174,58 +243,152 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
                 </label>
                 <input
                   type="text"
+                  value={answers.maxQuantity}
+                  onChange={(e) => handleAnswerChange('maxQuantity', e.target.value)}
                   placeholder="Maksymalna liczba koszulek = ..."
-                  className="w-full p-3 border border-bg-neutral rounded-md focus:outline-none focus:ring-2 focus:ring-nav-bg/50 text-text-color"
+                  className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-nav-bg/50 text-text-color ${
+                    showResults 
+                      ? feedback.maxQuantity?.correct 
+                        ? 'border-green-500 bg-green-50' 
+                        : 'border-red-500 bg-red-50'
+                      : 'border-bg-neutral'
+                  }`}
                 />
+                {showResults && feedback.maxQuantity && (
+                  <p className={`text-xs mt-1 ${feedback.maxQuantity.correct ? 'text-green-600' : 'text-red-600'}`}>
+                    {feedback.maxQuantity.message}
+                  </p>
+                )}
                 <p className="text-xs text-text-color/60 mt-1">
-                  Wskazówka: Sprawdź czy opłaca się zamówić więcej niż 30 sztuk
+                  Wskazówka: Sprawdź czy opłaca się zamówić więcej niż 30 sztuk (koszt z rabatem: 25 × 0,85 = 21,25 zł)
                 </p>
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
                   <strong>Zadanie 2:</strong> Przy marży 35%, jaka powinna być cena netto i brutto koszulki?
-                  (koszt produkcji z rabatem)
+                  (koszt produkcji z rabatem: 21,25 zł)
                 </label>
                 <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="text"
-                    placeholder="Cena netto = ... zł"
-                    className="w-full p-3 border border-bg-neutral rounded-md focus:outline-none focus:ring-2 focus:ring-nav-bg/50 text-text-color"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Cena brutto = ... zł"
-                    className="w-full p-3 border border-bg-neutral rounded-md focus:outline-none focus:ring-2 focus:ring-nav-bg/50 text-text-color"
-                  />
+                  <div>
+                    <input
+                      type="text"
+                      value={answers.netPrice}
+                      onChange={(e) => handleAnswerChange('netPrice', e.target.value)}
+                      placeholder="Cena netto = ... zł"
+                      className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-nav-bg/50 text-text-color ${
+                        showResults 
+                          ? feedback.netPrice?.correct 
+                            ? 'border-green-500 bg-green-50' 
+                            : 'border-red-500 bg-red-50'
+                          : 'border-bg-neutral'
+                      }`}
+                    />
+                    {showResults && feedback.netPrice && (
+                      <p className={`text-xs mt-1 ${feedback.netPrice.correct ? 'text-green-600' : 'text-red-600'}`}>
+                        {feedback.netPrice.message}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      value={answers.grossPrice}
+                      onChange={(e) => handleAnswerChange('grossPrice', e.target.value)}
+                      placeholder="Cena brutto = ... zł"
+                      className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-nav-bg/50 text-text-color ${
+                        showResults 
+                          ? feedback.grossPrice?.correct 
+                            ? 'border-green-500 bg-green-50' 
+                            : 'border-red-500 bg-red-50'
+                          : 'border-bg-neutral'
+                      }`}
+                    />
+                    {showResults && feedback.grossPrice && (
+                      <p className={`text-xs mt-1 ${feedback.grossPrice.correct ? 'text-green-600' : 'text-red-600'}`}>
+                        {feedback.grossPrice.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <p className="text-xs text-text-color/60 mt-1">
-                  Wskazówka: Marża 35% oznacza, że koszt = 65% ceny sprzedaży
+                  Wskazówka: Marża 35% oznacza, że koszt = 65% ceny sprzedaży. Cena netto = 21,25 ÷ 0,65
                 </p>
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  <strong>Zadanie 3:</strong> Po sprzedaniu 3/5 wyprodukowanych koszulek, 
-                  jaki jest Twój zysk/strata?
+                  <strong>Zadanie 3:</strong> Po sprzedaniu 3/5 wyprodukowanych koszulek (47 × 3/5 = 28,2 ≈ 28 szt.), 
+                  jaki jest Twój przychód i zysk/strata?
                 </label>
                 <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="text"
-                    placeholder="Przychód = ... zł"
-                    className="w-full p-3 border border-bg-neutral rounded-md focus:outline-none focus:ring-2 focus:ring-nav-bg/50 text-text-color"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Zysk/Strata = ... zł"
-                    className="w-full p-3 border border-bg-neutral rounded-md focus:outline-none focus:ring-2 focus:ring-nav-bg/50 text-text-color"
-                  />
+                  <div>
+                    <input
+                      type="text"
+                      value={answers.revenue}
+                      onChange={(e) => handleAnswerChange('revenue', e.target.value)}
+                      placeholder="Przychód = ... zł"
+                      className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-nav-bg/50 text-text-color ${
+                        showResults 
+                          ? feedback.revenue?.correct 
+                            ? 'border-green-500 bg-green-50' 
+                            : 'border-red-500 bg-red-50'
+                          : 'border-bg-neutral'
+                      }`}
+                    />
+                    {showResults && feedback.revenue && (
+                      <p className={`text-xs mt-1 ${feedback.revenue.correct ? 'text-green-600' : 'text-red-600'}`}>
+                        {feedback.revenue.message}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      value={answers.profit}
+                      onChange={(e) => handleAnswerChange('profit', e.target.value)}
+                      placeholder="Zysk/Strata = ... zł"
+                      className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-nav-bg/50 text-text-color ${
+                        showResults 
+                          ? feedback.profit?.correct 
+                            ? 'border-green-500 bg-green-50' 
+                            : 'border-red-500 bg-red-50'
+                          : 'border-bg-neutral'
+                      }`}
+                    />
+                    {showResults && feedback.profit && (
+                      <p className={`text-xs mt-1 ${feedback.profit.correct ? 'text-green-600' : 'text-red-600'}`}>
+                        {feedback.profit.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <p className="text-xs text-text-color/60 mt-1">
-                  Wskazówka: Zysk = Przychód - Koszty całkowite produkcji
+                  Wskazówka: Przychód = 28 × cena netto. Zysk = Przychód - Koszty całkowite (1000 zł)
                 </p>
               </div>
             </div>
+
+            {showResults && (
+              <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <h4 className="font-semibold text-blue-800 mb-2">📋 Podsumowanie wyników:</h4>
+                <div className="text-sm text-blue-700 space-y-1">
+                  <p>• Maksymalna produkcja: <strong>47 koszulek</strong> (1000 ÷ 21,25 = 47,06)</p>
+                  <p>• Cena netto: <strong>32,31 zł</strong> (21,25 ÷ 0,65 = 32,31)</p>
+                  <p>• Cena brutto: <strong>39,74 zł</strong> (32,31 × 1,23 = 39,74)</p>
+                  <p>• Przychód: <strong>913,68 zł</strong> (28 × 32,31 = 904,68)</p>
+                  <p>• Wynik: <strong>Strata 86,32 zł</strong> (904,68 - 1000 = -95,32)</p>
+                </div>
+                <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded">
+                  <p className="text-sm text-yellow-800">
+                    <strong>💡 Wniosek biznesowy:</strong> Startup ponosi stratę w pierwszym miesiącu, 
+                    co jest normalne. Aby osiągnąć rentowność, musisz sprzedać więcej koszulek 
+                    lub zwiększyć cenę sprzedaży.
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="flex justify-between">
               <button
                 onClick={() => setCurrentStep(4)}
@@ -234,10 +397,11 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
                 <ArrowLeft className="w-4 h-4" /> Wstecz
               </button>
               <button
+                onClick={checkAnswers}
                 className="bg-nav-bg text-white px-6 py-2 rounded-md hover:bg-nav-bg/90 transition-colors flex items-center gap-2"
               >
                 <CheckCircle className="w-4 h-4" />
-                {t('checkAnswer')}
+                Sprawdź odpowiedzi
               </button>
             </div>
           </div>
