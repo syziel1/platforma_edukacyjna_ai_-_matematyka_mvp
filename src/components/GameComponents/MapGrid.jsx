@@ -6,10 +6,10 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
 
   const getDirectionRotation = (direction) => {
     switch (direction) {
-      case 'N': return '0deg';
-      case 'E': return '90deg';
-      case 'S': return '180deg';
-      case 'W': return '270deg';
+      case 'N': return '0deg';    // Północ - strzałka w górę
+      case 'E': return '90deg';   // Wschód - strzałka w prawo
+      case 'S': return '180deg';  // Południe - strzałka w dół
+      case 'W': return '270deg';  // Zachód - strzałka w lewo
       default: return '0deg';
     }
   };
@@ -76,7 +76,7 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
         
         @keyframes playerPulse {
           0% { transform: scale(1); }
-          50% { transform: scale(1.1); }
+          50% { transform: scale(1.15); }
           100% { transform: scale(1); }
         }
         
@@ -124,6 +124,27 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
         
         .player-indicator {
           animation: playerPulse 1.5s ease-in-out infinite;
+        }
+        
+        .player-arrow {
+          width: 0;
+          height: 0;
+          border-left: 8px solid transparent;
+          border-right: 8px solid transparent;
+          border-bottom: 14px solid #dc2626;
+          filter: drop-shadow(0 2px 4px rgba(0,0,0,0.7));
+          position: relative;
+        }
+        
+        .player-arrow::after {
+          content: '';
+          position: absolute;
+          top: 14px;
+          left: -4px;
+          width: 8px;
+          height: 6px;
+          background-color: #dc2626;
+          border-radius: 0 0 2px 2px;
         }
       `}</style>
       
@@ -195,7 +216,7 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
                 </div>
               )}
               
-              {/* Player indicator with proper styling */}
+              {/* Enhanced Player indicator with clear directional arrow */}
               {isPlayerHere && (
                 <div className="absolute inset-0 flex items-center justify-center z-20">
                   <div 
@@ -205,17 +226,18 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
                       transition: 'transform 0.3s ease'
                     }}
                   >
-                    {/* Triangle arrow pointing up (north) by default */}
-                    <div 
-                      className="w-0 h-0"
-                      style={{
-                        borderLeft: '6px solid transparent',
-                        borderRight: '6px solid transparent',
-                        borderBottom: '10px solid #ef4444',
-                        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))'
-                      }}
-                    />
+                    {/* Enhanced directional arrow */}
+                    <div className="player-arrow" />
                   </div>
+                  
+                  {/* Glowing background circle for better visibility */}
+                  <div 
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: 'radial-gradient(circle, rgba(220, 38, 38, 0.3) 0%, rgba(220, 38, 38, 0.1) 50%, transparent 70%)',
+                      animation: 'playerPulse 1.5s ease-in-out infinite'
+                    }}
+                  />
                 </div>
               )}
               
