@@ -36,12 +36,23 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
               {translate('waterTankProblem')}
             </h3>
             <div className="prose prose-sm max-w-none mb-6 text-text-color">
-              <p className="leading-relaxed">
-                {translate('waterTankDescription')}
+              <p className="leading-relaxed mb-4">
+                Firma produkująca zbiorniki na wodę chce zoptymalizować swoje produkty. 
+                Mają ograniczoną ilość materiału na każdy zbiornik i chcą, żeby zbiornik 
+                pomieścił jak najwięcej wody.
               </p>
+              <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mt-4">
+                <p className="text-sm text-blue-800">
+                  <strong>Zadanie:</strong> Znajdź najlepsze proporcje cylindrycznego zbiornika 
+                  (stosunek wysokości do promienia), żeby zmieścił jak najwięcej wody przy 
+                  ograniczonej ilości materiału.
+                </p>
+              </div>
               <div className="bg-accent-secondary/10 border border-accent-secondary/30 rounded-md p-4 mt-4">
                 <p className="text-sm text-accent-secondary">
-                  💡 <strong>{translate('hint')}:</strong> {translate('waterTankHint')}
+                  💡 <strong>{translate('hint')}:</strong> Pomyśl o tym, jak zmienia się objętość 
+                  w zależności od proporcji wysokości do promienia. Czy zbiornik powinien być 
+                  wysoki i wąski, czy niski i szeroki?
                 </p>
               </div>
             </div>
@@ -87,21 +98,39 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
         return (
           <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
             <h3 className="text-lg font-semibold text-text-color mb-4">
-              {translate('waterTankTheory')}
+              Analiza geometryczna
             </h3>
             <div className="prose prose-sm max-w-none mb-6 text-text-color">
               <p className="leading-relaxed mb-4">
-                {translate('waterTankTheoryText')}
+                Teraz przeanalizujmy problem geometrycznie, bez używania pochodnych.
               </p>
+              
               <div className="bg-bg-light p-4 rounded-md mb-4">
-                <p className="font-mono text-sm text-text-color">
-                  V(r, h) = πr²h<br/>
-                  A(r, h) = 2πrh + 2πr²<br/>
-                  {translate('whereFormula')}
+                <h4 className="font-semibold mb-2">Wzory podstawowe:</h4>
+                <p className="font-mono text-sm text-text-color mb-2">
+                  <strong>Objętość cylindra:</strong> V = π × r² × h
+                </p>
+                <p className="font-mono text-sm text-text-color mb-2">
+                  <strong>Powierzchnia materiału:</strong> A = 2πr² + 2πrh
+                </p>
+                <p className="text-sm text-text-color/70">
+                  gdzie r = promień podstawy, h = wysokość
                 </p>
               </div>
+
+              <div className="bg-green-50 border border-green-200 rounded-md p-4 mb-4">
+                <h4 className="font-semibold mb-2 text-green-800">Kluczowe spostrzeżenie:</h4>
+                <p className="text-sm text-green-700 leading-relaxed">
+                  Gdy mamy stałą ilość materiału, najlepsze proporcje to gdy <strong>wysokość 
+                  równa się średnicy podstawy</strong> (h = 2r). To oznacza, że zbiornik 
+                  powinien być "kwadratowy" w przekroju pionowym.
+                </p>
+              </div>
+
               <p className="leading-relaxed">
-                {translate('waterTankOptimization')}
+                To można sprawdzić eksperymentalnie lub przez porównanie różnych proporcji. 
+                Zbiorniki zbyt wysokie mają małą podstawę, a zbyt płaskie mają za dużą powierzchnię 
+                górną i dolną w stosunku do objętości.
               </p>
             </div>
             <div className="flex justify-between">
@@ -115,7 +144,7 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
                 onClick={() => setCurrentStep(5)}
                 className="bg-accent-primary text-white px-6 py-2 rounded-md hover:bg-accent-primary/90 transition-colors flex items-center gap-2"
               >
-                {translate('goToFormal')} <ArrowRight className="w-4 h-4" />
+                Przejdź do zadań <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -125,38 +154,51 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
         return (
           <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
             <h3 className="text-lg font-semibold text-text-color mb-4">
-              {translate('waterTankSolution')}
+              Zadania praktyczne
             </h3>
             <div className="space-y-4 mb-6">
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  {translate('step1WaterTank')}
+                  <strong>Zadanie 1:</strong> Jeśli promień optymalnego zbiornika wynosi 3 metry, 
+                  jaka powinna być jego wysokość?
                 </label>
                 <input
                   type="text"
-                  placeholder="∂V/∂r = ..."
+                  placeholder="h = ... metrów"
                   className="w-full p-3 border border-bg-neutral rounded-md focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color"
                 />
+                <p className="text-xs text-text-color/60 mt-1">
+                  Wskazówka: h = 2r (wysokość = średnica)
+                </p>
               </div>
+              
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  {translate('step2WaterTank')}
+                  <strong>Zadanie 2:</strong> Oblicz objętość tego optymalnego zbiornika 
+                  (r = 3m, h = 6m)
                 </label>
                 <input
                   type="text"
-                  placeholder="∂V/∂h = ..."
+                  placeholder="V = π × r² × h = ..."
                   className="w-full p-3 border border-bg-neutral rounded-md focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color"
                 />
+                <p className="text-xs text-text-color/60 mt-1">
+                  Wskazówka: V = π × 3² × 6 = π × 9 × 6 = 54π ≈ 169,6 m³
+                </p>
               </div>
+              
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  {translate('step3WaterTank')}
+                  <strong>Zadanie 3:</strong> Jaka jest optymalna proporcja h/r dla każdego zbiornika?
                 </label>
                 <input
                   type="text"
-                  placeholder="r = h = ..."
+                  placeholder="h/r = ..."
                   className="w-full p-3 border border-bg-neutral rounded-md focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color"
                 />
+                <p className="text-xs text-text-color/60 mt-1">
+                  Wskazówka: Jeśli h = 2r, to h/r = 2
+                </p>
               </div>
             </div>
             <div className="flex justify-between">
