@@ -70,7 +70,7 @@ const GameModeSelector = ({ onModeSelect, onCancel }) => {
             title="Powrót do menu głównego"
           >
             <ArrowLeft className="w-5 h-5" />
-            <span className="text-sm font-medium">Powrót</span>
+            <span className="text-sm font-medium hidden md:inline">Powrót</span>
           </button>
           
           <div className="text-center flex-1">
