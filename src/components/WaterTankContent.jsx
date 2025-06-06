@@ -207,7 +207,7 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
                 <p className="text-sm text-green-700 leading-relaxed">
                   Gdy mamy stałą ilość materiału, najlepsze proporcje to gdy <strong>wysokość 
                   równa się średnicy podstawy</strong> (h = 2r). To oznacza, że zbiornik 
-                  powinien być "kwadratowy" w przekroju pionowym.
+                  powinien być "kwadratowy\" w przekroju pionowym.
                 </p>
               </div>
 
