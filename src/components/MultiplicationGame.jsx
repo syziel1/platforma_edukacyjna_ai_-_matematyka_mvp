@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import LessonHeader from './LessonHeader';
+import GlobalHeader from './GlobalHeader';
 import Scene3D from './GameComponents/Scene3D';
 import MapGrid from './GameComponents/MapGrid';
 import QuestionModal from './GameComponents/QuestionModal';
@@ -479,12 +480,19 @@ const MultiplicationGame = ({ onBack }) => {
 
   return (
     <div className="h-screen flex flex-col bg-bg-main">
-      <LessonHeader 
-        currentStep={1} 
-        totalSteps={1} 
-        onBack={onBack}
-        title={getGameTitle()}
-      />
+      {gameState.showModeSelector || gameState.showWelcome || gameState.showInstructions ? (
+        <GlobalHeader 
+          title={getGameTitle()}
+          onBack={onBack}
+          showBackButton={true}
+        />
+      ) : (
+        <GlobalHeader 
+          title={getGameTitle()}
+          onBack={onBack}
+          showBackButton={true}
+        />
+      )}
 
       {gameState.showModeSelector ? (
         <GameModeSelector 

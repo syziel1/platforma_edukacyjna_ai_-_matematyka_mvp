@@ -1,0 +1,91 @@
+import React from 'react';
+import { Video, ArrowLeft, Clock, User } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
+import { useGlobalTimer } from '../hooks/useGlobalTimer';
+import { useMentorStatus } from '../hooks/useMentorStatus';
+
+const GlobalHeader = ({ title, onBack, showBackButton = false }) => {
+  const { translate } = useLanguage();
+  const { formattedTime } = useGlobalTimer();
+  const { status, getStatusColor, getStatusIcon, getStatusText, formatNextAvailability } = useMentorStatus();
+
+  const handleVideoCall = () => {
+    if (status === 'available') {
+      window.open('http://strefaedukacji.zrozoomai.pl/', '_blank');
+    } else {
+      const nextAvail = formatNextAvailability(translate);
+      alert(`${translate('mentorNotAvailable')} ${nextAvail ? `\n${translate('nextAvailability')}: ${nextAvail}` : ''}`);
+    }
+  };
+
+  return (
+    <div className="bg-bg-card shadow-sm border-b border-bg-neutral p-4 sticky top-0 z-10">
+      <div className="flex items-center justify-between">
+        {/* Left side - Back button and title */}
+        <div className="flex items-center gap-4 flex-1">
+          {showBackButton && onBack && (
+            <button
+              onClick={onBack}
+              className="text-text-color hover:text-accent-primary transition-colors"
+              title={translate('backToProblems')}
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+          )}
+          <h1 className="text-lg md:text-xl font-bold text-text-color truncate">
+            {title}
+          </h1>
+        </div>
+
+        {/* Right side - Timer and Mentor status */}
+        <div className="flex items-center gap-4">
+          {/* Global Timer */}
+          <div className="flex items-center gap-2 text-text-color">
+            <Clock className="w-4 h-4" />
+            <span className="text-sm font-medium hidden sm:inline">
+              {translate('sessionTime')}:
+            </span>
+            <span className="text-sm font-bold">
+              {formattedTime}
+            </span>
+          </div>
+
+          {/* Mentor Status */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleVideoCall}
+              className={`flex items-center gap-2 p-2 rounded-md transition-all duration-200 ${
+                status === 'available' 
+                  ? 'hover:bg-green-50 hover:scale-105' 
+                  : 'hover:bg-gray-50 cursor-not-allowed opacity-75'
+              }`}
+              title={`${getStatusText(translate)} ${formatNextAvailability(translate) ? `- ${translate('nextAvailability')}: ${formatNextAvailability(translate)}` : ''}`}
+            >
+              <div className="relative">
+                <Video className={`w-5 h-5 ${getStatusColor()}`} />
+                {/* Status indicator */}
+                <div className="absolute -top-1 -right-1 text-xs">
+                  {getStatusIcon()}
+                </div>
+                {/* Busy indicator */}
+                {status === 'busy' && (
+                  <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-yellow-500 rounded-full animate-pulse" />
+                )}
+              </div>
+              <div className="hidden md:flex flex-col items-start">
+                <span className="text-xs text-text-color/70">
+                  {translate('mentor')}
+                </span>
+                <span className={`text-xs font-medium ${getStatusColor()}`}>
+                  {getStatusText(translate)}
+                </span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default GlobalHeader;

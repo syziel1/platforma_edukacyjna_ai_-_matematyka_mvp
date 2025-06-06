@@ -1,15 +1,3 @@
-import React, { createContext, useContext, useState } from 'react';
-
-const LanguageContext = createContext();
-
-export const useLanguage = () => {
-  const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
-  }
-  return context;
-};
-
 const translations = {
   pl: {
     // Start Screen
@@ -19,6 +7,19 @@ const translations = {
     'continueLesson': 'Kontynuuj zadanie',
     'backToProblems': 'Powrót do listy zadań',
     'connectWithMentor': 'Połącz się z mentorem',
+    
+    // Global Header
+    'sessionTime': 'Czas sesji',
+    'mentor': 'Mentor',
+    'mentorAvailable': 'Dostępny',
+    'mentorBusy': 'Zajęty',
+    'mentorUnavailable': 'Niedostępny',
+    'mentorUnknown': 'Nieznany',
+    'mentorNotAvailable': 'Mentor obecnie niedostępny.',
+    'nextAvailability': 'Następna dostępność',
+    'nextAvailabilityHours': 'za {hours}h {minutes}min',
+    'nextAvailabilityMinutes': 'za {minutes} minut',
+    'nextAvailabilityDays': 'za {days} dni',
     
     // Problems
     'chickenCoopTitle': 'Zadanie: Optymalny kurnik',
@@ -194,6 +195,19 @@ const translations = {
     'backToProblems': 'Back to tasks list',
     'connectWithMentor': 'Connect with mentor',
     
+    // Global Header
+    'sessionTime': 'Session Time',
+    'mentor': 'Mentor',
+    'mentorAvailable': 'Available',
+    'mentorBusy': 'Busy',
+    'mentorUnavailable': 'Unavailable',
+    'mentorUnknown': 'Unknown',
+    'mentorNotAvailable': 'Mentor currently unavailable.',
+    'nextAvailability': 'Next availability',
+    'nextAvailabilityHours': 'in {hours}h {minutes}min',
+    'nextAvailabilityMinutes': 'in {minutes} minutes',
+    'nextAvailabilityDays': 'in {days} days',
+    
     // Problems
     'chickenCoopTitle': 'Task: Optimal Chicken Coop',
     'chickenCoopDesc': 'Find the best dimensions for a chicken coop with limited fence length.',
@@ -359,33 +373,4 @@ const translations = {
     'loginError': 'Login failed. Please try again.',
     'welcome': 'Welcome'
   }
-};
-
-export const LanguageProvider = ({ children }) => {
-  const [currentLanguage, setCurrentLanguage] = useState('pl');
-
-  const translate = (key, params = {}) => {
-    let translation = translations[currentLanguage][key] || key;
-    
-    // Replace placeholders like {operation} with actual values
-    Object.keys(params).forEach(param => {
-      translation = translation.replace(`{${param}}`, params[param]);
-    });
-    
-    return translation;
-  };
-
-  const switchLanguage = () => {
-    setCurrentLanguage(prev => prev === 'pl' ? 'en' : 'pl');
-  };
-
-  return (
-    <LanguageContext.Provider value={{ 
-      currentLanguage, 
-      translate, 
-      switchLanguage 
-    }}>
-      {children}
-    </LanguageContext.Provider>
-  );
 };
