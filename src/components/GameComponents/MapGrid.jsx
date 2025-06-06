@@ -6,10 +6,10 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
 
   const getDirectionRotation = (direction) => {
     switch (direction) {
-      case 'N': return '180deg';
-      case 'E': return '-90deg';
-      case 'S': return '0deg';
-      case 'W': return '90deg';
+      case 'N': return '0deg';
+      case 'E': return '90deg';
+      case 'S': return '180deg';
+      case 'W': return '270deg';
       default: return '0deg';
     }
   };
@@ -74,6 +74,12 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
           100% { opacity: 0.3; transform: scale(0.8); }
         }
         
+        @keyframes playerPulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.1); }
+          100% { transform: scale(1); }
+        }
+        
         .bonus-glow {
           animation: bonusGlow 2s ease-in-out infinite;
         }
@@ -117,13 +123,7 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
         }
         
         .player-indicator {
-          filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.5));
-          animation: playerPulse 1s ease-in-out infinite alternate;
-        }
-        
-        @keyframes playerPulse {
-          0% { transform: rotate(var(--rotation)) scale(1); }
-          100% { transform: rotate(var(--rotation)) scale(1.1); }
+          animation: playerPulse 1.5s ease-in-out infinite;
         }
       `}</style>
       
@@ -195,31 +195,27 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
                 </div>
               )}
               
-              {/* Player indicator with enhanced styling */}
+              {/* Player indicator with proper styling */}
               {isPlayerHere && (
-                <div 
-                  className="absolute player-indicator"
-                  style={{
-                    '--rotation': getDirectionRotation(playerPosition.direction)
-                  }}
-                >
+                <div className="absolute inset-0 flex items-center justify-center z-20">
                   <div 
-                    className="w-0 h-0 border-[7px] border-transparent"
+                    className="player-indicator"
                     style={{
-                      borderTopWidth: '12px',
-                      borderTopColor: '#ef4444',
                       transform: `rotate(${getDirectionRotation(playerPosition.direction)})`,
                       transition: 'transform 0.3s ease'
                     }}
-                  />
-                  {/* Player glow effect */}
-                  <div 
-                    className="absolute -inset-1 rounded-full opacity-50"
-                    style={{
-                      background: 'radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, transparent 70%)',
-                      animation: 'playerPulse 1s ease-in-out infinite alternate'
-                    }}
-                  />
+                  >
+                    {/* Triangle arrow pointing up (north) by default */}
+                    <div 
+                      className="w-0 h-0"
+                      style={{
+                        borderLeft: '6px solid transparent',
+                        borderRight: '6px solid transparent',
+                        borderBottom: '10px solid #ef4444',
+                        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))'
+                      }}
+                    />
+                  </div>
                 </div>
               )}
               
