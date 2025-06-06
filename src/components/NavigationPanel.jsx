@@ -132,7 +132,7 @@ const NavigationPanel = ({ onLoginClick }) => {
             onClick={() => window.location.href = '/'}
             className="p-4 border-b border-nav-bg/50 hover:bg-nav-bg/80 transition-colors text-left"
           >
-            <h2 className="text-lg font-bold text-white">Platforma AI</h2>
+            <h2 className="text-lg font-bold text-white">Edu-Future</h2>
           </button>
         )}
 
