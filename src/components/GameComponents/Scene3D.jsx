@@ -196,18 +196,36 @@ const Scene3D = ({
     return `linear-gradient(180deg, ${skyColor} 0%, ${skyColor} 50%, ${currentCellColor} 100%)`;
   };
 
+  // Handle task click/touch - simulate arrow up key press
+  const handleTaskClick = (cellData) => {
+    if (!cellData || cellData.grass < 10) return; // Only clickable if grassy
+    
+    // Create a synthetic keyboard event for arrow up
+    const event = new KeyboardEvent('keydown', {
+      key: 'ArrowUp',
+      code: 'ArrowUp',
+      keyCode: 38,
+      which: 38,
+      bubbles: true
+    });
+    
+    // Dispatch the event to trigger the existing keyboard handler
+    window.dispatchEvent(event);
+  };
+
   const render3DCell = (coords, index, isInFrontGroup, currentCellColor) => {
     const cellData = getCell(coords.r, coords.c);
     const isOutOfBounds = coords.r < 0 || coords.r >= currentLevelSize || coords.c < 0 || coords.c >= currentLevelSize;
     const grassHeight = cellData ? Math.min(100, Math.max(20, (cellData.grass / 100) * 100)) : 60;
     const bonusData = getBonusIcon(cellData);
     const isFrontCenter = index === 2; // Center front cell
+    const isClickable = cellData && cellData.grass >= 10; // Only grassy cells are clickable
     
     if (isInFrontGroup) {
       return (
         <div
           key={`${coords.r}-${coords.c}-${index}-${animationTrigger}`}
-          className={`scene-cell ${viewClasses[index]} relative flex items-end overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105`}
+          className={`scene-cell ${viewClasses[index]} relative flex items-end overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105 ${isClickable ? 'cursor-pointer' : ''}`}
           style={{
             width: '33.33%',
             height: '180px',
@@ -220,6 +238,11 @@ const Scene3D = ({
               ${currentCellColor} 100%)`,
             boxShadow: '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)',
             animation: `cellPulse 0.5s ease-out ${index * 0.1}s both`
+          }}
+          onClick={() => isClickable && handleTaskClick(cellData)}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            if (isClickable) handleTaskClick(cellData);
           }}
         >
           {/* Sky with animated clouds */}
@@ -246,9 +269,17 @@ const Scene3D = ({
 
           {/* Mathematical task display for front center cell */}
           {isFrontCenter && cellData && cellData.grass >= 10 && (
-            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
+            <div 
+              className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20 cursor-pointer"
+              onClick={() => handleTaskClick(cellData)}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleTaskClick(cellData);
+              }}
+            >
               <div 
-                className="bg-white/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border-2 animate-bounce-gentle"
+                className="bg-white/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border-2 animate-bounce-gentle hover:scale-105 transition-transform duration-200 active:scale-95"
                 style={{ 
                   borderColor: getModeColor(selectedMode),
                   boxShadow: `0 4px 12px rgba(0,0,0,0.2), 0 0 0 2px ${getModeColor(selectedMode)}40`
@@ -269,6 +300,10 @@ const Scene3D = ({
                   </div>
                   <div className="text-xs text-gray-600">
                     {t('pressUpToSolve')}
+                  </div>
+                  {/* Click/Touch indicator */}
+                  <div className="text-xs text-gray-500 mt-1 opacity-75">
+                    👆 Kliknij lub naciśnij ↑
                   </div>
                 </div>
               </div>
