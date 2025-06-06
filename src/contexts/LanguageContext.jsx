@@ -98,6 +98,10 @@ const translations = {
     'errors': 'Błędów:',
     'tryBreakDown': 'Spróbuj rozłożyć działanie na prostsze części',
     
+    // 3D Scene Task Display
+    'task': 'Zadanie',
+    'pressUpToSolve': 'Naciśnij ↑ aby rozwiązać',
+    
     // Messages
     'great': 'Świetnie!',
     'bonusPoints': 'Bonus',
@@ -263,6 +267,10 @@ const translations = {
     'errors': 'Errors:',
     'tryBreakDown': 'Try breaking down the operation into simpler parts',
     
+    // 3D Scene Task Display
+    'task': 'Task',
+    'pressUpToSolve': 'Press ↑ to solve',
+    
     // Messages
     'great': 'Great!',
     'bonusPoints': 'Bonus',
@@ -278,11 +286,6 @@ const translations = {
     'logout': 'Sign out',
     'login': 'Sign in',
     'skipLogin': 'Continue without signing in',
-    
-    // Auth
-    'loginPrompt': 'Sign in with Google to save your progress.',
-    'loginError': 'Login failed. Please try again.',
-    'welcome': 'Welcome',
     'hint': 'Hint',
     
     // Lesson Header
@@ -339,7 +342,12 @@ const translations = {
     'send': 'Send',
     
     // Break suggestions
-    'breakSuggestions': 'Break suggestions:\n• Short walk\n• Eye exercises\n• Drink water\n• Stretch'
+    'breakSuggestions': 'Break suggestions:\n• Short walk\n• Eye exercises\n• Drink water\n• Stretch',
+
+    // Auth
+    'loginPrompt': 'Sign in with Google to save your progress.',
+    'loginError': 'Login failed. Please try again.',
+    'welcome': 'Welcome'
   }
 };
 
