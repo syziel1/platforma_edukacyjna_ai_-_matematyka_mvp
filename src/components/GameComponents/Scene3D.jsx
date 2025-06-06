@@ -10,7 +10,7 @@ const Scene3D = ({
   selectedMode, 
   gameModeConfig 
 }) => {
-  const { translate } = useLanguage();
+  const { t } = useLanguage();
   const { row: pr, col: pc, direction: pdir } = playerPosition;
   const [animationTrigger, setAnimationTrigger] = useState(0);
 
@@ -258,7 +258,7 @@ const Scene3D = ({
                   <div className="flex items-center justify-center mb-1">
                     <span className="text-lg mr-1">{getModeIcon(selectedMode)}</span>
                     <div className="text-sm font-bold text-gray-800">
-                      {translate('task')}
+                      {t('task')}
                     </div>
                   </div>
                   <div 
@@ -268,7 +268,7 @@ const Scene3D = ({
                     {formatQuestionDisplay(cellData)}
                   </div>
                   <div className="text-xs text-gray-600">
-                    {translate('pressUpToSolve')}
+                    {t('pressUpToSolve')}
                   </div>
                 </div>
               </div>
