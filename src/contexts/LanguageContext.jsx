@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState } from 'react';
 const translations = {
   pl: {
     // Start Screen
-    'welcomeTitle': 'Platforma Edukacyjna AI - Matematyka',
+    'welcomeTitle': 'Edu-Future - Platforma Edukacyjna AI - Matematyka',
     'welcomeDesc': 'Wybierz zadanie matematyczne, które chcesz rozwiązać. Każde zadanie zawiera interaktywne elementy i wsparcie sztucznej inteligencji.',
     'startLesson': 'Rozpocznij zadanie',
     'continueLesson': 'Kontynuuj zadanie',
@@ -190,7 +190,7 @@ const translations = {
   },
   en: {
     // Start Screen
-    'welcomeTitle': 'AI Education Platform - Mathematics',
+    'welcomeTitle': 'Edu-Fuure - AI Education Platform - Mathematics',
     'welcomeDesc': 'Choose a mathematical problem you want to solve. Each task includes interactive elements and AI support.',
     'startLesson': 'Start task',
     'continueLesson': 'Continue task',
