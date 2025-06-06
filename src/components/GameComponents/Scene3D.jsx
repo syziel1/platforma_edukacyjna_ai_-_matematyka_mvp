@@ -128,6 +128,16 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize, level, playSound
 
   const frontCenterCell = getFrontCenterCell();
 
+  // Get current player position cell data for background color
+  const currentCell = getCell(pr, pc);
+  const currentCellColor = getCellBackgroundColor(currentCell);
+
+  // Create gradient background that transitions from sky to current cell color
+  const getBackgroundGradient = () => {
+    const skyColor = '#87CEEB'; // Sky blue
+    return `linear-gradient(180deg, ${skyColor} 0%, ${skyColor} 50%, ${currentCellColor} 100%)`;
+  };
+
   const render3DCell = (coords, index, isInFrontGroup, currentCellColor) => {
     const cellData = getCell(coords.r, coords.c);
     const isOutOfBounds = coords.r < 0 || coords.r >= currentLevelSize || coords.c < 0 || coords.c >= currentLevelSize;
@@ -500,10 +510,6 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize, level, playSound
     );
   };
 
-  // Get current player position cell data for background color
-  const currentCell = getCell(pr, pc);
-  const currentCellColor = getCellBackgroundColor(currentCell);
-
   return (
     <>
       <style jsx>{`
@@ -600,7 +606,8 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize, level, playSound
         style={{ 
           perspective: '900px',
           perspectiveOrigin: 'center center',
-          filter: 'drop-shadow(0 10px 25px rgba(0,0,0,0.3))'
+          filter: 'drop-shadow(0 10px 25px rgba(0,0,0,0.3))',
+          background: getBackgroundGradient()
         }}
         role="img"
         aria-label="Enhanced 3D view of the jungle from player's perspective"

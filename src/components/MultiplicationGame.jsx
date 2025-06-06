@@ -285,7 +285,12 @@ const MultiplicationGame = ({ onBack }) => {
       ) : (
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* 3D View - Top Half */}
-          <div className="h-1/2 view-3d">
+          <div 
+            className="h-1/2 view-3d"
+            style={{
+              background: 'linear-gradient(180deg, #87CEEB 0%, #87CEEB 50%, var(--current-cell-color, #F0E68C) 100%)'
+            }}
+          >
             <div id="playerActionFeedback" className="text-lg mb-2 text-white text-shadow min-h-[25px]" />
             <div id="avatarAnimationFeedback" className="text-2xl min-h-[30px]" />
             
@@ -293,6 +298,7 @@ const MultiplicationGame = ({ onBack }) => {
               boardData={gameState.boardData}
               playerPosition={gameState.playerPosition}
               currentLevelSize={gameState.currentLevelSize}
+              level={1}
             />
           </div>
 
@@ -311,17 +317,6 @@ const MultiplicationGame = ({ onBack }) => {
             {/* Right Side - Stats */}
             <div className="w-80 p-6 border-l border-bg-neutral">
               <div className="space-y-4">
-                {/* Level */}
-                <div className="bg-amber-100 p-4 rounded-lg border border-amber-300">
-                  <div className="text-center">
-                    <div className="text-amber-800 font-bold text-lg mb-1">Poziom</div>
-                    <div className="text-amber-700 text-2xl font-bold">
-                      {gameState.currentLevelSize}×{gameState.currentLevelSize}
-                    </div>
-                    <div className="text-amber-600 text-sm">🌴 Dżungla</div>
-                  </div>
-                </div>
-
                 {/* Points */}
                 <div className="bg-green-100 p-4 rounded-lg border border-green-300">
                   <div className="text-center">
