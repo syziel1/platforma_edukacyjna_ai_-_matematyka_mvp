@@ -120,11 +120,20 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize, level, playSound
     );
   };
 
+  // Get the cell directly in front of the player (center front view)
+  const getFrontCenterCell = () => {
+    const frontCenterCoords = currentViewConfig.frontView[1]; // Middle cell of front view
+    return getCell(frontCenterCoords.r, frontCenterCoords.c);
+  };
+
+  const frontCenterCell = getFrontCenterCell();
+
   const render3DCell = (coords, index, isInFrontGroup, currentCellColor) => {
     const cellData = getCell(coords.r, coords.c);
     const isOutOfBounds = coords.r < 0 || coords.r >= currentLevelSize || coords.c < 0 || coords.c >= currentLevelSize;
     const grassHeight = cellData ? Math.min(100, Math.max(20, (cellData.grass / 100) * 100)) : 60;
     const bonusData = getBonusIcon(cellData);
+    const isFrontCenter = index === 2; // Center front cell
     
     if (isInFrontGroup) {
       return (
@@ -166,6 +175,25 @@ const Scene3D = ({ boardData, playerPosition, currentLevelSize, level, playSound
               }}
             />
           </div>
+
+          {/* Multiplication task display for front center cell */}
+          {isFrontCenter && cellData && cellData.grass >= 10 && (
+            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
+              <div className="bg-white/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border-2 border-amber-400 animate-bounce-gentle">
+                <div className="text-center">
+                  <div className="text-lg font-bold text-gray-800 mb-1">
+                    🧮 Zadanie
+                  </div>
+                  <div className="text-2xl font-bold text-blue-600">
+                    {cellData.originalMultiplier1} × {cellData.originalMultiplier2} = ?
+                  </div>
+                  <div className="text-xs text-gray-600 mt-1">
+                    Naciśnij ↑ aby rozwiązać
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Ground/Grass Layer with enhanced textures */}
           <div 
