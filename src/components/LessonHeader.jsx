@@ -4,12 +4,12 @@ import GlobalHeader from './GlobalHeader';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const LessonHeader = ({ currentStep, totalSteps, onBack, title }) => {
-  const { translate } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <>
       <GlobalHeader 
-        title={title || translate('lessonTitle')}
+        title={title || t('lessonTitle')}
         onBack={onBack}
         showBackButton={true}
       />

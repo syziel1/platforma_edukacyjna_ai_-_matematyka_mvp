@@ -5,14 +5,14 @@ import { useProgress } from '../contexts/ProgressContext';
 import GlobalHeader from './GlobalHeader';
 
 const StartScreen = ({ onProblemSelect }) => {
-  const { translate } = useLanguage();
+  const { t } = useLanguage();
   const { getProgress } = useProgress();
 
   const problems = [
     {
       id: 'multiplication-game',
-      title: translate('multiplicationGameTitle'),
-      description: translate('multiplicationGameDesc'),
+      title: t('multiplicationGameTitle'),
+      description: t('multiplicationGameDesc'),
       difficulty: 'medium',
       icon: Calculator,
       color: 'accent-secondary',
@@ -20,8 +20,8 @@ const StartScreen = ({ onProblemSelect }) => {
     },
     {
       id: 'chicken-coop',
-      title: translate('chickenCoopTitle'),
-      description: translate('chickenCoopDesc'),
+      title: t('chickenCoopTitle'),
+      description: t('chickenCoopDesc'),
       difficulty: 'easy',
       icon: Star,
       color: 'accent-primary',
@@ -29,8 +29,8 @@ const StartScreen = ({ onProblemSelect }) => {
     },
     {
       id: 'garden-fence',
-      title: translate('gardenFenceTitle'),
-      description: translate('gardenFenceDesc'),
+      title: t('gardenFenceTitle'),
+      description: t('gardenFenceDesc'),
       difficulty: 'medium',
       icon: Zap,
       color: 'accent-secondary',
@@ -38,8 +38,8 @@ const StartScreen = ({ onProblemSelect }) => {
     },
     {
       id: 'water-tank',
-      title: translate('waterTankTitle'),
-      description: translate('waterTankDesc'),
+      title: t('waterTankTitle'),
+      description: t('waterTankDesc'),
       difficulty: 'hard',
       icon: Trophy,
       color: 'nav-bg',
@@ -50,14 +50,14 @@ const StartScreen = ({ onProblemSelect }) => {
   return (
     <div className="flex-1 flex flex-col">
       <GlobalHeader 
-        title={translate('welcomeTitle')}
+        title={t('welcomeTitle')}
         showBackButton={false}
       />
       
       <div className="flex-1 p-6">
         <div className="mb-6">
           <p className="text-text-color/70">
-            {translate('welcomeDesc')}
+            {t('welcomeDesc')}
           </p>
         </div>
 
@@ -95,8 +95,8 @@ const StartScreen = ({ onProblemSelect }) => {
                       <BookOpen className="w-4 h-4 text-text-color/70" />
                       <span className="text-xs text-text-color/70">
                         {currentProgress > 0 
-                          ? translate('continueLesson')
-                          : translate('startLesson')}
+                          ? t('continueLesson')
+                          : t('startLesson')}
                       </span>
                     </div>
                     <span className="text-xs text-text-color/70">

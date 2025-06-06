@@ -4,7 +4,7 @@ import WaterTankVisualization from './WaterTankVisualization';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const WaterTankContent = ({ currentStep, setCurrentStep }) => {
-  const { translate } = useLanguage();
+  const { t } = useLanguage();
 
   const renderStep = () => {
     switch (currentStep) {
@@ -12,7 +12,7 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
         return (
           <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
             <h3 className="text-lg font-semibold text-text-color mb-4">
-              {translate('waterTankIntro')}
+              {t('waterTankIntro')}
             </h3>
             <div className="bg-text-color/90 rounded-lg aspect-video flex items-center justify-center mb-4">
               <div className="text-center text-white">
@@ -24,7 +24,7 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
               onClick={() => setCurrentStep(2)}
               className="bg-accent-primary text-white px-6 py-2 rounded-md hover:bg-accent-primary/90 transition-colors flex items-center gap-2"
             >
-              {translate('continue')} <ArrowRight className="w-4 h-4" />
+              {t('continue')} <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         );
@@ -33,7 +33,7 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
         return (
           <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
             <h3 className="text-lg font-semibold text-text-color mb-4">
-              {translate('waterTankProblem')}
+              {t('waterTankProblem')}
             </h3>
             <div className="prose prose-sm max-w-none mb-6 text-text-color">
               <p className="leading-relaxed mb-4">
@@ -50,10 +50,11 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
               </div>
               <div className="bg-accent-secondary/10 border border-accent-secondary/30 rounded-md p-4 mt-4">
                 <p className="text-sm text-accent-secondary">
-                  💡 <strong>{translate('hint')}:</strong> Pomyśl o tym, jak zmienia się objętość 
+                  💡 <strong>{t('hint')}:</strong> Pomyśl o tym, jak zmienia się objętość 
                   w zależności od proporcji wysokości do promienia. Czy zbiornik powinien być 
                   wysoki i wąski, czy niski i szeroki?
                 </p>
+              
               </div>
             </div>
             <div className="flex justify-between">
@@ -67,7 +68,7 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
                 onClick={() => setCurrentStep(3)}
                 className="bg-accent-primary text-white px-6 py-2 rounded-md hover:bg-accent-primary/90 transition-colors flex items-center gap-2"
               >
-                {translate('startExploration')} <ArrowRight className="w-4 h-4" />
+                {t('startExploration')} <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -88,7 +89,7 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
                 onClick={() => setCurrentStep(4)}
                 className="bg-accent-primary text-white px-6 py-2 rounded-md hover:bg-accent-primary/90 transition-colors flex items-center gap-2"
               >
-                {translate('endExploration')} <ArrowRight className="w-4 h-4" />
+                {t('endExploration')} <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -212,7 +213,7 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
                 className="bg-nav-bg text-white px-6 py-2 rounded-md hover:bg-nav-bg/90 transition-colors flex items-center gap-2"
               >
                 <CheckCircle className="w-4 h-4" />
-                {translate('checkAnswer')}
+                {t('checkAnswer')}
               </button>
             </div>
           </div>

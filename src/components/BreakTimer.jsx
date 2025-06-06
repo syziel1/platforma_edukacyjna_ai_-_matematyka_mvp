@@ -5,10 +5,10 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 const BreakTimer = () => {
   const { formattedTime, showBreakAlert, resetTimer, setShowBreakAlert } = useBreakTimer(25);
-  const { translate } = useLanguage();
+  const { t } = useLanguage();
 
   const handleBreakClick = () => {
-    alert(translate('breakSuggestions'));
+    alert(t('breakSuggestions'));
   };
 
   const handleCloseAlert = () => {
@@ -21,11 +21,11 @@ const BreakTimer = () => {
       <div
         className="flex items-center gap-2 cursor-pointer hover:bg-bg-neutral p-2 rounded-md transition-colors"
         onClick={handleBreakClick}
-        title={translate('breakSuggestions')}
+        title={t('breakSuggestions')}
       >
         <Clock className="w-4 h-4 text-text-color" />
         <span className="text-sm text-text-color">
-          {translate('nextBreak')} {formattedTime}
+          {t('nextBreak')} {formattedTime}
         </span>
       </div>
 
@@ -37,7 +37,7 @@ const BreakTimer = () => {
               <h3 className="text-lg font-semibold text-text-color">Czas na przerwę!</h3>
             </div>
             <p className="text-text-color mb-6 whitespace-pre-line">
-              {translate('breakSuggestions')}
+              {t('breakSuggestions')}
             </p>
             <button
               onClick={handleCloseAlert}

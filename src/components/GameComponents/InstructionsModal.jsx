@@ -2,7 +2,7 @@ import React from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 const InstructionsModal = ({ selectedMode, gameModeConfig, onBack, onStart }) => {
-  const { translate } = useLanguage();
+  const { t } = useLanguage();
   const modeInfo = gameModeConfig[selectedMode];
   
   const getModeIcon = (mode) => {
@@ -35,39 +35,39 @@ const InstructionsModal = ({ selectedMode, gameModeConfig, onBack, onStart }) =>
         <div className="text-center mb-6">
           <div className="text-3xl md:text-4xl mb-3">{getModeIcon(selectedMode)}</div>
           <h2 className="text-xl md:text-2xl font-bold mb-2 text-gray-800">
-            {translate('gameInstructions', { operation: modeInfo?.name })}
+            {t('gameInstructions', { operation: modeInfo?.name })}
           </h2>
         </div>
 
         <div className="space-y-4 mb-6 text-sm md:text-base">
           <div>
-            <h4 className="font-semibold text-gray-800 mb-2">🎮 {translate('controls')}</h4>
+            <h4 className="font-semibold text-gray-800 mb-2">🎮 {t('controls')}</h4>
             <div className="bg-gray-50 p-3 rounded-lg">
-              <p className="mb-2">{translate('controlsDesc')}</p>
+              <p className="mb-2">{t('controlsDesc')}</p>
               <ul className="ml-4 space-y-1 text-gray-700">
-                <li><strong>⬆️</strong> {translate('arrowUp')}</li>
-                <li><strong>⬅️</strong> {translate('arrowLeft')}</li>
-                <li><strong>➡️</strong> {translate('arrowRight')}</li>
+                <li><strong>⬆️</strong> {t('arrowUp')}</li>
+                <li><strong>⬅️</strong> {t('arrowLeft')}</li>
+                <li><strong>➡️</strong> {t('arrowRight')}</li>
               </ul>
             </div>
           </div>
 
           <div>
-            <h4 className="font-semibold text-gray-800 mb-2">🌱 {translate('gameRules')}</h4>
+            <h4 className="font-semibold text-gray-800 mb-2">🌱 {t('gameRules')}</h4>
             <div className="bg-gray-50 p-3 rounded-lg space-y-2 text-gray-700">
-              <p>• {translate('solveToMove', { operation: modeInfo?.name.toLowerCase() })}</p>
-              <p>• <span className="text-green-600 font-medium">{translate('correctAnswer')}</span></p>
-              <p>• <span className="text-red-600 font-medium">{translate('wrongAnswer')}</span></p>
-              <p>• {translate('clearedFields')}</p>
+              <p>• {t('solveToMove', { operation: modeInfo?.name.toLowerCase() })}</p>
+              <p>• <span className="text-green-600 font-medium">{t('correctAnswer')}</span></p>
+              <p>• <span className="text-red-600 font-medium">{t('wrongAnswer')}</span></p>
+              <p>• {t('clearedFields')}</p>
             </div>
           </div>
 
           <div>
-            <h4 className="font-semibold text-gray-800 mb-2">🏆 {translate('gameGoal')}</h4>
+            <h4 className="font-semibold text-gray-800 mb-2">🏆 {t('gameGoal')}</h4>
             <div className="bg-gray-50 p-3 rounded-lg space-y-2 text-gray-700">
-              <p>• {translate('discoverLevels')}</p>
-              <p>• {translate('findBonuses')}</p>
-              <p>• {translate('practiceOperations', { operation: modeInfo?.name.toLowerCase() })}</p>
+              <p>• {t('discoverLevels')}</p>
+              <p>• {t('findBonuses')}</p>
+              <p>• {t('practiceOperations', { operation: modeInfo?.name.toLowerCase() })}</p>
             </div>
           </div>
         </div>
@@ -77,14 +77,14 @@ const InstructionsModal = ({ selectedMode, gameModeConfig, onBack, onStart }) =>
             onClick={onStart}
             className={`w-full text-white py-3 px-6 rounded-md transition-colors text-lg font-medium ${getButtonColor(selectedMode)}`}
           >
-            🚀 {translate('startGame')}
+            🚀 {t('startGame')}
           </button>
           
           <button
             onClick={onBack}
             className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 px-6 rounded-md transition-colors text-base font-medium"
           >
-            ⬅️ {translate('back')}
+            ⬅️ {t('back')}
           </button>
         </div>
       </div>

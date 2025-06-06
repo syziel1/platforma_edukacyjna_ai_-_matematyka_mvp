@@ -7,7 +7,7 @@ import SettingsModal from './SettingsModal';
 const NavigationPanel = ({ onLoginClick }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const { translate, switchLanguage, currentLanguage } = useLanguage();
+  const { t, switchLanguage, currentLanguage } = useLanguage();
   const { user, logout } = useAuth();
 
   const handleDayPlan = () => {
@@ -36,27 +36,27 @@ const NavigationPanel = ({ onLoginClick }) => {
   const menuItems = [
     { 
       icon: Menu,
-      label: translate('menu'),
+      label: t('menu'),
       action: () => setIsExpanded(!isExpanded)
     },
     { 
       icon: CheckSquare, 
-      label: translate('myTasks'), 
+      label: t('myTasks'), 
       action: handleTasks
     },
     { 
       icon: Calendar, 
-      label: translate('dayPlan'), 
+      label: t('dayPlan'), 
       action: handleDayPlan 
     },
     { 
       icon: Settings, 
-      label: translate('settings'), 
+      label: t('settings'), 
       action: handleSettings
     },
     { 
       icon: user ? LogOut : LogIn, 
-      label: user ? translate('logout') : translate('login'), 
+      label: user ? t('logout') : t('login'), 
       action: user ? logout : onLoginClick
     }
   ];
@@ -117,7 +117,7 @@ const NavigationPanel = ({ onLoginClick }) => {
                 />
               )}
               <div>
-                <p className="text-sm text-white/70">{translate('welcome')}</p>
+                <p className="text-sm text-white/70">{t('welcome')}</p>
                 <p className="font-medium text-white overflow-hidden text-ellipsis">
                   {decodeHtmlEntities(user.name)}
                 </p>

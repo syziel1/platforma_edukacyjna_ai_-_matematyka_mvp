@@ -2,7 +2,7 @@ import React from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
-  const { translate } = useLanguage();
+  const { t } = useLanguage();
 
   const getDirectionRotation = (direction) => {
     switch (direction) {
@@ -240,7 +240,7 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
       {/* Level progress indicator */}
       <div className="mt-4 text-center">
         <div className="inline-flex items-center space-x-2 bg-amber-100 px-3 py-1 rounded-full border border-amber-300">
-          <span className="text-amber-800 font-medium">{translate('level')} {level}</span>
+          <span className="text-amber-800 font-medium">{t('level')} {level}</span>
           <span className="text-amber-600">🌴</span>
           <span className="text-amber-700 text-sm">{currentLevelSize}×{currentLevelSize}</span>
         </div>

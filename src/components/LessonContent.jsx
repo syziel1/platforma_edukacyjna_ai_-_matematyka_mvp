@@ -4,7 +4,7 @@ import InteractiveVisualization from './InteractiveVisualization';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const LessonContent = ({ currentStep, setCurrentStep }) => {
-  const { translate } = useLanguage();
+  const { t } = useLanguage();
 
   const renderStep = () => {
     switch (currentStep) {
@@ -12,7 +12,7 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
         return (
           <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
             <h3 className="text-lg font-semibold text-text-color mb-4">
-              {translate('step1Title')}
+              {t('step1Title')}
             </h3>
             <div className="bg-text-color/90 rounded-lg aspect-video flex items-center justify-center mb-4">
               <div className="text-center text-white">
@@ -33,11 +33,11 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
         return (
           <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
             <h3 className="text-lg font-semibold text-text-color mb-4">
-              {translate('step2Title')}
+              {t('step2Title')}
             </h3>
             <div className="prose prose-sm max-w-none mb-6 text-text-color">
               <p className="leading-relaxed">
-                {translate('problemText')}
+                {t('problemText')}
               </p>
               <div className="bg-accent-secondary/10 border border-accent-secondary/30 rounded-md p-4 mt-4">
                 <p className="text-sm text-accent-secondary">
@@ -56,7 +56,7 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
                 onClick={() => setCurrentStep(3)}
                 className="bg-accent-primary text-white px-6 py-2 rounded-md hover:bg-accent-primary/90 transition-colors flex items-center gap-2"
               >
-                {translate('understood')} <ArrowRight className="w-4 h-4" />
+                {t('understood')} <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -77,7 +77,7 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
                 onClick={() => setCurrentStep(4)}
                 className="bg-accent-primary text-white px-6 py-2 rounded-md hover:bg-accent-primary/90 transition-colors flex items-center gap-2"
               >
-                {translate('endExploration')} <ArrowRight className="w-4 h-4" />
+                {t('endExploration')} <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -87,7 +87,7 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
         return (
           <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
             <h3 className="text-lg font-semibold text-text-color mb-4">
-              {translate('step4Title')}
+              {t('step4Title')}
             </h3>
             <div className="prose prose-sm max-w-none mb-6 text-text-color">
               <p className="leading-relaxed mb-4">
@@ -116,7 +116,7 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
                 onClick={() => setCurrentStep(5)}
                 className="bg-accent-primary text-white px-6 py-2 rounded-md hover:bg-accent-primary/90 transition-colors flex items-center gap-2"
               >
-                {translate('goToFormal')} <ArrowRight className="w-4 h-4" />
+                {t('goToFormal')} <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -126,7 +126,7 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
         return (
           <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
             <h3 className="text-lg font-semibold text-text-color mb-4">
-              {translate('step5Title')}
+              {t('step5Title')}
             </h3>
             <div className="space-y-4 mb-6">
               <div>
@@ -171,7 +171,7 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
                 className="bg-nav-bg text-white px-6 py-2 rounded-md hover:bg-nav-bg/90 transition-colors flex items-center gap-2"
               >
                 <CheckCircle className="w-4 h-4" />
-                {translate('checkAnswer')}
+                {t('checkAnswer')}
               </button>
             </div>
           </div>

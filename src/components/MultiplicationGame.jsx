@@ -11,7 +11,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useSoundEffects } from '../hooks/useSoundEffects';
 
 const MultiplicationGame = ({ onBack }) => {
-  const { translate } = useLanguage();
+  const { t } = useLanguage();
   const { playSound } = useSoundEffects();
   
   const [gameState, setGameState] = useState({
@@ -35,7 +35,7 @@ const MultiplicationGame = ({ onBack }) => {
   // Game mode configurations
   const gameModeConfig = {
     addition: {
-      name: translate('addition'),
+      name: t('addition'),
       symbol: '+',
       generateQuestion: (r, c) => ({
         num1: r + 1,
@@ -46,7 +46,7 @@ const MultiplicationGame = ({ onBack }) => {
       })
     },
     subtraction: {
-      name: translate('subtraction'), 
+      name: t('subtraction'), 
       symbol: '-',
       generateQuestion: (r, c) => {
         const num1 = Math.max(r + 1, c + 1) + Math.floor(Math.random() * 5);
@@ -61,7 +61,7 @@ const MultiplicationGame = ({ onBack }) => {
       }
     },
     multiplication: {
-      name: translate('multiplication'),
+      name: t('multiplication'),
       symbol: '×',
       generateQuestion: (r, c) => ({
         num1: r + 1,
@@ -72,7 +72,7 @@ const MultiplicationGame = ({ onBack }) => {
       })
     },
     division: {
-      name: translate('division'),
+      name: t('division'),
       symbol: '÷',
       generateQuestion: (r, c) => {
         const divisor = Math.max(1, Math.min(r + 1, c + 1));
@@ -88,7 +88,7 @@ const MultiplicationGame = ({ onBack }) => {
       }
     },
     exponentiation: {
-      name: translate('exponentiation'),
+      name: t('exponentiation'),
       symbol: '^',
       generateQuestion: (r, c) => {
         const base = Math.max(2, Math.min(r + 1, c + 1, 5)); // Limit base to 2-5
@@ -103,7 +103,7 @@ const MultiplicationGame = ({ onBack }) => {
       }
     },
     'square-root': {
-      name: translate('squareRoot'),
+      name: t('squareRoot'),
       symbol: '√',
       generateQuestion: (r, c) => {
         // Generate perfect squares for easier calculation
@@ -296,7 +296,7 @@ const MultiplicationGame = ({ onBack }) => {
       if (currentCell.isBonus && newBoardData.find(c => c.row === currentCell.row && c.col === currentCell.col).grass === 0) {
         const bonusPoints = calculateCellScore(currentCell.row, currentCell.col, true) - cellScore;
         cellScore = calculateCellScore(currentCell.row, currentCell.col, true);
-        bonusMessage = ` (${translate('bonusPoints')} +${bonusPoints}!)`;
+        bonusMessage = ` (${t('bonusPoints')} +${bonusPoints}!)`;
         playSound('bonus');
       }
 
@@ -314,7 +314,7 @@ const MultiplicationGame = ({ onBack }) => {
         }
       }));
 
-      showMessage(`${translate('great')} +${cellScore} ${translate('points')}${bonusMessage}`, 2000);
+      showMessage(`${t('great')} +${cellScore} ${t('points')}${bonusMessage}`, 2000);
     } else {
       playSound('wrong');
       
@@ -336,7 +336,7 @@ const MultiplicationGame = ({ onBack }) => {
         wrongAnswersCount: prev.wrongAnswersCount + 1
       }));
 
-      showMessage(translate('wrong'), 2000);
+      showMessage(t('wrong'), 2000);
     }
   };
 
@@ -387,7 +387,7 @@ const MultiplicationGame = ({ onBack }) => {
             }));
 
             playSound('bonus');
-            showMessage(`${translate('bonusCollected')} +${bonusScore} ${translate('points')}!`, 2000);
+            showMessage(`${t('bonusCollected')} +${bonusScore} ${t('points')}!`, 2000);
           } else {
             // Normal movement to cleared cell
             setGameState(prev => ({
@@ -412,7 +412,7 @@ const MultiplicationGame = ({ onBack }) => {
         }
       } else {
         playSound('error');
-        showMessage(translate('cannotGo'), 1500);
+        showMessage(t('cannotGo'), 1500);
       }
     } else if (e.key === 'ArrowLeft') {
       const dirs = ['N', 'W', 'S', 'E'];
@@ -439,7 +439,7 @@ const MultiplicationGame = ({ onBack }) => {
         }
       }));
     }
-  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, gameState.showQuestion, gameState.playerPosition, gameState.currentLevelSize, gameState.boardData, translate, playSound]);
+  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, gameState.showQuestion, gameState.playerPosition, gameState.currentLevelSize, gameState.boardData, t, playSound]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
@@ -473,9 +473,9 @@ const MultiplicationGame = ({ onBack }) => {
 
   const getGameTitle = () => {
     if (gameState.selectedMode && gameModeConfig[gameState.selectedMode]) {
-      return `${translate('multiplicationGameTitle')} - ${gameModeConfig[gameState.selectedMode].name}`;
+      return `${t('multiplicationGameTitle')} - ${gameModeConfig[gameState.selectedMode].name}`;
     }
-    return translate('multiplicationGameTitle');
+    return t('multiplicationGameTitle');
   };
 
   return (
@@ -555,12 +555,12 @@ const MultiplicationGame = ({ onBack }) => {
                 {gameState.selectedMode && (
                   <div className="bg-amber-100 p-4 rounded-lg border border-amber-300 mb-4">
                     <div className="text-center">
-                      <div className="text-amber-800 font-bold text-lg mb-1">{translate('gameMode')}</div>
+                      <div className="text-amber-800 font-bold text-lg mb-1">{t('gameMode')}</div>
                       <div className="text-amber-700 text-xl font-bold">
                         {gameModeConfig[gameState.selectedMode].name}
                       </div>
                       <div className="text-amber-600 text-sm">
-                        {gameModeConfig[gameState.selectedMode].symbol} {translate('operations')}
+                        {gameModeConfig[gameState.selectedMode].symbol} {t('operations')}
                       </div>
                     </div>
                   </div>
@@ -571,40 +571,40 @@ const MultiplicationGame = ({ onBack }) => {
                   {/* Points */}
                   <div className="bg-green-100 p-4 rounded-lg border border-green-300">
                     <div className="text-center">
-                      <div className="text-green-800 font-bold text-base mb-1">{translate('points')}</div>
+                      <div className="text-green-800 font-bold text-base mb-1">{t('points')}</div>
                       <div className="text-green-700 text-xl font-bold">
                         {gameState.score}
                       </div>
-                      <div className="text-green-600 text-xs">🏆 {translate('earned')}</div>
+                      <div className="text-green-600 text-xs">🏆 {t('earned')}</div>
                     </div>
                   </div>
 
                   {/* Time */}
                   <div className="bg-blue-100 p-4 rounded-lg border border-blue-300">
                     <div className="text-center">
-                      <div className="text-blue-800 font-bold text-base mb-1">{translate('time')}</div>
+                      <div className="text-blue-800 font-bold text-base mb-1">{t('time')}</div>
                       <div className="text-blue-700 text-xl font-bold">
                         {formatTime(gameState.timeElapsed)}
                       </div>
-                      <div className="text-blue-600 text-xs">⏱️ {translate('elapsed')}</div>
+                      <div className="text-blue-600 text-xs">⏱️ {t('elapsed')}</div>
                     </div>
                   </div>
 
                   {/* Grass Cleared Percentage */}
                   <div className="bg-purple-100 p-4 rounded-lg border border-purple-300">
                     <div className="text-center">
-                      <div className="text-purple-800 font-bold text-base mb-1">{translate('grassCleared')}</div>
+                      <div className="text-purple-800 font-bold text-base mb-1">{t('grassCleared')}</div>
                       <div className="text-purple-700 text-xl font-bold">
                         {calculateGrassClearedPercentage()}%
                       </div>
-                      <div className="text-purple-600 text-xs">🌱 {translate('cleared')}</div>
+                      <div className="text-purple-600 text-xs">🌱 {t('cleared')}</div>
                     </div>
                   </div>
 
                   {/* Level */}
                   <div className="bg-orange-100 p-4 rounded-lg border border-orange-300">
                     <div className="text-center">
-                      <div className="text-orange-800 font-bold text-base mb-1">{translate('level')}</div>
+                      <div className="text-orange-800 font-bold text-base mb-1">{t('level')}</div>
                       <div className="text-orange-700 text-xl font-bold">
                         {gameState.currentLevelSize}×{gameState.currentLevelSize}
                       </div>

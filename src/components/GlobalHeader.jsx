@@ -5,7 +5,7 @@ import { useGlobalTimer } from '../hooks/useGlobalTimer';
 import { useMentorStatus } from '../hooks/useMentorStatus';
 
 const GlobalHeader = ({ title, onBack, showBackButton = false }) => {
-  const { translate } = useLanguage();
+  const { t } = useLanguage();
   const { formattedTime } = useGlobalTimer();
   const { status, getStatusColor, getStatusIcon, getStatusText, formatNextAvailability } = useMentorStatus();
 
@@ -13,8 +13,8 @@ const GlobalHeader = ({ title, onBack, showBackButton = false }) => {
     if (status === 'available') {
       window.open('http://strefaedukacji.zrozoomai.pl/', '_blank');
     } else {
-      const nextAvail = formatNextAvailability(translate);
-      alert(`${translate('mentorNotAvailable')} ${nextAvail ? `\n${translate('nextAvailability')}: ${nextAvail}` : ''}`);
+      const nextAvail = formatNextAvailability(t);
+      alert(`${t('mentorNotAvailable')} ${nextAvail ? `\n${t('nextAvailability')}: ${nextAvail}` : ''}`);
     }
   };
 
@@ -27,7 +27,7 @@ const GlobalHeader = ({ title, onBack, showBackButton = false }) => {
             <button
               onClick={onBack}
               className="text-text-color hover:text-accent-primary transition-colors"
-              title={translate('backToProblems')}
+              title={t('backToProblems')}
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
@@ -43,7 +43,7 @@ const GlobalHeader = ({ title, onBack, showBackButton = false }) => {
           <div className="flex items-center gap-2 text-text-color">
             <Clock className="w-4 h-4" />
             <span className="text-sm font-medium hidden sm:inline">
-              {translate('sessionTime')}:
+              {t('sessionTime')}:
             </span>
             <span className="text-sm font-bold">
               {formattedTime}
@@ -59,7 +59,7 @@ const GlobalHeader = ({ title, onBack, showBackButton = false }) => {
                   ? 'hover:bg-green-50 hover:scale-105' 
                   : 'hover:bg-gray-50 cursor-not-allowed opacity-75'
               }`}
-              title={`${getStatusText(translate)} ${formatNextAvailability(translate) ? `- ${translate('nextAvailability')}: ${formatNextAvailability(translate)}` : ''}`}
+              title={`${getStatusText(t)} ${formatNextAvailability(t) ? `- ${t('nextAvailability')}: ${formatNextAvailability(t)}` : ''}`}
             >
               <div className="relative">
                 <Video className={`w-5 h-5 ${getStatusColor()}`} />
@@ -74,10 +74,10 @@ const GlobalHeader = ({ title, onBack, showBackButton = false }) => {
               </div>
               <div className="hidden md:flex flex-col items-start">
                 <span className="text-xs text-text-color/70">
-                  {translate('mentor')}
+                  {t('mentor')}
                 </span>
                 <span className={`text-xs font-medium ${getStatusColor()}`}>
-                  {getStatusText(translate)}
+                  {getStatusText(t)}
                 </span>
               </div>
             </button>

@@ -5,7 +5,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 const SettingsModal = ({ isOpen, onClose }) => {
   const { settings, toggleSound, setVolume } = useSettings();
-  const { translate } = useLanguage();
+  const { t } = useLanguage();
 
   if (!isOpen) return null;
 
@@ -14,7 +14,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
       <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-text-color">
-            {translate('settings')}
+            {t('settings')}
           </h2>
           <button
             onClick={onClose}
@@ -34,7 +34,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                 <VolumeX className="w-5 h-5 text-gray-400" />
               )}
               <span className="font-medium text-text-color">
-                {translate('soundEffects')}
+                {t('soundEffects')}
               </span>
             </div>
             <button
@@ -55,7 +55,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
           {settings.soundEnabled && (
             <div>
               <label className="block text-sm font-medium text-text-color mb-2">
-                {translate('volume')}: {Math.round(settings.volume * 100)}%
+                {t('volume')}: {Math.round(settings.volume * 100)}%
               </label>
               <input
                 type="range"
@@ -75,7 +75,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
             onClick={onClose}
             className="bg-accent-primary text-white px-4 py-2 rounded-md hover:bg-accent-primary/90 transition-colors"
           >
-            {translate('close')}
+            {t('close')}
           </button>
         </div>
       </div>

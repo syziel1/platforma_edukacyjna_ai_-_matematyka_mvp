@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const WaterTankVisualization = () => {
-  const { translate } = useLanguage();
+  const { t } = useLanguage();
 
   // --- REPAIRED LOGIC: Use a clear material limit (max surface area) ---
   const [maxAllowedSurfaceArea] = useState(() => Math.floor(Math.random() * (400 - 100 + 1)) + 100);
@@ -47,7 +47,7 @@ const WaterTankVisualization = () => {
   return (
     <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
       <h3 className="text-lg font-semibold text-text-color mb-4">
-        {translate('waterTankExploration')}
+        {t('waterTankExploration')}
       </h3>
 
       {/* Simple 2D Side View Visualization */}
@@ -140,7 +140,7 @@ const WaterTankVisualization = () => {
       <div className="space-y-4 mb-6">
         <div>
           <label className="block text-sm font-medium text-text-color mb-2">
-            {translate('tankRadius')}: {formatNumber(radius)}m
+            {t('tankRadius')}: {formatNumber(radius)}m
           </label>
           <input
             type="range" min={minDimension} max={maxDimension} step="0.1"
@@ -151,7 +151,7 @@ const WaterTankVisualization = () => {
         
         <div>
           <label className="block text-sm font-medium text-text-color mb-2">
-            {translate('tankHeight')}: {formatNumber(height)}m
+            {t('tankHeight')}: {formatNumber(height)}m
           </label>
           <input
             type="range" min={minDimension} max={maxDimension} step="0.1"
@@ -164,13 +164,13 @@ const WaterTankVisualization = () => {
       {/* Data Display */}
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div className={`bg-bg-light p-3 rounded-md border ${isOverLimit ? 'border-red-500/50' : 'border-transparent'}`}>
-          <div className="text-sm text-text-color/70">{translate('surfaceArea')}</div>
+          <div className="text-sm text-text-color/70">{t('surfaceArea')}</div>
           <div className={`text-lg font-semibold ${isOverLimit ? 'text-red-500' : 'text-text-color'}`}>
             {formatNumber(currentSurfaceArea)} / {formatNumber(maxAllowedSurfaceArea)} m²
           </div>
         </div>
         <div className="bg-bg-light p-3 rounded-md">
-          <div className="text-sm text-text-color/70">{translate('tankVolume')}</div>
+          <div className="text-sm text-text-color/70">{t('tankVolume')}</div>
           <div className="text-lg font-semibold text-text-color">{formatNumber(volume)} m³</div>
         </div>
       </div>

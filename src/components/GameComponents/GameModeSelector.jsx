@@ -3,59 +3,59 @@ import { Calculator, Plus, Minus, X, Divide, Zap, Square as SquareRoot, ArrowLef
 import { useLanguage } from '../../contexts/LanguageContext';
 
 const GameModeSelector = ({ onModeSelect, onCancel }) => {
-  const { translate } = useLanguage();
+  const { t } = useLanguage();
 
   const gameModes = [
     {
       id: 'addition',
-      name: translate('addition'),
+      name: t('addition'),
       icon: Plus,
-      description: translate('additionDesc'),
+      description: t('additionDesc'),
       color: 'bg-green-500',
       hoverColor: 'hover:bg-green-600',
       example: '5 + 3 = ?'
     },
     {
       id: 'subtraction',
-      name: translate('subtraction'),
+      name: t('subtraction'),
       icon: Minus,
-      description: translate('subtractionDesc'),
+      description: t('subtractionDesc'),
       color: 'bg-red-500',
       hoverColor: 'hover:bg-red-600',
       example: '8 - 3 = ?'
     },
     {
       id: 'multiplication',
-      name: translate('multiplication'),
+      name: t('multiplication'),
       icon: X,
-      description: translate('multiplicationDesc'),
+      description: t('multiplicationDesc'),
       color: 'bg-blue-500',
       hoverColor: 'hover:bg-blue-600',
       example: '4 × 6 = ?'
     },
     {
       id: 'division',
-      name: translate('division'),
+      name: t('division'),
       icon: Divide,
-      description: translate('divisionDesc'),
+      description: t('divisionDesc'),
       color: 'bg-purple-500',
       hoverColor: 'hover:bg-purple-600',
       example: '12 ÷ 3 = ?'
     },
     {
       id: 'exponentiation',
-      name: translate('exponentiation'),
+      name: t('exponentiation'),
       icon: Zap,
-      description: translate('exponentiationDesc'),
+      description: t('exponentiationDesc'),
       color: 'bg-yellow-500',
       hoverColor: 'hover:bg-yellow-600',
       example: '2³ = ?'
     },
     {
       id: 'square-root',
-      name: translate('squareRoot'),
+      name: t('squareRoot'),
       icon: SquareRoot,
-      description: translate('squareRootDesc'),
+      description: t('squareRootDesc'),
       color: 'bg-orange-500',
       hoverColor: 'hover:bg-orange-600',
       example: '√16 = ?'
@@ -70,10 +70,10 @@ const GameModeSelector = ({ onModeSelect, onCancel }) => {
           <button
             onClick={onCancel}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors p-2 rounded-md hover:bg-gray-100"
-            title={translate('backToMenu')}
+            title={t('backToMenu')}
           >
             <ArrowLeft className="w-5 h-5" />
-            <span className="text-sm font-medium">{translate('backToMenu')}</span>
+            <span className="text-sm font-medium">{t('backToMenu')}</span>
           </button>
         </div>
 
@@ -82,21 +82,21 @@ const GameModeSelector = ({ onModeSelect, onCancel }) => {
           <button
             onClick={onCancel}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors p-2 rounded-md hover:bg-gray-100"
-            title={translate('backToMenu')}
+            title={t('backToMenu')}
           >
             <ArrowLeft className="w-5 h-5" />
-            <span className="text-sm font-medium">{translate('backToMenu')}</span>
+            <span className="text-sm font-medium">{t('backToMenu')}</span>
           </button>
           
           <div className="text-center flex-1">
             <div className="flex items-center justify-center mb-4">
               <Calculator className="w-12 h-12 text-blue-600 mr-3" />
               <h2 className="text-3xl font-bold text-gray-800">
-                {translate('chooseMathOperations')}
+                {t('chooseMathOperations')}
               </h2>
             </div>
             <p className="text-gray-600 text-lg">
-              {translate('chooseMathOperationsDesc')}
+              {t('chooseMathOperationsDesc')}
             </p>
           </div>
           
@@ -109,11 +109,11 @@ const GameModeSelector = ({ onModeSelect, onCancel }) => {
           <div className="flex items-center justify-center mb-4">
             <Calculator className="w-8 h-8 md:w-12 md:h-12 text-blue-600 mr-2 md:mr-3" />
             <h2 className="text-xl md:text-3xl font-bold text-gray-800">
-              {translate('chooseMathOperations')}
+              {t('chooseMathOperations')}
             </h2>
           </div>
           <p className="text-gray-600 text-base md:text-lg">
-            {translate('chooseMathOperationsDesc')}
+            {t('chooseMathOperationsDesc')}
           </p>
         </div>
 
@@ -150,7 +150,7 @@ const GameModeSelector = ({ onModeSelect, onCancel }) => {
         <div className="mt-6 md:mt-8 text-center">
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 md:p-4">
             <p className="text-blue-800 text-xs md:text-sm">
-              💡 <strong>{translate('tip')}</strong> {translate('difficultyTip')}
+              💡 <strong>{t('tip')}</strong> {t('difficultyTip')}
             </p>
           </div>
         </div>
