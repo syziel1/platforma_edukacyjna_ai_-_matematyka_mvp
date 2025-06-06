@@ -86,7 +86,7 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
         
         .bonus-collected {
           animation: bonusCollected 0.5s ease-out forwards;
-          filter: grayscale(50%);
+          filter: grayscale(70%) brightness(0.7);
         }
         
         .grass-wave {
@@ -174,7 +174,7 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
                         ? '0 0 4px rgba(0,0,0,0.5)' 
                         : '0 0 8px rgba(255,215,0,0.8), 0 0 4px rgba(0,0,0,0.5)',
                       fontSize: '16px',
-                      opacity: cellData.bonusCollected ? 0.5 : 1
+                      opacity: cellData.bonusCollected ? 0.4 : 1
                     }}
                   >
                     {getBonusIcon(cellData)}

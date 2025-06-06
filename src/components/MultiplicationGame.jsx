@@ -112,10 +112,38 @@ const MultiplicationGame = ({ onBack }) => {
     };
   }, [gameState.showModeSelector, gameState.showWelcome, gameState.showQuestion]);
 
-  const createNewCellData = useCallback((r, c, isStartCell) => {
+  // Generate bonus positions - maximum 1 per 8 cells
+  const generateBonusPositions = useCallback((size) => {
+    const totalCells = size * size;
+    const maxBonuses = Math.floor(totalCells / 8); // Maximum 1 bonus per 8 cells
+    const bonusPositions = new Set();
+    
+    // Don't place bonus on starting position (0,0)
+    const availablePositions = [];
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        if (!(r === 0 && c === 0)) { // Skip starting position
+          availablePositions.push(`${r}-${c}`);
+        }
+      }
+    }
+    
+    // Randomly select bonus positions
+    for (let i = 0; i < maxBonuses && availablePositions.length > 0; i++) {
+      const randomIndex = Math.floor(Math.random() * availablePositions.length);
+      const position = availablePositions.splice(randomIndex, 1)[0];
+      bonusPositions.add(position);
+    }
+    
+    return bonusPositions;
+  }, []);
+
+  const createNewCellData = useCallback((r, c, isStartCell, bonusPositions) => {
     const questionData = gameState.selectedMode 
       ? gameModeConfig[gameState.selectedMode].generateQuestion(r, c)
       : { num1: r + 1, num2: c + 1, answer: (r + 1) * (c + 1), display: `${r + 1} × ${c + 1}` };
+
+    const isBonus = bonusPositions.has(`${r}-${c}`);
 
     return {
       row: r,
@@ -126,7 +154,7 @@ const MultiplicationGame = ({ onBack }) => {
       originalMultiplier1: questionData.num1,
       originalMultiplier2: questionData.num2,
       correctAnswer: questionData.answer,
-      isBonus: Math.random() < 0.15, // 15% chance for bonus
+      isBonus: isBonus,
       isRevealed: isStartCell,
       bonusCollected: false,
       wasEverZeroGrass: isStartCell,
@@ -139,11 +167,12 @@ const MultiplicationGame = ({ onBack }) => {
     
     const newBoardData = [];
     const size = gameState.currentLevelSize;
+    const bonusPositions = generateBonusPositions(size);
 
     for (let r = 0; r < size; r++) {
       for (let c = 0; c < size; c++) {
         const isStartCell = r === 0 && c === 0;
-        newBoardData.push(createNewCellData(r, c, isStartCell));
+        newBoardData.push(createNewCellData(r, c, isStartCell, bonusPositions));
       }
     }
 
@@ -152,7 +181,7 @@ const MultiplicationGame = ({ onBack }) => {
       boardData: newBoardData,
       playerPosition: { row: 0, col: 0, direction: 'S' }
     }));
-  }, [gameState.currentLevelSize, gameState.selectedMode, createNewCellData]);
+  }, [gameState.currentLevelSize, gameState.selectedMode, createNewCellData, generateBonusPositions]);
 
   useEffect(() => {
     if (!gameState.showModeSelector && !gameState.showWelcome && gameState.boardData.length === 0) {
@@ -161,7 +190,7 @@ const MultiplicationGame = ({ onBack }) => {
   }, [gameState.showModeSelector, gameState.showWelcome, gameState.boardData.length, initializeGame]);
 
   const calculateCellScore = (row, col, isBonus = false) => {
-    const baseScore = row + col;
+    const baseScore = row + col + 2; // +2 because coordinates start from 0
     return isBonus ? baseScore * 2 : baseScore;
   };
 
@@ -200,8 +229,15 @@ const MultiplicationGame = ({ onBack }) => {
       });
 
       // Calculate score based on coordinates and bonus
-      const cellScore = calculateCellScore(currentCell.row, currentCell.col, currentCell.isBonus);
-      const bonusMessage = currentCell.isBonus ? ' (Bonus x2!)' : '';
+      let cellScore = calculateCellScore(currentCell.row, currentCell.col, false);
+      let bonusMessage = '';
+      
+      // Add bonus points if this is a bonus cell and it was cleared
+      if (currentCell.isBonus && newBoardData.find(c => c.row === currentCell.row && c.col === currentCell.col).grass === 0) {
+        const bonusPoints = calculateCellScore(currentCell.row, currentCell.col, true) - cellScore;
+        cellScore = calculateCellScore(currentCell.row, currentCell.col, true);
+        bonusMessage = ` (Bonus +${bonusPoints}!)`;
+      }
 
       setGameState(prev => ({
         ...prev,
@@ -209,6 +245,7 @@ const MultiplicationGame = ({ onBack }) => {
         score: prev.score + cellScore,
         showQuestion: false,
         currentQuestion: null,
+        wrongAnswersCount: 0,
         playerPosition: {
           ...prev.playerPosition,
           row: currentCell.row,
@@ -263,7 +300,7 @@ const MultiplicationGame = ({ onBack }) => {
         if (targetCell.grass < 10) {
           // Check if stepping on a bonus cell that hasn't been collected
           if (targetCell.isBonus && !targetCell.bonusCollected && targetCell.grass === 0) {
-            const bonusScore = calculateCellScore(targetCell.row, targetCell.col, true);
+            const bonusScore = calculateCellScore(targetCell.row, targetCell.col, false); // Base score for stepping on bonus
             
             // Mark bonus as collected
             const newBoardData = gameState.boardData.map(cell => {
