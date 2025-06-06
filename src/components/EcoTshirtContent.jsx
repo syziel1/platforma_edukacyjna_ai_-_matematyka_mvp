@@ -84,11 +84,21 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
               <TrendingUp className="w-5 h-5 text-nav-bg" />
               {t('ecoTshirtIntro')}
             </h3>
-            <div className="bg-text-color/90 rounded-lg aspect-video flex items-center justify-center mb-4">
-              <div className="text-center text-white">
-                <Play className="w-16 h-16 mx-auto mb-2 opacity-70" />
-                <p className="text-sm opacity-70">Video placeholder</p>
-              </div>
+            <div className="rounded-lg aspect-video mb-4 bg-black">
+              <video 
+                controls 
+                className="w-full h-full rounded-lg"
+                poster="/videos/intro-startup-poster.jpg"
+              >
+                <source src="/videos/intro-startup.mp4" type="video/mp4" />
+                <source src="/videos/intro-startup.webm" type="video/webm" />
+                <div className="bg-text-color/90 rounded-lg aspect-video flex items-center justify-center">
+                  <div className="text-center text-white">
+                    <Play className="w-16 h-16 mx-auto mb-2 opacity-70" />
+                    <p className="text-sm opacity-70">Twoja przeglądarka nie obsługuje wideo</p>
+                  </div>
+                </div>
+              </video>
             </div>
             <div className="bg-green-50 border border-green-200 rounded-md p-4 mb-4">
               <h4 className="font-semibold text-green-800 mb-2">🌱 Startup "Eko-Koszulka"</h4>

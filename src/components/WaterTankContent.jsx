@@ -98,11 +98,21 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
             <h3 className="text-lg font-semibold text-text-color mb-4">
               {t('waterTankIntro')}
             </h3>
-            <div className="bg-text-color/90 rounded-lg aspect-video flex items-center justify-center mb-4">
-              <div className="text-center text-white">
-                <Play className="w-16 h-16 mx-auto mb-2 opacity-70" />
-                <p className="text-sm opacity-70">Video placeholder</p>
-              </div>
+            <div className="rounded-lg aspect-video mb-4 bg-black">
+              <video 
+                controls 
+                className="w-full h-full rounded-lg"
+                poster="/videos/intro-zbiornik-poster.jpg"
+              >
+                <source src="/videos/intro-zbiornik.mp4" type="video/mp4" />
+                <source src="/videos/intro-zbiornik.webm" type="video/webm" />
+                <div className="bg-text-color/90 rounded-lg aspect-video flex items-center justify-center">
+                  <div className="text-center text-white">
+                    <Play className="w-16 h-16 mx-auto mb-2 opacity-70" />
+                    <p className="text-sm opacity-70">Twoja przeglądarka nie obsługuje wideo</p>
+                  </div>
+                </div>
+              </video>
             </div>
             <button
               onClick={() => setCurrentStep(2)}
