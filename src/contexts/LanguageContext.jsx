@@ -1,3 +1,5 @@
+import React, { createContext, useContext, useState } from 'react';
+
 const translations = {
   pl: {
     // Start Screen
@@ -373,4 +375,44 @@ const translations = {
     'loginError': 'Login failed. Please try again.',
     'welcome': 'Welcome'
   }
+};
+
+// Create the Language Context
+const LanguageContext = createContext();
+
+// Language Provider Component
+export const LanguageProvider = ({ children }) => {
+  const [language, setLanguage] = useState('pl'); // Default to Polish
+
+  const t = (key, params = {}) => {
+    let translation = translations[language][key] || key;
+    
+    // Replace parameters in translation
+    Object.keys(params).forEach(param => {
+      translation = translation.replace(`{${param}}`, params[param]);
+    });
+    
+    return translation;
+  };
+
+  const value = {
+    language,
+    setLanguage,
+    t
+  };
+
+  return (
+    <LanguageContext.Provider value={value}>
+      {children}
+    </LanguageContext.Provider>
+  );
+};
+
+// Custom hook to use the Language Context
+export const useLanguage = () => {
+  const context = useContext(LanguageContext);
+  if (!context) {
+    throw new Error('useLanguage must be used within a LanguageProvider');
+  }
+  return context;
 };
