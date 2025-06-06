@@ -9,6 +9,15 @@ const StartScreen = ({ onProblemSelect }) => {
 
   const problems = [
     {
+      id: 'multiplication-game',
+      title: translate('multiplicationGameTitle'),
+      description: translate('multiplicationGameDesc'),
+      difficulty: 'medium',
+      icon: Calculator,
+      color: 'accent-secondary',
+      totalSteps: 1
+    },
+    {
       id: 'chicken-coop',
       title: translate('chickenCoopTitle'),
       description: translate('chickenCoopDesc'),
@@ -34,15 +43,6 @@ const StartScreen = ({ onProblemSelect }) => {
       icon: Trophy,
       color: 'nav-bg',
       totalSteps: 5
-    },
-    {
-      id: 'multiplication-game',
-      title: translate('multiplicationGameTitle'),
-      description: translate('multiplicationGameDesc'),
-      difficulty: 'medium',
-      icon: Calculator,
-      color: 'accent-secondary',
-      totalSteps: 1
     }
   ];
 
