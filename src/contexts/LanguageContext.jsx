@@ -384,6 +384,10 @@ const LanguageContext = createContext();
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState('pl'); // Default to Polish
 
+  const switchLanguage = () => {
+    setLanguage(prevLang => prevLang === 'pl' ? 'en' : 'pl');
+  };
+
   const t = (key, params = {}) => {
     let translation = translations[language][key] || key;
     
@@ -397,7 +401,9 @@ export const LanguageProvider = ({ children }) => {
 
   const value = {
     language,
+    currentLanguage: language,
     setLanguage,
+    switchLanguage,
     t
   };
 
