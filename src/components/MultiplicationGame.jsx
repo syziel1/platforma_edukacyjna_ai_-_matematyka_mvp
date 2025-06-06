@@ -93,6 +93,23 @@ const MultiplicationGame = ({ onBack }) => {
           display: `${base}^${exponent}`
         };
       }
+    },
+    'square-root': {
+      name: 'Pierwiastkowanie',
+      symbol: '√',
+      generateQuestion: (r, c) => {
+        // Generate perfect squares for easier calculation
+        const perfectSquares = [1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225];
+        const maxIndex = Math.min(perfectSquares.length - 1, Math.max(r, c) + 2);
+        const randomSquare = perfectSquares[Math.min(maxIndex, perfectSquares.length - 1)];
+        return {
+          num1: randomSquare,
+          num2: null,
+          operation: 'square-root',
+          answer: Math.sqrt(randomSquare),
+          display: `√${randomSquare}`
+        };
+      }
     }
   };
 
@@ -201,6 +218,10 @@ const MultiplicationGame = ({ onBack }) => {
       showModeSelector: false,
       showWelcome: true
     }));
+  };
+
+  const handleCancel = () => {
+    onBack();
   };
 
   const handleAnswer = (answer) => {
@@ -417,7 +438,10 @@ const MultiplicationGame = ({ onBack }) => {
       />
 
       {gameState.showModeSelector ? (
-        <GameModeSelector onModeSelect={handleModeSelect} />
+        <GameModeSelector 
+          onModeSelect={handleModeSelect} 
+          onCancel={handleCancel}
+        />
       ) : gameState.showWelcome ? (
         <WelcomeModal 
           selectedMode={gameState.selectedMode}

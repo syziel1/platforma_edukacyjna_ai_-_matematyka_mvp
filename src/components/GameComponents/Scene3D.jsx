@@ -135,6 +135,7 @@ const Scene3D = ({
       case 'multiplication': return '✖️';
       case 'division': return '➗';
       case 'exponentiation': return '⚡';
+      case 'square-root': return '√';
       default: return '🧮';
     }
   };
@@ -146,6 +147,7 @@ const Scene3D = ({
       case 'multiplication': return '#3b82f6'; // blue-500
       case 'division': return '#a855f7'; // purple-500
       case 'exponentiation': return '#eab308'; // yellow-500
+      case 'square-root': return '#f97316'; // orange-500
       default: return '#3b82f6';
     }
   };
@@ -167,6 +169,8 @@ const Scene3D = ({
         return `${questionData.num1} ÷ ${questionData.num2} = ?`;
       case 'exponentiation':
         return `${questionData.num1}^${questionData.num2} = ?`;
+      case 'square-root':
+        return `√${questionData.num1} = ?`;
       default:
         return cellData.question;
     }

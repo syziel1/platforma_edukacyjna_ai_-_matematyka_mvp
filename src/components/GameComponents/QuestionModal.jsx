@@ -71,6 +71,7 @@ const QuestionModal = ({
       case 'multiplication': return '✖️';
       case 'division': return '➗';
       case 'exponentiation': return '⚡';
+      case 'square-root': return '√';
       default: return '🧮';
     }
   };
@@ -82,6 +83,7 @@ const QuestionModal = ({
       case 'multiplication': return 'text-blue-600';
       case 'division': return 'text-purple-600';
       case 'exponentiation': return 'text-yellow-600';
+      case 'square-root': return 'text-orange-600';
       default: return 'text-blue-600';
     }
   };
@@ -93,6 +95,7 @@ const QuestionModal = ({
       case 'multiplication': return 'from-blue-500 to-blue-600';
       case 'division': return 'from-purple-500 to-purple-600';
       case 'exponentiation': return 'from-yellow-500 to-yellow-600';
+      case 'square-root': return 'from-orange-500 to-orange-600';
       default: return 'from-green-500 to-blue-500';
     }
   };
@@ -114,6 +117,8 @@ const QuestionModal = ({
         return { display: `${questionData.num1} ÷ ${questionData.num2}`, symbol: '=' };
       case 'exponentiation':
         return { display: `${questionData.num1}^${questionData.num2}`, symbol: '=' };
+      case 'square-root':
+        return { display: `√${questionData.num1}`, symbol: '=' };
       default:
         return { display: question.question, symbol: '=' };
     }

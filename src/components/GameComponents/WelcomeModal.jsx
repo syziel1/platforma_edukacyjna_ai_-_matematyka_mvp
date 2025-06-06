@@ -10,6 +10,7 @@ const WelcomeModal = ({ selectedMode, gameModeConfig, onStart }) => {
       case 'multiplication': return '✖️';
       case 'division': return '➗';
       case 'exponentiation': return '⚡';
+      case 'square-root': return '√';
       default: return '🧮';
     }
   };
@@ -21,7 +22,45 @@ const WelcomeModal = ({ selectedMode, gameModeConfig, onStart }) => {
       case 'multiplication': return 'text-blue-600';
       case 'division': return 'text-purple-600';
       case 'exponentiation': return 'text-yellow-600';
+      case 'square-root': return 'text-orange-600';
       default: return 'text-gray-600';
+    }
+  };
+
+  const getExamples = (mode) => {
+    switch(mode) {
+      case 'addition':
+        return [
+          <div key="1" className="bg-white p-3 rounded text-center font-mono text-lg">2 + 3 = ?</div>,
+          <div key="2" className="bg-white p-3 rounded text-center font-mono text-lg">5 + 4 = ?</div>
+        ];
+      case 'subtraction':
+        return [
+          <div key="1" className="bg-white p-3 rounded text-center font-mono text-lg">8 - 3 = ?</div>,
+          <div key="2" className="bg-white p-3 rounded text-center font-mono text-lg">12 - 5 = ?</div>
+        ];
+      case 'multiplication':
+        return [
+          <div key="1" className="bg-white p-3 rounded text-center font-mono text-lg">3 × 4 = ?</div>,
+          <div key="2" className="bg-white p-3 rounded text-center font-mono text-lg">6 × 2 = ?</div>
+        ];
+      case 'division':
+        return [
+          <div key="1" className="bg-white p-3 rounded text-center font-mono text-lg">12 ÷ 3 = ?</div>,
+          <div key="2" className="bg-white p-3 rounded text-center font-mono text-lg">20 ÷ 4 = ?</div>
+        ];
+      case 'exponentiation':
+        return [
+          <div key="1" className="bg-white p-3 rounded text-center font-mono text-lg">2³ = ?</div>,
+          <div key="2" className="bg-white p-3 rounded text-center font-mono text-lg">3² = ?</div>
+        ];
+      case 'square-root':
+        return [
+          <div key="1" className="bg-white p-3 rounded text-center font-mono text-lg">√16 = ?</div>,
+          <div key="2" className="bg-white p-3 rounded text-center font-mono text-lg">√25 = ?</div>
+        ];
+      default:
+        return [];
     }
   };
 
@@ -43,36 +82,7 @@ const WelcomeModal = ({ selectedMode, gameModeConfig, onStart }) => {
             🎯 Przykładowe zadania w tym trybie:
           </h3>
           <div className="grid grid-cols-2 gap-4">
-            {selectedMode === 'addition' && (
-              <>
-                <div className="bg-white p-3 rounded text-center font-mono text-lg">2 + 3 = ?</div>
-                <div className="bg-white p-3 rounded text-center font-mono text-lg">5 + 4 = ?</div>
-              </>
-            )}
-            {selectedMode === 'subtraction' && (
-              <>
-                <div className="bg-white p-3 rounded text-center font-mono text-lg">8 - 3 = ?</div>
-                <div className="bg-white p-3 rounded text-center font-mono text-lg">12 - 5 = ?</div>
-              </>
-            )}
-            {selectedMode === 'multiplication' && (
-              <>
-                <div className="bg-white p-3 rounded text-center font-mono text-lg">3 × 4 = ?</div>
-                <div className="bg-white p-3 rounded text-center font-mono text-lg">6 × 2 = ?</div>
-              </>
-            )}
-            {selectedMode === 'division' && (
-              <>
-                <div className="bg-white p-3 rounded text-center font-mono text-lg">12 ÷ 3 = ?</div>
-                <div className="bg-white p-3 rounded text-center font-mono text-lg">20 ÷ 4 = ?</div>
-              </>
-            )}
-            {selectedMode === 'exponentiation' && (
-              <>
-                <div className="bg-white p-3 rounded text-center font-mono text-lg">2³ = ?</div>
-                <div className="bg-white p-3 rounded text-center font-mono text-lg">3² = ?</div>
-              </>
-            )}
+            {getExamples(selectedMode)}
           </div>
         </div>
 
@@ -103,6 +113,7 @@ const WelcomeModal = ({ selectedMode, gameModeConfig, onStart }) => {
             selectedMode === 'multiplication' ? 'bg-blue-500 hover:bg-blue-600' :
             selectedMode === 'division' ? 'bg-purple-500 hover:bg-purple-600' :
             selectedMode === 'exponentiation' ? 'bg-yellow-500 hover:bg-yellow-600' :
+            selectedMode === 'square-root' ? 'bg-orange-500 hover:bg-orange-600' :
             'bg-accent-primary hover:bg-accent-primary/90'
           }`}
         >

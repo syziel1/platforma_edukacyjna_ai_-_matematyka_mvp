@@ -1,7 +1,7 @@
 import React from 'react';
-import { Calculator, Plus, Minus, X, Divide, Zap } from 'lucide-react';
+import { Calculator, Plus, Minus, X, Divide, Zap, SquareRoot, ArrowLeft } from 'lucide-react';
 
-const GameModeSelector = ({ onModeSelect }) => {
+const GameModeSelector = ({ onModeSelect, onCancel }) => {
   const gameModes = [
     {
       id: 'addition',
@@ -47,22 +47,46 @@ const GameModeSelector = ({ onModeSelect }) => {
       color: 'bg-yellow-500',
       hoverColor: 'hover:bg-yellow-600',
       example: '2³ = ?'
+    },
+    {
+      id: 'square-root',
+      name: 'Pierwiastkowanie',
+      icon: SquareRoot,
+      description: 'Naucz się pierwiastków kwadratowych',
+      color: 'bg-orange-500',
+      hoverColor: 'hover:bg-orange-600',
+      example: '√16 = ?'
     }
   ];
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
       <div className="bg-white p-8 rounded-xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <Calculator className="w-12 h-12 text-blue-600 mr-3" />
-            <h2 className="text-3xl font-bold text-gray-800">
-              Wybierz rodzaj działań matematycznych
-            </h2>
+        {/* Header with back button */}
+        <div className="flex items-center justify-between mb-6">
+          <button
+            onClick={onCancel}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors p-2 rounded-md hover:bg-gray-100"
+            title="Powrót do menu głównego"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="text-sm font-medium">Powrót</span>
+          </button>
+          
+          <div className="text-center flex-1">
+            <div className="flex items-center justify-center mb-4">
+              <Calculator className="w-12 h-12 text-blue-600 mr-3" />
+              <h2 className="text-3xl font-bold text-gray-800">
+                Wybierz rodzaj działań matematycznych
+              </h2>
+            </div>
+            <p className="text-gray-600 text-lg">
+              Wybierz, które działania chcesz ćwiczyć w dżungli matematycznej!
+            </p>
           </div>
-          <p className="text-gray-600 text-lg">
-            Wybierz, które działania chcesz ćwiczyć w dżungli matematycznej!
-          </p>
+          
+          {/* Spacer for balance */}
+          <div className="w-20"></div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
