@@ -90,7 +90,7 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
                 className="w-full h-full rounded-lg"
                 poster="/videos/intro-startup-poster.jpg"
               >
-                <source src="/public/videos/intro-startup.mp4" type="video/mp4" />
+                <source src="/videos/intro-startup.mp4" type="video/mp4" />
                 <source src="/videos/intro-startup.webm" type="video/webm" />
                 <div className="bg-text-color/90 rounded-lg aspect-video flex items-center justify-center">
                   <div className="text-center text-white">
