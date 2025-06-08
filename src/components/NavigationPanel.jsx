@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Menu, CheckSquare, Calendar, Settings, LogOut, Globe, LogIn } from 'lucide-react';
+import { Menu, CheckSquare, Calendar, Settings, LogOut, Globe, LogIn, Home } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import SettingsModal from './SettingsModal';
 
-const NavigationPanel = ({ onLoginClick }) => {
+const NavigationPanel = ({ onLoginClick, onShowKokpit }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const { t, switchLanguage, currentLanguage } = useLanguage();
@@ -33,12 +33,26 @@ const NavigationPanel = ({ onLoginClick }) => {
     }
   };
 
+  const handleKokpit = () => {
+    if (onShowKokpit) {
+      onShowKokpit();
+    }
+    if (window.innerWidth < 768) {
+      setIsExpanded(false);
+    }
+  };
+
   const menuItems = [
     { 
       icon: Menu,
       label: t('menu'),
       action: () => setIsExpanded(!isExpanded)
     },
+    ...(user && onShowKokpit ? [{ 
+      icon: Home, 
+      label: 'Kokpit Odkrywcy', 
+      action: handleKokpit
+    }] : []),
     { 
       icon: CheckSquare, 
       label: t('myTasks'), 
