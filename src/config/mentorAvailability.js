@@ -1,20 +1,27 @@
 export const mentorAvailability = {
-  // Godziny dostępności mentora (format 24h)
+  // Informacje o mentorze
+  mentorInfo: {
+    name: 'Sylwester Zieliński',
+    title: 'Mentor Matematyki',
+    specialization: 'Funkcje kwadratowe, optymalizacja, analiza matematyczna'
+  },
+
+  // Harmonogram spotkań (format 24h)
   schedule: {
-    monday: { start: '08:00', end: '12:00' },
-    tuesday: { start: '08:00', end: '12:00' },
-    wednesday: { start: '08:00', end: '12:00' },
-    thursday: { start: '08:00', end: '12:00' },
-    friday: { start: '08:00', end: '12:00' },
+    monday: { start: '08:30', end: '09:30' },
+    tuesday: { start: '08:30', end: '09:30' },
+    wednesday: { start: '08:30', end: '09:30' },
+    thursday: { start: '08:30', end: '09:30' },
+    friday: { start: '08:30', end: '09:30' },
     saturday: null, // Niedostępny
     sunday: null   // Niedostępny
   },
   
-  // Symulacja zajętości mentora (można rozszerzyć o API)
+  // Symulacja zajętości mentora
   isBusy: false,
   
-  // Funkcja sprawdzająca dostępność
-  isAvailable() {
+  // Funkcja sprawdzająca czy to czas spotkania (dokładnie o 8:30)
+  isSessionTime() {
     const now = new Date();
     const dayOfWeek = now.getDay(); // 0 = niedziela, 1 = poniedziałek, itd.
     const currentTime = now.toTimeString().slice(0, 5); // Format HH:MM
@@ -24,7 +31,23 @@ export const mentorAvailability = {
     const todaySchedule = this.schedule[today];
     
     if (!todaySchedule) return false; // Dzień wolny
-    if (this.isBusy) return false; // Mentor zajęty
+    
+    // Sprawdź czy to dokładnie czas spotkania (8:30)
+    return currentTime === '08:30';
+  },
+  
+  // Funkcja sprawdzająca dostępność (szersze okno czasowe)
+  isAvailable() {
+    const now = new Date();
+    const dayOfWeek = now.getDay();
+    const currentTime = now.toTimeString().slice(0, 5);
+    
+    const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const today = dayNames[dayOfWeek];
+    const todaySchedule = this.schedule[today];
+    
+    if (!todaySchedule) return false;
+    if (this.isBusy) return false;
     
     return currentTime >= todaySchedule.start && currentTime <= todaySchedule.end;
   },
@@ -32,12 +55,13 @@ export const mentorAvailability = {
   // Funkcja zwracająca status mentora
   getStatus() {
     if (this.isBusy) return 'busy';
+    if (this.isSessionTime()) return 'session-time'; // Nowy status
     if (this.isAvailable()) return 'available';
     return 'unavailable';
   },
   
-  // Funkcja zwracająca następną dostępność
-  getNextAvailability() {
+  // Funkcja zwracająca następne spotkanie
+  getNextSessionDate() {
     const now = new Date();
     const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     
@@ -49,19 +73,40 @@ export const mentorAvailability = {
       const schedule = this.schedule[dayName];
       
       if (schedule) {
-        const nextDateTime = new Date(checkDate);
+        const sessionDateTime = new Date(checkDate);
         const [hours, minutes] = schedule.start.split(':');
-        nextDateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+        sessionDateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
         
-        // Jeśli to dzisiaj, sprawdź czy jeszcze nie minęła godzina rozpoczęcia
-        if (i === 0 && nextDateTime <= now) {
+        // Jeśli to dzisiaj, sprawdź czy jeszcze nie minęła godzina
+        if (i === 0 && sessionDateTime <= now) {
           continue; // Sprawdź następny dzień
         }
         
-        return nextDateTime;
+        return sessionDateTime;
       }
     }
     
-    return null; // Brak dostępności w najbliższych 7 dniach
+    return null;
+  },
+
+  // Funkcja formatująca datę spotkania
+  formatSessionDate(date) {
+    if (!date) return null;
+    
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const sessionDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    
+    const diffTime = sessionDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) {
+      return 'Dziś';
+    } else if (diffDays === 1) {
+      return 'Jutro';
+    } else {
+      const dayNames = ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'];
+      return dayNames[date.getDay()];
+    }
   }
 };

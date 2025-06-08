@@ -1,13 +1,32 @@
-import React, { useEffect } from 'react';
-import { Clock, Video, Calendar, RotateCcw } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Clock, Video, Calendar, RotateCcw, User } from 'lucide-react';
 import { useGlobalTimer } from '../../hooks/useGlobalTimer';
+import { mentorAvailability } from '../../config/mentorAvailability';
 
 const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
   const { timeElapsed, formattedTime, resetAfterBreak } = useGlobalTimer();
+  const [mentorStatus, setMentorStatus] = useState('unavailable');
+  const [nextSession, setNextSession] = useState(null);
   
   // Oblicz pozostały czas (cel: 1 godzina nauki)
   const targetTime = 3600; // 1 godzina w sekundach
   const timeRemaining = Math.max(0, targetTime - timeElapsed);
+
+  // Aktualizuj status mentora co minutę
+  useEffect(() => {
+    const updateMentorStatus = () => {
+      const status = mentorAvailability.getStatus();
+      setMentorStatus(status);
+      
+      const nextSessionDate = mentorAvailability.getNextSessionDate();
+      setNextSession(nextSessionDate);
+    };
+
+    updateMentorStatus();
+    const interval = setInterval(updateMentorStatus, 60000); // Co minutę
+
+    return () => clearInterval(interval);
+  }, []);
 
   const getProgressPercentage = () => {
     return (timeElapsed / targetTime) * 100;
@@ -16,6 +35,21 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
   const handleResetTimer = () => {
     if (confirm('Czy na pewno chcesz zresetować timer sesji? To działanie nie może być cofnięte.')) {
       resetAfterBreak();
+    }
+  };
+
+  const handleScheduleMentor = () => {
+    const nextSessionDate = mentorAvailability.getNextSessionDate();
+    if (nextSessionDate) {
+      const formattedDate = mentorAvailability.formatSessionDate(nextSessionDate);
+      onScheduleMentor({
+        name: mentorAvailability.mentorInfo.name,
+        title: mentorAvailability.mentorInfo.title,
+        date: formattedDate,
+        time: '8:30',
+        zoomLink: 'http://strefaedukacji.zrozoomai.pl/',
+        isActive: mentorStatus === 'session-time'
+      });
     }
   };
 
@@ -29,6 +63,41 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
     }
     return `${minutes}:${secs.toString().padStart(2, '0')}`;
   };
+
+  const getMentorStatusInfo = () => {
+    switch (mentorStatus) {
+      case 'session-time':
+        return {
+          color: 'text-green-600',
+          bgColor: 'bg-green-600',
+          icon: '🟢',
+          message: 'Spotkanie trwa - dołącz teraz!'
+        };
+      case 'available':
+        return {
+          color: 'text-blue-600',
+          bgColor: 'bg-blue-600',
+          icon: '🔵',
+          message: 'Dostępny (poza czasem spotkania)'
+        };
+      case 'busy':
+        return {
+          color: 'text-yellow-600',
+          bgColor: 'bg-yellow-600',
+          icon: '🟡',
+          message: 'Zajęty'
+        };
+      default:
+        return {
+          color: 'text-gray-600',
+          bgColor: 'bg-gray-600',
+          icon: '⚫',
+          message: 'Niedostępny'
+        };
+    }
+  };
+
+  const statusInfo = getMentorStatusInfo();
 
   return (
     <div className="bg-bg-card rounded-xl p-6 shadow-lg border border-bg-neutral">
@@ -110,39 +179,77 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
         {!mentorSession ? (
           <div className="text-center">
             <div className="mb-3">
-              <Calendar className="w-8 h-8 text-nav-bg mx-auto mb-2" />
-              <p className="text-text-color/70 text-sm">
-                Potrzebujesz pomocy? Umów się z mentorem!
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <User className="w-6 h-6 text-nav-bg" />
+                <span className="font-medium text-text-color">
+                  {mentorAvailability.mentorInfo.name}
+                </span>
+                <span className="text-lg">{statusInfo.icon}</span>
+              </div>
+              <p className="text-text-color/70 text-sm mb-1">
+                {mentorAvailability.mentorInfo.title}
               </p>
+              <p className={`text-xs font-medium ${statusInfo.color}`}>
+                {statusInfo.message}
+              </p>
+              {nextSession && (
+                <p className="text-text-color/60 text-xs mt-1">
+                  Następne spotkanie: {mentorAvailability.formatSessionDate(nextSession)} o 8:30
+                </p>
+              )}
             </div>
             <button
-              onClick={onScheduleMentor}
+              onClick={handleScheduleMentor}
               className="w-full bg-nav-bg text-white py-3 px-6 rounded-lg hover:bg-nav-bg/90 transition-colors font-medium flex items-center justify-center gap-2"
             >
               <Calendar className="w-5 h-5" />
-              UMÓW SESJĘ Z MENTOREM
+              ZAPLANUJ SPOTKANIE
             </button>
           </div>
         ) : (
           <div className="text-center">
             <div className="mb-3">
-              <Video className="w-8 h-8 text-green-600 mx-auto mb-2" />
-              <p className="text-text-color font-medium">
-                Spotkanie z mentorem: {mentorSession.name}
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <User className="w-6 h-6 text-green-600" />
+                <span className="font-medium text-text-color">
+                  {mentorSession.name}
+                </span>
+                <span className="text-lg">{statusInfo.icon}</span>
+              </div>
+              <p className="text-text-color/70 text-sm mb-1">
+                {mentorSession.title}
               </p>
-              <p className="text-text-color/70 text-sm">
-                {mentorSession.date} o {mentorSession.time}
+              <p className="text-text-color font-medium">
+                Spotkanie: {mentorSession.date} o {mentorSession.time}
+              </p>
+              <p className={`text-xs font-medium ${statusInfo.color} mt-1`}>
+                {statusInfo.message}
               </p>
             </div>
             <a
               href={mentorSession.zoomLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center justify-center gap-2 inline-flex"
+              className={`w-full py-3 px-6 rounded-lg transition-colors font-medium flex items-center justify-center gap-2 inline-flex ${
+                mentorSession.isActive 
+                  ? 'bg-green-600 hover:bg-green-700 text-white cursor-pointer' 
+                  : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+              }`}
+              onClick={(e) => {
+                if (!mentorSession.isActive) {
+                  e.preventDefault();
+                  alert(`Spotkanie będzie aktywne ${mentorSession.date} o ${mentorSession.time}. Obecnie: ${new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })}`);
+                }
+              }}
             >
               <Video className="w-5 h-5" />
-              DOŁĄCZ DO SPOTKANIA
+              {mentorSession.isActive ? 'DOŁĄCZ DO SPOTKANIA' : `SPOTKANIE O ${mentorSession.time}`}
             </a>
+            {!mentorSession.isActive && (
+              <p className="text-xs text-text-color/60 mt-2">
+                Przycisk będzie aktywny o {mentorSession.time}
+              </p>
+            )}
           </div>
         )}
       </div>

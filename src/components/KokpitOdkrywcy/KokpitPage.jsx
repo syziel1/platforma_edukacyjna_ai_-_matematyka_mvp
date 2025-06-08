@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useProgress } from '../../contexts/ProgressContext';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { mentorAvailability } from '../../config/mentorAvailability';
 import LeftColumn from './LeftColumn';
 import RightColumn from './RightColumn';
 import GlobalHeader from '../GlobalHeader';
@@ -58,16 +59,11 @@ const KokpitPage = ({ onProblemSelect }) => {
     }));
   }, [getProgress]);
 
-  // Symulacja sesji z mentorem (można rozszerzyć o prawdziwe API)
-  const handleScheduleMentor = () => {
+  // Funkcja planowania spotkania z mentorem
+  const handleScheduleMentor = (sessionData) => {
     setKokpitData(prev => ({
       ...prev,
-      mentorSession: {
-        name: 'Dr Anna Kowalska',
-        date: 'Dziś',
-        time: '15:30',
-        zoomLink: 'http://strefaedukacji.zrozoomai.pl/'
-      }
+      mentorSession: sessionData
     }));
   };
 
