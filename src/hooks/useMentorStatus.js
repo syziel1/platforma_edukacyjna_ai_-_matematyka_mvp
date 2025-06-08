@@ -11,7 +11,7 @@ export const useMentorStatus = () => {
       setStatus(currentStatus);
       
       if (currentStatus !== 'available') {
-        const next = mentorAvailability.getNextAvailability();
+        const next = mentorAvailability.getNextSessionDate();
         setNextAvailability(next);
       } else {
         setNextAvailability(null);
