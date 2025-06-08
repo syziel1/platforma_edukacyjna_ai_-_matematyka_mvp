@@ -89,8 +89,25 @@ const AboutProjectModal = ({ isOpen, onClose }) => {
             {/* Project Leader */}
             <div className="bg-white rounded-lg p-4 border border-nav-bg/30 mb-4">
               <div className="flex items-center gap-4 mb-3">
-                <div className="w-16 h-16 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-full flex items-center justify-center text-white font-bold text-xl">
-                  SZ
+                {/* Zdjęcie mentora - placeholder, który można podmienić */}
+                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-accent-primary shadow-lg">
+                  <img 
+                    src="/mentor-photo.jpg"
+                    alt="Sylwester Zieliński"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback do inicjałów jeśli zdjęcie nie zostanie znalezione
+                      e.target.style.display = 'none';
+                      e.target.nextElementSibling.style.display = 'flex';
+                    }}
+                  />
+                  {/* Fallback z inicjałami */}
+                  <div 
+                    className="w-full h-full bg-gradient-to-br from-accent-primary to-accent-secondary rounded-full flex items-center justify-center text-white font-bold text-xl"
+                    style={{ display: 'none' }}
+                  >
+                    SZ
+                  </div>
                 </div>
                 <div>
                   <h4 className="font-bold text-text-color text-lg">Sylwester Zieliński</h4>
