@@ -15,7 +15,7 @@ const ChatPanel = ({ isMobile = false }) => {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const { translate, currentLanguage } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const { user } = useAuth();
 
   const generateGeminiResponse = async (userInput) => {
@@ -130,7 +130,7 @@ const ChatPanel = ({ isMobile = false }) => {
           <div className="flex items-center gap-2">
             <Bot className="w-5 h-5 text-nav-bg" />
             <h3 className="font-semibold text-text-color">
-              {translate('aiMentor')}
+              {t('aiMentor')}
             </h3>
           </div>
           <ChevronUp className={`w-5 h-5 text-nav-bg transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
@@ -163,7 +163,7 @@ const ChatPanel = ({ isMobile = false }) => {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder={translate('typeMessage')}
+                  placeholder={t('typeMessage')}
                   className="flex-1 p-2 border border-bg-neutral rounded-md resize-none text-sm focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color bg-white"
                   rows="2"
                   disabled={isLoading}
@@ -189,7 +189,7 @@ const ChatPanel = ({ isMobile = false }) => {
         <div className="flex items-center gap-2">
           <Bot className="w-5 h-5 text-nav-bg" />
           <h3 className="font-semibold text-text-color">
-            {translate('aiMentor')}
+            {t('aiMentor')}
           </h3>
         </div>
       </div>
@@ -219,7 +219,7 @@ const ChatPanel = ({ isMobile = false }) => {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder={translate('typeMessage')}
+            placeholder={t('typeMessage')}
             className="flex-1 p-2 border border-bg-neutral rounded-md resize-none text-sm focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color bg-white"
             rows="2"
             disabled={isLoading}

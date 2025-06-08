@@ -1,12 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import LessonHeader from './LessonHeader';
+import GlobalHeader from './GlobalHeader';
 import Scene3D from './GameComponents/Scene3D';
 import MapGrid from './GameComponents/MapGrid';
 import QuestionModal from './GameComponents/QuestionModal';
 import WelcomeModal from './GameComponents/WelcomeModal';
+import InstructionsModal from './GameComponents/InstructionsModal';
 import GameModeSelector from './GameComponents/GameModeSelector';
+import { useLanguage } from '../contexts/LanguageContext';
+import { useSoundEffects } from '../hooks/useSoundEffects';
 
 const MultiplicationGame = ({ onBack }) => {
+  const { t } = useLanguage();
+  const { playSound } = useSoundEffects();
+  
   const [gameState, setGameState] = useState({
     currentLevelSize: 4,
     boardData: [],
@@ -16,6 +23,7 @@ const MultiplicationGame = ({ onBack }) => {
     showModeSelector: true,
     selectedMode: null,
     showWelcome: false,
+    showInstructions: false,
     showQuestion: false,
     currentQuestion: null,
     wrongAnswersCount: 0,
@@ -27,7 +35,7 @@ const MultiplicationGame = ({ onBack }) => {
   // Game mode configurations
   const gameModeConfig = {
     addition: {
-      name: 'Dodawanie',
+      name: t('addition'),
       symbol: '+',
       generateQuestion: (r, c) => ({
         num1: r + 1,
@@ -38,7 +46,7 @@ const MultiplicationGame = ({ onBack }) => {
       })
     },
     subtraction: {
-      name: 'Odejmowanie', 
+      name: t('subtraction'), 
       symbol: '-',
       generateQuestion: (r, c) => {
         const num1 = Math.max(r + 1, c + 1) + Math.floor(Math.random() * 5);
@@ -53,7 +61,7 @@ const MultiplicationGame = ({ onBack }) => {
       }
     },
     multiplication: {
-      name: 'Mnożenie',
+      name: t('multiplication'),
       symbol: '×',
       generateQuestion: (r, c) => ({
         num1: r + 1,
@@ -64,7 +72,7 @@ const MultiplicationGame = ({ onBack }) => {
       })
     },
     division: {
-      name: 'Dzielenie',
+      name: t('division'),
       symbol: '÷',
       generateQuestion: (r, c) => {
         const divisor = Math.max(1, Math.min(r + 1, c + 1));
@@ -80,7 +88,7 @@ const MultiplicationGame = ({ onBack }) => {
       }
     },
     exponentiation: {
-      name: 'Potęgowanie',
+      name: t('exponentiation'),
       symbol: '^',
       generateQuestion: (r, c) => {
         const base = Math.max(2, Math.min(r + 1, c + 1, 5)); // Limit base to 2-5
@@ -93,13 +101,30 @@ const MultiplicationGame = ({ onBack }) => {
           display: `${base}^${exponent}`
         };
       }
+    },
+    'square-root': {
+      name: t('squareRoot'),
+      symbol: '√',
+      generateQuestion: (r, c) => {
+        // Generate perfect squares for easier calculation
+        const perfectSquares = [1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225];
+        const maxIndex = Math.min(perfectSquares.length - 1, Math.max(r, c) + 2);
+        const randomSquare = perfectSquares[Math.min(maxIndex, perfectSquares.length - 1)];
+        return {
+          num1: randomSquare,
+          num2: null,
+          operation: 'square-root',
+          answer: Math.sqrt(randomSquare),
+          display: `√${randomSquare}`
+        };
+      }
     }
   };
 
   // Add timer effect
   useEffect(() => {
     let timer;
-    if (!gameState.showModeSelector && !gameState.showWelcome && !gameState.showQuestion) {
+    if (!gameState.showModeSelector && !gameState.showWelcome && !gameState.showInstructions && !gameState.showQuestion) {
       timer = setInterval(() => {
         setGameState(prev => ({
           ...prev,
@@ -110,7 +135,7 @@ const MultiplicationGame = ({ onBack }) => {
     return () => {
       if (timer) clearInterval(timer);
     };
-  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showQuestion]);
+  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, gameState.showQuestion]);
 
   // Generate bonus positions - maximum 1 per 8 cells
   const generateBonusPositions = useCallback((size) => {
@@ -184,10 +209,10 @@ const MultiplicationGame = ({ onBack }) => {
   }, [gameState.currentLevelSize, gameState.selectedMode, createNewCellData, generateBonusPositions]);
 
   useEffect(() => {
-    if (!gameState.showModeSelector && !gameState.showWelcome && gameState.boardData.length === 0) {
+    if (!gameState.showModeSelector && !gameState.showWelcome && !gameState.showInstructions && gameState.boardData.length === 0) {
       initializeGame();
     }
-  }, [gameState.showModeSelector, gameState.showWelcome, gameState.boardData.length, initializeGame]);
+  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, gameState.boardData.length, initializeGame]);
 
   const calculateCellScore = (row, col, isBonus = false) => {
     const baseScore = row + col + 2; // +2 because coordinates start from 0
@@ -195,11 +220,44 @@ const MultiplicationGame = ({ onBack }) => {
   };
 
   const handleModeSelect = (mode) => {
+    playSound('move');
     setGameState(prev => ({
       ...prev,
       selectedMode: mode,
       showModeSelector: false,
       showWelcome: true
+    }));
+  };
+
+  const handleCancel = () => {
+    playSound('move');
+    onBack();
+  };
+
+  const handleShowInstructions = () => {
+    playSound('move');
+    setGameState(prev => ({
+      ...prev,
+      showWelcome: false,
+      showInstructions: true
+    }));
+  };
+
+  const handleBackToWelcome = () => {
+    playSound('move');
+    setGameState(prev => ({
+      ...prev,
+      showInstructions: false,
+      showWelcome: true
+    }));
+  };
+
+  const handleStartGame = () => {
+    playSound('move');
+    setGameState(prev => ({
+      ...prev,
+      showWelcome: false,
+      showInstructions: false
     }));
   };
 
@@ -211,6 +269,8 @@ const MultiplicationGame = ({ onBack }) => {
     const correctAnswer = currentCell.correctAnswer;
     
     if (parseInt(answer) === correctAnswer) {
+      playSound('correct');
+      
       const newBoardData = gameState.boardData.map(cell => {
         if (cell.row === currentCell.row && cell.col === currentCell.col) {
           const newGrass = Math.max(0, cell.grass - Math.ceil(cell.grass * 0.50));
@@ -236,7 +296,8 @@ const MultiplicationGame = ({ onBack }) => {
       if (currentCell.isBonus && newBoardData.find(c => c.row === currentCell.row && c.col === currentCell.col).grass === 0) {
         const bonusPoints = calculateCellScore(currentCell.row, currentCell.col, true) - cellScore;
         cellScore = calculateCellScore(currentCell.row, currentCell.col, true);
-        bonusMessage = ` (Bonus +${bonusPoints}!)`;
+        bonusMessage = ` (${t('bonusPoints')} +${bonusPoints}!)`;
+        playSound('bonus');
       }
 
       setGameState(prev => ({
@@ -253,8 +314,10 @@ const MultiplicationGame = ({ onBack }) => {
         }
       }));
 
-      showMessage(`Świetnie! +${cellScore} punktów${bonusMessage}`, 2000);
+      showMessage(`${t('great')} +${cellScore} ${t('points')}${bonusMessage}`, 2000);
     } else {
+      playSound('wrong');
+      
       const newBoardData = gameState.boardData.map(cell => {
         if (cell.row === currentCell.row && cell.col === currentCell.col) {
           const newGrass = Math.min(200, cell.grass + Math.ceil(cell.grass * 0.20));
@@ -273,12 +336,12 @@ const MultiplicationGame = ({ onBack }) => {
         wrongAnswersCount: prev.wrongAnswersCount + 1
       }));
 
-      showMessage('Niestety, źle. Trawa odrasta...', 2000);
+      showMessage(t('wrong'), 2000);
     }
   };
 
   const handleKeyPress = useCallback((e) => {
-    if (gameState.showModeSelector || gameState.showWelcome || gameState.showQuestion) return;
+    if (gameState.showModeSelector || gameState.showWelcome || gameState.showInstructions || gameState.showQuestion) return;
 
     const { row: pr, col: pc, direction: pdir } = gameState.playerPosition;
     let newRow = pr, newCol = pc, newDirection = pdir;
@@ -298,6 +361,8 @@ const MultiplicationGame = ({ onBack }) => {
         const targetCell = gameState.boardData.find(cell => cell.row === newRow && cell.col === newCol);
         
         if (targetCell.grass < 10) {
+          playSound('move');
+          
           // Check if stepping on a bonus cell that hasn't been collected
           if (targetCell.isBonus && !targetCell.bonusCollected && targetCell.grass === 0) {
             const bonusScore = calculateCellScore(targetCell.row, targetCell.col, false); // Base score for stepping on bonus
@@ -321,7 +386,8 @@ const MultiplicationGame = ({ onBack }) => {
               }
             }));
 
-            showMessage(`Bonus zebrano! +${bonusScore} punktów!`, 2000);
+            playSound('bonus');
+            showMessage(`${t('bonusCollected')} +${bonusScore} ${t('points')}!`, 2000);
           } else {
             // Normal movement to cleared cell
             setGameState(prev => ({
@@ -336,6 +402,7 @@ const MultiplicationGame = ({ onBack }) => {
           moved = true;
         } else {
           // Show question for grassy cell
+          playSound('question');
           setGameState(prev => ({
             ...prev,
             showQuestion: true,
@@ -344,7 +411,8 @@ const MultiplicationGame = ({ onBack }) => {
           }));
         }
       } else {
-        showMessage("Nie możesz tam iść (ściana!)", 1500);
+        playSound('error');
+        showMessage(t('cannotGo'), 1500);
       }
     } else if (e.key === 'ArrowLeft') {
       const dirs = ['N', 'W', 'S', 'E'];
@@ -359,6 +427,9 @@ const MultiplicationGame = ({ onBack }) => {
     }
 
     if (moved && !gameState.showQuestion) {
+      if (e.key !== 'ArrowUp') {
+        playSound('move');
+      }
       setGameState(prev => ({
         ...prev,
         playerPosition: {
@@ -368,7 +439,7 @@ const MultiplicationGame = ({ onBack }) => {
         }
       }));
     }
-  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showQuestion, gameState.playerPosition, gameState.currentLevelSize, gameState.boardData]);
+  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, gameState.showQuestion, gameState.playerPosition, gameState.currentLevelSize, gameState.boardData, t, playSound]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
@@ -402,27 +473,45 @@ const MultiplicationGame = ({ onBack }) => {
 
   const getGameTitle = () => {
     if (gameState.selectedMode && gameModeConfig[gameState.selectedMode]) {
-      return `Gra: Szlakami ${gameModeConfig[gameState.selectedMode].name.toLowerCase()}`;
+      return `${t('multiplicationGameTitle')} - ${gameModeConfig[gameState.selectedMode].name}`;
     }
-    return "Gra: Szlakami matematyki";
+    return t('multiplicationGameTitle');
   };
 
   return (
     <div className="h-screen flex flex-col bg-bg-main">
-      <LessonHeader 
-        currentStep={1} 
-        totalSteps={1} 
-        onBack={onBack}
-        title={getGameTitle()}
-      />
+      {gameState.showModeSelector || gameState.showWelcome || gameState.showInstructions ? (
+        <GlobalHeader 
+          title={getGameTitle()}
+          onBack={onBack}
+          showBackButton={true}
+        />
+      ) : (
+        <GlobalHeader 
+          title={getGameTitle()}
+          onBack={onBack}
+          showBackButton={true}
+        />
+      )}
 
       {gameState.showModeSelector ? (
-        <GameModeSelector onModeSelect={handleModeSelect} />
+        <GameModeSelector 
+          onModeSelect={handleModeSelect} 
+          onCancel={handleCancel}
+        />
       ) : gameState.showWelcome ? (
         <WelcomeModal 
           selectedMode={gameState.selectedMode}
           gameModeConfig={gameModeConfig}
-          onStart={() => setGameState(prev => ({ ...prev, showWelcome: false }))} 
+          onStart={handleStartGame}
+          onShowInstructions={handleShowInstructions}
+        />
+      ) : gameState.showInstructions ? (
+        <InstructionsModal 
+          selectedMode={gameState.selectedMode}
+          gameModeConfig={gameModeConfig}
+          onBack={handleBackToWelcome}
+          onStart={handleStartGame}
         />
       ) : (
         <div className="flex-1 flex flex-col overflow-hidden">
@@ -441,15 +530,16 @@ const MultiplicationGame = ({ onBack }) => {
               playerPosition={gameState.playerPosition}
               currentLevelSize={gameState.currentLevelSize}
               level={1}
+              playSound={playSound}
               selectedMode={gameState.selectedMode}
               gameModeConfig={gameModeConfig}
             />
           </div>
 
-          {/* 2D View - Bottom Half, Full Width */}
-          <div className="h-1/2 bg-bg-card flex">
-            {/* Left Side - Map */}
-            <div className="flex-1 flex flex-col justify-center items-center p-4">
+          {/* 2D View - Bottom Half */}
+          <div className="h-1/2 bg-bg-card flex flex-col md:flex-row">
+            {/* Map Section - Full width on mobile, 60% on desktop */}
+            <div className="flex-1 md:w-3/5 flex flex-col justify-center items-center p-2 md:p-4">
               <MapGrid 
                 boardData={gameState.boardData}
                 playerPosition={gameState.playerPosition}
@@ -458,54 +548,68 @@ const MultiplicationGame = ({ onBack }) => {
               />
             </div>
 
-            {/* Right Side - Stats */}
-            <div className="w-80 p-6 border-l border-bg-neutral">
-              <div className="space-y-4">
+            {/* Stats Section - Full width on mobile, 40% on desktop */}
+            <div className="md:w-2/5 p-2 md:p-6 md:border-l border-bg-neutral">
+              <div className="h-full">
                 {/* Game Mode Display */}
                 {gameState.selectedMode && (
-                  <div className="bg-amber-100 p-4 rounded-lg border border-amber-300">
+                  <div className="bg-amber-100 p-2 md:p-4 rounded-lg border border-amber-300 mb-2 md:mb-4">
                     <div className="text-center">
-                      <div className="text-amber-800 font-bold text-lg mb-1">Tryb gry</div>
-                      <div className="text-amber-700 text-xl font-bold">
+                      <div className="text-amber-800 font-bold text-sm md:text-lg mb-1">{t('gameMode')}</div>
+                      <div className="text-amber-700 text-base md:text-xl font-bold">
                         {gameModeConfig[gameState.selectedMode].name}
                       </div>
-                      <div className="text-amber-600 text-sm">
-                        {gameModeConfig[gameState.selectedMode].symbol} Działania
+                      <div className="text-amber-600 text-xs md:text-sm">
+                        {gameModeConfig[gameState.selectedMode].symbol} {t('operations')}
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* Points */}
-                <div className="bg-green-100 p-4 rounded-lg border border-green-300">
-                  <div className="text-center">
-                    <div className="text-green-800 font-bold text-lg mb-1">Punkty</div>
-                    <div className="text-green-700 text-2xl font-bold">
-                      {gameState.score}
+                {/* Stats in responsive grid */}
+                <div className="grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-4">
+                  {/* Points */}
+                  <div className="bg-green-100 p-2 md:p-4 rounded-lg border border-green-300">
+                    <div className="text-center">
+                      <div className="text-green-800 font-bold text-xs md:text-base mb-1">{t('points')}</div>
+                      <div className="text-green-700 text-lg md:text-xl font-bold">
+                        {gameState.score}
+                      </div>
+                      <div className="text-green-600 text-xs">🏆 {t('earned')}</div>
                     </div>
-                    <div className="text-green-600 text-sm">🏆 Zdobyte</div>
                   </div>
-                </div>
 
-                {/* Time */}
-                <div className="bg-blue-100 p-4 rounded-lg border border-blue-300">
-                  <div className="text-center">
-                    <div className="text-blue-800 font-bold text-lg mb-1">Czas</div>
-                    <div className="text-blue-700 text-2xl font-bold">
-                      {formatTime(gameState.timeElapsed)}
+                  {/* Time */}
+                  <div className="bg-blue-100 p-2 md:p-4 rounded-lg border border-blue-300">
+                    <div className="text-center">
+                      <div className="text-blue-800 font-bold text-xs md:text-base mb-1">{t('time')}</div>
+                      <div className="text-blue-700 text-lg md:text-xl font-bold">
+                        {formatTime(gameState.timeElapsed)}
+                      </div>
+                      <div className="text-blue-600 text-xs">⏱️ {t('elapsed')}</div>
                     </div>
-                    <div className="text-blue-600 text-sm">⏱️ Upłynął</div>
                   </div>
-                </div>
 
-                {/* Grass Cleared Percentage */}
-                <div className="bg-purple-100 p-4 rounded-lg border border-purple-300">
-                  <div className="text-center">
-                    <div className="text-purple-800 font-bold text-lg mb-1">Trawa usunięta</div>
-                    <div className="text-purple-700 text-2xl font-bold">
-                      {calculateGrassClearedPercentage()}%
+                  {/* Grass Cleared Percentage */}
+                  <div className="bg-purple-100 p-2 md:p-4 rounded-lg border border-purple-300">
+                    <div className="text-center">
+                      <div className="text-purple-800 font-bold text-xs md:text-base mb-1">{t('grassCleared')}</div>
+                      <div className="text-purple-700 text-lg md:text-xl font-bold">
+                        {calculateGrassClearedPercentage()}%
+                      </div>
+                      <div className="text-purple-600 text-xs">🌱 {t('cleared')}</div>
                     </div>
-                    <div className="text-purple-600 text-sm">🌱 Oczyszczone</div>
+                  </div>
+
+                  {/* Level */}
+                  <div className="bg-orange-100 p-2 md:p-4 rounded-lg border border-orange-300">
+                    <div className="text-center">
+                      <div className="text-orange-800 font-bold text-xs md:text-base mb-1">{t('level')}</div>
+                      <div className="text-orange-700 text-lg md:text-xl font-bold">
+                        {gameState.currentLevelSize}×{gameState.currentLevelSize}
+                      </div>
+                      <div className="text-orange-600 text-xs">🌴 Rozmiar</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -520,6 +624,7 @@ const MultiplicationGame = ({ onBack }) => {
           onAnswer={handleAnswer}
           wrongAnswersCount={gameState.wrongAnswersCount}
           isGeminiLoading={gameState.isGeminiLoading}
+          playSound={playSound}
           selectedMode={gameState.selectedMode}
           gameModeConfig={gameModeConfig}
         />

@@ -5,7 +5,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 const LoginScreen = ({ onSkip }) => {
   const { login } = useAuth();
-  const { translate } = useLanguage();
+  const { t } = useLanguage();
 
   const handleSuccess = (credentialResponse) => {
     const decoded = JSON.parse(atob(credentialResponse.credential.split('.')[1]));
@@ -26,10 +26,10 @@ const LoginScreen = ({ onSkip }) => {
     <div className="min-h-screen bg-bg-main flex items-center justify-center">
       <div className="bg-bg-card p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
         <h1 className="text-xl font-bold text-text-color mb-6 text-center">
-          {translate('welcomeTitle')}
+          {t('welcomeTitle')}
         </h1>
         <p className="text-text-color/70 mb-8 text-center">
-          {translate('loginPrompt')}
+          {t('loginPrompt')}
         </p>
         <div className="flex flex-col items-center gap-4">
           <GoogleLogin
@@ -41,7 +41,7 @@ const LoginScreen = ({ onSkip }) => {
             onClick={onSkip}
             className="text-text-color hover:text-accent-primary transition-colors"
           >
-            {translate('skipLogin')}
+            {t('skipLogin')}
           </button>
         </div>
       </div>

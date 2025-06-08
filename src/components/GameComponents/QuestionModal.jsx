@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const QuestionModal = ({ 
   question, 
@@ -11,6 +12,7 @@ const QuestionModal = ({
   selectedMode,
   gameModeConfig
 }) => {
+  const { t } = useLanguage();
   const [answer, setAnswer] = useState('');
   const [showAdvice, setShowAdvice] = useState(false);
   const [isShaking, setIsShaking] = useState(false);
@@ -71,6 +73,7 @@ const QuestionModal = ({
       case 'multiplication': return '✖️';
       case 'division': return '➗';
       case 'exponentiation': return '⚡';
+      case 'square-root': return '√';
       default: return '🧮';
     }
   };
@@ -82,6 +85,7 @@ const QuestionModal = ({
       case 'multiplication': return 'text-blue-600';
       case 'division': return 'text-purple-600';
       case 'exponentiation': return 'text-yellow-600';
+      case 'square-root': return 'text-orange-600';
       default: return 'text-blue-600';
     }
   };
@@ -93,6 +97,7 @@ const QuestionModal = ({
       case 'multiplication': return 'from-blue-500 to-blue-600';
       case 'division': return 'from-purple-500 to-purple-600';
       case 'exponentiation': return 'from-yellow-500 to-yellow-600';
+      case 'square-root': return 'from-orange-500 to-orange-600';
       default: return 'from-green-500 to-blue-500';
     }
   };
@@ -114,6 +119,8 @@ const QuestionModal = ({
         return { display: `${questionData.num1} ÷ ${questionData.num2}`, symbol: '=' };
       case 'exponentiation':
         return { display: `${questionData.num1}^${questionData.num2}`, symbol: '=' };
+      case 'square-root':
+        return { display: `√${questionData.num1}`, symbol: '=' };
       default:
         return { display: question.question, symbol: '=' };
     }
@@ -206,7 +213,7 @@ const QuestionModal = ({
             <div className="flex items-center justify-center mb-2">
               <span className="text-3xl mr-2">{getModeIcon(selectedMode)}</span>
               <h3 className="text-xl font-bold text-gray-800">
-                Rozwiąż zadanie
+                {t('solveTask')}
               </h3>
             </div>
             <div className="text-center">
@@ -226,12 +233,12 @@ const QuestionModal = ({
                 value={answer}
                 onChange={handleChange}
                 className="w-full p-4 border-2 border-blue-300 rounded-lg text-center text-2xl font-bold focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all duration-200"
-                placeholder="Twoja odpowiedź..."
+                placeholder={t('yourAnswer')}
                 autoFocus
               />
               {wrongAnswersCount > 0 && (
                 <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                  Błędów: {wrongAnswersCount}
+                  {t('errors')} {wrongAnswersCount}
                 </div>
               )}
             </div>
@@ -241,7 +248,7 @@ const QuestionModal = ({
               disabled={!answer}
               className={`w-full bg-gradient-to-r ${getGradientColors(selectedMode)} text-white py-3 px-6 rounded-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg transform active:scale-95`}
             >
-              ✅ Sprawdź odpowiedź
+              ✅ {t('checkAnswer')}
             </button>
 
             {wrongAnswersCount >= 1 && onAskWiseOwl && (
@@ -253,7 +260,7 @@ const QuestionModal = ({
               >
                 <span className="owl-wing">🦉</span>
                 <span>
-                  {isGeminiLoading ? 'Mądra Sowa myśli...' : '✨ Zapytaj Mądrą Sowę'}
+                  {isGeminiLoading ? t('wiseOwlThinking') : `✨ ${t('askWiseOwl')}`}
                 </span>
                 {isGeminiLoading && (
                   <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-600 border-t-transparent"></div>
@@ -271,7 +278,7 @@ const QuestionModal = ({
                 </div>
                 <h4 className="font-bold text-blue-800 mb-2 flex items-center">
                   <span className="mr-2">💡</span>
-                  Rada od Mądrej Sowy:
+                  {t('adviceFromOwl')}
                 </h4>
                 <p className="text-blue-700 text-sm leading-relaxed">
                   {wiseOwlAdvice}
@@ -303,7 +310,7 @@ const QuestionModal = ({
           
           {wrongAnswersCount >= 2 && (
             <p className="text-center text-sm text-gray-600 mt-2">
-              💡 Wskazówka: Spróbuj rozłożyć działanie na prostsze części
+              💡 {t('hint')}: {t('tryBreakDown')}
             </p>
           )}
         </div>

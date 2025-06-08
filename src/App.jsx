@@ -3,10 +3,12 @@ import NavigationPanel from './components/NavigationPanel';
 import LessonHeader from './components/LessonHeader';
 import LessonContent from './components/LessonContent';
 import WaterTankContent from './components/WaterTankContent';
+import EcoTshirtContent from './components/EcoTshirtContent';
 import ChatPanel from './components/ChatPanel';
 import StartScreen from './components/StartScreen';
 import LoginScreen from './components/LoginScreen';
 import MultiplicationGame from './components/MultiplicationGame';
+import KokpitPage from './components/KokpitOdkrywcy/KokpitPage';
 import { useAuth } from './contexts/AuthContext';
 import { useProgress } from './contexts/ProgressContext';
 
@@ -14,12 +16,14 @@ function App() {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedProblem, setSelectedProblem] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
+  const [showKokpit, setShowKokpit] = useState(true); // Kokpit domyślnie widoczny
   const totalSteps = 5;
   const { user } = useAuth();
   const { updateProgress } = useProgress();
 
   const handleProblemSelect = (problemId) => {
     setSelectedProblem(problemId);
+    setShowKokpit(false);
     const savedProgress = localStorage.getItem('lessonProgress');
     const progress = savedProgress ? JSON.parse(savedProgress)[problemId] || 1 : 1;
     setCurrentStep(progress);
@@ -32,12 +36,24 @@ function App() {
     }
   };
 
+  const handleBackToKokpit = () => {
+    setSelectedProblem(null);
+    setShowKokpit(true);
+  };
+
+  const handleShowKokpit = () => {
+    setShowKokpit(true);
+    setSelectedProblem(null);
+  };
+
   const renderContent = () => {
     switch (selectedProblem) {
       case 'chicken-coop':
         return <LessonContent currentStep={currentStep} setCurrentStep={handleStepChange} />;
       case 'water-tank':
         return <WaterTankContent currentStep={currentStep} setCurrentStep={handleStepChange} />;
+      case 'eco-tshirt':
+        return <EcoTshirtContent currentStep={currentStep} setCurrentStep={handleStepChange} />;
       case 'multiplication-game':
         return <MultiplicationGame />;
       default:
@@ -51,12 +67,19 @@ function App() {
 
   return (
     <div className="min-h-screen bg-bg-main flex relative">
-      <NavigationPanel onLoginClick={() => setShowLogin(true)} />
+      <NavigationPanel 
+        onLoginClick={() => setShowLogin(true)}
+        onShowKokpit={handleShowKokpit}
+      />
 
-      {selectedProblem ? (
+      {showKokpit ? (
+        <div className="flex-1 pt-16 md:pt-0">
+          <KokpitPage onProblemSelect={handleProblemSelect} />
+        </div>
+      ) : selectedProblem ? (
         selectedProblem === 'multiplication-game' ? (
           <div className="flex-1 pt-16 md:pt-0">
-            <MultiplicationGame onBack={() => setSelectedProblem(null)} />
+            <MultiplicationGame onBack={handleBackToKokpit} />
           </div>
         ) : (
           <div className="flex flex-1">
@@ -65,7 +88,7 @@ function App() {
                 <LessonHeader 
                   currentStep={currentStep} 
                   totalSteps={totalSteps} 
-                  onBack={() => setSelectedProblem(null)}
+                  onBack={handleBackToKokpit}
                 />
                 <div className="flex-1 overflow-y-auto">
                   {renderContent()}
@@ -81,8 +104,9 @@ function App() {
           </div>
         )
       ) : (
+        // Fallback - nie powinno się zdarzyć, ale dla bezpieczeństwa
         <div className="flex-1 pt-16 md:pt-0">
-          <StartScreen onProblemSelect={handleProblemSelect} />
+          <KokpitPage onProblemSelect={handleProblemSelect} />
         </div>
       )}
     </div>

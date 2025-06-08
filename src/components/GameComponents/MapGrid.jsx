@@ -115,7 +115,11 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
         
         .player-indicator {
           filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.5));
+        }
+        
+        .player-arrow {
           animation: playerPulse 1s ease-in-out infinite alternate;
+          transition: transform 0.3s ease;
         }
         
         @keyframes playerPulse {
@@ -194,19 +198,13 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
               
               {/* Player indicator with enhanced styling */}
               {isPlayerHere && (
-                <div 
-                  className="absolute player-indicator"
-                  style={{
-                    '--rotation': getDirectionRotation(playerPosition.direction)
-                  }}
-                >
+                <div className="absolute player-indicator">
                   <div 
-                    className="w-0 h-0 border-[7px] border-transparent"
+                    className="w-0 h-0 border-[7px] border-transparent player-arrow"
                     style={{
                       borderTopWidth: '12px',
                       borderTopColor: '#ef4444',
-                      transform: `rotate(${getDirectionRotation(playerPosition.direction)})`,
-                      transition: 'transform 0.3s ease'
+                      '--rotation': getDirectionRotation(playerPosition.direction)
                     }}
                   />
                   {/* Player glow effect */}
