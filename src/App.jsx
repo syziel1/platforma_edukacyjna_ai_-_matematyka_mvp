@@ -16,7 +16,7 @@ function App() {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedProblem, setSelectedProblem] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
-  const [showKokpit, setShowKokpit] = useState(false);
+  const [showKokpit, setShowKokpit] = useState(true); // Kokpit domyślnie widoczny
   const totalSteps = 5;
   const { user } = useAuth();
   const { updateProgress } = useProgress();
@@ -79,7 +79,7 @@ function App() {
       ) : selectedProblem ? (
         selectedProblem === 'multiplication-game' ? (
           <div className="flex-1 pt-16 md:pt-0">
-            <MultiplicationGame onBack={showKokpit ? handleBackToKokpit : () => setSelectedProblem(null)} />
+            <MultiplicationGame onBack={handleBackToKokpit} />
           </div>
         ) : (
           <div className="flex flex-1">
@@ -88,7 +88,7 @@ function App() {
                 <LessonHeader 
                   currentStep={currentStep} 
                   totalSteps={totalSteps} 
-                  onBack={showKokpit ? handleBackToKokpit : () => setSelectedProblem(null)}
+                  onBack={handleBackToKokpit}
                 />
                 <div className="flex-1 overflow-y-auto">
                   {renderContent()}
@@ -104,8 +104,9 @@ function App() {
           </div>
         )
       ) : (
+        // Fallback - nie powinno się zdarzyć, ale dla bezpieczeństwa
         <div className="flex-1 pt-16 md:pt-0">
-          <StartScreen onProblemSelect={handleProblemSelect} />
+          <KokpitPage onProblemSelect={handleProblemSelect} />
         </div>
       )}
     </div>
