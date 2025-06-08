@@ -95,9 +95,13 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
     setFeedback(newFeedback);
     setShowResults(true);
 
-    // Show overall feedback
+    // Show overall feedback and advance if all correct
     if (allCorrect) {
       alert('🎉 Gratulacje! Wszystkie odpowiedzi są poprawne! Odkryłeś, że kwadrat daje największą powierzchnię!');
+      // Przejdź do następnego kroku tylko po poprawnych odpowiedziach
+      setTimeout(() => {
+        setCurrentStep(6); // Krok 6 - Podsumowanie wzorów
+      }, 1000);
     } else {
       alert('📚 Niektóre odpowiedzi wymagają poprawy. Sprawdź wskazówki i spróbuj ponownie.');
     }
@@ -233,18 +237,26 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
         return (
           <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
             <h3 className="text-lg font-semibold text-text-color mb-4">
-              {t('step5Title')}
+              Krok 1: Oblicz współrzędną x wierzchołka
             </h3>
             <div className="space-y-4 mb-6">
+              <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-4">
+                <h4 className="font-semibold text-blue-800 mb-2">📐 Wzór na współrzędną x wierzchołka paraboli:</h4>
+                <p className="font-mono text-blue-700 text-lg">x = -b / (2a)</p>
+                <p className="text-sm text-blue-600 mt-2">
+                  Gdzie dla funkcji P(x) = Lx - x² mamy: a = -1, b = L = 20, c = 0
+                </p>
+              </div>
+              
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  Krok 1: Oblicz współrzędną x wierzchołka (długość jednego boku)
+                  <strong>Zadanie:</strong> Oblicz współrzędną x wierzchołka (długość jednego boku)
                 </label>
                 <input
                   type="text"
                   value={answers.xCoordinate}
                   onChange={(e) => handleAnswerChange('xCoordinate', e.target.value)}
-                  placeholder="x = -b / (2a) = ..."
+                  placeholder="x = -b / (2a) = -20 / (2×(-1)) = ..."
                   className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color ${
                     showResults 
                       ? feedback.xCoordinate?.correct 
@@ -262,15 +274,55 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
                   Wskazówka: L = 20 (połowa obwodu 40m), a = -1, b = 20
                 </p>
               </div>
+            </div>
+
+            <div className="flex justify-between">
+              <button
+                onClick={() => setCurrentStep(4)}
+                className="bg-nav-bg/20 text-text-color px-6 py-2 rounded-md hover:bg-nav-bg/40 transition-colors flex items-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" /> Wstecz
+              </button>
+              <button
+                onClick={() => {
+                  if (answers.xCoordinate && parseFloat(answers.xCoordinate.replace(',', '.')) === 10) {
+                    setCurrentStep(6);
+                  } else {
+                    alert('Najpierw podaj prawidłową odpowiedź dla współrzędnej x!');
+                  }
+                }}
+                className="bg-accent-primary text-white px-6 py-2 rounded-md hover:bg-accent-primary/90 transition-colors flex items-center gap-2"
+              >
+                Następny krok <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        );
+
+      case 6:
+        return (
+          <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
+            <h3 className="text-lg font-semibold text-text-color mb-4">
+              Krok 2: Oblicz długość drugiego boku
+            </h3>
+            <div className="space-y-4 mb-6">
+              <div className="bg-green-50 border border-green-200 rounded-md p-4 mb-4">
+                <h4 className="font-semibold text-green-800 mb-2">📐 Wzór na drugi bok:</h4>
+                <p className="font-mono text-green-700 text-lg">y = L - x</p>
+                <p className="text-sm text-green-600 mt-2">
+                  Gdzie L = 20 (połowa obwodu), a x = {answers.xCoordinate || '10'} (z poprzedniego kroku)
+                </p>
+              </div>
+              
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  Krok 2: Oblicz długość drugiego boku
+                  <strong>Zadanie:</strong> Oblicz długość drugiego boku
                 </label>
                 <input
                   type="text"
                   value={answers.yCoordinate}
                   onChange={(e) => handleAnswerChange('yCoordinate', e.target.value)}
-                  placeholder="y = L - x = ..."
+                  placeholder="y = L - x = 20 - 10 = ..."
                   className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color ${
                     showResults 
                       ? feedback.yCoordinate?.correct 
@@ -285,12 +337,55 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
                   </p>
                 )}
                 <p className="text-xs text-text-color/60 mt-1">
-                  Wskazówka: y = 20 - x
+                  Wskazówka: y = 20 - x = 20 - 10
                 </p>
               </div>
+            </div>
+
+            <div className="flex justify-between">
+              <button
+                onClick={() => setCurrentStep(5)}
+                className="bg-nav-bg/20 text-text-color px-6 py-2 rounded-md hover:bg-nav-bg/40 transition-colors flex items-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" /> Wstecz
+              </button>
+              <button
+                onClick={() => {
+                  if (answers.yCoordinate && parseFloat(answers.yCoordinate.replace(',', '.')) === 10) {
+                    setCurrentStep(7);
+                  } else {
+                    alert('Najpierw podaj prawidłową odpowiedź dla długości drugiego boku!');
+                  }
+                }}
+                className="bg-accent-primary text-white px-6 py-2 rounded-md hover:bg-accent-primary/90 transition-colors flex items-center gap-2"
+              >
+                Ostatni krok <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        );
+
+      case 7:
+        return (
+          <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
+            <h3 className="text-lg font-semibold text-text-color mb-4">
+              Krok 3: Podaj optymalne wymiary kurnika
+            </h3>
+            <div className="space-y-4 mb-6">
+              <div className="bg-purple-50 border border-purple-200 rounded-md p-4 mb-4">
+                <h4 className="font-semibold text-purple-800 mb-2">🎯 Podsumowanie obliczeń:</h4>
+                <p className="text-purple-700">
+                  x = {answers.xCoordinate || '10'} m (pierwszy bok)<br/>
+                  y = {answers.yCoordinate || '10'} m (drugi bok)
+                </p>
+                <p className="text-sm text-purple-600 mt-2">
+                  Teraz podaj finalne wymiary kurnika w formacie: x × y
+                </p>
+              </div>
+              
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  Krok 3: Podaj optymalne wymiary kurnika (x × y)
+                  <strong>Zadanie:</strong> Podaj optymalne wymiary kurnika (x × y)
                 </label>
                 <input
                   type="text"
@@ -316,6 +411,31 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
               </div>
             </div>
 
+            <div className="flex justify-between">
+              <button
+                onClick={() => setCurrentStep(6)}
+                className="bg-nav-bg/20 text-text-color px-6 py-2 rounded-md hover:bg-nav-bg/40 transition-colors flex items-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" /> Wstecz
+              </button>
+              <button
+                onClick={checkAnswers}
+                className="bg-nav-bg text-white px-6 py-2 rounded-md hover:bg-nav-bg/90 transition-colors flex items-center gap-2"
+              >
+                <CheckCircle className="w-4 h-4" />
+                {t('checkAnswer')}
+              </button>
+            </div>
+          </div>
+        );
+
+      case 8:
+        return (
+          <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
+            <h3 className="text-lg font-semibold text-text-color mb-4">
+              🎉 Gratulacje! Zadanie ukończone!
+            </h3>
+            
             {showResults && (
               <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                 <h4 className="font-semibold text-blue-800 mb-2">📋 Podsumowanie rozwiązania:</h4>
@@ -334,19 +454,12 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
               </div>
             )}
 
-            <div className="flex justify-between">
+            <div className="flex justify-center">
               <button
-                onClick={() => setCurrentStep(4)}
+                onClick={() => setCurrentStep(7)}
                 className="bg-nav-bg/20 text-text-color px-6 py-2 rounded-md hover:bg-nav-bg/40 transition-colors flex items-center gap-2"
               >
-                <ArrowLeft className="w-4 h-4" /> Wstecz
-              </button>
-              <button
-                onClick={checkAnswers}
-                className="bg-nav-bg text-white px-6 py-2 rounded-md hover:bg-nav-bg/90 transition-colors flex items-center gap-2"
-              >
-                <CheckCircle className="w-4 h-4" />
-                {t('checkAnswer')}
+                <ArrowLeft className="w-4 h-4" /> Wstecz do ostatniego kroku
               </button>
             </div>
           </div>

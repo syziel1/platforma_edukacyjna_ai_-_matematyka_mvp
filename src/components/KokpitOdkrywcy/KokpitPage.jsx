@@ -35,14 +35,26 @@ const KokpitPage = ({ onProblemSelect }) => {
   // Pobierz aktualny postęp lekcji
   useEffect(() => {
     const currentProgress = getProgress('chicken-coop');
-    const progressPercentage = (currentProgress / 5) * 100;
+    // Zwiększamy totalSteps do 8, ponieważ teraz mamy 8 kroków
+    const totalSteps = 8;
+    const progressPercentage = (currentProgress / totalSteps) * 100;
+    
+    // Określ status na podstawie postępu
+    let stepDescription = 'Wprowadzenie do zadania';
+    if (currentProgress >= 8) {
+      stepDescription = 'Zadanie ukończone! 🎉';
+    } else if (currentProgress >= 5) {
+      stepDescription = `Rozwiązanie formalne - Krok ${currentProgress - 4}/3`;
+    } else if (currentProgress > 0) {
+      stepDescription = `Krok ${currentProgress}/4`;
+    }
     
     setKokpitData(prev => ({
       ...prev,
       currentLesson: {
         ...prev.currentLesson,
         progress: progressPercentage,
-        currentStep: currentProgress > 0 ? `Krok ${currentProgress}/5` : 'Wprowadzenie do zadania'
+        currentStep: stepDescription
       }
     }));
   }, [getProgress]);
