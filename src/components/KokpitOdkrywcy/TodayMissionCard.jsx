@@ -1,7 +1,24 @@
-import React from 'react';
-import { Clock, Video, Calendar } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { Clock, Video, Calendar, RotateCcw } from 'lucide-react';
+import { useGlobalTimer } from '../../hooks/useGlobalTimer';
 
-const TodayMissionCard = ({ timeRemaining, mentorSession, onScheduleMentor }) => {
+const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
+  const { timeElapsed, formattedTime, resetAfterBreak } = useGlobalTimer();
+  
+  // Oblicz pozostały czas (cel: 1 godzina nauki)
+  const targetTime = 3600; // 1 godzina w sekundach
+  const timeRemaining = Math.max(0, targetTime - timeElapsed);
+
+  const getProgressPercentage = () => {
+    return (timeElapsed / targetTime) * 100;
+  };
+
+  const handleResetTimer = () => {
+    if (confirm('Czy na pewno chcesz zresetować timer sesji? To działanie nie może być cofnięte.')) {
+      resetAfterBreak();
+    }
+  };
+
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -13,26 +30,32 @@ const TodayMissionCard = ({ timeRemaining, mentorSession, onScheduleMentor }) =>
     return `${minutes}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const getProgressPercentage = () => {
-    const totalTime = 3600; // 1 godzina
-    return ((totalTime - timeRemaining) / totalTime) * 100;
-  };
-
   return (
     <div className="bg-bg-card rounded-xl p-6 shadow-lg border border-bg-neutral">
-      <h2 className="text-2xl font-bold text-text-color mb-6 flex items-center gap-2">
-        🎯 Twoja misja na dziś
-      </h2>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold text-text-color flex items-center gap-2">
+          🎯 Twoja misja na dziś
+        </h2>
+        <button
+          onClick={handleResetTimer}
+          className="text-text-color/50 hover:text-text-color transition-colors p-1 rounded"
+          title="Resetuj timer sesji"
+        >
+          <RotateCcw className="w-4 h-4" />
+        </button>
+      </div>
       
       {/* Wskaźnik czasu */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <Clock className="w-5 h-5 text-accent-primary" />
-            <span className="font-medium text-text-color">Pozostały czas nauki:</span>
+            <span className="font-medium text-text-color">
+              {timeRemaining > 0 ? 'Pozostały czas nauki:' : 'Cel osiągnięty! 🎉'}
+            </span>
           </div>
           <span className="text-2xl font-bold text-accent-primary">
-            {formatTime(timeRemaining)}
+            {timeRemaining > 0 ? formatTime(timeRemaining) : '🏆'}
           </span>
         </div>
         
@@ -53,20 +76,25 @@ const TodayMissionCard = ({ timeRemaining, mentorSession, onScheduleMentor }) =>
               cx="50"
               cy="50"
               r="40"
-              stroke="#FFA500"
+              stroke={getProgressPercentage() >= 100 ? "#22c55e" : "#FFA500"}
               strokeWidth="8"
               fill="none"
               strokeLinecap="round"
               strokeDasharray={`${2 * Math.PI * 40}`}
-              strokeDashoffset={`${2 * Math.PI * 40 * (1 - getProgressPercentage() / 100)}`}
+              strokeDashoffset={`${2 * Math.PI * 40 * (1 - Math.min(getProgressPercentage(), 100) / 100)}`}
               className="transition-all duration-300"
             />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="text-sm font-bold text-accent-primary">
-              {Math.round(getProgressPercentage())}%
+              {Math.round(Math.min(getProgressPercentage(), 100))}%
             </span>
           </div>
+        </div>
+
+        {/* Informacja o czasie sesji */}
+        <div className="text-center text-sm text-text-color/70">
+          Czas sesji: {formattedTime}
         </div>
       </div>
 

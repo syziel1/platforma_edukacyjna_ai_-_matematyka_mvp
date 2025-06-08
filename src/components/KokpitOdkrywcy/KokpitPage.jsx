@@ -13,7 +13,6 @@ const KokpitPage = ({ onProblemSelect }) => {
 
   // Stan dla danych kokpitu
   const [kokpitData, setKokpitData] = useState({
-    timeRemaining: 3600, // 1 godzina w sekundach
     mentorSession: null, // lub obiekt z danymi sesji
     currentLesson: {
       id: 'chicken-coop',
@@ -58,18 +57,6 @@ const KokpitPage = ({ onProblemSelect }) => {
       }
     }));
   }, [getProgress]);
-
-  // Timer odliczający czas
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setKokpitData(prev => ({
-        ...prev,
-        timeRemaining: Math.max(0, prev.timeRemaining - 1)
-      }));
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
 
   // Symulacja sesji z mentorem (można rozszerzyć o prawdziwe API)
   const handleScheduleMentor = () => {
@@ -119,7 +106,6 @@ const KokpitPage = ({ onProblemSelect }) => {
             {/* Kolumna lewa - 65% szerokości */}
             <div className="lg:col-span-2">
               <LeftColumn 
-                timeRemaining={kokpitData.timeRemaining}
                 mentorSession={kokpitData.mentorSession}
                 currentLesson={kokpitData.currentLesson}
                 onScheduleMentor={handleScheduleMentor}

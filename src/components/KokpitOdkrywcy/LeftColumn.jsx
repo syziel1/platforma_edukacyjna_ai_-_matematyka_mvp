@@ -3,7 +3,6 @@ import TodayMissionCard from './TodayMissionCard';
 import CurrentLessonCard from './CurrentLessonCard';
 
 const LeftColumn = ({ 
-  timeRemaining, 
   mentorSession, 
   currentLesson, 
   onScheduleMentor, 
@@ -12,7 +11,6 @@ const LeftColumn = ({
   return (
     <div className="space-y-6">
       <TodayMissionCard 
-        timeRemaining={timeRemaining}
         mentorSession={mentorSession}
         onScheduleMentor={onScheduleMentor}
       />
