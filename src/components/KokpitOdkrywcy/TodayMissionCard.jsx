@@ -142,44 +142,6 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
     };
   };
 
-  // Funkcja formatująca informację o następnym spotkaniu
-  const formatNextSessionInfo = () => {
-    if (!nextSession) {
-      return 'Brak zaplanowanych spotkań';
-    }
-
-    const now = new Date();
-    const sessionDate = new Date(nextSession);
-    
-    // Sprawdź czy to dzisiaj
-    const isToday = sessionDate.toDateString() === now.toDateString();
-    
-    // Sprawdź czy to jutro
-    const tomorrow = new Date(now);
-    tomorrow.setDate(now.getDate() + 1);
-    const isTomorrow = sessionDate.toDateString() === tomorrow.toDateString();
-    
-    let dateText;
-    if (isToday) {
-      dateText = 'dziś';
-    } else if (isTomorrow) {
-      dateText = 'jutro';
-    } else {
-      // Sprawdź czy to w tym tygodniu
-      const daysDiff = Math.ceil((sessionDate - now) / (1000 * 60 * 60 * 24));
-      if (daysDiff <= 7) {
-        dateText = sessionDate.toLocaleDateString('pl-PL', { weekday: 'long' }).toLowerCase();
-      } else {
-        dateText = sessionDate.toLocaleDateString('pl-PL', {
-          day: '2-digit',
-          month: '2-digit'
-        });
-      }
-    }
-    
-    return `${dateText} o 8:30`;
-  };
-
   const statusInfo = getMentorStatusInfo();
 
   return (
@@ -265,18 +227,14 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
               <div className="flex items-center justify-center gap-2 mb-2">
                 <User className="w-6 h-6 text-nav-bg" />
                 <span className="font-medium text-text-color">
-                  {mentorAvailability.mentorInfo.name}
+                  Mentor Matematyki
                 </span>
-                <span className="text-lg">{statusInfo.icon}</span>
               </div>
               <p className="text-text-color/70 text-sm mb-1">
-                {mentorAvailability.mentorInfo.title}
+                Brak zaplanowanych spotkań
               </p>
-              <p className={`text-xs font-medium ${statusInfo.color}`}>
-                {statusInfo.message}
-              </p>
-              <p className="text-text-color/60 text-xs mt-1">
-                Następne spotkanie: {formatNextSessionInfo()}
+              <p className="text-text-color/60 text-xs">
+                Zaplanuj spotkanie z mentorem, aby otrzymać spersonalizowaną pomoc
               </p>
             </div>
             <button
