@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Video, Calendar, RotateCcw, User } from 'lucide-react';
+import { Clock, Video, Calendar, RotateCcw, User, X } from 'lucide-react';
 import { useGlobalTimer } from '../../hooks/useGlobalTimer';
 import { mentorAvailability } from '../../config/mentorAvailability';
 
@@ -50,6 +50,12 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
         zoomLink: 'http://strefaedukacji.zrozoomai.pl/',
         isActive: mentorStatus === 'session-time'
       });
+    }
+  };
+
+  const handleCancelMeeting = () => {
+    if (confirm('Czy na pewno chcesz anulować zaplanowane spotkanie z mentorem?')) {
+      onScheduleMentor(null); // Anuluj spotkanie
     }
   };
 
@@ -226,25 +232,39 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
                 {statusInfo.message}
               </p>
             </div>
-            <a
-              href={mentorSession.zoomLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`w-full py-3 px-6 rounded-lg transition-colors font-medium flex items-center justify-center gap-2 inline-flex ${
-                mentorSession.isActive 
-                  ? 'bg-green-600 hover:bg-green-700 text-white cursor-pointer' 
-                  : 'bg-gray-400 text-gray-200 cursor-not-allowed'
-              }`}
-              onClick={(e) => {
-                if (!mentorSession.isActive) {
-                  e.preventDefault();
-                  alert(`Spotkanie będzie aktywne ${mentorSession.date} o ${mentorSession.time}. Obecnie: ${new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })}`);
-                }
-              }}
-            >
-              <Video className="w-5 h-5" />
-              {mentorSession.isActive ? 'DOŁĄCZ DO SPOTKANIA' : `SPOTKANIE O ${mentorSession.time}`}
-            </a>
+            
+            {/* Przycisk dołączenia do spotkania */}
+            <div className="space-y-3">
+              <a
+                href={mentorSession.zoomLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`w-full py-3 px-6 rounded-lg transition-colors font-medium flex items-center justify-center gap-2 inline-flex ${
+                  mentorSession.isActive 
+                    ? 'bg-green-600 hover:bg-green-700 text-white cursor-pointer' 
+                    : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                }`}
+                onClick={(e) => {
+                  if (!mentorSession.isActive) {
+                    e.preventDefault();
+                    alert(`Spotkanie będzie aktywne ${mentorSession.date} o ${mentorSession.time}. Obecnie: ${new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })}`);
+                  }
+                }}
+              >
+                <Video className="w-5 h-5" />
+                {mentorSession.isActive ? 'DOŁĄCZ DO SPOTKANIA' : `SPOTKANIE O ${mentorSession.time}`}
+              </a>
+              
+              {/* Przycisk anulowania spotkania */}
+              <button
+                onClick={handleCancelMeeting}
+                className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg transition-colors font-medium flex items-center justify-center gap-2 text-sm"
+              >
+                <X className="w-4 h-4" />
+                ANULUJ SPOTKANIE
+              </button>
+            </div>
+            
             {!mentorSession.isActive && (
               <p className="text-xs text-text-color/60 mt-2">
                 Przycisk będzie aktywny o {mentorSession.time}
