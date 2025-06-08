@@ -69,17 +69,17 @@ function App() {
     <div className="min-h-screen bg-bg-main flex relative">
       <NavigationPanel 
         onLoginClick={() => setShowLogin(true)}
-        onShowKokpit={user ? handleShowKokpit : null}
+        onShowKokpit={handleShowKokpit}
       />
 
-      {showKokpit && user ? (
+      {showKokpit ? (
         <div className="flex-1 pt-16 md:pt-0">
           <KokpitPage onProblemSelect={handleProblemSelect} />
         </div>
       ) : selectedProblem ? (
         selectedProblem === 'multiplication-game' ? (
           <div className="flex-1 pt-16 md:pt-0">
-            <MultiplicationGame onBack={user ? handleBackToKokpit : () => setSelectedProblem(null)} />
+            <MultiplicationGame onBack={showKokpit ? handleBackToKokpit : () => setSelectedProblem(null)} />
           </div>
         ) : (
           <div className="flex flex-1">
@@ -88,7 +88,7 @@ function App() {
                 <LessonHeader 
                   currentStep={currentStep} 
                   totalSteps={totalSteps} 
-                  onBack={user ? handleBackToKokpit : () => setSelectedProblem(null)}
+                  onBack={showKokpit ? handleBackToKokpit : () => setSelectedProblem(null)}
                 />
                 <div className="flex-1 overflow-y-auto">
                   {renderContent()}

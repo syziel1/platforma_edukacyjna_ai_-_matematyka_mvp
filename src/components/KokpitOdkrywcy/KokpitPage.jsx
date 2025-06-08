@@ -85,10 +85,18 @@ const KokpitPage = ({ onProblemSelect }) => {
     alert('Mapa Wiedzy będzie dostępna wkrótce! 🗺️');
   };
 
+  // Wyświetl odpowiednie powitanie w zależności od statusu logowania
+  const getWelcomeMessage = () => {
+    if (user) {
+      return `Witaj z powrotem, ${user.name}! 🚀`;
+    }
+    return 'Witaj w Kokpicie Odkrywcy! 🚀';
+  };
+
   return (
     <div className="min-h-screen bg-bg-main">
       <GlobalHeader 
-        title={`Witaj z powrotem, ${user?.name || 'Odkrywco'}! 🚀`}
+        title={getWelcomeMessage()}
         showBackButton={false}
       />
       

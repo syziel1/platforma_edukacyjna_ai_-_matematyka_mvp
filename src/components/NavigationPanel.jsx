@@ -48,11 +48,12 @@ const NavigationPanel = ({ onLoginClick, onShowKokpit }) => {
       label: t('menu'),
       action: () => setIsExpanded(!isExpanded)
     },
-    ...(user && onShowKokpit ? [{ 
+    // Kokpit dostępny dla wszystkich (nie tylko zalogowanych)
+    { 
       icon: Home, 
       label: 'Kokpit Odkrywcy', 
       action: handleKokpit
-    }] : []),
+    },
     { 
       icon: CheckSquare, 
       label: t('myTasks'), 
