@@ -248,16 +248,30 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
         ) : (
           <div className="text-center">
             <div className="mb-3">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <User className="w-6 h-6 text-green-600" />
-                <span className="font-medium text-text-color">
-                  {mentorSession.name}
-                </span>
-                <span className="text-lg">{statusInfo.icon}</span>
+              <div className="flex items-center justify-center gap-3 mb-2">
+                {/* Zdjęcie mentora */}
+                <div className="relative">
+                  <img 
+                    src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop&crop=face"
+                    alt={mentorSession.name}
+                    className="w-12 h-12 rounded-full object-cover border-2 border-green-500 shadow-lg"
+                  />
+                  {/* Status indicator */}
+                  <div className={`absolute -bottom-1 -right-1 w-4 h-4 ${statusInfo.bgColor} rounded-full border-2 border-white flex items-center justify-center`}>
+                    <span className="text-xs text-white">
+                      {statusInfo.icon === '🟢' ? '●' : statusInfo.icon === '🔵' ? '●' : statusInfo.icon === '🟡' ? '●' : '●'}
+                    </span>
+                  </div>
+                </div>
+                <div className="text-left">
+                  <span className="font-medium text-text-color block">
+                    {mentorSession.name}
+                  </span>
+                  <span className="text-text-color/70 text-xs">
+                    {mentorSession.title}
+                  </span>
+                </div>
               </div>
-              <p className="text-text-color/70 text-sm mb-1">
-                {mentorSession.title}
-              </p>
               
               {/* Zaktualizowane informacje o spotkaniu */}
               {(() => {
