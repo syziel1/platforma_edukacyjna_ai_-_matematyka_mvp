@@ -47,6 +47,7 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
         title: mentorAvailability.mentorInfo.title,
         date: formattedDate,
         time: '8:30',
+        fullDateTime: nextSessionDate, // Dodajemy pełną datę
         zoomLink: 'http://strefaedukacji.zrozoomai.pl/',
         isActive: mentorStatus === 'session-time'
       });
@@ -101,6 +102,44 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
           message: 'Niedostępny'
         };
     }
+  };
+
+  // Funkcja formatująca datę i czas spotkania
+  const formatMeetingDateTime = (session) => {
+    if (!session || !session.fullDateTime) {
+      return { date: session?.date || 'Nieznana data', time: session?.time || '8:30' };
+    }
+
+    const meetingDate = new Date(session.fullDateTime);
+    const now = new Date();
+    
+    // Sprawdź czy to dzisiaj
+    const isToday = meetingDate.toDateString() === now.toDateString();
+    
+    // Sprawdź czy to jutro
+    const tomorrow = new Date(now);
+    tomorrow.setDate(now.getDate() + 1);
+    const isTomorrow = meetingDate.toDateString() === tomorrow.toDateString();
+    
+    let dateText;
+    if (isToday) {
+      dateText = 'Dziś';
+    } else if (isTomorrow) {
+      dateText = 'Jutro';
+    } else {
+      // Formatuj datę w formacie DD.MM.YYYY
+      dateText = meetingDate.toLocaleDateString('pl-PL', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    }
+    
+    return {
+      date: dateText,
+      time: session.time,
+      dayName: meetingDate.toLocaleDateString('pl-PL', { weekday: 'long' })
+    };
   };
 
   const statusInfo = getMentorStatusInfo();
@@ -225,9 +264,24 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
               <p className="text-text-color/70 text-sm mb-1">
                 {mentorSession.title}
               </p>
-              <p className="text-text-color font-medium">
-                Spotkanie: {mentorSession.date} o {mentorSession.time}
-              </p>
+              
+              {/* Zaktualizowane informacje o spotkaniu */}
+              {(() => {
+                const meetingInfo = formatMeetingDateTime(mentorSession);
+                return (
+                  <div className="text-text-color font-medium">
+                    <p className="text-base">
+                      Spotkanie: {meetingInfo.date} o {meetingInfo.time}
+                    </p>
+                    {meetingInfo.dayName && meetingInfo.date !== 'Dziś' && meetingInfo.date !== 'Jutro' && (
+                      <p className="text-sm text-text-color/70 mt-1">
+                        ({meetingInfo.dayName})
+                      </p>
+                    )}
+                  </div>
+                );
+              })()}
+              
               <p className={`text-xs font-medium ${statusInfo.color} mt-1`}>
                 {statusInfo.message}
               </p>
@@ -247,7 +301,8 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
                 onClick={(e) => {
                   if (!mentorSession.isActive) {
                     e.preventDefault();
-                    alert(`Spotkanie będzie aktywne ${mentorSession.date} o ${mentorSession.time}. Obecnie: ${new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })}`);
+                    const meetingInfo = formatMeetingDateTime(mentorSession);
+                    alert(`Spotkanie będzie aktywne ${meetingInfo.date} o ${meetingInfo.time}. Obecnie: ${new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' })}`);
                   }
                 }}
               >
