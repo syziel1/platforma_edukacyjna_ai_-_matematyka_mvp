@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Menu, CheckSquare, Calendar, Settings, LogOut, Globe, LogIn, Home } from 'lucide-react';
+import { Menu, CheckSquare, Calendar, Settings, LogOut, Globe, LogIn, Home, Info } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import SettingsModal from './SettingsModal';
+import AboutProjectModal from './AboutProjectModal';
 
 const NavigationPanel = ({ onLoginClick, onShowKokpit }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showAboutProject, setShowAboutProject] = useState(false);
   const { t, switchLanguage, currentLanguage } = useLanguage();
   const { user, logout } = useAuth();
 
@@ -28,6 +30,13 @@ const NavigationPanel = ({ onLoginClick, onShowKokpit }) => {
 
   const handleSettings = () => {
     setShowSettings(true);
+    if (window.innerWidth < 768) {
+      setIsExpanded(false);
+    }
+  };
+
+  const handleAboutProject = () => {
+    setShowAboutProject(true);
     if (window.innerWidth < 768) {
       setIsExpanded(false);
     }
@@ -63,6 +72,11 @@ const NavigationPanel = ({ onLoginClick, onShowKokpit }) => {
       icon: Calendar, 
       label: t('dayPlan'), 
       action: handleDayPlan 
+    },
+    { 
+      icon: Info, 
+      label: 'O projekcie', 
+      action: handleAboutProject
     },
     { 
       icon: Settings, 
@@ -198,6 +212,12 @@ const NavigationPanel = ({ onLoginClick, onShowKokpit }) => {
       <SettingsModal 
         isOpen={showSettings} 
         onClose={() => setShowSettings(false)} 
+      />
+
+      {/* About Project Modal */}
+      <AboutProjectModal 
+        isOpen={showAboutProject} 
+        onClose={() => setShowAboutProject(false)} 
       />
     </>
   );
