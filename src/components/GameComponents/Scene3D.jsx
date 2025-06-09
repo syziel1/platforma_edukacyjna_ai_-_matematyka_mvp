@@ -490,8 +490,11 @@ const Scene3D = ({
           left: isLeftSide ? 0 : 'auto',
           right: isLeftSide ? 'auto' : 0,
           transform: isLeftSide 
+            ? 'perspective(500px) rotateY(45deg) rotateX(-3deg) translateZ(25px) scale(0.95)'
+            : 'perspective(500px) rotateY(-45deg) rotateX(-3deg) translateZ(25px) scale(0.95)',
+/*          transform: isLeftSide 
             ? 'rotateY(65deg) translateX(55px)'
-            : 'rotateY(-65deg) translateX(-55px)',
+            : 'rotateY(-65deg) translateX(-55px)',*/
           transformOrigin: isLeftSide ? 'left center' : 'right center',
           zIndex: isLeftSide ? 10 : 5,
           opacity: 0.9,
