@@ -476,26 +476,25 @@ const Scene3D = ({
       );
     }
 
-    // Enhanced side cells with improved 3D perspective and click handling
+    // FIXED: Enhanced side cells with proper positioning and click handling
     const isLeftSide = index === 0;
-    const startRotation = isLeftSide ? '65deg' : '-65deg';
-    const endRotation = isLeftSide ? '45deg' : '-45deg';
 
     return (
       <div
         key={`${coords.r}-${coords.c}-${index}-${animationTrigger}`}
         className={`scene-cell ${viewClasses[index]} absolute overflow-hidden transition-all duration-500 ease-out cursor-pointer`}
         style={{
-          width: '100%',
-          height: '100%',
+          width: '45%',
+          height: '240px',
           bottom: 0,
-          left: isLeftSide ? '0%' : 'auto',
-          right: isLeftSide ? 'auto' : '0%',
+          left: isLeftSide ? 0 : 'auto',
+          right: isLeftSide ? 'auto' : 0,
           transform: isLeftSide 
-            ? 'perspective(500px) rotateY(45deg) rotateX(-3deg) translateZ(25px) scale(0.95)'
-            : 'perspective(500px) rotateY(-45deg) rotateX(-3deg) translateZ(25px) scale(0.95)',
-          transformOrigin: isLeftSide ? 'right center' : 'left center',
-          zIndex: 8,
+            ? 'rotateY(65deg) translateX(55px)'
+            : 'rotateY(-65deg) translateX(-55px)',
+          transformOrigin: isLeftSide ? 'left center' : 'right center',
+          zIndex: isLeftSide ? 10 : 5,
+          opacity: 0.9,
           border: '2px solid #1a1a1a',
           borderRadius: '8px',
           background: `linear-gradient(${isLeftSide ? '135deg' : '225deg'}, 
@@ -507,8 +506,6 @@ const Scene3D = ({
           boxShadow: isLeftSide 
             ? '12px 6px 24px rgba(0,0,0,0.5), inset -3px 0 6px rgba(0,0,0,0.3)'
             : '-12px 6px 24px rgba(0,0,0,0.5), inset 3px 0 6px rgba(0,0,0,0.3)',
-          '--start-rotation': startRotation,
-          '--end-rotation': endRotation,
           animation: 'sideSlide 0.6s ease-out both'
         }}
         onClick={() => handleSideViewClick(isLeftSide)}
@@ -781,35 +778,6 @@ const Scene3D = ({
             zIndex: 10
           }}
         />
-
-        {/* FIXED: Side views with full width click areas */}
-        <div 
-          className="absolute left-0 top-0 bottom-0 w-1/3 z-20 cursor-pointer flex items-center justify-center"
-          onClick={() => handleSideViewClick(true)}
-          onTouchEnd={(e) => {
-            e.preventDefault();
-            handleSideViewClick(true);
-          }}
-          title="Obróć w lewo"
-        >
-          <div className="opacity-0 hover:opacity-100 transition-opacity duration-200 bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg">
-            <div className="text-3xl">⬅️</div>
-          </div>
-        </div>
-
-        <div 
-          className="absolute right-0 top-0 bottom-0 w-1/3 z-20 cursor-pointer flex items-center justify-center"
-          onClick={() => handleSideViewClick(false)}
-          onTouchEnd={(e) => {
-            e.preventDefault();
-            handleSideViewClick(false);
-          }}
-          title="Obróć w prawo"
-        >
-          <div className="opacity-0 hover:opacity-100 transition-opacity duration-200 bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg">
-            <div className="text-3xl">➡️</div>
-          </div>
-        </div>
 
         {displayOrderCoords.map((coords, index) => {
           const isInFrontGroup = index > 0 && index < 4;
