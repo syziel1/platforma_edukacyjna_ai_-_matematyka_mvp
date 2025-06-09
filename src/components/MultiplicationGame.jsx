@@ -223,6 +223,17 @@ const MultiplicationGame = ({ onBack }) => {
     return isBonus ? baseScore * 2 : baseScore;
   };
 
+  // Function to handle game end and save score
+  const handleGameEnd = useCallback(() => {
+    if (gameState.gameStartTime) {
+      const gameTimeSpent = Math.floor((Date.now() - gameState.gameStartTime) / 1000);
+      updateMultiplicationGameScore(gameState.score, gameTimeSpent);
+      
+      // Show game end message
+      showMessage(`🎉 Gra zakończona! Wynik: ${gameState.score} punktów`, 3000);
+    }
+  }, [gameState.score, gameState.gameStartTime, updateMultiplicationGameScore]);
+
   const handleModeSelect = (mode) => {
     playSound('move');
     setGameState(prev => ({
@@ -264,17 +275,6 @@ const MultiplicationGame = ({ onBack }) => {
       showInstructions: false
     }));
   };
-
-  // Function to handle game end and save score
-  const handleGameEnd = useCallback(() => {
-    if (gameState.gameStartTime) {
-      const gameTimeSpent = Math.floor((Date.now() - gameState.gameStartTime) / 1000);
-      updateMultiplicationGameScore(gameState.score, gameTimeSpent);
-      
-      // Show game end message
-      showMessage(`🎉 Gra zakończona! Wynik: ${gameState.score} punktów`, 3000);
-    }
-  }, [gameState.score, gameState.gameStartTime, updateMultiplicationGameScore]);
 
   const handleAnswer = (answer) => {
     const currentCell = gameState.boardData.find(
@@ -477,12 +477,12 @@ const MultiplicationGame = ({ onBack }) => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Calculate grass cleared percentage correctly
+  // FIXED: Calculate grass cleared percentage correctly - count cells with less than 100% grass
   const calculateGrassClearedPercentage = () => {
     if (gameState.boardData.length === 0) return 0;
     
-    // Count cells that have been cleared (grass < 10)
-    const clearedCells = gameState.boardData.filter(cell => cell.grass < 10).length;
+    // Count cells that have been partially or fully cleared (grass < 100%)
+    const clearedCells = gameState.boardData.filter(cell => cell.grass < 100).length;
     const totalCells = gameState.boardData.length;
     
     return Math.round((clearedCells / totalCells) * 100);
@@ -541,12 +541,7 @@ const MultiplicationGame = ({ onBack }) => {
       ) : (
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* 3D View - Top Half */}
-          <div 
-            className="h-1/2 view-3d"
-            style={{
-              background: 'linear-gradient(180deg, #87CEEB 0%, #87CEEB 50%, var(--current-cell-color, #F0E68C) 100%)'
-            }}
-          >
+          <div className="h-1/2 view-3d">
             <div id="playerActionFeedback" className="text-lg mb-2 text-white text-shadow min-h-[25px]" />
             <div id="avatarAnimationFeedback" className="text-2xl min-h-[30px]" />
             

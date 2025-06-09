@@ -18,6 +18,25 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
     return bonusIcons[iconIndex];
   };
 
+  // FIXED: Dynamic color based on grass height
+  const getCellBackgroundColor = (cellData) => {
+    if (!cellData) return '#8B4513'; // Brown for out-of-bounds
+    
+    const grassPercent = cellData.grass / 100;
+    
+    if (grassPercent <= 0.1) {
+      return '#F0E68C'; // Light khaki for cleared cells (sand)
+    } else if (grassPercent <= 0.3) {
+      return '#9ACD32'; // Yellow-green for low grass
+    } else if (grassPercent <= 0.6) {
+      return '#7CB342'; // Medium green
+    } else if (grassPercent <= 0.8) {
+      return '#689F38'; // Darker green
+    } else {
+      return '#558B2F'; // Very dark green for full grass
+    }
+  };
+
   const getCellAnimation = (cellData, isPlayerHere) => {
     let animationClass = '';
     
@@ -146,11 +165,7 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
               key={`${cellData.row}-${cellData.col}`}
               className={`w-[35px] h-[35px] border border-gray-400 flex justify-center items-center text-xs relative bg-clip-padding transition-all duration-300 ease-in-out ${animationClass}`}
               style={{
-                backgroundColor: cellData.grass < 10 
-                  ? '#F0E68C' // Light khaki for cleared cells
-                  : cellData.grass <= 100 
-                    ? '#78B134' // Green for normal grass
-                    : '#A0522D', // Brown for overgrown grass
+                backgroundColor: getCellBackgroundColor(cellData)
               }}
             >
               {/* Grass texture overlay for grassy cells */}
