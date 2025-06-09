@@ -25,6 +25,7 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
       animationClass += ' animate-pulse';
     }
     
+    // Only show bonus glow if bonus exists and hasn't been collected
     if (cellData.isBonus && !cellData.bonusCollected) {
       animationClass += ' bonus-glow';
     }
@@ -168,31 +169,26 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
                 />
               )}
               
-              {/* Bonus indicator with enhanced visual */}
-              {cellData.isBonus && (
+              {/* Bonus indicator with enhanced visual - only show if not collected */}
+              {cellData.isBonus && !cellData.bonusCollected && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <span 
-                    className={`text-lg z-10 ${cellData.bonusCollected ? 'bonus-collected' : 'bonus-icon'}`}
+                    className="text-lg z-10 bonus-icon"
                     style={{ 
-                      textShadow: cellData.bonusCollected 
-                        ? '0 0 4px rgba(0,0,0,0.5)' 
-                        : '0 0 8px rgba(255,215,0,0.8), 0 0 4px rgba(0,0,0,0.5)',
-                      fontSize: '16px',
-                      opacity: cellData.bonusCollected ? 0.4 : 1
+                      textShadow: '0 0 8px rgba(255,215,0,0.8), 0 0 4px rgba(0,0,0,0.5)',
+                      fontSize: '16px'
                     }}
                   >
                     {getBonusIcon(cellData)}
                   </span>
-                  {/* Bonus glow effect - only if not collected */}
-                  {!cellData.bonusCollected && (
-                    <div 
-                      className="absolute inset-0 rounded-full"
-                      style={{
-                        background: 'radial-gradient(circle, rgba(255,215,0,0.2) 0%, transparent 70%)',
-                        animation: 'bonusGlow 2s ease-in-out infinite'
-                      }}
-                    />
-                  )}
+                  {/* Bonus glow effect */}
+                  <div 
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: 'radial-gradient(circle, rgba(255,215,0,0.2) 0%, transparent 70%)',
+                      animation: 'bonusGlow 2s ease-in-out infinite'
+                    }}
+                  />
                 </div>
               )}
               

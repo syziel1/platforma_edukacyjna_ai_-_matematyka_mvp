@@ -297,6 +297,7 @@ const MultiplicationGame = ({ onBack }) => {
             isRevealed: true,
             hintGivenForHardReset: false,
             wasEverZeroGrass: wasCleared ? true : cell.wasEverZeroGrass,
+            // Mark bonus as collected when grass is cleared
             bonusCollected: wasCleared && cell.isBonus ? true : cell.bonusCollected
           };
         }
@@ -308,7 +309,8 @@ const MultiplicationGame = ({ onBack }) => {
       let bonusMessage = '';
       
       // Add bonus points if this is a bonus cell and it was cleared
-      if (currentCell.isBonus && newBoardData.find(c => c.row === currentCell.row && c.col === currentCell.col).grass === 0) {
+      const clearedCell = newBoardData.find(c => c.row === currentCell.row && c.col === currentCell.col);
+      if (currentCell.isBonus && clearedCell.grass === 0 && !currentCell.bonusCollected) {
         const bonusPoints = calculateCellScore(currentCell.row, currentCell.col, true) - cellScore;
         cellScore = calculateCellScore(currentCell.row, currentCell.col, true);
         bonusMessage = ` (${t('bonusPoints')} +${bonusPoints}!)`;
@@ -380,7 +382,7 @@ const MultiplicationGame = ({ onBack }) => {
           
           // Check if stepping on a bonus cell that hasn't been collected
           if (targetCell.isBonus && !targetCell.bonusCollected && targetCell.grass === 0) {
-            const bonusScore = calculateCellScore(targetCell.row, targetCell.col, false); // Base score for stepping on bonus
+            const bonusScore = calculateCellScore(targetCell.row, targetCell.col, true); // Full bonus score for stepping on
             
             // Mark bonus as collected
             const newBoardData = gameState.boardData.map(cell => {
