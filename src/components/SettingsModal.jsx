@@ -1,18 +1,18 @@
 import React from 'react';
-import { Volume2, VolumeX, X, RotateCcw, Eye, EyeOff } from 'lucide-react';
+import { Volume2, VolumeX, X, RotateCcw, Eye, EyeOff, Globe } from 'lucide-react';
 import { useSettings } from '../contexts/SettingsContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const SettingsModal = ({ isOpen, onClose }) => {
   const { settings, toggleSound, setVolume, toggleGrassPercentage, resetGameState } = useSettings();
-  const { t } = useLanguage();
+  const { t, currentLanguage, switchLanguage } = useLanguage();
 
   if (!isOpen) return null;
 
   const handleResetGameState = () => {
-    if (confirm('Czy na pewno chcesz zresetować stan gry? To działanie usunie postęp w grze, ale zachowa rekordy punktów.')) {
+    if (confirm(t('resetGameStateConfirm'))) {
       resetGameState();
-      alert('Stan gry został zresetowany!');
+      alert(t('gameStateReset'));
     }
   };
 
@@ -32,6 +32,22 @@ const SettingsModal = ({ isOpen, onClose }) => {
         </div>
 
         <div className="space-y-6">
+          {/* Language Toggle */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Globe className="w-5 h-5 text-accent-primary" />
+              <span className="font-medium text-text-color">
+                {t('language')}
+              </span>
+            </div>
+            <button
+              onClick={switchLanguage}
+              className="bg-accent-primary text-white px-4 py-2 rounded-md hover:bg-accent-primary/90 transition-colors font-medium"
+            >
+              {currentLanguage.toUpperCase()}
+            </button>
+          </div>
+
           {/* Sound Toggle */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -76,7 +92,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
             </div>
           )}
 
-          {/* FIXED: Grass Percentage Toggle */}
+          {/* Grass Percentage Toggle */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {settings.showGrassPercentage ? (
@@ -86,10 +102,10 @@ const SettingsModal = ({ isOpen, onClose }) => {
               )}
               <div>
                 <span className="font-medium text-text-color block">
-                  Pokaż procent trawy
+                  {t('showGrassPercentage')}
                 </span>
                 <span className="text-xs text-text-color/60">
-                  Wyświetla procent trawy na komórkach 2D (jeśli &lt; 100%)
+                  {t('showGrassPercentageDesc')}
                 </span>
               </div>
             </div>
@@ -107,17 +123,17 @@ const SettingsModal = ({ isOpen, onClose }) => {
             </button>
           </div>
 
-          {/* FIXED: Reset Game State */}
+          {/* Reset Game State */}
           <div className="border-t border-gray-200 pt-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <RotateCcw className="w-5 h-5 text-red-500" />
                 <div>
                   <span className="font-medium text-text-color block">
-                    Resetuj stan gry
+                    {t('resetGameState')}
                   </span>
                   <span className="text-xs text-text-color/60">
-                    Powrót do pierwszego poziomu (zachowuje rekordy)
+                    {t('resetGameStateDesc')}
                   </span>
                 </div>
               </div>

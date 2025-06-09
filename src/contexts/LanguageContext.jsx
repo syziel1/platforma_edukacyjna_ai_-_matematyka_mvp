@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const translations = {
   pl: {
@@ -66,7 +66,7 @@ const translations = {
     'controls': 'Sterowanie:',
     'controlsDesc': 'Poruszaj się po planszy za pomocą klawiszy strzałek:',
     'arrowUp': 'Strzałka w górę: Idź do przodu',
-    'arrowLeft': 'Strzałka w lewo: Obróć się w lewo', 
+    'arrowLeft': 'Strzałka w lewo: Obróć się w lewo',
     'arrowRight': 'Strzałka w prawo: Obróć się w prawo',
     'gameRules': 'Zasady gry:',
     'solveToMove': 'Aby wejść na nowe, zarośnięte pole, musisz poprawnie rozwiązać działanie {operation}.',
@@ -121,11 +121,18 @@ const translations = {
     'login': 'Zaloguj się',
     'skipLogin': 'Kontynuuj bez logowania',
     'hint': 'Wskazówka',
+    'language': 'Język',
     
     // Settings
     'soundEffects': 'Efekty dźwiękowe',
     'volume': 'Głośność',
     'close': 'Zamknij',
+    'showGrassPercentage': 'Pokaż procent trawy',
+    'showGrassPercentageDesc': 'Wyświetla procent trawy na komórkach 2D (jeśli < 100%)',
+    'resetGameState': 'Resetuj stan gry',
+    'resetGameStateDesc': 'Powrót do pierwszego poziomu (zachowuje rekordy)',
+    'resetGameStateConfirm': 'Czy na pewno chcesz zresetować stan gry? To działanie usunie postęp w grze, ale zachowa rekordy punktów.',
+    'gameStateReset': 'Stan gry został zresetowany!',
     
     // Lesson Header
     'lessonTitle': 'Zadanie: Optymalny kurnik',
@@ -347,11 +354,18 @@ const translations = {
     'login': 'Sign in',
     'skipLogin': 'Continue without signing in',
     'hint': 'Hint',
+    'language': 'Language',
     
     // Settings
     'soundEffects': 'Sound Effects',
     'volume': 'Volume',
     'close': 'Close',
+    'showGrassPercentage': 'Show grass percentage',
+    'showGrassPercentageDesc': 'Display grass percentage on 2D cells (if < 100%)',
+    'resetGameState': 'Reset game state',
+    'resetGameStateDesc': 'Return to first level (keeps records)',
+    'resetGameStateConfirm': 'Are you sure you want to reset the game state? This will remove game progress but keep score records.',
+    'gameStateReset': 'Game state has been reset!',
     
     // Lesson Header
     'lessonTitle': 'Task: Optimal Chicken Coop',
@@ -455,15 +469,56 @@ const translations = {
   }
 };
 
+// Function to detect user's language based on location
+const detectUserLanguage = () => {
+  // Check if user has a saved preference
+  const savedLanguage = localStorage.getItem('userLanguage');
+  if (savedLanguage && (savedLanguage === 'pl' || savedLanguage === 'en')) {
+    return savedLanguage;
+  }
+
+  // Try to detect based on browser language
+  const browserLanguage = navigator.language || navigator.languages[0];
+  
+  // Check if browser language indicates Polish
+  if (browserLanguage.startsWith('pl')) {
+    return 'pl';
+  }
+
+  // Try to detect based on timezone (rough approximation for Poland)
+  try {
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (timezone === 'Europe/Warsaw' || timezone === 'Europe/Krakow') {
+      return 'pl';
+    }
+  } catch (error) {
+    console.log('Timezone detection failed:', error);
+  }
+
+  // Default to English
+  return 'en';
+};
+
 // Create the Language Context
 const LanguageContext = createContext();
 
 // Language Provider Component
 export const LanguageProvider = ({ children }) => {
-  const [language, setLanguage] = useState('pl'); // Default to Polish
+  const [language, setLanguage] = useState(() => detectUserLanguage());
+
+  // Save language preference when it changes
+  useEffect(() => {
+    localStorage.setItem('userLanguage', language);
+  }, [language]);
 
   const switchLanguage = () => {
     setLanguage(prevLang => prevLang === 'pl' ? 'en' : 'pl');
+  };
+
+  const setLanguageDirectly = (newLanguage) => {
+    if (newLanguage === 'pl' || newLanguage === 'en') {
+      setLanguage(newLanguage);
+    }
   };
 
   const t = (key, params = {}) => {
@@ -480,7 +535,7 @@ export const LanguageProvider = ({ children }) => {
   const value = {
     language,
     currentLanguage: language,
-    setLanguage,
+    setLanguage: setLanguageDirectly,
     switchLanguage,
     t
   };

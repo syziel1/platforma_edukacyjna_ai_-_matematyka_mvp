@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, CheckSquare, Calendar, Settings, LogOut, Globe, LogIn, Home, Info } from 'lucide-react';
+import { Menu, CheckSquare, Calendar, Settings, LogOut, LogIn, Home, Info } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import SettingsModal from './SettingsModal';
@@ -9,7 +9,7 @@ const NavigationPanel = ({ onLoginClick, onShowKokpit }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showAboutProject, setShowAboutProject] = useState(false);
-  const { t, switchLanguage, currentLanguage } = useLanguage();
+  const { t } = useLanguage();
   const { user, logout } = useAuth();
 
   const handleDayPlan = () => {
@@ -188,24 +188,6 @@ const NavigationPanel = ({ onLoginClick, onShowKokpit }) => {
             </button>
           ))}
         </nav>
-
-        {/* Language Toggle */}
-        <div className="p-2 border-t border-nav-bg/50">
-          <button
-            onClick={switchLanguage}
-            className={`w-full flex items-center gap-3 p-3 rounded-md hover:bg-nav-bg/80 transition-colors ${
-              !isExpanded ? 'justify-center' : ''
-            }`}
-            title={!isExpanded ? `${currentLanguage.toUpperCase()}` : ''}
-          >
-            <Globe className="w-5 h-5 text-white flex-shrink-0" />
-            {isExpanded && (
-              <span className="text-white font-medium">
-                {currentLanguage.toUpperCase()}
-              </span>
-            )}
-          </button>
-        </div>
       </div>
 
       {/* Settings Modal */}
