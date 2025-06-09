@@ -15,7 +15,8 @@ export const SettingsProvider = ({ children }) => {
     const saved = localStorage.getItem('gameSettings');
     return saved ? JSON.parse(saved) : {
       soundEnabled: true,
-      volume: 0.5
+      volume: 0.5,
+      showGrassPercentage: false
     };
   });
 
@@ -38,12 +39,26 @@ export const SettingsProvider = ({ children }) => {
     updateSetting('volume', Math.max(0, Math.min(1, volume)));
   };
 
+  const toggleGrassPercentage = () => {
+    updateSetting('showGrassPercentage', !settings.showGrassPercentage);
+  };
+
+  const resetGameState = () => {
+    // Remove game state from localStorage
+    localStorage.removeItem('multiplicationGameState');
+    
+    // Optionally trigger a page reload to reset the game completely
+    // window.location.reload();
+  };
+
   return (
     <SettingsContext.Provider value={{ 
       settings, 
       updateSetting, 
       toggleSound, 
-      setVolume 
+      setVolume,
+      toggleGrassPercentage,
+      resetGameState
     }}>
       {children}
     </SettingsContext.Provider>

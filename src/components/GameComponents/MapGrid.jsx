@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
+const MapGrid = ({ boardData, playerPosition, currentLevelSize, level, showGrassPercentage = false }) => {
   const getDirectionRotation = (direction) => {
     switch (direction) {
       case 'N': return '180deg';
@@ -204,6 +204,13 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
                       animation: 'bonusGlow 2s ease-in-out infinite'
                     }}
                   />
+                </div>
+              )}
+              
+              {/* FIXED: Grass percentage display */}
+              {showGrassPercentage && cellData.grass < 100 && cellData.grass > 0 && (
+                <div className="absolute top-0 left-0 text-[8px] font-bold text-white bg-black/50 px-1 rounded-br">
+                  {Math.round(cellData.grass)}%
                 </div>
               )}
               

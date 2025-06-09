@@ -10,29 +10,63 @@ import GameModeSelector from './GameComponents/GameModeSelector';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useSoundEffects } from '../hooks/useSoundEffects';
 import { useGameRecords } from '../contexts/GameRecordsContext';
+import { useSettings } from '../contexts/SettingsContext';
 
 const MultiplicationGame = ({ onBack }) => {
   const { t } = useLanguage();
   const { playSound } = useSoundEffects();
   const { updateMultiplicationGameScore } = useGameRecords();
+  const { settings } = useSettings();
   
-  const [gameState, setGameState] = useState({
-    currentLevelSize: 4,
-    boardData: [],
-    playerPosition: { row: 0, col: 0, direction: 'S' },
-    score: 0,
-    timeElapsed: 0,
-    gameStartTime: null,
-    showModeSelector: true,
-    selectedMode: null,
-    showWelcome: false,
-    showInstructions: false,
-    showQuestion: false,
-    currentQuestion: null,
-    wrongAnswersCount: 0,
-    isGeminiLoading: false,
-    message: '',
-    showMessage: false
+  // FIXED: Load saved game state
+  const loadGameState = () => {
+    const saved = localStorage.getItem('multiplicationGameState');
+    if (saved) {
+      try {
+        const parsedState = JSON.parse(saved);
+        // Apply grass growth based on days passed
+        if (parsedState.lastPlayed) {
+          const lastPlayedDate = new Date(parsedState.lastPlayed);
+          const now = new Date();
+          const daysPassed = Math.floor((now - lastPlayedDate) / (1000 * 60 * 60 * 24));
+          
+          if (daysPassed > 0) {
+            // Apply grass growth formula: height = height * (1.05)^days, max 100%
+            parsedState.boardData = parsedState.boardData.map(cell => ({
+              ...cell,
+              grass: Math.min(100, cell.grass * Math.pow(1.05, daysPassed))
+            }));
+          }
+        }
+        return parsedState;
+      } catch (error) {
+        console.error('Error loading game state:', error);
+      }
+    }
+    return null;
+  };
+
+  const [gameState, setGameState] = useState(() => {
+    const savedState = loadGameState();
+    return savedState || {
+      currentLevelSize: 4,
+      boardData: [],
+      playerPosition: { row: 0, col: 0, direction: 'S' },
+      score: 0,
+      timeElapsed: 0,
+      gameStartTime: null,
+      showModeSelector: true,
+      selectedMode: null,
+      showWelcome: false,
+      showInstructions: false,
+      showQuestion: false,
+      currentQuestion: null,
+      wrongAnswersCount: 0,
+      isGeminiLoading: false,
+      message: '',
+      showMessage: false,
+      lastPlayed: null
+    };
   });
 
   // Game mode configurations
@@ -123,6 +157,22 @@ const MultiplicationGame = ({ onBack }) => {
       }
     }
   };
+
+  // Save game state to localStorage
+  const saveGameState = useCallback(() => {
+    const stateToSave = {
+      ...gameState,
+      lastPlayed: new Date().toISOString()
+    };
+    localStorage.setItem('multiplicationGameState', JSON.stringify(stateToSave));
+  }, [gameState]);
+
+  // Save game state whenever it changes (except for UI states)
+  useEffect(() => {
+    if (gameState.boardData.length > 0 && !gameState.showModeSelector && !gameState.showWelcome && !gameState.showInstructions) {
+      saveGameState();
+    }
+  }, [gameState.boardData, gameState.playerPosition, gameState.score, gameState.currentLevelSize, saveGameState]);
 
   // Add timer effect
   useEffect(() => {
@@ -234,6 +284,36 @@ const MultiplicationGame = ({ onBack }) => {
     }
   }, [gameState.score, gameState.gameStartTime, updateMultiplicationGameScore]);
 
+  // FIXED: Check for level progression (40% grass cleared)
+  const checkLevelProgression = useCallback(() => {
+    const grassClearedPercentage = calculateGrassClearedPercentage();
+    if (grassClearedPercentage >= 40 && gameState.currentLevelSize < 8) {
+      // Advance to next level
+      const newSize = gameState.currentLevelSize + 1;
+      const newBoardData = [];
+      const bonusPositions = generateBonusPositions(newSize);
+
+      for (let r = 0; r < newSize; r++) {
+        for (let c = 0; c < newSize; c++) {
+          const isStartCell = r === 0 && c === 0;
+          newBoardData.push(createNewCellData(r, c, isStartCell, bonusPositions));
+        }
+      }
+
+      setGameState(prev => ({
+        ...prev,
+        currentLevelSize: newSize,
+        boardData: newBoardData,
+        playerPosition: { row: 0, col: 0, direction: 'S' }
+      }));
+
+      showMessage(`🎉 Poziom ${newSize}×${newSize} odblokowany!`, 3000);
+      if (playSound) {
+        playSound('bonus');
+      }
+    }
+  }, [gameState.currentLevelSize, generateBonusPositions, createNewCellData, playSound]);
+
   const handleModeSelect = (mode) => {
     playSound('move');
     setGameState(prev => ({
@@ -332,6 +412,11 @@ const MultiplicationGame = ({ onBack }) => {
       }));
 
       showMessage(`${t('great')} +${cellScore} ${t('points')}${bonusMessage}`, 2000);
+      
+      // Check for level progression after successful answer
+      setTimeout(() => {
+        checkLevelProgression();
+      }, 100);
     } else {
       playSound('wrong');
       
@@ -549,7 +634,7 @@ const MultiplicationGame = ({ onBack }) => {
               boardData={gameState.boardData}
               playerPosition={gameState.playerPosition}
               currentLevelSize={gameState.currentLevelSize}
-              level={1}
+              level={gameState.currentLevelSize}
               playSound={playSound}
               selectedMode={gameState.selectedMode}
               gameModeConfig={gameModeConfig}
@@ -564,7 +649,8 @@ const MultiplicationGame = ({ onBack }) => {
                 boardData={gameState.boardData}
                 playerPosition={gameState.playerPosition}
                 currentLevelSize={gameState.currentLevelSize}
-                level={1}
+                level={gameState.currentLevelSize}
+                showGrassPercentage={settings.showGrassPercentage}
               />
             </div>
 
@@ -629,6 +715,24 @@ const MultiplicationGame = ({ onBack }) => {
                         {gameState.currentLevelSize}×{gameState.currentLevelSize}
                       </div>
                       <div className="text-orange-600 text-xs">🌴 Rozmiar</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Level progression indicator */}
+                <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <div className="text-center">
+                    <div className="text-yellow-800 font-bold text-sm mb-2">
+                      Postęp poziomu
+                    </div>
+                    <div className="w-full bg-yellow-200 rounded-full h-3 mb-2">
+                      <div 
+                        className="bg-yellow-500 h-3 rounded-full transition-all duration-300"
+                        style={{ width: `${Math.min(100, (calculateGrassClearedPercentage() / 40) * 100)}%` }}
+                      />
+                    </div>
+                    <div className="text-yellow-700 text-xs">
+                      {calculateGrassClearedPercentage()}/40% do następnego poziomu
                     </div>
                   </div>
                 </div>

@@ -1,13 +1,20 @@
 import React from 'react';
-import { Volume2, VolumeX, X } from 'lucide-react';
+import { Volume2, VolumeX, X, RotateCcw, Eye, EyeOff } from 'lucide-react';
 import { useSettings } from '../contexts/SettingsContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const SettingsModal = ({ isOpen, onClose }) => {
-  const { settings, toggleSound, setVolume } = useSettings();
+  const { settings, toggleSound, setVolume, toggleGrassPercentage, resetGameState } = useSettings();
   const { t } = useLanguage();
 
   if (!isOpen) return null;
+
+  const handleResetGameState = () => {
+    if (confirm('Czy na pewno chcesz zresetować stan gry? To działanie usunie postęp w grze, ale zachowa rekordy punktów.')) {
+      resetGameState();
+      alert('Stan gry został zresetowany!');
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -68,6 +75,60 @@ const SettingsModal = ({ isOpen, onClose }) => {
               />
             </div>
           )}
+
+          {/* FIXED: Grass Percentage Toggle */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {settings.showGrassPercentage ? (
+                <Eye className="w-5 h-5 text-accent-primary" />
+              ) : (
+                <EyeOff className="w-5 h-5 text-gray-400" />
+              )}
+              <div>
+                <span className="font-medium text-text-color block">
+                  Pokaż procent trawy
+                </span>
+                <span className="text-xs text-text-color/60">
+                  Wyświetla procent trawy na komórkach 2D (jeśli &lt; 100%)
+                </span>
+              </div>
+            </div>
+            <button
+              onClick={toggleGrassPercentage}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                settings.showGrassPercentage ? 'bg-accent-primary' : 'bg-gray-300'
+              }`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  settings.showGrassPercentage ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
+
+          {/* FIXED: Reset Game State */}
+          <div className="border-t border-gray-200 pt-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <RotateCcw className="w-5 h-5 text-red-500" />
+                <div>
+                  <span className="font-medium text-text-color block">
+                    Resetuj stan gry
+                  </span>
+                  <span className="text-xs text-text-color/60">
+                    Powrót do pierwszego poziomu (zachowuje rekordy)
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={handleResetGameState}
+                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-medium transition-colors"
+              >
+                Reset
+              </button>
+            </div>
+          </div>
         </div>
 
         <div className="mt-6 flex justify-end">

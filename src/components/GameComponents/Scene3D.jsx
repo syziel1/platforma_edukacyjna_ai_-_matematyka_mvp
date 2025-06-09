@@ -221,6 +221,19 @@ const Scene3D = ({
     window.dispatchEvent(event);
   };
 
+  // FIXED: Handle front view click - simulate arrow up key press
+  const handleFrontViewClick = () => {
+    const event = new KeyboardEvent('keydown', {
+      key: 'ArrowUp',
+      code: 'ArrowUp',
+      keyCode: 38,
+      which: 38,
+      bubbles: true
+    });
+    
+    window.dispatchEvent(event);
+  };
+
   // Handle task click/touch - simulate arrow up key press
   const handleTaskClick = (cellData) => {
     if (!cellData || cellData.grass < 10) return; // Only clickable if grassy
@@ -250,7 +263,7 @@ const Scene3D = ({
       return (
         <div
           key={`${coords.r}-${coords.c}-${index}-${animationTrigger}`}
-          className={`scene-cell ${viewClasses[index]} relative flex items-end overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105 ${isClickable ? 'cursor-pointer' : ''}`}
+          className={`scene-cell ${viewClasses[index]} relative flex items-end overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105 cursor-pointer`}
           style={{
             width: '33.33%',
             height: '180px',
@@ -264,10 +277,10 @@ const Scene3D = ({
             boxShadow: '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)',
             animation: `cellPulse 0.5s ease-out ${index * 0.1}s both`
           }}
-          onClick={() => isClickable && handleTaskClick(cellData)}
+          onClick={() => handleFrontViewClick()}
           onTouchEnd={(e) => {
             e.preventDefault();
-            if (isClickable) handleTaskClick(cellData);
+            handleFrontViewClick();
           }}
         >
           {/* FIXED: Transparent sky section */}
@@ -473,11 +486,11 @@ const Scene3D = ({
         key={`${coords.r}-${coords.c}-${index}-${animationTrigger}`}
         className={`scene-cell ${viewClasses[index]} absolute overflow-hidden transition-all duration-500 ease-out cursor-pointer`}
         style={{
-          width: '35%',
-          height: '180px',
-          bottom: '26%',
-          left: isLeftSide ? '-5%' : 'auto',
-          right: isLeftSide ? 'auto' : '-5%',
+          width: '100%',
+          height: '100%',
+          bottom: 0,
+          left: isLeftSide ? '0%' : 'auto',
+          right: isLeftSide ? 'auto' : '0%',
           transform: isLeftSide 
             ? 'perspective(500px) rotateY(45deg) rotateX(-3deg) translateZ(25px) scale(0.95)'
             : 'perspective(500px) rotateY(-45deg) rotateX(-3deg) translateZ(25px) scale(0.95)',
@@ -768,6 +781,35 @@ const Scene3D = ({
             zIndex: 10
           }}
         />
+
+        {/* FIXED: Side views with full width click areas */}
+        <div 
+          className="absolute left-0 top-0 bottom-0 w-1/3 z-20 cursor-pointer flex items-center justify-center"
+          onClick={() => handleSideViewClick(true)}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            handleSideViewClick(true);
+          }}
+          title="Obróć w lewo"
+        >
+          <div className="opacity-0 hover:opacity-100 transition-opacity duration-200 bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg">
+            <div className="text-3xl">⬅️</div>
+          </div>
+        </div>
+
+        <div 
+          className="absolute right-0 top-0 bottom-0 w-1/3 z-20 cursor-pointer flex items-center justify-center"
+          onClick={() => handleSideViewClick(false)}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            handleSideViewClick(false);
+          }}
+          title="Obróć w prawo"
+        >
+          <div className="opacity-0 hover:opacity-100 transition-opacity duration-200 bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg">
+            <div className="text-3xl">➡️</div>
+          </div>
+        </div>
 
         {displayOrderCoords.map((coords, index) => {
           const isInFrontGroup = index > 0 && index < 4;
