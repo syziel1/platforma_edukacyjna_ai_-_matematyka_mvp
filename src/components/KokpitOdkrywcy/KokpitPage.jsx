@@ -21,15 +21,7 @@ const KokpitPage = ({ onProblemSelect }) => {
       graphic: 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=400',
       progress: 0,
       currentStep: 'Wprowadzenie do zadania'
-    },
-    bestScore: 1250,
-    recentBadges: [
-      { id: 1, name: 'Pierwszy Krok', iconUrl: '🏆' },
-      { id: 2, name: 'Matematyk', iconUrl: '🧮' },
-      { id: 3, name: 'Odkrywca', iconUrl: '🔍' },
-      { id: 4, name: 'Wytrwały', iconUrl: '💪' }
-    ],
-    totalBadgeCount: 12
+    }
   });
 
   // Pobierz aktualny postęp lekcji
@@ -112,9 +104,6 @@ const KokpitPage = ({ onProblemSelect }) => {
             {/* Kolumna prawa - 35% szerokości */}
             <div className="lg:col-span-1">
               <RightColumn 
-                bestScore={kokpitData.bestScore}
-                recentBadges={kokpitData.recentBadges}
-                totalBadgeCount={kokpitData.totalBadgeCount}
                 onStartGame={handleStartGame}
                 onOpenKnowledgeMap={handleOpenKnowledgeMap}
               />

@@ -9,10 +9,12 @@ import InstructionsModal from './GameComponents/InstructionsModal';
 import GameModeSelector from './GameComponents/GameModeSelector';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useSoundEffects } from '../hooks/useSoundEffects';
+import { useGameRecords } from '../contexts/GameRecordsContext';
 
 const MultiplicationGame = ({ onBack }) => {
   const { t } = useLanguage();
   const { playSound } = useSoundEffects();
+  const { updateMultiplicationGameScore } = useGameRecords();
   
   const [gameState, setGameState] = useState({
     currentLevelSize: 4,
@@ -20,6 +22,7 @@ const MultiplicationGame = ({ onBack }) => {
     playerPosition: { row: 0, col: 0, direction: 'S' },
     score: 0,
     timeElapsed: 0,
+    gameStartTime: null,
     showModeSelector: true,
     selectedMode: null,
     showWelcome: false,
@@ -204,7 +207,8 @@ const MultiplicationGame = ({ onBack }) => {
     setGameState(prev => ({
       ...prev,
       boardData: newBoardData,
-      playerPosition: { row: 0, col: 0, direction: 'S' }
+      playerPosition: { row: 0, col: 0, direction: 'S' },
+      gameStartTime: Date.now()
     }));
   }, [gameState.currentLevelSize, gameState.selectedMode, createNewCellData, generateBonusPositions]);
 
@@ -260,6 +264,17 @@ const MultiplicationGame = ({ onBack }) => {
       showInstructions: false
     }));
   };
+
+  // Function to handle game end and save score
+  const handleGameEnd = useCallback(() => {
+    if (gameState.gameStartTime) {
+      const gameTimeSpent = Math.floor((Date.now() - gameState.gameStartTime) / 1000);
+      updateMultiplicationGameScore(gameState.score, gameTimeSpent);
+      
+      // Show game end message
+      showMessage(`🎉 Gra zakończona! Wynik: ${gameState.score} punktów`, 3000);
+    }
+  }, [gameState.score, gameState.gameStartTime, updateMultiplicationGameScore]);
 
   const handleAnswer = (answer) => {
     const currentCell = gameState.boardData.find(
@@ -478,18 +493,26 @@ const MultiplicationGame = ({ onBack }) => {
     return t('multiplicationGameTitle');
   };
 
+  // Handle game exit - save score when leaving
+  const handleBackWithSave = () => {
+    if (gameState.score > 0 && gameState.gameStartTime) {
+      handleGameEnd();
+    }
+    onBack();
+  };
+
   return (
     <div className="h-screen flex flex-col bg-bg-main">
       {gameState.showModeSelector || gameState.showWelcome || gameState.showInstructions ? (
         <GlobalHeader 
           title={getGameTitle()}
-          onBack={onBack}
+          onBack={handleBackWithSave}
           showBackButton={true}
         />
       ) : (
         <GlobalHeader 
           title={getGameTitle()}
-          onBack={onBack}
+          onBack={handleBackWithSave}
           showBackButton={true}
         />
       )}
