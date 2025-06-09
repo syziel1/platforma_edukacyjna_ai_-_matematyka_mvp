@@ -289,15 +289,15 @@ const MultiplicationGame = ({ onBack }) => {
       const newBoardData = gameState.boardData.map(cell => {
         if (cell.row === currentCell.row && cell.col === currentCell.col) {
           const newGrass = Math.max(0, cell.grass - Math.ceil(cell.grass * 0.50));
-          const wasCleared = newGrass === 0; // FIXED: Only consider cleared when grass is exactly 0
+          const wasCleared = newGrass <= 50; // FIXED: Bonus collected when grass <= 50%
           
           return {
             ...cell,
             grass: newGrass,
             isRevealed: true,
             hintGivenForHardReset: false,
-            wasEverZeroGrass: wasCleared ? true : cell.wasEverZeroGrass,
-            // FIXED: Mark bonus as collected ONLY when grass reaches exactly 0
+            wasEverZeroGrass: newGrass === 0 ? true : cell.wasEverZeroGrass,
+            // FIXED: Mark bonus as collected when grass <= 50%
             bonusCollected: (wasCleared && cell.isBonus && !cell.bonusCollected) ? true : cell.bonusCollected
           };
         }
@@ -308,9 +308,9 @@ const MultiplicationGame = ({ onBack }) => {
       let cellScore = calculateCellScore(currentCell.row, currentCell.col, false);
       let bonusMessage = '';
       
-      // FIXED: Check if this is a bonus cell and it was just fully cleared (grass = 0)
+      // FIXED: Check if this is a bonus cell and grass dropped to 50% or less
       const updatedCell = newBoardData.find(c => c.row === currentCell.row && c.col === currentCell.col);
-      if (currentCell.isBonus && updatedCell.grass === 0 && !currentCell.bonusCollected) {
+      if (currentCell.isBonus && updatedCell.grass <= 50 && !currentCell.bonusCollected) {
         const bonusPoints = calculateCellScore(currentCell.row, currentCell.col, true) - cellScore;
         cellScore = calculateCellScore(currentCell.row, currentCell.col, true);
         bonusMessage = ` (${t('bonusPoints')} +${bonusPoints}!)`;
@@ -380,8 +380,8 @@ const MultiplicationGame = ({ onBack }) => {
         if (targetCell.grass < 10) {
           playSound('move');
           
-          // FIXED: Check if stepping on a bonus cell that hasn't been collected and grass is exactly 0
-          if (targetCell.isBonus && !targetCell.bonusCollected && targetCell.grass === 0) {
+          // FIXED: Check if stepping on a bonus cell that hasn't been collected and grass <= 50%
+          if (targetCell.isBonus && !targetCell.bonusCollected && targetCell.grass <= 50) {
             const bonusScore = calculateCellScore(targetCell.row, targetCell.col, false); // Base score for stepping on
             
             // Mark bonus as collected

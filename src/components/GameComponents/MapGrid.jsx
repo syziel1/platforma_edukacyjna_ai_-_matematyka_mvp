@@ -25,8 +25,8 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
       animationClass += ' animate-pulse';
     }
     
-    // Only show bonus glow if bonus exists and hasn't been collected
-    if (cellData.isBonus && !cellData.bonusCollected) {
+    // Only show bonus glow if bonus exists and grass > 50%
+    if (cellData.isBonus && cellData.grass > 50) {
       animationClass += ' bonus-glow';
     }
     
@@ -169,8 +169,8 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
                 />
               )}
               
-              {/* Bonus indicator with enhanced visual - only show if not collected */}
-              {cellData.isBonus && !cellData.bonusCollected && (
+              {/* Bonus indicator - only show if grass > 50% */}
+              {cellData.isBonus && cellData.grass > 50 && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <span 
                     className="text-lg z-10 bonus-icon"
