@@ -449,7 +449,7 @@ const Scene3D = ({
         className={`scene-cell ${viewClasses[index]} absolute overflow-hidden transition-all duration-500 ease-out`}
         style={{
           width: '35%',
-          height: '200px',
+          height: '180px',
           bottom: 0,
           left: isLeftSide ? '-5%' : 'auto',
           right: isLeftSide ? 'auto' : '-5%',
