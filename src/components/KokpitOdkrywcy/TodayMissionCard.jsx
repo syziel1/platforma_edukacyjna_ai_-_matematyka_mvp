@@ -215,7 +215,7 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
       {/* Cel dnia */}
       <div className="mb-6 p-4 bg-accent-secondary/10 rounded-lg border border-accent-secondary/30">
         <p className="text-text-color font-medium">
-          <strong>Cel:</strong> Opanowanie podstaw funkcji kwadratowej i jej zastosowań.
+          <strong>Cel:</strong> Poświęcić godzinę na naukę.
         </p>
       </div>
 
