@@ -72,23 +72,12 @@ const Scene3D = ({
     return cellMap.get(`${row}-${col}`) || null;
   };
 
-  // FIXED: Dynamic color based on grass height
   const getCellBackgroundColor = (cellData) => {
     if (!cellData) return '#8B4513'; // Brown for out-of-bounds cells
     
-    const grassPercent = cellData.grass / 100;
-    
-    if (grassPercent <= 0.1) {
-      return '#F0E68C'; // Light khaki for cleared cells (sand)
-    } else if (grassPercent <= 0.3) {
-      return '#9ACD32'; // Yellow-green for low grass
-    } else if (grassPercent <= 0.6) {
-      return '#7CB342'; // Medium green
-    } else if (grassPercent <= 0.8) {
-      return '#689F38'; // Darker green
-    } else {
-      return '#558B2F'; // Very dark green for full grass
-    }
+    if (cellData.grass < 10) return '#F0E68C'; // Light khaki for cleared cells
+    if (cellData.grass <= 100) return '#78B134'; // Green for normal grass
+    return '#A0522D'; // Brown for overgrown grass
   };
 
   const getCellHeight = (cellData) => {
@@ -97,7 +86,7 @@ const Scene3D = ({
   };
 
   const getBonusIcon = (cellData) => {
-    if (!cellData || !cellData.isBonus || cellData.grass <= 50) return null;
+    if (!cellData || !cellData.isBonus || cellData.bonusCollected) return null;
     
     // Enhanced bonus icons based on level and position
     const bonusTypes = [
@@ -203,35 +192,8 @@ const Scene3D = ({
 
   // Create gradient background that transitions from sky to current cell color
   const getBackgroundGradient = () => {
-    const skyColor = 'rgba(135, 206, 235, 0)'; // Transparent sky blue
+    const skyColor = '#87CEEB'; // Sky blue
     return `linear-gradient(180deg, ${skyColor} 0%, ${skyColor} 50%, ${currentCellColor} 100%)`;
-  };
-
-  // FIXED: Handle side view clicks for left/right rotation
-  const handleSideViewClick = (isLeftSide) => {
-    const keyCode = isLeftSide ? 'ArrowLeft' : 'ArrowRight';
-    const event = new KeyboardEvent('keydown', {
-      key: keyCode,
-      code: keyCode,
-      keyCode: isLeftSide ? 37 : 39,
-      which: isLeftSide ? 37 : 39,
-      bubbles: true
-    });
-    
-    window.dispatchEvent(event);
-  };
-
-  // FIXED: Handle front view click - simulate arrow up key press
-  const handleFrontViewClick = () => {
-    const event = new KeyboardEvent('keydown', {
-      key: 'ArrowUp',
-      code: 'ArrowUp',
-      keyCode: 38,
-      which: 38,
-      bubbles: true
-    });
-    
-    window.dispatchEvent(event);
   };
 
   // Handle task click/touch - simulate arrow up key press
@@ -263,28 +225,28 @@ const Scene3D = ({
       return (
         <div
           key={`${coords.r}-${coords.c}-${index}-${animationTrigger}`}
-          className={`scene-cell ${viewClasses[index]} relative flex items-end overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105 cursor-pointer`}
+          className={`scene-cell ${viewClasses[index]} relative flex items-end overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105 ${isClickable ? 'cursor-pointer' : ''}`}
           style={{
             width: '33.33%',
             height: '180px',
             border: '2px solid #2a2a2a',
             borderRadius: '8px',
             background: `linear-gradient(180deg, 
-              rgba(135, 206, 235, 0) 0%, 
-              rgba(224, 246, 255, 0) 20%, 
-              rgba(240, 248, 255, 0) 40%, 
+              #87CEEB 0%, 
+              #E0F6FF 20%, 
+              #F0F8FF 40%, 
               ${currentCellColor} 100%)`,
             boxShadow: '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)',
             animation: `cellPulse 0.5s ease-out ${index * 0.1}s both`
           }}
-          onClick={() => handleFrontViewClick()}
+          onClick={() => isClickable && handleTaskClick(cellData)}
           onTouchEnd={(e) => {
             e.preventDefault();
-            handleFrontViewClick();
+            if (isClickable) handleTaskClick(cellData);
           }}
         >
-          {/* FIXED: Transparent sky section */}
-          <div className="absolute top-0 w-full h-16 overflow-hidden bg-transparent">
+          {/* Sky with animated clouds */}
+          <div className="absolute top-0 w-full h-16 overflow-hidden">
             <div 
               className="absolute w-8 h-4 bg-white/30 rounded-full animate-float"
               style={{
@@ -476,49 +438,44 @@ const Scene3D = ({
       );
     }
 
-    // FIXED: Enhanced side cells with proper positioning and click handling
+    // Enhanced side cells with improved 3D perspective
     const isLeftSide = index === 0;
+    const startRotation = isLeftSide ? '65deg' : '-65deg';
+    const endRotation = isLeftSide ? '45deg' : '-45deg';
 
     return (
       <div
         key={`${coords.r}-${coords.c}-${index}-${animationTrigger}`}
-        className={`scene-cell ${viewClasses[index]} absolute overflow-hidden transition-all duration-500 ease-out cursor-pointer`}
+        className={`scene-cell ${viewClasses[index]} absolute overflow-hidden transition-all duration-500 ease-out`}
         style={{
-          width: '45%',
-          height: '240px',
+          width: '35%',
+          height: '200px',
           bottom: 0,
-          left: isLeftSide ? 0 : 'auto',
-          right: isLeftSide ? 'auto' : 0,
+          left: isLeftSide ? '-5%' : 'auto',
+          right: isLeftSide ? 'auto' : '-5%',
           transform: isLeftSide 
             ? 'perspective(500px) rotateY(45deg) rotateX(-3deg) translateZ(25px) scale(0.95)'
             : 'perspective(500px) rotateY(-45deg) rotateX(-3deg) translateZ(25px) scale(0.95)',
-/*          transform: isLeftSide 
-            ? 'rotateY(65deg) translateX(55px)'
-            : 'rotateY(-65deg) translateX(-55px)',*/
-          transformOrigin: isLeftSide ? 'left center' : 'right center',
-          zIndex: isLeftSide ? 10 : 5,
-          opacity: 0.9,
+          transformOrigin: isLeftSide ? 'right center' : 'left center',
+          zIndex: 8,
           border: '2px solid #1a1a1a',
           borderRadius: '8px',
           background: `linear-gradient(${isLeftSide ? '135deg' : '225deg'}, 
-            rgba(135, 206, 235, 0) 0%, 
-            rgba(176, 224, 230, 0) 15%, 
-            rgba(224, 246, 255, 0) 35%, 
-            rgba(240, 248, 255, 0) 50%, 
+            #87CEEB 0%, 
+            #B0E0E6 15%, 
+            #E0F6FF 35%, 
+            #F0F8FF 50%, 
             ${currentCellColor} 100%)`,
           boxShadow: isLeftSide 
             ? '12px 6px 24px rgba(0,0,0,0.5), inset -3px 0 6px rgba(0,0,0,0.3)'
             : '-12px 6px 24px rgba(0,0,0,0.5), inset 3px 0 6px rgba(0,0,0,0.3)',
+          '--start-rotation': startRotation,
+          '--end-rotation': endRotation,
           animation: 'sideSlide 0.6s ease-out both'
         }}
-        onClick={() => handleSideViewClick(isLeftSide)}
-        onTouchEnd={(e) => {
-          e.preventDefault();
-          handleSideViewClick(isLeftSide);
-        }}
       >
-        {/* FIXED: Transparent sky with animated elements */}
-        <div className="absolute inset-x-0 top-0 h-20 overflow-hidden bg-transparent">
+        {/* Enhanced sky with animated elements */}
+        <div className="absolute inset-x-0 top-0 h-20 overflow-hidden">
           <div 
             className="absolute w-6 h-3 bg-white/25 rounded-full animate-drift"
             style={{
@@ -654,15 +611,6 @@ const Scene3D = ({
             borderRadius: '8px'
           }}
         />
-
-        {/* Click indicator for side views */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-          <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg">
-            <div className="text-2xl">
-              {isLeftSide ? '⬅️' : '➡️'}
-            </div>
-          </div>
-        </div>
       </div>
     );
   };
@@ -759,13 +707,12 @@ const Scene3D = ({
       `}</style>
       
       <div 
-        className="flex justify-center items-center gap-0 w-full p-0 box-border relative transition-all duration-500 ease-in-out"
+        className="flex justify-center items-center gap-0 w-full h-[280px] p-0 box-border relative transition-all duration-500 ease-in-out"
         style={{ 
           perspective: '900px',
           perspectiveOrigin: 'center center',
           filter: 'drop-shadow(0 10px 25px rgba(0,0,0,0.3))',
-          background: getBackgroundGradient(),
-          height: '100%'
+          background: getBackgroundGradient()
         }}
         role="img"
         aria-label="Enhanced 3D view of the jungle from player's perspective"
