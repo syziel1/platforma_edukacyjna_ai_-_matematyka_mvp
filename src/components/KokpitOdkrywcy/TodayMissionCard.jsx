@@ -317,11 +317,11 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
                 <Video className="w-5 h-5" />
                 {mentorSession.isActive ? 'JOIN MEETING' : `MEETING AT ${mentorSession.time}`}
               </a>
-            {!mentorSession.isActive && (
-              <p className="text-xs text-text-color/60 mt-2">
-                Button will be active at {mentorSession.time}
-              </p>
-            )}
+              {!mentorSession.isActive && (
+                <p className="text-xs text-text-color/60 mt-2">
+                  Button will be active at {mentorSession.time}
+                </p>
+              )}
               
               {/* Przycisk anulowania spotkania */}
               <button
