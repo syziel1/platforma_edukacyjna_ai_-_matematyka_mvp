@@ -757,7 +757,7 @@ const Scene3D = ({
       `}</style>
       
       <div 
-        className="flex justify-center items-center gap-0 w-full p-0 box-border relative transition-all duration-500 ease-in-out"
+        className="flex  items-center gap-0 w-full p-0 box-border relative transition-all duration-500 ease-in-out"
         style={{ 
           perspective: '900px',
           perspectiveOrigin: 'center top',
