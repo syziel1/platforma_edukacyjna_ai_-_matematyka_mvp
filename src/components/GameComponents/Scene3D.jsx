@@ -475,7 +475,7 @@ const Scene3D = ({
         }}
       >
         {/* Enhanced sky with animated elements */}
-        <div className="absolute inset-x-0 top-0 h-20 overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-20 overflow-hidden bg-transparent">
           <div 
             className="absolute w-6 h-3 bg-white/25 rounded-full animate-drift"
             style={{
@@ -611,6 +611,15 @@ const Scene3D = ({
             borderRadius: '8px'
           }}
         />
+        
+        {/* Click indicator for side views */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+          <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg">
+            <div className="text-2xl">
+              {isLeftSide ? '⬅️' : '➡️'}
+            </div>
+          </div>
+        </div>
       </div>
     );
   };
