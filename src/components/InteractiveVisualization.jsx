@@ -83,7 +83,7 @@ const InteractiveVisualization = () => {
                 ? 'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
                 : 'top-full left-1/2 transform -translate-x-1/2 mt-2'
             }`}>
-            Kurnik
+            Chicken Coop
           </div>
 
           <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-sm text-text-color">

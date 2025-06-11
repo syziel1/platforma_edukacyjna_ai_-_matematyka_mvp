@@ -479,25 +479,7 @@ const detectUserLanguage = () => {
     return savedLanguage;
   }
 
-  // Try to detect based on browser language
-  const browserLanguage = navigator.language || navigator.languages[0];
-  
-  // Check if browser language indicates Polish
-  if (browserLanguage.startsWith('pl')) {
-    return 'pl';
-  }
-
-  // Try to detect based on timezone (rough approximation for Poland)
-  try {
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    if (timezone === 'Europe/Warsaw' || timezone === 'Europe/Krakow') {
-      return 'pl';
-    }
-  } catch (error) {
-    console.log('Timezone detection failed:', error);
-  }
-
-  // Default to English
+  // Default to English for global audience
   return 'en';
 };
 

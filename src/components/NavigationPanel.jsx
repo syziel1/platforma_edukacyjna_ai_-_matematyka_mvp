@@ -66,13 +66,13 @@ const NavigationPanel = ({ onLoginClick, onShowKokpit, onShowStartScreen }) => {
       label: t('menu'),
       action: () => setIsExpanded(!isExpanded)
     },
-    // Kokpit dostępny dla wszystkich (nie tylko zalogowanych)
+    // Explorer Cockpit available for everyone
     { 
       icon: Home, 
-      label: 'Kokpit Odkrywcy', 
+      label: 'Explorer Cockpit', 
       action: handleKokpit
     },
-    // StartScreen - lista zadań
+    // StartScreen - lessons list
     { 
       icon: BookOpen, 
       label: t('lessonsList'), 
@@ -90,7 +90,7 @@ const NavigationPanel = ({ onLoginClick, onShowKokpit, onShowStartScreen }) => {
     },
     { 
       icon: Info, 
-      label: 'O projekcie', 
+      label: 'About Project', 
       action: handleAboutProject
     },
     { 

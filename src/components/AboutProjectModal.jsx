@@ -23,7 +23,7 @@ const AboutProjectModal = ({ isOpen, onClose }) => {
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h2 className="text-2xl font-bold text-text-color flex items-center gap-2">
             <Target className="w-6 h-6 text-accent-primary" />
-            O projekcie Edu-Future
+            About Edu-Future Project
           </h2>
           <button
             onClick={onClose}
@@ -39,42 +39,42 @@ const AboutProjectModal = ({ isOpen, onClose }) => {
           <div className="bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 rounded-lg p-6 border border-accent-primary/20">
             <h3 className="text-xl font-bold text-text-color mb-3 flex items-center gap-2">
               <Lightbulb className="w-5 h-5 text-accent-primary" />
-              Misja projektu
+              Project Mission
             </h3>
             <p className="text-text-color leading-relaxed mb-4">
-              <strong>Edu-Future</strong> to innowacyjna platforma edukacyjna zaprojektowana, aby zrewolucjonizować 
-              naukę matematyki poprzez personalizację, grywalizację i wsparcie sztucznej inteligencji.
+              <strong>Edu-Future</strong> is an innovative educational platform designed to revolutionize 
+              mathematics learning through personalization, gamification, and artificial intelligence support.
             </p>
             <p className="text-text-color leading-relaxed">
-              Naszą misją jest stworzenie spójnej i logicznej podróży edukacyjnej, w której uczeń nie tylko 
-              rozwiązuje problemy, ale przede wszystkim rozumie <strong>cel i sens nauki</strong>.
+              Our mission is to create a coherent and logical educational journey where students not only 
+              solve problems but primarily understand the <strong>purpose and meaning of learning</strong>.
             </p>
           </div>
 
           {/* Key Features */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-              <h4 className="font-bold text-blue-800 mb-2">🎯 Nauka przez Problem-Solving</h4>
+              <h4 className="font-bold text-blue-800 mb-2">🎯 Problem-Based Learning</h4>
               <p className="text-blue-700 text-sm">
-                Każdy temat zaczyna się od praktycznego problemu z życia wziętego.
+                Every topic starts with a practical, real-world problem.
               </p>
             </div>
             <div className="bg-green-50 rounded-lg p-4 border border-green-200">
-              <h4 className="font-bold text-green-800 mb-2">🤖 Personalizowany Mentor AI</h4>
+              <h4 className="font-bold text-green-800 mb-2">🤖 Personalized AI Mentor</h4>
               <p className="text-green-700 text-sm">
-                Dedykowany asystent AI dostosowuje się do indywidualnego tempa nauki.
+                Dedicated AI assistant adapts to individual learning pace.
               </p>
             </div>
             <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
-              <h4 className="font-bold text-purple-800 mb-2">🎮 Grywalizacja</h4>
+              <h4 className="font-bold text-purple-800 mb-2">🎮 Gamification</h4>
               <p className="text-purple-700 text-sm">
-                Nauka odbywa się poprzez serię interaktywnych gier i wyzwań.
+                Learning through interactive games and challenges.
               </p>
             </div>
             <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
-              <h4 className="font-bold text-orange-800 mb-2">👨‍🏫 Wsparcie Mentorów</h4>
+              <h4 className="font-bold text-orange-800 mb-2">👨‍🏫 Mentor Support</h4>
               <p className="text-orange-700 text-sm">
-                Platforma łączy uczniów z prawdziwymi nauczycielami i korepetytorami.
+                Platform connects students with real teachers and tutors.
               </p>
             </div>
           </div>
@@ -83,25 +83,25 @@ const AboutProjectModal = ({ isOpen, onClose }) => {
           <div className="bg-nav-bg/5 rounded-lg p-6 border border-nav-bg/20">
             <h3 className="text-xl font-bold text-text-color mb-4 flex items-center gap-2">
               <Users className="w-5 h-5 text-nav-bg" />
-              Zespół projektu
+              Project Team
             </h3>
             
             {/* Project Leader */}
             <div className="bg-white rounded-lg p-4 border border-nav-bg/30 mb-4">
               <div className="flex items-center gap-4 mb-3">
-                {/* Zdjęcie mentora - placeholder, który można podmienić */}
+                {/* Mentor photo - placeholder that can be replaced */}
                 <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-accent-primary shadow-lg">
                   <img 
                     src="/mentor-photo.jpg"
                     alt="Sylwester Zieliński"
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      // Fallback do inicjałów jeśli zdjęcie nie zostanie znalezione
+                      // Fallback to initials if photo not found
                       e.target.style.display = 'none';
                       e.target.nextElementSibling.style.display = 'flex';
                     }}
                   />
-                  {/* Fallback z inicjałami */}
+                  {/* Fallback with initials */}
                   <div 
                     className="w-full h-full bg-gradient-to-br from-accent-primary to-accent-secondary rounded-full flex items-center justify-center text-white font-bold text-xl"
                     style={{ display: 'none' }}
@@ -111,7 +111,7 @@ const AboutProjectModal = ({ isOpen, onClose }) => {
                 </div>
                 <div>
                   <h4 className="font-bold text-text-color text-lg">Sylwester Zieliński</h4>
-                  <p className="text-text-color/70">Lider Projektu, Wizjoner, Prototypowanie UI</p>
+                  <p className="text-text-color/70">Project Leader, Visionary, UI Prototyping</p>
                 </div>
               </div>
               
@@ -128,7 +128,7 @@ const AboutProjectModal = ({ isOpen, onClose }) => {
                   className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors text-sm font-medium"
                 >
                   <Calendar className="w-4 h-4" />
-                  Umów spotkanie
+                  Schedule Meeting
                 </button>
               </div>
             </div>
@@ -137,22 +137,22 @@ const AboutProjectModal = ({ isOpen, onClose }) => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-white/50 rounded-lg p-3 border border-nav-bg/20">
                 <h5 className="font-bold text-text-color">Arkadiusz Słota</h5>
-                <p className="text-text-color/70 text-sm">Architektura Systemów, Programista AI (RAG & Gen AI)</p>
+                <p className="text-text-color/70 text-sm">System Architecture, AI Developer (RAG & Gen AI)</p>
               </div>
               <div className="bg-white/50 rounded-lg p-3 border border-nav-bg/20">
                 <h5 className="font-bold text-text-color">Mateusz Tyburski</h5>
-                <p className="text-text-color/70 text-sm">Automatyzacja, Wsparcie Techniczne</p>
+                <p className="text-text-color/70 text-sm">Automation, Technical Support</p>
               </div>
               <div className="bg-white/50 rounded-lg p-3 border border-nav-bg/20">
                 <h5 className="font-bold text-text-color">Michał Marini</h5>
-                <p className="text-text-color/70 text-sm">Procesy, Analityka</p>
+                <p className="text-text-color/70 text-sm">Processes, Analytics</p>
               </div>
             </div>
           </div>
 
           {/* Technology Stack */}
           <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-            <h3 className="text-xl font-bold text-text-color mb-4">🛠️ Stos technologiczny</h3>
+            <h3 className="text-xl font-bold text-text-color mb-4">🛠️ Technology Stack</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div className="bg-white rounded-lg p-3 text-center border border-gray-200">
                 <div className="text-2xl mb-1">⚛️</div>
@@ -177,39 +177,39 @@ const AboutProjectModal = ({ isOpen, onClose }) => {
           <div className="bg-gray-900 rounded-lg p-6 text-white">
             <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
               <Github className="w-5 h-5" />
-              Kod źródłowy
+              Source Code
             </h3>
             <p className="text-gray-300 mb-4">
-              Projekt jest rozwijany jako open source. Sprawdź kod źródłowy i śledź postępy rozwoju.
+              The project is developed as open source. Check the source code and follow development progress.
             </p>
             <button
               onClick={handleGithubClick}
               className="flex items-center gap-2 bg-white text-gray-900 hover:bg-gray-100 px-4 py-2 rounded-lg transition-colors font-medium"
             >
               <Github className="w-4 h-4" />
-              Zobacz repozytorium
+              View Repository
             </button>
           </div>
 
           {/* Call to Action */}
           <div className="bg-gradient-to-r from-accent-primary to-accent-secondary rounded-lg p-6 text-white text-center">
-            <h3 className="text-xl font-bold mb-3">🚀 Dołącz do rewolucji w edukacji!</h3>
+            <h3 className="text-xl font-bold mb-3">🚀 Join the Education Revolution!</h3>
             <p className="mb-4 opacity-90">
-              Chcesz być częścią projektu lub masz pytania? Skontaktuj się z liderem projektu.
+              Want to be part of the project or have questions? Contact the project leader.
             </p>
             <button
               onClick={handleScheduleMeeting}
               className="bg-white text-accent-primary hover:bg-gray-100 px-6 py-3 rounded-lg transition-colors font-bold flex items-center gap-2 mx-auto"
             >
               <Calendar className="w-5 h-5" />
-              Umów spotkanie z Sylwestrem
+              Schedule Meeting with Sylwester
             </button>
           </div>
         </div>
 
         {/* Footer */}
         <div className="border-t border-gray-200 p-4 text-center text-gray-500 text-sm">
-          <p>© 2024 Edu-Future. Wszystkie prawa zastrzeżone. Autor: Sylwester Zieliński. Projekt rozwijany w ramach Bolt Hackathon.</p>
+          <p>© 2024 Edu-Future. All rights reserved. Author: Sylwester Zieliński. Project developed as part of Bolt Hackathon.</p>
         </div>
       </div>
     </div>
