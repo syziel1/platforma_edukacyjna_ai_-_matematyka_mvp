@@ -12,7 +12,7 @@ import { useSoundEffects } from '../hooks/useSoundEffects';
 import { useGameRecords } from '../contexts/GameRecordsContext';
 import { useSettings } from '../contexts/SettingsContext';
 
-const JungleGame = ({ onBack }) => {
+const JungleGame = ({ onBack, startWithModeSelector = false }) => {
   const { t } = useLanguage();
   const { playSound } = useSoundEffects();
   const { updateJungleGameScore } = useGameRecords();
@@ -47,6 +47,29 @@ const JungleGame = ({ onBack }) => {
   };
 
   const [gameState, setGameState] = useState(() => {
+    // If startWithModeSelector is true, always show mode selector regardless of saved state
+    if (startWithModeSelector) {
+      return {
+        currentLevelSize: 4,
+        boardData: [],
+        playerPosition: { row: 0, col: 0, direction: 'S' },
+        score: 0,
+        timeElapsed: 0,
+        gameStartTime: null,
+        showModeSelector: true,
+        selectedMode: null,
+        showWelcome: false,
+        showInstructions: false,
+        showQuestion: false,
+        currentQuestion: null,
+        wrongAnswersCount: 0,
+        isGeminiLoading: false,
+        message: '',
+        showMessage: false,
+        lastPlayed: null
+      };
+    }
+
     const savedState = loadGameState();
     return savedState || {
       currentLevelSize: 4,
