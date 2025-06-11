@@ -62,7 +62,7 @@ const GlobalHeader = ({ title, onBack, showBackButton = false }) => {
               title={`${getStatusText(t)} ${formatNextAvailability(t) ? `- ${t('nextAvailability')}: ${formatNextAvailability(t)}` : ''}`}
             >
               <div className="relative">
-                <Video className={`w-3 h-3 md:w-5 md:h-6 ${getStatusColor()}`} />
+                <Video className={`w-3 h-3 md:w-6 md:h-6 ${getStatusColor()}`} />
                 {/* Status indicator */}
                 <div className="absolute -bottom-0.5 -right-0.5 text-xs">
                   {getStatusIcon()}
