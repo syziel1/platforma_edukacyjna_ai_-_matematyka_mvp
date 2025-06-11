@@ -12,8 +12,7 @@ export const useGameRecords = () => {
 
 export const GameRecordsProvider = ({ children }) => {
   const [records, setRecords] = useState(() => {
-    const saved = localStorage.getItem('gameRecords');
-    return saved ? JSON.parse(saved) : {
+    const defaultRecords = {
       jungleGame: {
         bestScore: 0,
         totalGamesPlayed: 0,
@@ -38,6 +37,36 @@ export const GameRecordsProvider = ({ children }) => {
         lastCompleted: null
       }
     };
+
+    try {
+      const saved = localStorage.getItem('gameRecords');
+      if (saved) {
+        const parsedData = JSON.parse(saved);
+        // Deep merge saved data with default structure to ensure all properties exist
+        return {
+          jungleGame: {
+            ...defaultRecords.jungleGame,
+            ...(parsedData.jungleGame || {})
+          },
+          chickenCoop: {
+            ...defaultRecords.chickenCoop,
+            ...(parsedData.chickenCoop || {})
+          },
+          ecoTshirt: {
+            ...defaultRecords.ecoTshirt,
+            ...(parsedData.ecoTshirt || {})
+          },
+          waterTank: {
+            ...defaultRecords.waterTank,
+            ...(parsedData.waterTank || {})
+          }
+        };
+      }
+    } catch (error) {
+      console.warn('Failed to parse game records from localStorage:', error);
+    }
+    
+    return defaultRecords;
   });
 
   useEffect(() => {
