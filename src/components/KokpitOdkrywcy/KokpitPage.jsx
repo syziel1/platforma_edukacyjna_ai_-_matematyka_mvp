@@ -102,7 +102,7 @@ const KokpitPage = ({ onProblemSelect }) => {
             </div>
             
             {/* Kolumna prawa - 35% szerokości */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-1">
               <RightColumn 
                 onStartGame={handleStartGame}
                 onOpenKnowledgeMap={handleOpenKnowledgeMap}
