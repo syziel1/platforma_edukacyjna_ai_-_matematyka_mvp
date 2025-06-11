@@ -11,87 +11,15 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useSoundEffects } from '../hooks/useSoundEffects';
 import { useGameRecords } from '../contexts/GameRecordsContext';
 import { useSettings } from '../contexts/SettingsContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const JungleGame = ({ onBack, startWithModeSelector = false }) => {
   const { t } = useLanguage();
   const { playSound } = useSoundEffects();
   const { updateJungleGameScore } = useGameRecords();
   const { settings } = useSettings();
+  const { user } = useAuth();
   
-  // FIXED: Load saved game state
-  const loadGameState = () => {
-    const saved = localStorage.getItem('jungleGameState');
-    if (saved) {
-      try {
-        const parsedState = JSON.parse(saved);
-        // Apply grass growth based on days passed
-        if (parsedState.lastPlayed) {
-          const lastPlayedDate = new Date(parsedState.lastPlayed);
-          const now = new Date();
-          const daysPassed = Math.floor((now - lastPlayedDate) / (1000 * 60 * 60 * 24));
-          
-          if (daysPassed > 0) {
-            // Apply grass growth formula: height = height * (1.05)^days, max 100%
-            parsedState.boardData = parsedState.boardData.map(cell => ({
-              ...cell,
-              grass: Math.min(100, cell.grass * Math.pow(1.05, daysPassed))
-            }));
-          }
-        }
-        return parsedState;
-      } catch (error) {
-        console.error('Error loading game state:', error);
-      }
-    }
-    return null;
-  };
-
-  const [gameState, setGameState] = useState(() => {
-    // If startWithModeSelector is true, always show mode selector regardless of saved state
-    if (startWithModeSelector) {
-      return {
-        currentLevelSize: 4,
-        boardData: [],
-        playerPosition: { row: 0, col: 0, direction: 'S' },
-        score: 0,
-        timeElapsed: 0,
-        gameStartTime: null,
-        showModeSelector: true,
-        selectedMode: null,
-        showWelcome: false,
-        showInstructions: false,
-        showQuestion: false,
-        currentQuestion: null,
-        wrongAnswersCount: 0,
-        isGeminiLoading: false,
-        message: '',
-        showMessage: false,
-        lastPlayed: null
-      };
-    }
-
-    const savedState = loadGameState();
-    return savedState || {
-      currentLevelSize: 4,
-      boardData: [],
-      playerPosition: { row: 0, col: 0, direction: 'S' },
-      score: 0,
-      timeElapsed: 0,
-      gameStartTime: null,
-      showModeSelector: true,
-      selectedMode: null,
-      showWelcome: false,
-      showInstructions: false,
-      showQuestion: false,
-      currentQuestion: null,
-      wrongAnswersCount: 0,
-      isGeminiLoading: false,
-      message: '',
-      showMessage: false,
-      lastPlayed: null
-    };
-  });
-
   // Game mode configurations
   const gameModeConfig = {
     addition: {
@@ -151,8 +79,8 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
       name: t('exponentiation'),
       symbol: '^',
       generateQuestion: (r, c) => {
-        const base = Math.max(2, Math.min(r + 1, c + 1, 5)); // Limit base to 2-5
-        const exponent = Math.max(1, Math.min(Math.max(r, c), 3)); // Limit exponent to 1-3
+        const base = Math.max(2, Math.min(r + 1, c + 1, 5));
+        const exponent = Math.max(1, Math.min(Math.max(r, c), 3));
         return {
           num1: base,
           num2: exponent,
@@ -166,7 +94,6 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
       name: t('squareRoot'),
       symbol: '√',
       generateQuestion: (r, c) => {
-        // Generate perfect squares for easier calculation
         const perfectSquares = [1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225];
         const maxIndex = Math.min(perfectSquares.length - 1, Math.max(r, c) + 2);
         const randomSquare = perfectSquares[Math.min(maxIndex, perfectSquares.length - 1)];
@@ -181,49 +108,23 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
     }
   };
 
-  // Save game state to localStorage
-  const saveGameState = useCallback(() => {
-    const stateToSave = {
-      ...gameState,
-      lastPlayed: new Date().toISOString()
-    };
-    localStorage.setItem('jungleGameState', JSON.stringify(stateToSave));
-  }, [gameState]);
+  // Generate user-specific storage key
+  const getUserStorageKey = (mode) => {
+    const userId = user?.id || 'anonymous';
+    return `jungleGame_${mode}_${userId}`;
+  };
 
-  // Save game state whenever it changes (except for UI states)
-  useEffect(() => {
-    if (gameState.boardData.length > 0 && !gameState.showModeSelector && !gameState.showWelcome && !gameState.showInstructions) {
-      saveGameState();
-    }
-  }, [gameState.boardData, gameState.playerPosition, gameState.score, gameState.currentLevelSize, saveGameState]);
-
-  // Add timer effect
-  useEffect(() => {
-    let timer;
-    if (!gameState.showModeSelector && !gameState.showWelcome && !gameState.showInstructions && !gameState.showQuestion) {
-      timer = setInterval(() => {
-        setGameState(prev => ({
-          ...prev,
-          timeElapsed: prev.timeElapsed + 1
-        }));
-      }, 1000);
-    }
-    return () => {
-      if (timer) clearInterval(timer);
-    };
-  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, gameState.showQuestion]);
-
-  // Generate bonus positions - maximum 1 per 8 cells
-  const generateBonusPositions = useCallback((size) => {
-    const totalCells = size * size;
-    const maxBonuses = Math.floor(totalCells / 8); // Maximum 1 bonus per 8 cells
+  // Generate bonus positions for 10x10 board - maximum 12 bonuses (1 per 8 cells)
+  const generateBonusPositions = useCallback(() => {
+    const totalCells = 100; // 10x10
+    const maxBonuses = 12; // 1 per ~8 cells
     const bonusPositions = new Set();
     
     // Don't place bonus on starting position (0,0)
     const availablePositions = [];
-    for (let r = 0; r < size; r++) {
-      for (let c = 0; c < size; c++) {
-        if (!(r === 0 && c === 0)) { // Skip starting position
+    for (let r = 0; r < 10; r++) {
+      for (let c = 0; c < 10; c++) {
+        if (!(r === 0 && c === 0)) {
           availablePositions.push(`${r}-${c}`);
         }
       }
@@ -239,103 +140,227 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
     return bonusPositions;
   }, []);
 
-  const createNewCellData = useCallback((r, c, isStartCell, bonusPositions) => {
-    const questionData = gameState.selectedMode 
-      ? gameModeConfig[gameState.selectedMode].generateQuestion(r, c)
-      : { num1: r + 1, num2: c + 1, answer: (r + 1) * (c + 1), display: `${r + 1} × ${c + 1}` };
+  // Create initial 10x10 board for a specific mode
+  const createInitialBoard = useCallback((mode) => {
+    const boardData = [];
+    const bonusPositions = generateBonusPositions();
 
-    const isBonus = bonusPositions.has(`${r}-${c}`);
-
-    return {
-      row: r,
-      col: c,
-      grass: isStartCell ? 0 : 100,
-      question: questionData.display,
-      questionData: questionData,
-      originalMultiplier1: questionData.num1,
-      originalMultiplier2: questionData.num2,
-      correctAnswer: questionData.answer,
-      isBonus: isBonus,
-      isRevealed: isStartCell,
-      bonusCollected: false,
-      wasEverZeroGrass: isStartCell,
-      hintGivenForHardReset: false
-    };
-  }, [gameState.selectedMode]);
-
-  const initializeGame = useCallback(() => {
-    if (!gameState.selectedMode) return;
-    
-    const newBoardData = [];
-    const size = gameState.currentLevelSize;
-    const bonusPositions = generateBonusPositions(size);
-
-    for (let r = 0; r < size; r++) {
-      for (let c = 0; c < size; c++) {
+    for (let r = 0; r < 10; r++) {
+      for (let c = 0; c < 10; c++) {
         const isStartCell = r === 0 && c === 0;
-        newBoardData.push(createNewCellData(r, c, isStartCell, bonusPositions));
+        const questionData = gameModeConfig[mode].generateQuestion(r, c);
+        const isBonus = bonusPositions.has(`${r}-${c}`);
+
+        boardData.push({
+          row: r,
+          col: c,
+          grass: isStartCell ? 0 : 100,
+          question: questionData.display,
+          questionData: questionData,
+          originalMultiplier1: questionData.num1,
+          originalMultiplier2: questionData.num2,
+          correctAnswer: questionData.answer,
+          isBonus: isBonus,
+          isRevealed: isStartCell,
+          bonusCollected: false,
+          wasEverZeroGrass: isStartCell,
+          hintGivenForHardReset: false
+        });
       }
     }
 
+    return boardData;
+  }, [gameModeConfig, generateBonusPositions]);
+
+  // Load or create board for specific mode
+  const loadOrCreateBoard = useCallback((mode) => {
+    const storageKey = getUserStorageKey(mode);
+    const saved = localStorage.getItem(storageKey);
+    
+    if (saved) {
+      try {
+        const parsedData = JSON.parse(saved);
+        
+        // Apply grass growth based on days passed
+        if (parsedData.lastPlayed) {
+          const lastPlayedDate = new Date(parsedData.lastPlayed);
+          const now = new Date();
+          const daysPassed = Math.floor((now - lastPlayedDate) / (1000 * 60 * 60 * 24));
+          
+          if (daysPassed > 0) {
+            // Apply grass growth formula: height = height * (1.05)^days, max 100%
+            parsedData.boardData = parsedData.boardData.map(cell => ({
+              ...cell,
+              grass: Math.min(100, cell.grass * Math.pow(1.05, daysPassed))
+            }));
+          }
+        }
+        
+        return parsedData;
+      } catch (error) {
+        console.error('Error loading board data:', error);
+      }
+    }
+    
+    // Create new board if none exists
+    const newBoardData = createInitialBoard(mode);
+    const newBoardState = {
+      boardData: newBoardData,
+      currentViewSize: 4,
+      lastPlayed: new Date().toISOString()
+    };
+    
+    localStorage.setItem(storageKey, JSON.stringify(newBoardState));
+    return newBoardState;
+  }, [createInitialBoard, getUserStorageKey, user]);
+
+  // Save board state for specific mode
+  const saveBoardState = useCallback((mode, boardData, viewSize) => {
+    const storageKey = getUserStorageKey(mode);
+    const boardState = {
+      boardData: boardData,
+      currentViewSize: viewSize,
+      lastPlayed: new Date().toISOString()
+    };
+    localStorage.setItem(storageKey, JSON.stringify(boardState));
+  }, [getUserStorageKey]);
+
+  // Initialize game state
+  const [gameState, setGameState] = useState(() => {
+    if (startWithModeSelector) {
+      return {
+        currentViewSize: 4,
+        fullBoardData: [], // Full 10x10 board
+        visibleBoardData: [], // Currently visible portion
+        playerPosition: { row: 0, col: 0, direction: 'S' },
+        score: 0,
+        timeElapsed: 0,
+        gameStartTime: null,
+        showModeSelector: true,
+        selectedMode: null,
+        showWelcome: false,
+        showInstructions: false,
+        showQuestion: false,
+        currentQuestion: null,
+        wrongAnswersCount: 0,
+        isGeminiLoading: false,
+        message: '',
+        showMessage: false
+      };
+    }
+
+    return {
+      currentViewSize: 4,
+      fullBoardData: [],
+      visibleBoardData: [],
+      playerPosition: { row: 0, col: 0, direction: 'S' },
+      score: 0,
+      timeElapsed: 0,
+      gameStartTime: null,
+      showModeSelector: true,
+      selectedMode: null,
+      showWelcome: false,
+      showInstructions: false,
+      showQuestion: false,
+      currentQuestion: null,
+      wrongAnswersCount: 0,
+      isGeminiLoading: false,
+      message: '',
+      showMessage: false
+    };
+  });
+
+  // Extract visible portion of the board based on current view size
+  const extractVisibleBoard = useCallback((fullBoard, viewSize) => {
+    return fullBoard.filter(cell => 
+      cell.row < viewSize && cell.col < viewSize
+    );
+  }, []);
+
+  // Initialize or load board when mode is selected
+  const initializeGameBoard = useCallback((mode) => {
+    const boardState = loadOrCreateBoard(mode);
+    const visibleBoard = extractVisibleBoard(boardState.boardData, boardState.currentViewSize);
+    
     setGameState(prev => ({
       ...prev,
-      boardData: newBoardData,
+      fullBoardData: boardState.boardData,
+      visibleBoardData: visibleBoard,
+      currentViewSize: boardState.currentViewSize,
       playerPosition: { row: 0, col: 0, direction: 'S' },
       gameStartTime: Date.now()
     }));
-  }, [gameState.currentLevelSize, gameState.selectedMode, createNewCellData, generateBonusPositions]);
+  }, [loadOrCreateBoard, extractVisibleBoard]);
 
+  // Save board state whenever it changes
   useEffect(() => {
-    if (!gameState.showModeSelector && !gameState.showWelcome && !gameState.showInstructions && gameState.boardData.length === 0) {
-      initializeGame();
+    if (gameState.selectedMode && gameState.fullBoardData.length > 0 && 
+        !gameState.showModeSelector && !gameState.showWelcome && !gameState.showInstructions) {
+      saveBoardState(gameState.selectedMode, gameState.fullBoardData, gameState.currentViewSize);
     }
-  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, gameState.boardData.length, initializeGame]);
+  }, [gameState.fullBoardData, gameState.currentViewSize, gameState.selectedMode, 
+      gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, saveBoardState]);
+
+  // Timer effect
+  useEffect(() => {
+    let timer;
+    if (!gameState.showModeSelector && !gameState.showWelcome && !gameState.showInstructions && !gameState.showQuestion) {
+      timer = setInterval(() => {
+        setGameState(prev => ({
+          ...prev,
+          timeElapsed: prev.timeElapsed + 1
+        }));
+      }, 1000);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, gameState.showQuestion]);
 
   const calculateCellScore = (row, col, isBonus = false) => {
-    const baseScore = row + col + 2; // +2 because coordinates start from 0
+    const baseScore = row + col + 2;
     return isBonus ? baseScore * 2 : baseScore;
   };
 
-  // Function to handle game end and save score
+  // Handle game end and save score
   const handleGameEnd = useCallback(() => {
     if (gameState.gameStartTime) {
       const gameTimeSpent = Math.floor((Date.now() - gameState.gameStartTime) / 1000);
       updateJungleGameScore(gameState.score, gameTimeSpent);
-      
-      // Show game end message
       showMessage(`🎉 Game finished! Score: ${gameState.score} points`, 3000);
     }
   }, [gameState.score, gameState.gameStartTime, updateJungleGameScore]);
 
-  // FIXED: Check for level progression (40% grass cleared)
+  // Calculate grass cleared percentage for visible area only
+  const calculateGrassClearedPercentage = () => {
+    if (gameState.visibleBoardData.length === 0) return 0;
+    
+    const clearedCells = gameState.visibleBoardData.filter(cell => cell.grass < 100).length;
+    const totalCells = gameState.visibleBoardData.length;
+    
+    return Math.round((clearedCells / totalCells) * 100);
+  };
+
+  // Check for level progression (40% of visible area cleared)
   const checkLevelProgression = useCallback(() => {
     const grassClearedPercentage = calculateGrassClearedPercentage();
-    if (grassClearedPercentage >= 40 && gameState.currentLevelSize < 8) {
-      // Advance to next level
-      const newSize = gameState.currentLevelSize + 1;
-      const newBoardData = [];
-      const bonusPositions = generateBonusPositions(newSize);
-
-      for (let r = 0; r < newSize; r++) {
-        for (let c = 0; c < newSize; c++) {
-          const isStartCell = r === 0 && c === 0;
-          newBoardData.push(createNewCellData(r, c, isStartCell, bonusPositions));
-        }
-      }
-
+    
+    if (grassClearedPercentage >= 40 && gameState.currentViewSize < 10) {
+      const newViewSize = Math.min(10, gameState.currentViewSize + 1);
+      const newVisibleBoard = extractVisibleBoard(gameState.fullBoardData, newViewSize);
+      
       setGameState(prev => ({
         ...prev,
-        currentLevelSize: newSize,
-        boardData: newBoardData,
-        playerPosition: { row: 0, col: 0, direction: 'S' }
+        currentViewSize: newViewSize,
+        visibleBoardData: newVisibleBoard
       }));
 
-      showMessage(`🎉 Level ${newSize}×${newSize} unlocked!`, 3000);
+      showMessage(`🎉 Level ${newViewSize}×${newViewSize} unlocked!`, 3000);
       if (playSound) {
         playSound('bonus');
       }
     }
-  }, [gameState.currentLevelSize, generateBonusPositions, createNewCellData, playSound]);
+  }, [gameState.currentViewSize, gameState.fullBoardData, extractVisibleBoard, playSound]);
 
   const handleModeSelect = (mode) => {
     playSound('move');
@@ -377,10 +402,15 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
       showWelcome: false,
       showInstructions: false
     }));
+    
+    // Initialize board when game starts
+    if (gameState.selectedMode) {
+      initializeGameBoard(gameState.selectedMode);
+    }
   };
 
   const handleAnswer = (answer) => {
-    const currentCell = gameState.boardData.find(
+    const currentCell = gameState.visibleBoardData.find(
       cell => cell.row === gameState.currentQuestion.row && cell.col === gameState.currentQuestion.col
     );
     
@@ -389,10 +419,11 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
     if (parseInt(answer) === correctAnswer) {
       playSound('correct');
       
-      const newBoardData = gameState.boardData.map(cell => {
+      // Update both full board and visible board
+      const newFullBoardData = gameState.fullBoardData.map(cell => {
         if (cell.row === currentCell.row && cell.col === currentCell.col) {
           const newGrass = Math.max(0, cell.grass - Math.ceil(cell.grass * 0.50));
-          const wasCleared = newGrass <= 50; // FIXED: Bonus collected when grass <= 50%
+          const wasCleared = newGrass <= 50;
           
           return {
             ...cell,
@@ -400,19 +431,19 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
             isRevealed: true,
             hintGivenForHardReset: false,
             wasEverZeroGrass: newGrass === 0 ? true : cell.wasEverZeroGrass,
-            // FIXED: Mark bonus as collected when grass <= 50%
             bonusCollected: (wasCleared && cell.isBonus && !cell.bonusCollected) ? true : cell.bonusCollected
           };
         }
         return cell;
       });
 
-      // Calculate score based on coordinates and bonus
+      const newVisibleBoardData = extractVisibleBoard(newFullBoardData, gameState.currentViewSize);
+
+      // Calculate score
       let cellScore = calculateCellScore(currentCell.row, currentCell.col, false);
       let bonusMessage = '';
       
-      // FIXED: Check if this is a bonus cell and grass dropped to 50% or less
-      const updatedCell = newBoardData.find(c => c.row === currentCell.row && c.col === currentCell.col);
+      const updatedCell = newFullBoardData.find(c => c.row === currentCell.row && c.col === currentCell.col);
       if (currentCell.isBonus && updatedCell.grass <= 50 && !currentCell.bonusCollected) {
         const bonusPoints = calculateCellScore(currentCell.row, currentCell.col, true) - cellScore;
         cellScore = calculateCellScore(currentCell.row, currentCell.col, true);
@@ -422,7 +453,8 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
 
       setGameState(prev => ({
         ...prev,
-        boardData: newBoardData,
+        fullBoardData: newFullBoardData,
+        visibleBoardData: newVisibleBoardData,
         score: prev.score + cellScore,
         showQuestion: false,
         currentQuestion: null,
@@ -443,7 +475,8 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
     } else {
       playSound('wrong');
       
-      const newBoardData = gameState.boardData.map(cell => {
+      // Update both full board and visible board
+      const newFullBoardData = gameState.fullBoardData.map(cell => {
         if (cell.row === currentCell.row && cell.col === currentCell.col) {
           const newGrass = Math.min(200, cell.grass + Math.ceil(cell.grass * 0.20));
           return {
@@ -454,9 +487,12 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
         return cell;
       });
 
+      const newVisibleBoardData = extractVisibleBoard(newFullBoardData, gameState.currentViewSize);
+
       setGameState(prev => ({
         ...prev,
-        boardData: newBoardData,
+        fullBoardData: newFullBoardData,
+        visibleBoardData: newVisibleBoardData,
         score: Math.max(0, prev.score - 1),
         wrongAnswersCount: prev.wrongAnswersCount + 1
       }));
@@ -481,28 +517,31 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
         default: break;
       }
 
-      if (newRow >= 0 && newRow < gameState.currentLevelSize && 
-          newCol >= 0 && newCol < gameState.currentLevelSize) {
-        const targetCell = gameState.boardData.find(cell => cell.row === newRow && cell.col === newCol);
+      if (newRow >= 0 && newRow < gameState.currentViewSize && 
+          newCol >= 0 && newCol < gameState.currentViewSize) {
+        const targetCell = gameState.visibleBoardData.find(cell => cell.row === newRow && cell.col === newCol);
         
         if (targetCell.grass < 10) {
           playSound('move');
           
-          // FIXED: Check if stepping on a bonus cell that hasn't been collected and grass <= 50%
+          // Check if stepping on a bonus cell
           if (targetCell.isBonus && !targetCell.bonusCollected && targetCell.grass <= 50) {
-            const bonusScore = calculateCellScore(targetCell.row, targetCell.col, false); // Base score for stepping on
+            const bonusScore = calculateCellScore(targetCell.row, targetCell.col, false);
             
-            // Mark bonus as collected
-            const newBoardData = gameState.boardData.map(cell => {
+            // Update both full and visible board data
+            const newFullBoardData = gameState.fullBoardData.map(cell => {
               if (cell.row === targetCell.row && cell.col === targetCell.col) {
                 return { ...cell, bonusCollected: true };
               }
               return cell;
             });
 
+            const newVisibleBoardData = extractVisibleBoard(newFullBoardData, gameState.currentViewSize);
+
             setGameState(prev => ({
               ...prev,
-              boardData: newBoardData,
+              fullBoardData: newFullBoardData,
+              visibleBoardData: newVisibleBoardData,
               score: prev.score + bonusScore,
               playerPosition: {
                 ...prev.playerPosition,
@@ -514,7 +553,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
             playSound('bonus');
             showMessage(`${t('bonusCollected')} +${bonusScore} ${t('points')}!`, 2000);
           } else {
-            // Normal movement to cleared cell
+            // Normal movement
             setGameState(prev => ({
               ...prev,
               playerPosition: {
@@ -532,7 +571,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
             ...prev,
             showQuestion: true,
             currentQuestion: targetCell,
-            wrongAnswersCount: 0 // Reset wrong answers for new question
+            wrongAnswersCount: 0
           }));
         }
       } else {
@@ -564,7 +603,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
         }
       }));
     }
-  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, gameState.showQuestion, gameState.playerPosition, gameState.currentLevelSize, gameState.boardData, t, playSound]);
+  }, [gameState, t, playSound, extractVisibleBoard]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
@@ -578,22 +617,10 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
     }, duration);
   };
 
-  // Format time to mm:ss
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  // FIXED: Calculate grass cleared percentage correctly - count cells with less than 100% grass
-  const calculateGrassClearedPercentage = () => {
-    if (gameState.boardData.length === 0) return 0;
-    
-    // Count cells that have been partially or fully cleared (grass < 100%)
-    const clearedCells = gameState.boardData.filter(cell => cell.grass < 100).length;
-    const totalCells = gameState.boardData.length;
-    
-    return Math.round((clearedCells / totalCells) * 100);
   };
 
   const getGameTitle = () => {
@@ -603,7 +630,6 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
     return t('jungleGameTitle');
   };
 
-  // Handle game exit - save score when leaving
   const handleBackWithSave = () => {
     if (gameState.score > 0 && gameState.gameStartTime) {
       handleGameEnd();
@@ -613,19 +639,11 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
 
   return (
     <div className="h-screen flex flex-col bg-bg-main">
-      {gameState.showModeSelector || gameState.showWelcome || gameState.showInstructions ? (
-        <GlobalHeader 
-          title={getGameTitle()}
-          onBack={handleBackWithSave}
-          showBackButton={true}
-        />
-      ) : (
-        <GlobalHeader 
-          title={getGameTitle()}
-          onBack={handleBackWithSave}
-          showBackButton={true}
-        />
-      )}
+      <GlobalHeader 
+        title={getGameTitle()}
+        onBack={handleBackWithSave}
+        showBackButton={true}
+      />
 
       {gameState.showModeSelector ? (
         <GameModeSelector 
@@ -654,10 +672,10 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
             <div id="avatarAnimationFeedback" className="text-2xl min-h-[30px]" />
             
             <Scene3D 
-              boardData={gameState.boardData}
+              boardData={gameState.visibleBoardData}
               playerPosition={gameState.playerPosition}
-              currentLevelSize={gameState.currentLevelSize}
-              level={gameState.currentLevelSize}
+              currentLevelSize={gameState.currentViewSize}
+              level={gameState.currentViewSize}
               playSound={playSound}
               selectedMode={gameState.selectedMode}
               gameModeConfig={gameModeConfig}
@@ -666,21 +684,20 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
 
           {/* 2D View - Bottom Half */}
           <div className="h-1/2 bg-bg-card flex flex-col md:flex-row">
-            {/* Map Section - Full width on mobile, 60% on desktop */}
+            {/* Map Section */}
             <div className="flex-1 md:w-3/5 flex flex-col justify-center items-center p-2 md:p-4">
               <MapGrid 
-                boardData={gameState.boardData}
+                boardData={gameState.visibleBoardData}
                 playerPosition={gameState.playerPosition}
-                currentLevelSize={gameState.currentLevelSize}
-                level={gameState.currentLevelSize}
+                currentLevelSize={gameState.currentViewSize}
+                level={gameState.currentViewSize}
                 showGrassPercentage={settings.showGrassPercentage}
               />
             </div>
 
-            {/* Stats Section - Full width on mobile, 40% on desktop */}
+            {/* Stats Section */}
             <div className="md:w-2/5 p-2 md:p-6 md:border-l border-bg-neutral">
               <div className="h-full">
-                {/* Stats in responsive grid */}
                 <div className="grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-4">
                   {/* Points */}
                   <div className="bg-green-100 p-2 md:p-4 rounded-lg border border-green-300">
@@ -720,7 +737,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
                     <div className="text-center">
                       <div className="text-orange-800 font-bold text-xs md:text-base mb-1">{t('level')}</div>
                       <div className="text-orange-700 text-lg md:text-xl font-bold">
-                        {gameState.currentLevelSize}×{gameState.currentLevelSize}
+                        {gameState.currentViewSize}×{gameState.currentViewSize}
                       </div>
                       <div className="text-orange-600 text-xs">🌴 Size</div>
                     </div>
@@ -742,6 +759,11 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
                     <div className="text-yellow-700 text-xs">
                       {calculateGrassClearedPercentage()}/40% to next level
                     </div>
+                    {gameState.currentViewSize < 10 && (
+                      <div className="text-yellow-600 text-xs mt-1">
+                        Full board: 10×10 (exploring {gameState.currentViewSize}×{gameState.currentViewSize})
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
