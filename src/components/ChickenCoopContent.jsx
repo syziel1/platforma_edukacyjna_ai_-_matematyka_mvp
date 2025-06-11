@@ -3,7 +3,7 @@ import { Play, ArrowRight, ArrowLeft, CheckCircle } from 'lucide-react';
 import InteractiveVisualization from './InteractiveVisualization';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const LessonContent = ({ currentStep, setCurrentStep }) => {
+const ChickenCoopContent = ({ currentStep, setCurrentStep }) => {
   const { t } = useLanguage();
   
   // State for answers
@@ -477,4 +477,4 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
   );
 };
 
-export default LessonContent;
+export default ChickenCoopContent;
