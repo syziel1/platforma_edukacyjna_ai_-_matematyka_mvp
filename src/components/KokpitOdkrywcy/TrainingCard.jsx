@@ -56,7 +56,7 @@ const TrainingCard = ({ onStartGame }) => {
             <Trophy className="w-4 h-4 text-accent-secondary" />
             <span className="text-text-color font-medium text-sm">Your record:</span>
           </div>
-          <span className="text-accent-secondary font-bold text-lg">
+          <span className="text-text_color font-bold text-lg">
             {bestScore > 0 ? bestScore.toLocaleString() : '---'}
           </span>
         </div>
