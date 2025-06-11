@@ -11,6 +11,7 @@ const KokpitPage = ({ onProblemSelect }) => {
   const { user } = useAuth();
   const { getProgress } = useProgress();
   const { t } = useLanguage();
+  const [showKnowledgeMap, setShowKnowledgeMap] = useState(false);
 
   // Stan dla danych kokpitu
   const [kokpitData, setKokpitData] = useState({
