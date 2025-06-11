@@ -283,7 +283,7 @@ const Scene3D = ({
           }}
         >
           {/* Sky with animated clouds */}
-          <div className="absolute top-0 w-full h-16 overflow-hidden">
+          <div className="absolute top-0 w-full h-16 overflow-hidden bg-transparent">
             <div 
               className="absolute w-8 h-4 bg-white/30 rounded-full animate-float"
               style={{
