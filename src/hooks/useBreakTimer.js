@@ -38,12 +38,21 @@ export const useBreakTimer = (initialMinutes = 25) => {
     setShowBreakAlert(false);
   };
 
+  // Funkcja do resetowania timera globalnego po przerwie
+  const handleBreakTaken = (resetGlobalTimer) => {
+    resetTimer();
+    if (resetGlobalTimer) {
+      resetGlobalTimer(); // Reset timera globalnego
+    }
+  };
+
   return {
     timeLeft,
     formattedTime: formatTime(timeLeft),
     isActive,
     showBreakAlert,
     resetTimer,
+    handleBreakTaken,
     setShowBreakAlert
   };
 };

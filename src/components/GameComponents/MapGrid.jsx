@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
+const MapGrid = ({ boardData, playerPosition, currentLevelSize, level, showGrassPercentage = false }) => {
   const getDirectionRotation = (direction) => {
     switch (direction) {
       case 'N': return '180deg';
@@ -18,6 +18,25 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
     return bonusIcons[iconIndex];
   };
 
+  // FIXED: Dynamic color based on grass height
+  const getCellBackgroundColor = (cellData) => {
+    if (!cellData) return '#8B4513'; // Brown for out-of-bounds
+    
+    const grassPercent = cellData.grass / 100;
+    
+    if (grassPercent <= 0.1) {
+      return '#F0E68C'; // Light khaki for cleared cells (sand)
+    } else if (grassPercent <= 0.3) {
+      return '#9ACD32'; // Yellow-green for low grass
+    } else if (grassPercent <= 0.6) {
+      return '#7CB342'; // Medium green
+    } else if (grassPercent <= 0.8) {
+      return '#689F38'; // Darker green
+    } else {
+      return '#558B2F'; // Very dark green for full grass
+    }
+  };
+
   const getCellAnimation = (cellData, isPlayerHere) => {
     let animationClass = '';
     
@@ -25,7 +44,8 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
       animationClass += ' animate-pulse';
     }
     
-    if (cellData.isBonus && !cellData.bonusCollected) {
+    // Only show bonus glow if bonus exists and grass > 50%
+    if (cellData.isBonus && cellData.grass > 50) {
       animationClass += ' bonus-glow';
     }
     
@@ -115,7 +135,11 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
         
         .player-indicator {
           filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.5));
+        }
+        
+        .player-arrow {
           animation: playerPulse 1s ease-in-out infinite alternate;
+          transition: transform 0.3s ease;
         }
         
         @keyframes playerPulse {
@@ -141,11 +165,7 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
               key={`${cellData.row}-${cellData.col}`}
               className={`w-[35px] h-[35px] border border-gray-400 flex justify-center items-center text-xs relative bg-clip-padding transition-all duration-300 ease-in-out ${animationClass}`}
               style={{
-                backgroundColor: cellData.grass < 10 
-                  ? '#F0E68C' // Light khaki for cleared cells
-                  : cellData.grass <= 100 
-                    ? '#78B134' // Green for normal grass
-                    : '#A0522D', // Brown for overgrown grass
+                backgroundColor: getCellBackgroundColor(cellData)
               }}
             >
               {/* Grass texture overlay for grassy cells */}
@@ -164,49 +184,45 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level }) => {
                 />
               )}
               
-              {/* Bonus indicator with enhanced visual */}
-              {cellData.isBonus && (
+              {/* Bonus indicator - only show if grass > 50% */}
+              {cellData.isBonus && cellData.grass > 50 && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <span 
-                    className={`text-lg z-10 ${cellData.bonusCollected ? 'bonus-collected' : 'bonus-icon'}`}
+                    className="text-lg z-10 bonus-icon"
                     style={{ 
-                      textShadow: cellData.bonusCollected 
-                        ? '0 0 4px rgba(0,0,0,0.5)' 
-                        : '0 0 8px rgba(255,215,0,0.8), 0 0 4px rgba(0,0,0,0.5)',
-                      fontSize: '16px',
-                      opacity: cellData.bonusCollected ? 0.4 : 1
+                      textShadow: '0 0 8px rgba(255,215,0,0.8), 0 0 4px rgba(0,0,0,0.5)',
+                      fontSize: '16px'
                     }}
                   >
                     {getBonusIcon(cellData)}
                   </span>
-                  {/* Bonus glow effect - only if not collected */}
-                  {!cellData.bonusCollected && (
-                    <div 
-                      className="absolute inset-0 rounded-full"
-                      style={{
-                        background: 'radial-gradient(circle, rgba(255,215,0,0.2) 0%, transparent 70%)',
-                        animation: 'bonusGlow 2s ease-in-out infinite'
-                      }}
-                    />
-                  )}
+                  {/* Bonus glow effect */}
+                  <div 
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: 'radial-gradient(circle, rgba(255,215,0,0.2) 0%, transparent 70%)',
+                      animation: 'bonusGlow 2s ease-in-out infinite'
+                    }}
+                  />
+                </div>
+              )}
+              
+              {/* FIXED: Grass percentage display */}
+              {showGrassPercentage && cellData.grass < 100 && cellData.grass > 0 && (
+                <div className="absolute top-0 left-0 text-[8px] font-bold text-white bg-black/50 px-1 rounded-br">
+                  {Math.round(cellData.grass)}%
                 </div>
               )}
               
               {/* Player indicator with enhanced styling */}
               {isPlayerHere && (
-                <div 
-                  className="absolute player-indicator"
-                  style={{
-                    '--rotation': getDirectionRotation(playerPosition.direction)
-                  }}
-                >
+                <div className="absolute player-indicator">
                   <div 
-                    className="w-0 h-0 border-[7px] border-transparent"
+                    className="w-0 h-0 border-[7px] border-transparent player-arrow"
                     style={{
                       borderTopWidth: '12px',
                       borderTopColor: '#ef4444',
-                      transform: `rotate(${getDirectionRotation(playerPosition.direction)})`,
-                      transition: 'transform 0.3s ease'
+                      '--rotation': getDirectionRotation(playerPosition.direction)
                     }}
                   />
                   {/* Player glow effect */}

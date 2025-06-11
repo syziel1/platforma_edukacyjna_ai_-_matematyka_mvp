@@ -1,4 +1,5 @@
 import React, { useMemo, useEffect, useState } from 'react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const Scene3D = ({ 
   boardData, 
@@ -9,6 +10,7 @@ const Scene3D = ({
   selectedMode, 
   gameModeConfig 
 }) => {
+  const { t } = useLanguage();
   const { row: pr, col: pc, direction: pdir } = playerPosition;
   const [animationTrigger, setAnimationTrigger] = useState(0);
 
@@ -73,9 +75,19 @@ const Scene3D = ({
   const getCellBackgroundColor = (cellData) => {
     if (!cellData) return '#8B4513'; // Brown for out-of-bounds cells
     
-    if (cellData.grass < 10) return '#F0E68C'; // Light khaki for cleared cells
-    if (cellData.grass <= 100) return '#78B134'; // Green for normal grass
-    return '#A0522D'; // Brown for overgrown grass
+    const grassPercent = cellData.grass / 100;
+    
+    if (grassPercent <= 0.1) {
+      return '#F0E68C'; // Light khaki for cleared cells (sand)
+    } else if (grassPercent <= 0.3) {
+      return '#9ACD32'; // Yellow-green for low grass
+    } else if (grassPercent <= 0.6) {
+      return '#7CB342'; // Medium green
+    } else if (grassPercent <= 0.8) {
+      return '#689F38'; // Darker green
+    } else {
+      return '#558B2F'; // Very dark green for full grass
+    }
   };
 
   const getCellHeight = (cellData) => {
@@ -135,6 +147,7 @@ const Scene3D = ({
       case 'multiplication': return '✖️';
       case 'division': return '➗';
       case 'exponentiation': return '⚡';
+      case 'square-root': return '√';
       default: return '🧮';
     }
   };
@@ -146,6 +159,7 @@ const Scene3D = ({
       case 'multiplication': return '#3b82f6'; // blue-500
       case 'division': return '#a855f7'; // purple-500
       case 'exponentiation': return '#eab308'; // yellow-500
+      case 'square-root': return '#f97316'; // orange-500
       default: return '#3b82f6';
     }
   };
@@ -167,6 +181,8 @@ const Scene3D = ({
         return `${questionData.num1} ÷ ${questionData.num2} = ?`;
       case 'exponentiation':
         return `${questionData.num1}^${questionData.num2} = ?`;
+      case 'square-root':
+        return `√${questionData.num1} = ?`;
       default:
         return cellData.question;
     }
@@ -187,7 +203,51 @@ const Scene3D = ({
   // Create gradient background that transitions from sky to current cell color
   const getBackgroundGradient = () => {
     const skyColor = '#87CEEB'; // Sky blue
-    return `linear-gradient(180deg, ${skyColor} 0%, ${skyColor} 50%, ${currentCellColor} 100%)`;
+    return `linear-gradient(180deg, ${skyColor} 0%, ${skyColor} 30%, ${currentCellColor} 100%)`;
+  };
+
+  // FIXED: Handle side view clicks for left/right rotation
+  const handleSideViewClick = (isLeftSide) => {
+    const keyCode = isLeftSide ? 'ArrowLeft' : 'ArrowRight';
+    const event = new KeyboardEvent('keydown', {
+      key: keyCode,
+      code: keyCode,
+      keyCode: isLeftSide ? 37 : 39,
+      which: isLeftSide ? 37 : 39,
+      bubbles: true
+    });
+    
+    window.dispatchEvent(event);
+  };
+
+  // FIXED: Handle front view click - simulate arrow up key press
+  const handleFrontViewClick = () => {
+    const event = new KeyboardEvent('keydown', {
+      key: 'ArrowUp',
+      code: 'ArrowUp',
+      keyCode: 38,
+      which: 38,
+      bubbles: true
+    });
+    
+    window.dispatchEvent(event);
+  };
+
+  // Handle task click/touch - simulate arrow up key press
+  const handleTaskClick = (cellData) => {
+    if (!cellData || cellData.grass < 10) return; // Only clickable if grassy
+    
+    // Create a synthetic keyboard event for arrow up
+    const event = new KeyboardEvent('keydown', {
+      key: 'ArrowUp',
+      code: 'ArrowUp',
+      keyCode: 38,
+      which: 38,
+      bubbles: true
+    });
+    
+    // Dispatch the event to trigger the existing keyboard handler
+    window.dispatchEvent(event);
   };
 
   const render3DCell = (coords, index, isInFrontGroup, currentCellColor) => {
@@ -196,12 +256,13 @@ const Scene3D = ({
     const grassHeight = cellData ? Math.min(100, Math.max(20, (cellData.grass / 100) * 100)) : 60;
     const bonusData = getBonusIcon(cellData);
     const isFrontCenter = index === 2; // Center front cell
+    const isClickable = cellData && cellData.grass >= 10; // Only grassy cells are clickable
     
     if (isInFrontGroup) {
       return (
         <div
           key={`${coords.r}-${coords.c}-${index}-${animationTrigger}`}
-          className={`scene-cell ${viewClasses[index]} relative flex items-end overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105`}
+          className={`scene-cell ${viewClasses[index]} relative flex items-end overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105 ${isClickable ? 'cursor-pointer' : ''}`}
           style={{
             width: '33.33%',
             height: '180px',
@@ -215,9 +276,14 @@ const Scene3D = ({
             boxShadow: '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)',
             animation: `cellPulse 0.5s ease-out ${index * 0.1}s both`
           }}
+          onClick={() => isClickable && handleTaskClick(cellData)}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            if (isClickable) handleTaskClick(cellData);
+          }}
         >
           {/* Sky with animated clouds */}
-          <div className="absolute top-0 w-full h-16 overflow-hidden">
+          <div className="absolute top-0 w-full h-16 overflow-hidden bg-transparent">
             <div 
               className="absolute w-8 h-4 bg-white/30 rounded-full animate-float"
               style={{
@@ -240,9 +306,17 @@ const Scene3D = ({
 
           {/* Mathematical task display for front center cell */}
           {isFrontCenter && cellData && cellData.grass >= 10 && (
-            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
+            <div 
+              className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20 cursor-pointer"
+              onClick={() => handleTaskClick(cellData)}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleTaskClick(cellData);
+              }}
+            >
               <div 
-                className="bg-white/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border-2 animate-bounce-gentle"
+                className="bg-white/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border-2 animate-bounce-gentle hover:scale-105 transition-transform duration-200 active:scale-95"
                 style={{ 
                   borderColor: getModeColor(selectedMode),
                   boxShadow: `0 4px 12px rgba(0,0,0,0.2), 0 0 0 2px ${getModeColor(selectedMode)}40`
@@ -252,7 +326,7 @@ const Scene3D = ({
                   <div className="flex items-center justify-center mb-1">
                     <span className="text-lg mr-1">{getModeIcon(selectedMode)}</span>
                     <div className="text-sm font-bold text-gray-800">
-                      Zadanie
+                      {t('task')}
                     </div>
                   </div>
                   <div 
@@ -262,7 +336,11 @@ const Scene3D = ({
                     {formatQuestionDisplay(cellData)}
                   </div>
                   <div className="text-xs text-gray-600">
-                    Naciśnij ↑ aby rozwiązać
+                    {t('pressUpToSolve')}
+                  </div>
+                  {/* Click/Touch indicator */}
+                  <div className="text-xs text-gray-500 mt-1 opacity-75">
+                    👆 Kliknij lub naciśnij ↑
                   </div>
                 </div>
               </div>
@@ -409,7 +487,6 @@ const Scene3D = ({
         style={{
           width: '35%',
           height: '200px',
-          bottom: 0,
           left: isLeftSide ? '-5%' : 'auto',
           right: isLeftSide ? 'auto' : '-5%',
           transform: isLeftSide 
@@ -432,9 +509,14 @@ const Scene3D = ({
           '--end-rotation': endRotation,
           animation: 'sideSlide 0.6s ease-out both'
         }}
+        onClick={() => handleSideViewClick(isLeftSide)}
+        onTouchEnd={(e) => {
+          e.preventDefault();
+          handleSideViewClick(isLeftSide);
+        }}
       >
         {/* Enhanced sky with animated elements */}
-        <div className="absolute inset-x-0 top-0 h-20 overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-20 overflow-hidden bg-transparent">
           <div 
             className="absolute w-6 h-3 bg-white/25 rounded-full animate-drift"
             style={{
@@ -570,6 +652,15 @@ const Scene3D = ({
             borderRadius: '8px'
           }}
         />
+        
+        {/* Click indicator for side views */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+          <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg">
+            <div className="text-2xl">
+              {isLeftSide ? '⬅️' : '➡️'}
+            </div>
+          </div>
+        </div>
       </div>
     );
   };
@@ -666,12 +757,13 @@ const Scene3D = ({
       `}</style>
       
       <div 
-        className="flex justify-center items-end gap-0 mt-10 mb-10 w-full h-[280px] p-0 box-border relative transition-all duration-500 ease-in-out"
+        className="flex justify-center gap-0 w-full p-0 box-border relative transition-all duration-500 ease-in-out"
         style={{ 
           perspective: '900px',
-          perspectiveOrigin: 'center center',
+          perspectiveOrigin: 'center top',
           filter: 'drop-shadow(0 10px 25px rgba(0,0,0,0.3))',
-          background: getBackgroundGradient()
+          background: getBackgroundGradient(),
+          height: '100%'
         }}
         role="img"
         aria-label="Enhanced 3D view of the jungle from player's perspective"

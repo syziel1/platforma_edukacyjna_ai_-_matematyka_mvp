@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { Menu, CheckSquare, Calendar, Settings, LogOut, Globe, LogIn } from 'lucide-react';
+import { Menu, CheckSquare, Calendar, Settings, LogOut, LogIn, Home, Info } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
+import SettingsModal from './SettingsModal';
+import AboutProjectModal from './AboutProjectModal';
 
-const NavigationPanel = ({ onLoginClick }) => {
+const NavigationPanel = ({ onLoginClick, onShowKokpit }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const { translate, switchLanguage, currentLanguage } = useLanguage();
+  const [showSettings, setShowSettings] = useState(false);
+  const [showAboutProject, setShowAboutProject] = useState(false);
+  const { t } = useLanguage();
   const { user, logout } = useAuth();
 
   const handleDayPlan = () => {
@@ -24,32 +28,64 @@ const NavigationPanel = ({ onLoginClick }) => {
     }
   };
 
+  const handleSettings = () => {
+    setShowSettings(true);
+    if (window.innerWidth < 768) {
+      setIsExpanded(false);
+    }
+  };
+
+  const handleAboutProject = () => {
+    setShowAboutProject(true);
+    if (window.innerWidth < 768) {
+      setIsExpanded(false);
+    }
+  };
+
+  const handleKokpit = () => {
+    if (onShowKokpit) {
+      onShowKokpit();
+    }
+    if (window.innerWidth < 768) {
+      setIsExpanded(false);
+    }
+  };
+
   const menuItems = [
     { 
       icon: Menu,
-      label: translate('menu'),
+      label: t('menu'),
       action: () => setIsExpanded(!isExpanded)
+    },
+    // Kokpit dostępny dla wszystkich (nie tylko zalogowanych)
+    { 
+      icon: Home, 
+      label: 'Kokpit Odkrywcy', 
+      action: handleKokpit
     },
     { 
       icon: CheckSquare, 
-      label: translate('myTasks'), 
+      label: t('myTasks'), 
       action: handleTasks
     },
     { 
       icon: Calendar, 
-      label: translate('dayPlan'), 
+      label: t('dayPlan'), 
       action: handleDayPlan 
     },
     { 
+      icon: Info, 
+      label: 'O projekcie', 
+      action: handleAboutProject
+    },
+    { 
       icon: Settings, 
-      label: translate('settings'), 
-      action: () => {
-        alert('Language settings: Click the globe icon below to switch language');
-      }
+      label: t('settings'), 
+      action: handleSettings
     },
     { 
       icon: user ? LogOut : LogIn, 
-      label: user ? translate('logout') : translate('login'), 
+      label: user ? t('logout') : t('login'), 
       action: user ? logout : onLoginClick
     }
   ];
@@ -110,7 +146,7 @@ const NavigationPanel = ({ onLoginClick }) => {
                 />
               )}
               <div>
-                <p className="text-sm text-white/70">{translate('welcome')}</p>
+                <p className="text-sm text-white/70">{t('welcome')}</p>
                 <p className="font-medium text-white overflow-hidden text-ellipsis">
                   {decodeHtmlEntities(user.name)}
                 </p>
@@ -125,7 +161,7 @@ const NavigationPanel = ({ onLoginClick }) => {
             onClick={() => window.location.href = '/'}
             className="p-4 border-b border-nav-bg/50 hover:bg-nav-bg/80 transition-colors text-left"
           >
-            <h2 className="text-lg font-bold text-white">Platforma AI</h2>
+            <h2 className="text-lg font-bold text-white">Edu-Future</h2>
           </button>
         )}
 
@@ -152,25 +188,19 @@ const NavigationPanel = ({ onLoginClick }) => {
             </button>
           ))}
         </nav>
-
-        {/* Language Toggle */}
-        <div className="p-2 border-t border-nav-bg/50">
-          <button
-            onClick={switchLanguage}
-            className={`w-full flex items-center gap-3 p-3 rounded-md hover:bg-nav-bg/80 transition-colors ${
-              !isExpanded ? 'justify-center' : ''
-            }`}
-            title={!isExpanded ? `${currentLanguage.toUpperCase()}` : ''}
-          >
-            <Globe className="w-5 h-5 text-white flex-shrink-0" />
-            {isExpanded && (
-              <span className="text-white font-medium">
-                {currentLanguage.toUpperCase()}
-              </span>
-            )}
-          </button>
-        </div>
       </div>
+
+      {/* Settings Modal */}
+      <SettingsModal 
+        isOpen={showSettings} 
+        onClose={() => setShowSettings(false)} 
+      />
+
+      {/* About Project Modal */}
+      <AboutProjectModal 
+        isOpen={showAboutProject} 
+        onClose={() => setShowAboutProject(false)} 
+      />
     </>
   );
 };
