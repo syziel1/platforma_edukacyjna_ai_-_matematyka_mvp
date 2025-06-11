@@ -252,7 +252,7 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
                 {/* Zdjęcie mentora */}
                 <div className="relative">
                   <img 
-                    src="Syziel AIMentor profile photo.jpg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop&crop=face"
+                    src="Syziel_AIMentor_profile_photo.jpg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop&crop=face"
                     alt={mentorSession.name}
                     className="w-12 h-12 rounded-full object-cover border-2 border-green-500 shadow-lg"
                   />
