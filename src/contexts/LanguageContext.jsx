@@ -226,6 +226,10 @@ const translations = {
     'aiMentor': 'Asystent AI',
     'typeMessage': 'Napisz pytanie...',
     'send': 'Wyślij',
+    'chatWelcomeMessage': 'Cześć! Jestem twoim mentorem AI. Zadaj mi pytanie o matematykę lub lekcję.',
+    'chatErrorMessage': 'Przepraszam, wystąpił błąd podczas komunikacji z AI. Spróbuj ponownie za chwilę.',
+    'chatWaitMessage': 'Proszę czekać...',
+    'chatConfigError': 'Błąd konfiguracji - brak klucza API.',
     
     // Break suggestions
     'breakSuggestions': 'Sugestie na przerwę:\n• Krótki spacer\n• Ćwiczenia oczu\n• Napij się wody\n• Rozciągnij się',
@@ -460,6 +464,10 @@ const translations = {
     'aiMentor': 'AI Assistant',
     'typeMessage': 'Type a question...',
     'send': 'Send',
+    'chatWelcomeMessage': 'Hello! I am your AI mentor. Ask me a question about mathematics or the lesson.',
+    'chatErrorMessage': 'Sorry, there was an error communicating with AI. Please try again in a moment.',
+    'chatWaitMessage': 'Please wait...',
+    'chatConfigError': 'Configuration error - missing API key.',
     
     // Break suggestions
     'breakSuggestions': 'Break suggestions:\n• Short walk\n• Eye exercises\n• Drink water\n• Stretch',

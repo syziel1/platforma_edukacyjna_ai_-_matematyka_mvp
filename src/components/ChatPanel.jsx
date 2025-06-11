@@ -8,7 +8,7 @@ const ChatPanel = ({ isMobile = false }) => {
     {
       id: 1,
       type: 'ai',
-      content: 'Cześć! Jestem twoim mentorem AI. Zadaj mi pytanie o matematykę lub lekcję.',
+      content: '',
       timestamp: new Date()
     }
   ]);
@@ -18,30 +18,40 @@ const ChatPanel = ({ isMobile = false }) => {
   const { t, currentLanguage } = useLanguage();
   const { user } = useAuth();
 
+  // Initialize welcome message with translation
+  React.useEffect(() => {
+    setMessages([{
+      id: 1,
+      type: 'ai',
+      content: t('chatWelcomeMessage'),
+      timestamp: new Date()
+    }]);
+  }, [t]);
+
   const generateGeminiResponse = async (userInput) => {
-    if (isLoading) return "Proszę czekać...";
+    if (isLoading) return t('chatWaitMessage');
     setIsLoading(true);
 
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
     if (!apiKey) {
       console.error('Missing Gemini API key');
-      return "Błąd konfiguracji - brak klucza API.";
+      return t('chatConfigError');
     }
 
     const contextPrompt = `
-      Kontekst rozmowy:
-      - Jesteś mentorem AI na platformie edukacyjnej do nauki matematyki
-      - Język użytkownika: ${currentLanguage === 'pl' ? 'polski' : 'angielski'}
-      ${user ? `- Użytkownik: ${user.name}` : '- Użytkownik: niezalogowany'}
-      - Historia konwersacji: ${messages.map(m => `${m.type}: ${m.content}`).join(' | ')}
+      Conversation context:
+      - You are an AI mentor on an educational platform for learning mathematics
+      - User language: ${currentLanguage === 'pl' ? 'Polish' : 'English'}
+      ${user ? `- User: ${user.name}` : '- User: not logged in'}
+      - Conversation history: ${messages.map(m => `${m.type}: ${m.content}`).join(' | ')}
       
-      Pytanie użytkownika: ${userInput}
+      User question: ${userInput}
       
-      Odpowiedz w sposób:
-      1. Pomocny i przyjazny
-      2. Dostosowany do poziomu ucznia
-      3. Z naciskiem na zrozumienie konceptów matematycznych
-      4. W języku ${currentLanguage === 'pl' ? 'polskim' : 'angielskim'}
+      Respond in a way that is:
+      1. Helpful and friendly
+      2. Adapted to the student's level
+      3. Focused on understanding mathematical concepts
+      4. In ${currentLanguage === 'pl' ? 'Polish' : 'English'} language
     `;
 
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
@@ -82,7 +92,7 @@ const ChatPanel = ({ isMobile = false }) => {
       return text;
     } catch (error) {
       console.error('Gemini API Error:', error);
-      return "Przepraszam, wystąpił błąd podczas komunikacji z AI. Spróbuj ponownie za chwilę.";
+      return t('chatErrorMessage');
     } finally {
       setIsLoading(false);
     }
