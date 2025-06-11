@@ -760,7 +760,7 @@ const Scene3D = ({
       <div 
         className="flex justify-center items-center gap-0 w-full p-0 box-border relative transition-all duration-500 ease-in-out"
         style={{ 
-          perspective: '900px',
+/*          perspective: '900px',*/
           perspectiveOrigin: 'center center',
           filter: 'drop-shadow(0 10px 25px rgba(0,0,0,0.3))',
           background: getBackgroundGradient(),
