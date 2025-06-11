@@ -657,21 +657,6 @@ const MultiplicationGame = ({ onBack }) => {
             {/* Stats Section - Full width on mobile, 40% on desktop */}
             <div className="md:w-2/5 p-2 md:p-6 md:border-l border-bg-neutral">
               <div className="h-full">
-                {/* Game Mode Display */}
-                {gameState.selectedMode && (
-                  <div className="bg-amber-100 p-2 md:p-4 rounded-lg border border-amber-300 mb-2 md:mb-4">
-                    <div className="text-center">
-                      <div className="text-amber-800 font-bold text-sm md:text-lg mb-1">{t('gameMode')}</div>
-                      <div className="text-amber-700 text-base md:text-xl font-bold">
-                        {gameModeConfig[gameState.selectedMode].name}
-                      </div>
-                      <div className="text-amber-600 text-xs md:text-sm">
-                        {gameModeConfig[gameState.selectedMode].symbol} {t('operations')}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
                 {/* Stats in responsive grid */}
                 <div className="grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-4">
                   {/* Points */}
