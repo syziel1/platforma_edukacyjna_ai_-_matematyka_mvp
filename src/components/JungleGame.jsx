@@ -666,8 +666,8 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
         />
       ) : (
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* 3D View - Top Half */}
-          <div className="h-1/2 view-3d">
+          {/* 3D View - 40% of height */}
+          <div className="h-2/5 view-3d">
             <div id="playerActionFeedback" className="text-lg mb-2 text-white text-shadow min-h-[25px]" />
             <div id="avatarAnimationFeedback" className="text-2xl min-h-[30px]" />
             
@@ -682,9 +682,9 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
             />
           </div>
 
-          {/* 2D View - Bottom Half - FIXED HEIGHT */}
-          <div className="h-1/2 bg-bg-card flex flex-col md:flex-row overflow-hidden">
-            {/* Map Section - FIXED TO FIT PROPERLY */}
+          {/* 2D View - 60% of height */}
+          <div className="h-3/5 bg-bg-card flex flex-col md:flex-row overflow-hidden">
+            {/* Map Section */}
             <div className="flex-1 md:w-3/5 flex flex-col justify-center items-center p-2 md:p-4 overflow-hidden">
               <div className="w-full h-full flex items-center justify-center">
                 <MapGrid 
@@ -697,7 +697,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
               </div>
             </div>
 
-            {/* Stats Section - REMOVED LEVEL PROGRESS */}
+            {/* Stats Section */}
             <div className="md:w-2/5 p-2 md:p-6 md:border-l border-bg-neutral overflow-hidden">
               <div className="h-full flex flex-col">
                 <div className="grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-4 flex-1">
