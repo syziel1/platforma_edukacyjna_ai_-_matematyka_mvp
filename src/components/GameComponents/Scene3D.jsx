@@ -764,6 +764,7 @@ const Scene3D = ({
           perspectiveOrigin: 'center top',
           filter: 'drop-shadow(0 10px 25px rgba(0,0,0,0.3))',
           background: getBackgroundGradient(),
+          height: '100%'
 /*          minHeight: '350px'*/
         }}
         role="img"
