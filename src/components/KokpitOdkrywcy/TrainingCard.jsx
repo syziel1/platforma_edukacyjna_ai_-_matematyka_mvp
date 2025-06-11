@@ -16,7 +16,7 @@ const TrainingCard = ({ onStartGame }) => {
       </h3>
       
       {/* Video gry */}
-      <div className="mb-4 relative rounded-lg overflow-hidden bg-gradient-to-br from-green-400 to-blue-500 h-24 flex items-center justify-center">
+      <div className="mb-4 relative rounded-lg overflow-hidden bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
         <video 
           autoPlay
           muted
