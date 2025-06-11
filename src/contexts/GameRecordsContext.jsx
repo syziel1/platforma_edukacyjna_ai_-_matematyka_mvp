@@ -14,7 +14,7 @@ export const GameRecordsProvider = ({ children }) => {
   const [records, setRecords] = useState(() => {
     const saved = localStorage.getItem('gameRecords');
     return saved ? JSON.parse(saved) : {
-      multiplicationGame: {
+      jungleGame: {
         bestScore: 0,
         totalGamesPlayed: 0,
         totalTimeSpent: 0,
@@ -44,9 +44,9 @@ export const GameRecordsProvider = ({ children }) => {
     localStorage.setItem('gameRecords', JSON.stringify(records));
   }, [records]);
 
-  const updateMultiplicationGameScore = (score, timeSpent) => {
+  const updateJungleGameScore = (score, timeSpent) => {
     setRecords(prev => {
-      const gameData = prev.multiplicationGame;
+      const gameData = prev.jungleGame;
       const newBestScore = Math.max(gameData.bestScore, score);
       const newTotalGames = gameData.totalGamesPlayed + 1;
       const newTotalTime = gameData.totalTimeSpent + timeSpent;
@@ -83,7 +83,7 @@ export const GameRecordsProvider = ({ children }) => {
 
       return {
         ...prev,
-        multiplicationGame: {
+        jungleGame: {
           bestScore: newBestScore,
           totalGamesPlayed: newTotalGames,
           totalTimeSpent: newTotalTime,
@@ -114,33 +114,33 @@ export const GameRecordsProvider = ({ children }) => {
   const getAchievementInfo = (achievementId) => {
     const achievements = {
       'first-game': {
-        name: 'Pierwszy Krok',
-        description: 'Ukończ pierwszą grę',
+        name: 'First Step',
+        description: 'Complete your first game',
         icon: '🎯'
       },
       'score-1000': {
-        name: 'Tysiąc Punktów',
-        description: 'Zdobądź 1000 punktów w jednej grze',
+        name: 'Thousand Points',
+        description: 'Score 1000 points in one game',
         icon: '🏆'
       },
       'score-2000': {
-        name: 'Mistrz Matematyki',
-        description: 'Zdobądź 2000 punktów w jednej grze',
+        name: 'Math Master',
+        description: 'Score 2000 points in one game',
         icon: '🌟'
       },
       'score-5000': {
-        name: 'Legenda Dżungli',
-        description: 'Zdobądź 5000 punktów w jednej grze',
+        name: 'Jungle Legend',
+        description: 'Score 5000 points in one game',
         icon: '👑'
       },
       'games-10': {
-        name: 'Wytrwały Odkrywca',
-        description: 'Zagraj 10 gier',
+        name: 'Persistent Explorer',
+        description: 'Play 10 games',
         icon: '💪'
       },
       'games-50': {
-        name: 'Weteran Dżungli',
-        description: 'Zagraj 50 gier',
+        name: 'Jungle Veteran',
+        description: 'Play 50 games',
         icon: '🎖️'
       }
     };
@@ -149,7 +149,7 @@ export const GameRecordsProvider = ({ children }) => {
   };
 
   const getAllAchievements = () => {
-    return records.multiplicationGame.achievements.map(id => ({
+    return records.jungleGame.achievements.map(id => ({
       id,
       ...getAchievementInfo(id)
     }));
@@ -161,7 +161,7 @@ export const GameRecordsProvider = ({ children }) => {
 
   const resetRecords = () => {
     setRecords({
-      multiplicationGame: {
+      jungleGame: {
         bestScore: 0,
         totalGamesPlayed: 0,
         totalTimeSpent: 0,
@@ -190,7 +190,7 @@ export const GameRecordsProvider = ({ children }) => {
   return (
     <GameRecordsContext.Provider value={{
       records,
-      updateMultiplicationGameScore,
+      updateJungleGameScore,
       updateLessonCompletion,
       getAchievementInfo,
       getAllAchievements,

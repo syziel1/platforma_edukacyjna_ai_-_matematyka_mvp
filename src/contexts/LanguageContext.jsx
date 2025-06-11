@@ -1,5 +1,3 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-
 const translations = {
   pl: {
     // Start Screen
@@ -31,8 +29,8 @@ const translations = {
     'ecoTshirtDesc': 'Załóż własny startup produkujący ekologiczne koszulki z nadrukami AI. Podejmuj mądre decyzje finansowe!',
     'waterTankTitle': 'Zadanie: Zbiornik na wodę',
     'waterTankDesc': 'Oblicz optymalne wymiary cylindrycznego zbiornika na wodę.',
-    'multiplicationGameTitle': 'Gra: Szlakami matematyki',
-    'multiplicationGameDesc': 'Odkrywaj tajemniczą dżunglę, ucząc się działań matematycznych w formie gry przygodowej.',
+    'jungleGameTitle': 'Gra: Szlakami matematyki',
+    'jungleGameDesc': 'Odkrywaj tajemniczą dżunglę, ucząc się działań matematycznych w formie gry przygodowej.',
     
     // Game Mode Selector
     'chooseMathOperations': 'Wybierz rodzaj działań matematycznych',
@@ -269,8 +267,8 @@ const translations = {
     'ecoTshirtDesc': 'Start your own eco-friendly t-shirt startup with AI-generated prints. Make smart financial decisions!',
     'waterTankTitle': 'Task: Water Tank',
     'waterTankDesc': 'Calculate optimal dimensions for a cylindrical water tank.',
-    'multiplicationGameTitle': 'Game: Mathematical Trails',
-    'multiplicationGameDesc': 'Explore a mysterious jungle while learning mathematical operations in an adventure game.',
+    'jungleGameTitle': 'Game: Mathematical Trails',
+    'jungleGameDesc': 'Explore a mysterious jungle while learning mathematical operations in an adventure game.',
     
     // Game Mode Selector
     'chooseMathOperations': 'Choose Mathematical Operations',
@@ -432,7 +430,6 @@ const translations = {
     'customerSegment': 'Customer Segment',
     'marketingBudget': 'Marketing Budget',
     'breakEvenPoint': 'Break-even Point',
-    'cashFlow': 'Cash Flow',
     'investmentReturn': 'Investment Return',
     
     // Water Tank Problem

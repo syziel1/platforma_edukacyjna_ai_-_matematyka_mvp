@@ -12,15 +12,15 @@ import { useSoundEffects } from '../hooks/useSoundEffects';
 import { useGameRecords } from '../contexts/GameRecordsContext';
 import { useSettings } from '../contexts/SettingsContext';
 
-const MultiplicationGame = ({ onBack }) => {
+const JungleGame = ({ onBack }) => {
   const { t } = useLanguage();
   const { playSound } = useSoundEffects();
-  const { updateMultiplicationGameScore } = useGameRecords();
+  const { updateJungleGameScore } = useGameRecords();
   const { settings } = useSettings();
   
   // FIXED: Load saved game state
   const loadGameState = () => {
-    const saved = localStorage.getItem('multiplicationGameState');
+    const saved = localStorage.getItem('jungleGameState');
     if (saved) {
       try {
         const parsedState = JSON.parse(saved);
@@ -164,7 +164,7 @@ const MultiplicationGame = ({ onBack }) => {
       ...gameState,
       lastPlayed: new Date().toISOString()
     };
-    localStorage.setItem('multiplicationGameState', JSON.stringify(stateToSave));
+    localStorage.setItem('jungleGameState', JSON.stringify(stateToSave));
   }, [gameState]);
 
   // Save game state whenever it changes (except for UI states)
@@ -277,12 +277,12 @@ const MultiplicationGame = ({ onBack }) => {
   const handleGameEnd = useCallback(() => {
     if (gameState.gameStartTime) {
       const gameTimeSpent = Math.floor((Date.now() - gameState.gameStartTime) / 1000);
-      updateMultiplicationGameScore(gameState.score, gameTimeSpent);
+      updateJungleGameScore(gameState.score, gameTimeSpent);
       
       // Show game end message
-      showMessage(`🎉 Gra zakończona! Wynik: ${gameState.score} punktów`, 3000);
+      showMessage(`🎉 Game finished! Score: ${gameState.score} points`, 3000);
     }
-  }, [gameState.score, gameState.gameStartTime, updateMultiplicationGameScore]);
+  }, [gameState.score, gameState.gameStartTime, updateJungleGameScore]);
 
   // FIXED: Check for level progression (40% grass cleared)
   const checkLevelProgression = useCallback(() => {
@@ -307,7 +307,7 @@ const MultiplicationGame = ({ onBack }) => {
         playerPosition: { row: 0, col: 0, direction: 'S' }
       }));
 
-      showMessage(`🎉 Poziom ${newSize}×${newSize} odblokowany!`, 3000);
+      showMessage(`🎉 Level ${newSize}×${newSize} unlocked!`, 3000);
       if (playSound) {
         playSound('bonus');
       }
@@ -575,9 +575,9 @@ const MultiplicationGame = ({ onBack }) => {
 
   const getGameTitle = () => {
     if (gameState.selectedMode && gameModeConfig[gameState.selectedMode]) {
-      return `${t('multiplicationGameTitle')} - ${gameModeConfig[gameState.selectedMode].name}`;
+      return `${t('jungleGameTitle')} - ${gameModeConfig[gameState.selectedMode].name}`;
     }
-    return t('multiplicationGameTitle');
+    return t('jungleGameTitle');
   };
 
   // Handle game exit - save score when leaving
@@ -699,7 +699,7 @@ const MultiplicationGame = ({ onBack }) => {
                       <div className="text-orange-700 text-lg md:text-xl font-bold">
                         {gameState.currentLevelSize}×{gameState.currentLevelSize}
                       </div>
-                      <div className="text-orange-600 text-xs">🌴 Rozmiar</div>
+                      <div className="text-orange-600 text-xs">🌴 Size</div>
                     </div>
                   </div>
                 </div>
@@ -708,7 +708,7 @@ const MultiplicationGame = ({ onBack }) => {
                 <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                   <div className="text-center">
                     <div className="text-yellow-800 font-bold text-sm mb-2">
-                      Postęp poziomu
+                      Level Progress
                     </div>
                     <div className="w-full bg-yellow-200 rounded-full h-3 mb-2">
                       <div 
@@ -717,7 +717,7 @@ const MultiplicationGame = ({ onBack }) => {
                       />
                     </div>
                     <div className="text-yellow-700 text-xs">
-                      {calculateGrassClearedPercentage()}/40% do następnego poziomu
+                      {calculateGrassClearedPercentage()}/40% to next level
                     </div>
                   </div>
                 </div>
@@ -748,4 +748,4 @@ const MultiplicationGame = ({ onBack }) => {
   );
 };
 
-export default MultiplicationGame;
+export default JungleGame;

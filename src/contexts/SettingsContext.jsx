@@ -45,7 +45,7 @@ export const SettingsProvider = ({ children }) => {
 
   const resetGameState = () => {
     // Remove game state from localStorage
-    localStorage.removeItem('multiplicationGameState');
+    localStorage.removeItem('jungleGameState');
     
     // Optionally trigger a page reload to reset the game completely
     // window.location.reload();

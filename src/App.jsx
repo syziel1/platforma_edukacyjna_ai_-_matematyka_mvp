@@ -7,7 +7,7 @@ import EcoTshirtContent from './components/EcoTshirtContent';
 import ChatPanel from './components/ChatPanel';
 import StartScreen from './components/StartScreen';
 import LoginScreen from './components/LoginScreen';
-import MultiplicationGame from './components/MultiplicationGame';
+import JungleGame from './components/JungleGame';
 import KokpitPage from './components/KokpitOdkrywcy/KokpitPage';
 import { useAuth } from './contexts/AuthContext';
 import { useProgress } from './contexts/ProgressContext';
@@ -64,8 +64,8 @@ function App() {
         return <WaterTankContent currentStep={currentStep} setCurrentStep={handleStepChange} />;
       case 'eco-tshirt':
         return <EcoTshirtContent currentStep={currentStep} setCurrentStep={handleStepChange} />;
-      case 'multiplication-game':
-        return <MultiplicationGame />;
+      case 'jungle-game':
+        return <JungleGame />;
       default:
         return null;
     }
@@ -92,9 +92,9 @@ function App() {
           <StartScreen onProblemSelect={handleProblemSelect} />
         </div>
       ) : selectedProblem ? (
-        selectedProblem === 'multiplication-game' ? (
+        selectedProblem === 'jungle-game' ? (
           <div className="flex-1 pt-16 md:pt-0">
-            <MultiplicationGame onBack={handleBackToKokpit} />
+            <JungleGame onBack={handleBackToKokpit} />
           </div>
         ) : (
           <div className="flex flex-1">

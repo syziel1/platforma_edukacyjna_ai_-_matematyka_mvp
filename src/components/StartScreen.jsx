@@ -10,9 +10,9 @@ const StartScreen = ({ onProblemSelect }) => {
 
   const problems = [
     {
-      id: 'multiplication-game',
-      title: t('multiplicationGameTitle'),
-      description: t('multiplicationGameDesc'),
+      id: 'jungle-game',
+      title: t('jungleGameTitle'),
+      description: t('jungleGameDesc'),
       difficulty: 'medium',
       icon: Calculator,
       color: 'accent-secondary',

@@ -4,9 +4,9 @@ import { useGameRecords } from '../../contexts/GameRecordsContext';
 
 const TrainingCard = ({ onStartGame }) => {
   const { records } = useGameRecords();
-  const bestScore = records.multiplicationGame.bestScore;
-  const totalGames = records.multiplicationGame.totalGamesPlayed;
-  const averageScore = records.multiplicationGame.averageScore;
+  const bestScore = records.jungleGame.bestScore;
+  const totalGames = records.jungleGame.totalGamesPlayed;
+  const averageScore = records.jungleGame.averageScore;
 
   return (
     <div className="bg-bg-card rounded-xl p-6 shadow-lg border border-bg-neutral">
