@@ -81,8 +81,7 @@ const TrainingCard = ({ onStartGame }) => {
         onClick={handlePlayClick}
         className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 px-4 rounded-lg hover:from-green-600 hover:to-blue-600 transition-all duration-200 font-medium flex items-center justify-center gap-2 transform hover:scale-105 active:scale-95"
       >
-        'PLAY THE GAME'
-        <ArrowRight className="w-4 h-4" />
+        PLAY THE GAME <ArrowRight className="w-4 h-4" />
       </button>
 
       {/* Motywacyjny tekst */}
