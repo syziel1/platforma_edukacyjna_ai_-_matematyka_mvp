@@ -92,14 +92,14 @@ export const GameRecordsProvider = ({ children }) => {
       }
       
       // Score milestones
+      if (score >= 500 && !newAchievements.includes('score-500')) {
+        newAchievements.push('score-500');
+      }
       if (score >= 1000 && !newAchievements.includes('score-1000')) {
         newAchievements.push('score-1000');
       }
       if (score >= 2000 && !newAchievements.includes('score-2000')) {
         newAchievements.push('score-2000');
-      }
-      if (score >= 5000 && !newAchievements.includes('score-5000')) {
-        newAchievements.push('score-5000');
       }
 
       // Games played milestones
@@ -147,19 +147,19 @@ export const GameRecordsProvider = ({ children }) => {
         description: 'Complete your first game',
         icon: '🎯'
       },
-      'score-1000': {
-        name: 'Thousand Points',
-        description: 'Score 1000 points in one game',
+      'score-500': {
+        name: '500 Points',
+        description: 'Score 500 points in one game',
         icon: '🏆'
       },
-      'score-2000': {
+      'score-1000': {
         name: 'Math Master',
-        description: 'Score 2000 points in one game',
+        description: 'Score 1000 points in one game',
         icon: '🌟'
       },
-      'score-5000': {
+      'score-2000': {
         name: 'Jungle Legend',
-        description: 'Score 5000 points in one game',
+        description: 'Score 2000 points in one game',
         icon: '👑'
       },
       'games-10': {
