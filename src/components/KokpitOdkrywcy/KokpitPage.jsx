@@ -92,7 +92,7 @@ const KokpitPage = ({ onProblemSelect }) => {
           {/* Główny układ dwukolumnowy */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Kolumna lewa - 65% szerokości */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-1">
               <LeftColumn 
                 mentorSession={kokpitData.mentorSession}
                 currentLesson={kokpitData.currentLesson}
@@ -102,7 +102,7 @@ const KokpitPage = ({ onProblemSelect }) => {
             </div>
             
             {/* Kolumna prawa - 35% szerokości */}
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-2">
               <RightColumn 
                 onStartGame={handleStartGame}
                 onOpenKnowledgeMap={handleOpenKnowledgeMap}
