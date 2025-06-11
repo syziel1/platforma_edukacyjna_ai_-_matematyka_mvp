@@ -64,7 +64,7 @@ const GlobalHeader = ({ title, onBack, showBackButton = false }) => {
               <div className="relative">
                 <Video className={`w-3 h-3 md:w-5 md:h-5 ${getStatusColor()}`} />
                 {/* Status indicator */}
-                <div className="absolute -bottom-0.5 -right-0.5 text-xs">
+                <div className="absolute -bottom-0 -right-0.5 text-xs">
                   {getStatusIcon()}
                 </div>
                 {/* Busy indicator */}
