@@ -35,12 +35,6 @@ const AchievementsWidget = () => {
           </div>
         )}
       </div>
-
-      {/* Link do wszystkich odznak */}
-      <button className="w-full text-nav-bg hover:text-nav-bg/80 transition-colors font-medium text-sm flex items-center justify-center gap-2 py-2 border border-nav-bg/30 rounded-lg hover:bg-nav-bg/5">
-        View all 
-        <ArrowRight className="w-4 h-4" />
-      </button>
     </div>
   );
 };
