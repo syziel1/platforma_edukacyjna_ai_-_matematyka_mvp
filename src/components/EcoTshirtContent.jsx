@@ -86,6 +86,7 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
             </h3>
             <div className="rounded-lg aspect-video mb-4 bg-black">
               <video 
+                autoPlay
                 controls 
                 className="w-full h-full rounded-lg"
                 poster="/videos/intro-startup-poster.jpg"
