@@ -487,7 +487,6 @@ const Scene3D = ({
         style={{
           width: '35%',
           height: '200px',
-          top: 0,
           left: isLeftSide ? '-5%' : 'auto',
           right: isLeftSide ? 'auto' : '-5%',
           transform: isLeftSide 
