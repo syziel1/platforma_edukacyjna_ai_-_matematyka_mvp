@@ -35,7 +35,6 @@ const LoginScreen = ({ onSkip }) => {
           <GoogleLogin
             onSuccess={handleSuccess}
             onError={handleError}
-            useOneTap
           />
           <button
             onClick={onSkip}
