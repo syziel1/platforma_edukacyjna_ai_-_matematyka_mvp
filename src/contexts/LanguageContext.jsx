@@ -31,7 +31,7 @@ const translations = {
     'ecoTshirtDesc': 'Załóż własny startup produkujący ekologiczne koszulki z nadrukami AI. Podejmuj mądre decyzje finansowe!',
     'waterTankTitle': 'Zadanie: Zbiornik na wodę',
     'waterTankDesc': 'Oblicz optymalne wymiary cylindrycznego zbiornika na wodę.',
-    'jungleGameTitle': 'Gra: Szlakami matematyki',
+    'jungleGameTitle': 'Gra: ',
     'jungleGameDesc': 'Odkrywaj tajemniczą dżunglę, ucząc się działań matematycznych w formie gry przygodowej.',
     
     // Game Mode Selector
@@ -269,7 +269,7 @@ const translations = {
     'ecoTshirtDesc': 'Start your own eco-friendly t-shirt startup with AI-generated prints. Make smart financial decisions!',
     'waterTankTitle': 'Task: Water Tank',
     'waterTankDesc': 'Calculate optimal dimensions for a cylindrical water tank.',
-    'jungleGameTitle': 'Game: Mathematical Trails',
+    'jungleGameTitle': 'Game: ',
     'jungleGameDesc': 'Explore a mysterious jungle while learning mathematical operations in an adventure game.',
     
     // Game Mode Selector
