@@ -75,9 +75,19 @@ const Scene3D = ({
   const getCellBackgroundColor = (cellData) => {
     if (!cellData) return '#8B4513'; // Brown for out-of-bounds cells
     
-    if (cellData.grass < 10) return '#F0E68C'; // Light khaki for cleared cells
-    if (cellData.grass <= 100) return '#78B134'; // Green for normal grass
-    return '#A0522D'; // Brown for overgrown grass
+    const grassPercent = cellData.grass / 100;
+    
+    if (grassPercent <= 0.1) {
+      return '#F0E68C'; // Light khaki for cleared cells (sand)
+    } else if (grassPercent <= 0.3) {
+      return '#9ACD32'; // Yellow-green for low grass
+    } else if (grassPercent <= 0.6) {
+      return '#7CB342'; // Medium green
+    } else if (grassPercent <= 0.8) {
+      return '#689F38'; // Darker green
+    } else {
+      return '#558B2F'; // Very dark green for full grass
+    }
   };
 
   const getCellHeight = (cellData) => {
