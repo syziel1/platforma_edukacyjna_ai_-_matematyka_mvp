@@ -625,7 +625,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
 
   const getGameTitle = () => {
     if (gameState.selectedMode && gameModeConfig[gameState.selectedMode]) {
-      return `${t('jungleGameTitle')} - ${gameModeConfig[gameState.selectedMode].name}`;
+      return `${t('jungleGameTitle')}: ${gameModeConfig[gameState.selectedMode].name}`;
     }
     return t('jungleGameTitle');
   };
