@@ -683,7 +683,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
           </div>
 
           {/* 2D View - Bottom Half - FIXED HEIGHT */}
-          <div className="h-1/2 bg-bg-card flex flex-col md:flex-row overflow-hidden">
+          <div className=" bg-bg-card flex flex-col md:flex-row overflow-hidden">
             {/* Map Section - FIXED TO FIT PROPERLY */}
             <div className="flex-1 md:w-3/5 flex flex-col justify-center items-center p-2 md:p-4 overflow-hidden">
               <div className="w-full h-full flex items-center justify-center">
