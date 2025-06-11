@@ -75,8 +75,11 @@ const KokpitPage = ({ onProblemSelect }) => {
   };
 
   const handleOpenKnowledgeMap = () => {
-    // Placeholder - można rozszerzyć o rzeczywistą mapę wiedzy
-    alert('Knowledge Map will be available soon! 🗺️');
+    setShowKnowledgeMap(true);
+  };
+
+  const handleCloseKnowledgeMap = () => {
+    setShowKnowledgeMap(false);
   };
 
   // Wyświetl odpowiednie powitanie w zależności od statusu logowania
