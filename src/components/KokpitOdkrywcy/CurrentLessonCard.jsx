@@ -6,7 +6,7 @@ const CurrentLessonCard = ({ lesson, onContinueLesson }) => {
     <div className="bg-bg-card rounded-xl p-6 shadow-lg border border-bg-neutral">
       <h2 className="text-xl font-bold text-text-color mb-4 flex items-center gap-2">
         <BookOpen className="w-6 h-6 text-accent-primary" />
-        {lesson.title}
+        Lesson: Chicken Coop Optimization
       </h2>
       
       {/* Video lekcji */}
@@ -22,7 +22,7 @@ const CurrentLessonCard = ({ lesson, onContinueLesson }) => {
           <div className="w-full h-48 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white">
             <div className="text-center">
               <div className="text-4xl mb-2">🐔</div>
-              <p className="text-sm">Problem kurnika</p>
+              <p className="text-sm">Chicken Coop Problem</p>
             </div>
           </div>
         </video>
@@ -31,7 +31,7 @@ const CurrentLessonCard = ({ lesson, onContinueLesson }) => {
       {/* Pasek postępu */}
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-text-color">Postęp:</span>
+          <span className="text-sm font-medium text-text-color">Progress:</span>
           <span className="text-sm font-bold text-accent-primary">
             {Math.round(lesson.progress)}%
           </span>
@@ -47,7 +47,7 @@ const CurrentLessonCard = ({ lesson, onContinueLesson }) => {
       {/* Aktualny krok */}
       <div className="mb-6 p-3 bg-blue-50 rounded-lg border border-blue-200">
         <p className="text-blue-800 font-medium text-sm">
-          <strong>Aktualny etap:</strong> {lesson.currentStep}
+          <strong>Current step:</strong> {lesson.currentStep}
         </p>
       </div>
 
@@ -56,7 +56,7 @@ const CurrentLessonCard = ({ lesson, onContinueLesson }) => {
         onClick={onContinueLesson}
         className="w-full bg-gradient-to-r from-accent-primary to-accent-secondary text-white py-4 px-6 rounded-lg hover:from-accent-primary/90 hover:to-accent-secondary/90 transition-all duration-200 font-bold text-lg flex items-center justify-center gap-2 transform hover:scale-105 active:scale-95"
       >
-        KONTYNUUJ NAUKĘ
+        CONTINUE LEARNING
         <ArrowRight className="w-5 h-5" />
       </button>
     </div>

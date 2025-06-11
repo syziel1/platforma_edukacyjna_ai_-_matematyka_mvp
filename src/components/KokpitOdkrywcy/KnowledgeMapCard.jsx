@@ -6,7 +6,7 @@ const KnowledgeMapCard = ({ onOpenKnowledgeMap }) => {
     <div className="bg-bg-card rounded-xl p-6 shadow-lg border border-bg-neutral">
       <h3 className="text-lg font-bold text-text-color mb-4 flex items-center gap-2">
         <Map className="w-5 h-5 text-nav-bg" />
-        Konstelacja Kompetencji
+        Constellation of Competencies
       </h3>
       
       {/* Mini-mapa z kosmicznym motywem */}
@@ -46,7 +46,7 @@ const KnowledgeMapCard = ({ onOpenKnowledgeMap }) => {
 
       {/* Opis */}
       <p className="text-text-color/70 text-sm mb-4 leading-relaxed">
-        Eksploruj galaktykę wiedzy matematycznej. Odkrywaj nowe tematy i śledź swoje postępy w kosmicznej konstelacji umiejętności.
+        Explore the galaxy of mathematical knowledge. Discover new topics and track your progress in the cosmic constellation of skills.
       </p>
 
       {/* Przycisk */}
@@ -54,7 +54,7 @@ const KnowledgeMapCard = ({ onOpenKnowledgeMap }) => {
         onClick={onOpenKnowledgeMap}
         className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 font-medium flex items-center justify-center gap-2 shadow-lg"
       >
-        EKSPLORUJ KONSTELACJĘ
+        EXPLORE CONSTELLATION
         <ArrowRight className="w-4 h-4" />
       </button>
     </div>

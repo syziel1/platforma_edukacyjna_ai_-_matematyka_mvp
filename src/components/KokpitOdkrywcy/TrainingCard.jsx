@@ -12,7 +12,7 @@ const TrainingCard = ({ onStartGame }) => {
     <div className="bg-bg-card rounded-xl p-6 shadow-lg border border-bg-neutral">
       <h3 className="text-lg font-bold text-text-color mb-4 flex items-center gap-2">
         <Gamepad2 className="w-5 h-5 text-accent-primary" />
-        Trening: Matematyczna Dżungla
+        Training: Mathematical Jungle
       </h3>
       
       {/* Video gry */}
@@ -48,7 +48,7 @@ const TrainingCard = ({ onStartGame }) => {
         <div className="p-3 bg-accent-secondary/10 rounded-lg border border-accent-secondary/30 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Trophy className="w-4 h-4 text-accent-secondary" />
-            <span className="text-text-color font-medium text-sm">Twój rekord:</span>
+            <span className="text-text-color font-medium text-sm">Your record:</span>
           </div>
           <span className="text-accent-secondary font-bold text-lg">
             {bestScore > 0 ? bestScore.toLocaleString() : '---'}
@@ -59,11 +59,11 @@ const TrainingCard = ({ onStartGame }) => {
         {totalGames > 0 && (
           <div className="grid grid-cols-2 gap-2 text-xs">
             <div className="bg-blue-50 p-2 rounded border border-blue-200 text-center">
-              <div className="text-blue-600 font-medium">Gier zagrane</div>
+              <div className="text-blue-600 font-medium">Games played</div>
               <div className="text-blue-800 font-bold">{totalGames}</div>
             </div>
             <div className="bg-green-50 p-2 rounded border border-green-200 text-center">
-              <div className="text-green-600 font-medium">Średni wynik</div>
+              <div className="text-green-600 font-medium">Average score</div>
               <div className="text-green-800 font-bold">{averageScore}</div>
             </div>
           </div>
@@ -75,7 +75,7 @@ const TrainingCard = ({ onStartGame }) => {
         onClick={onStartGame}
         className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 px-4 rounded-lg hover:from-green-600 hover:to-blue-600 transition-all duration-200 font-medium flex items-center justify-center gap-2 transform hover:scale-105 active:scale-95"
       >
-        {totalGames > 0 ? 'ZAGRAJ PONOWNIE' : 'ZAGRAJ'}
+        {totalGames > 0 ? 'PLAY AGAIN' : 'PLAY'}
         <ArrowRight className="w-4 h-4" />
       </button>
 
@@ -83,10 +83,10 @@ const TrainingCard = ({ onStartGame }) => {
       {bestScore > 0 && (
         <div className="mt-3 text-center">
           <p className="text-xs text-text-color/70">
-            {bestScore < 1000 ? '🎯 Cel: 1000 punktów!' : 
-             bestScore < 2000 ? '🌟 Cel: 2000 punktów!' : 
-             bestScore < 5000 ? '👑 Cel: 5000 punktów!' : 
-             '🏆 Jesteś mistrzem!'}
+            {bestScore < 1000 ? '🎯 Goal: 1000 points!' : 
+             bestScore < 2000 ? '🌟 Goal: 2000 points!' : 
+             bestScore < 5000 ? '👑 Goal: 5000 points!' : 
+             '🏆 You are a master!'}
           </p>
         </div>
       )}

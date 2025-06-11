@@ -17,10 +17,10 @@ const KokpitPage = ({ onProblemSelect }) => {
     mentorSession: null, // lub obiekt z danymi sesji
     currentLesson: {
       id: 'chicken-coop',
-      title: 'Lekcja: Optymalizacja przy użyciu funkcji kwadratowej',
+      title: 'Lesson: Chicken Coop Optimization',
       graphic: 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=400',
       progress: 0,
-      currentStep: 'Wprowadzenie do zadania'
+      currentStep: 'Introduction to the task'
     }
   });
 
@@ -32,13 +32,13 @@ const KokpitPage = ({ onProblemSelect }) => {
     const progressPercentage = (currentProgress / totalSteps) * 100;
     
     // Określ status na podstawie postępu
-    let stepDescription = 'Wprowadzenie do zadania';
+    let stepDescription = 'Introduction to the task';
     if (currentProgress >= 8) {
-      stepDescription = 'Zadanie ukończone! 🎉';
+      stepDescription = 'Task completed! 🎉';
     } else if (currentProgress >= 5) {
-      stepDescription = `Rozwiązanie formalne - Krok ${currentProgress - 4}/3`;
+      stepDescription = `Formal solution - Step ${currentProgress - 4}/3`;
     } else if (currentProgress > 0) {
-      stepDescription = `Krok ${currentProgress}/4`;
+      stepDescription = `Step ${currentProgress}/4`;
     }
     
     setKokpitData(prev => ({
@@ -69,15 +69,15 @@ const KokpitPage = ({ onProblemSelect }) => {
 
   const handleOpenKnowledgeMap = () => {
     // Placeholder - można rozszerzyć o rzeczywistą mapę wiedzy
-    alert('Mapa Wiedzy będzie dostępna wkrótce! 🗺️');
+    alert('Knowledge Map will be available soon! 🗺️');
   };
 
   // Wyświetl odpowiednie powitanie w zależności od statusu logowania
   const getWelcomeMessage = () => {
     if (user) {
-      return `Witaj z powrotem, ${user.name}! 🚀`;
+      return `Welcome back, ${user.name}! 🚀`;
     }
-    return 'Witaj w Kokpicie Odkrywcy! 🚀';
+    return 'Welcome to Explorer Cockpit! 🚀';
   };
 
   return (
