@@ -56,16 +56,33 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level, showGrass
     return animationClass;
   };
 
-  // Calculate responsive cell size based on container and grid size
+  // IMPROVED: Calculate optimal cell size to fill available space
   const getCellSize = () => {
-    // Base size calculation - aim for cells that fit the container
-    const baseSize = Math.floor(Math.min(
-      (window.innerWidth * 0.4) / currentLevelSize, // 40% of screen width divided by grid size
-      (window.innerHeight * 0.35) / currentLevelSize  // 35% of screen height divided by grid size
-    ));
+    // Get the container dimensions - we need to account for the parent container
+    const containerElement = document.querySelector('.w-full.h-full.flex.items-center.justify-center');
     
-    // Ensure minimum and maximum sizes
-    return Math.max(20, Math.min(35, baseSize));
+    let availableWidth = 400; // Default fallback
+    let availableHeight = 300; // Default fallback
+    
+    if (containerElement) {
+      const rect = containerElement.getBoundingClientRect();
+      availableWidth = rect.width - 32; // Account for padding
+      availableHeight = rect.height - 32; // Account for padding
+    } else {
+      // Fallback calculation based on viewport
+      availableWidth = Math.min(window.innerWidth * 0.4, 500);
+      availableHeight = Math.min(window.innerHeight * 0.35, 400);
+    }
+    
+    // Calculate the maximum cell size that fits in both dimensions
+    const maxCellSizeByWidth = Math.floor(availableWidth / currentLevelSize);
+    const maxCellSizeByHeight = Math.floor(availableHeight / currentLevelSize);
+    
+    // Use the smaller of the two to ensure the grid fits in both dimensions
+    const optimalSize = Math.min(maxCellSizeByWidth, maxCellSizeByHeight);
+    
+    // Ensure minimum and maximum bounds
+    return Math.max(25, Math.min(60, optimalSize));
   };
 
   const cellSize = getCellSize();
@@ -169,8 +186,8 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level, showGrass
           gridTemplateRows: `repeat(${currentLevelSize}, ${cellSize}px)`,
           gap: '1px',
           background: 'linear-gradient(45deg, #8B4513, #A0522D)',
-          maxWidth: '100%',
-          maxHeight: '100%'
+          width: `${currentLevelSize * cellSize + (currentLevelSize - 1)}px`,
+          height: `${currentLevelSize * cellSize + (currentLevelSize - 1)}px`
         }}
       >
         {boardData.map((cellData) => {
@@ -185,7 +202,7 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level, showGrass
                 width: `${cellSize}px`,
                 height: `${cellSize}px`,
                 backgroundColor: getCellBackgroundColor(cellData),
-                fontSize: `${Math.max(8, cellSize * 0.3)}px`
+                fontSize: `${Math.max(10, cellSize * 0.3)}px`
               }}
             >
               {/* Grass texture overlay for grassy cells */}
@@ -211,7 +228,7 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level, showGrass
                     className="z-10 bonus-icon"
                     style={{ 
                       textShadow: '0 0 8px rgba(255,215,0,0.8), 0 0 4px rgba(0,0,0,0.5)',
-                      fontSize: `${Math.max(10, cellSize * 0.4)}px`
+                      fontSize: `${Math.max(12, cellSize * 0.4)}px`
                     }}
                   >
                     {getBonusIcon(cellData)}
@@ -231,7 +248,7 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level, showGrass
               {showGrassPercentage && cellData.grass < 100 && cellData.grass > 0 && (
                 <div 
                   className="absolute top-0 left-0 font-bold text-white bg-black/50 px-1 rounded-br"
-                  style={{ fontSize: `${Math.max(6, cellSize * 0.2)}px` }}
+                  style={{ fontSize: `${Math.max(8, cellSize * 0.2)}px` }}
                 >
                   {Math.round(cellData.grass)}%
                 </div>
@@ -245,9 +262,9 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level, showGrass
                     style={{
                       width: 0,
                       height: 0,
-                      borderLeft: `${Math.max(4, cellSize * 0.2)}px solid transparent`,
-                      borderRight: `${Math.max(4, cellSize * 0.2)}px solid transparent`,
-                      borderTop: `${Math.max(6, cellSize * 0.3)}px solid #ef4444`,
+                      borderLeft: `${Math.max(6, cellSize * 0.2)}px solid transparent`,
+                      borderRight: `${Math.max(6, cellSize * 0.2)}px solid transparent`,
+                      borderTop: `${Math.max(8, cellSize * 0.3)}px solid #ef4444`,
                       '--rotation': getDirectionRotation(playerPosition.direction)
                     }}
                   />
@@ -255,7 +272,7 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level, showGrass
                   <div 
                     className="absolute rounded-full opacity-50"
                     style={{
-                      inset: `-${Math.max(2, cellSize * 0.1)}px`,
+                      inset: `-${Math.max(3, cellSize * 0.1)}px`,
                       background: 'radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, transparent 70%)',
                       animation: 'playerPulse 1s ease-in-out infinite alternate'
                     }}
