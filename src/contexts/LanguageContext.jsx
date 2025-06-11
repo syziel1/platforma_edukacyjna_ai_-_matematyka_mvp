@@ -9,6 +9,7 @@ const translations = {
     'continueLesson': 'Kontynuuj zadanie',
     'backToProblems': 'Powrót do listy zadań',
     'connectWithMentor': 'Połącz się z mentorem',
+    'lessonsList': 'Lista zadań',
     
     // Global Header
     'sessionTime': 'Czas sesji',
@@ -242,6 +243,7 @@ const translations = {
     'continueLesson': 'Continue task',
     'backToProblems': 'Back to tasks list',
     'connectWithMentor': 'Connect with mentor',
+    'lessonsList': 'Lessons List',
     
     // Global Header
     'sessionTime': 'Session Time',

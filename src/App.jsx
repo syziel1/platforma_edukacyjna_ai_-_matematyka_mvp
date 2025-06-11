@@ -17,6 +17,7 @@ function App() {
   const [selectedProblem, setSelectedProblem] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
   const [showKokpit, setShowKokpit] = useState(true); // Kokpit domyślnie widoczny
+  const [showStartScreen, setShowStartScreen] = useState(false);
   const totalSteps = 5;
   const { user } = useAuth();
   const { updateProgress } = useProgress();
@@ -24,6 +25,7 @@ function App() {
   const handleProblemSelect = (problemId) => {
     setSelectedProblem(problemId);
     setShowKokpit(false);
+    setShowStartScreen(false);
     const savedProgress = localStorage.getItem('lessonProgress');
     const progress = savedProgress ? JSON.parse(savedProgress)[problemId] || 1 : 1;
     setCurrentStep(progress);
@@ -39,10 +41,18 @@ function App() {
   const handleBackToKokpit = () => {
     setSelectedProblem(null);
     setShowKokpit(true);
+    setShowStartScreen(false);
   };
 
   const handleShowKokpit = () => {
     setShowKokpit(true);
+    setShowStartScreen(false);
+    setSelectedProblem(null);
+  };
+
+  const handleShowStartScreen = () => {
+    setShowStartScreen(true);
+    setShowKokpit(false);
     setSelectedProblem(null);
   };
 
@@ -70,11 +80,16 @@ function App() {
       <NavigationPanel 
         onLoginClick={() => setShowLogin(true)}
         onShowKokpit={handleShowKokpit}
+        onShowStartScreen={handleShowStartScreen}
       />
 
       {showKokpit ? (
         <div className="flex-1 pt-16 md:pt-0">
           <KokpitPage onProblemSelect={handleProblemSelect} />
+        </div>
+      ) : showStartScreen ? (
+        <div className="flex-1 pt-16 md:pt-0">
+          <StartScreen onProblemSelect={handleProblemSelect} />
         </div>
       ) : selectedProblem ? (
         selectedProblem === 'multiplication-game' ? (

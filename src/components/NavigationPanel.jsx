@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Menu, CheckSquare, Calendar, Settings, LogOut, LogIn, Home, Info } from 'lucide-react';
+import { Menu, CheckSquare, Calendar, Settings, LogOut, LogIn, Home, Info, BookOpen } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import SettingsModal from './SettingsModal';
 import AboutProjectModal from './AboutProjectModal';
 
-const NavigationPanel = ({ onLoginClick, onShowKokpit }) => {
+const NavigationPanel = ({ onLoginClick, onShowKokpit, onShowStartScreen }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showAboutProject, setShowAboutProject] = useState(false);
@@ -51,6 +51,15 @@ const NavigationPanel = ({ onLoginClick, onShowKokpit }) => {
     }
   };
 
+  const handleStartScreen = () => {
+    if (onShowStartScreen) {
+      onShowStartScreen();
+    }
+    if (window.innerWidth < 768) {
+      setIsExpanded(false);
+    }
+  };
+
   const menuItems = [
     { 
       icon: Menu,
@@ -62,6 +71,12 @@ const NavigationPanel = ({ onLoginClick, onShowKokpit }) => {
       icon: Home, 
       label: 'Kokpit Odkrywcy', 
       action: handleKokpit
+    },
+    // StartScreen - lista zadań
+    { 
+      icon: BookOpen, 
+      label: t('lessonsList'), 
+      action: handleStartScreen
     },
     { 
       icon: CheckSquare, 
