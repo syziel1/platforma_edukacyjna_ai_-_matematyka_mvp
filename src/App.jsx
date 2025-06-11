@@ -26,6 +26,16 @@ function App() {
     setSelectedProblem(problemId);
     setShowKokpit(false);
     setShowStartScreen(false);
+    
+    // For jungle-game, always start with mode selector
+    if (problemId === 'jungle-game') {
+      // The JungleGame component will handle showing the mode selector
+      const savedProgress = localStorage.getItem('lessonProgress');
+      const progress = savedProgress ? JSON.parse(savedProgress)[problemId] || 1 : 1;
+      setCurrentStep(progress);
+      return;
+    }
+    
     const savedProgress = localStorage.getItem('lessonProgress');
     const progress = savedProgress ? JSON.parse(savedProgress)[problemId] || 1 : 1;
     setCurrentStep(progress);
@@ -65,7 +75,7 @@ function App() {
       case 'eco-tshirt':
         return <EcoTshirtContent currentStep={currentStep} setCurrentStep={handleStepChange} />;
       case 'jungle-game':
-        return <JungleGame />;
+        return <JungleGame startWithModeSelector={true} />;
       default:
         return null;
     }
@@ -94,7 +104,7 @@ function App() {
       ) : selectedProblem ? (
         selectedProblem === 'jungle-game' ? (
           <div className="flex-1 pt-16 md:pt-0">
-            <JungleGame onBack={handleBackToKokpit} />
+            <JungleGame onBack={handleBackToKokpit} startWithModeSelector={true} />
           </div>
         ) : (
           <div className="flex flex-1">

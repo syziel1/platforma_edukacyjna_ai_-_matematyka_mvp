@@ -63,8 +63,15 @@ const KokpitPage = ({ onProblemSelect }) => {
     onProblemSelect(kokpitData.currentLesson.id);
   };
 
-  const handleStartGame = () => {
-    onProblemSelect('multiplication-game');
+  // Modified to handle game mode selector
+  const handleStartGame = (showModeSelector = false) => {
+    if (showModeSelector) {
+      // Start the jungle game with mode selector
+      onProblemSelect('jungle-game');
+    } else {
+      // Direct game start (legacy behavior)
+      onProblemSelect('jungle-game');
+    }
   };
 
   const handleOpenKnowledgeMap = () => {
