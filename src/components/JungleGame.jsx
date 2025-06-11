@@ -667,7 +667,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
       ) : (
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* 3D View - Top Half */}
-          <div className="h-1/2 view-3d">
+          <div className=" view-3d">
             <div id="playerActionFeedback" className="text-lg mb-2 text-white text-shadow min-h-[25px]" />
             <div id="avatarAnimationFeedback" className="text-2xl min-h-[30px]" />
             
