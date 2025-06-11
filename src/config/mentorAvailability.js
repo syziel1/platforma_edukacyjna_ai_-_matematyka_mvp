@@ -1,18 +1,18 @@
 export const mentorAvailability = {
   // Informacje o mentorze
   mentorInfo: {
-    name: 'Sylwester Zieliński',
-    title: 'Mentor Matematyki',
-    specialization: 'Funkcje kwadratowe, optymalizacja, analiza matematyczna'
+    name: 'mgr inż. Sylwester Zieliński',
+    title: 'Mentor matematyki/informatyki',
+    specialization: 'Matura rozszerzona z matematyki'
   },
 
   // Harmonogram spotkań (format 24h)
   schedule: {
-    monday: { start: '08:30', end: '09:30' },
-    tuesday: { start: '08:30', end: '09:30' },
-    wednesday: { start: '08:30', end: '09:30' },
-    thursday: { start: '08:30', end: '09:30' },
-    friday: { start: '08:30', end: '09:30' },
+    monday: { start: '08:30', end: '11:30' },
+    tuesday: { start: '08:30', end: '11:30' },
+    wednesday: { start: '08:30', end: '11:30' },
+    thursday: { start: '08:30', end: '11:30' },
+    friday: { start: '08:30', end: '11:30' },
     saturday: null, // Niedostępny
     sunday: null   // Niedostępny
   },
