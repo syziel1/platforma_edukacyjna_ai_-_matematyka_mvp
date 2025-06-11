@@ -758,13 +758,13 @@ const Scene3D = ({
       `}</style>
       
       <div 
+        className="flex justify-center items-center gap-0 w-full p-0 box-border relative transition-all duration-500 ease-in-out"
         style={{ 
           perspective: '900px',
           perspectiveOrigin: 'center top',
           filter: 'drop-shadow(0 10px 25px rgba(0,0,0,0.3))',
           background: getBackgroundGradient(),
-          height: '100%'
-/*          minHeight: '350px'*/
+          minHeight: '350px'
         }}
         role="img"
         aria-label="Enhanced 3D view of the jungle from player's perspective"
