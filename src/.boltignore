@@ -1,0 +1,43 @@
+# Zależności, których AI nie musi czytać
+node_modules/
+
+# Pliki buildów i cache
+.next/
+out/
+build/
+dist/
+
+# Ustawienia lokalnego środowiska
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Pliki logów
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Pliki konfiguracyjne lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Duże pliki multimedialne (AI nie potrzebuje ich treści)
+public/images/
+public/videos/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.webp
+*.mp4
+*.webm
+
+# Pliki testowe (możesz je odkomentować, jeśli AI ma pisać lub naprawiać testy)
+# cypress/
+**/*.test.js
+**/*.spec.js
