@@ -104,7 +104,7 @@ const translations = {
     
     // 3D Scene Task Display
     'task': 'Zadanie',
-    'pressUpToSolve': 'Naciśnij ↑ aby rozwiązać',
+    'pressUpToSolve': '👆 Kliknij lub naciśnij ↑',
     
     // Messages
     'great': 'Świetnie!',
@@ -342,7 +342,7 @@ const translations = {
     
     // 3D Scene Task Display
     'task': 'Task',
-    'pressUpToSolve': 'Press ↑ to solve',
+    'pressUpToSolve': '👆 Click or press ↑',
     
     // Messages
     'great': 'Great!',
