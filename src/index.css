@@ -40,13 +40,12 @@ body {
 /* Game-specific styles */
 .view-3d {
   flex: 1;
-  color: white;
+/*  color: white;*/
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-/*  border-right: 2px solid #3A3A3A;*/
   position: relative;
   padding: 0;
   box-sizing: border-box;
