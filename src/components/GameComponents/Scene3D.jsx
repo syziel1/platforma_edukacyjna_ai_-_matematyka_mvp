@@ -203,7 +203,7 @@ const Scene3D = ({
   // Create gradient background that transitions from sky to current cell color
   const getBackgroundGradient = () => {
     const skyColor = '#87CEEB'; // Sky blue
-    return `linear-gradient(180deg, ${skyColor} 0%, ${skyColor} 50%, ${currentCellColor} 100%)`;
+    return `linear-gradient(180deg, ${skyColor} 0%, ${skyColor} 30%, ${currentCellColor} 100%)`;
   };
 
   // FIXED: Handle side view clicks for left/right rotation
