@@ -473,6 +473,11 @@ const Scene3D = ({
           '--end-rotation': endRotation,
           animation: 'sideSlide 0.6s ease-out both'
         }}
+        onClick={() => handleSideViewClick(isLeftSide)}
+        onTouchEnd={(e) => {
+          e.preventDefault();
+          handleSideViewClick(isLeftSide);
+        }}
       >
         {/* Enhanced sky with animated elements */}
         <div className="absolute inset-x-0 top-0 h-20 overflow-hidden bg-transparent">
