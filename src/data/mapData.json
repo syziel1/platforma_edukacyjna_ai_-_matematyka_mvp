@@ -15,8 +15,8 @@
     "status": "available",
     "dependencies": [],
     "url": "/lessons/arithmetic-hub",
-    "x": -200,
-    "y": -100
+    "orbitRadius": 150,
+    "angle": 0
   },
   {
     "id": "funkcja-kwadratowa",
@@ -25,8 +25,8 @@
     "status": "available",
     "dependencies": [],
     "url": "/lessons/quadratic-function",
-    "x": 200,
-    "y": -100
+    "orbitRadius": 150,
+    "angle": 120
   },
   {
     "id": "myslenie-analityczne",
@@ -35,8 +35,8 @@
     "status": "locked",
     "dependencies": ["funkcja-kwadratowa"],
     "url": "/lessons/analytical-thinking",
-    "x": 0,
-    "y": 200
+    "orbitRadius": 150,
+    "angle": 240
   },
   {
     "id": "dodawanie-odejmowanie",
@@ -45,8 +45,9 @@
     "status": "available",
     "dependencies": ["arytmetyka"],
     "url": "/drills/add-subtract",
-    "x": -300,
-    "y": -50
+    "parentId": "arytmetyka",
+    "orbitRadius": 80,
+    "angle": 0
   },
   {
     "id": "mnozenie-dzielenie",
@@ -55,8 +56,9 @@
     "status": "locked",
     "dependencies": ["dodawanie-odejmowanie"],
     "url": "/drills/multiply-divide",
-    "x": -350,
-    "y": -150
+    "parentId": "arytmetyka",
+    "orbitRadius": 80,
+    "angle": 90
   },
   {
     "id": "potegowanie-pierwiastkowanie",
@@ -65,8 +67,9 @@
     "status": "locked",
     "dependencies": ["mnozenie-dzielenie"],
     "url": "/drills/powers-roots",
-    "x": -250,
-    "y": -200
+    "parentId": "arytmetyka",
+    "orbitRadius": 80,
+    "angle": 180
   },
   {
     "id": "logarytmy",
@@ -75,38 +78,42 @@
     "status": "locked",
     "dependencies": ["potegowanie-pierwiastkowanie"],
     "url": "/lessons/logarithms",
-    "x": -150,
-    "y": -180
+    "parentId": "arytmetyka",
+    "orbitRadius": 80,
+    "angle": 270
   },
   {
     "id": "postac-funkcji",
     "label": "Postać Funkcji",
     "type": "moon",
-    "status": "locked",
+    "status": "available",
     "dependencies": ["funkcja-kwadratowa"],
     "url": "/lessons/function-forms",
-    "x": 300,
-    "y": -50
+    "parentId": "funkcja-kwadratowa",
+    "orbitRadius": 80,
+    "angle": 0
   },
   {
     "id": "wierzcholek",
     "label": "Wierzchołek",
     "type": "moon",
     "status": "locked",
-    "dependencies": ["funkcja-kwadratowa"],
+    "dependencies": ["postac-funkcji"],
     "url": "/lessons/vertex",
-    "x": 350,
-    "y": -150
+    "parentId": "funkcja-kwadratowa",
+    "orbitRadius": 80,
+    "angle": 120
   },
   {
     "id": "miejsca-zerowe",
     "label": "Miejsca Zerowe",
     "type": "moon",
     "status": "locked",
-    "dependencies": ["funkcja-kwadratowa"],
+    "dependencies": ["postac-funkcji"],
     "url": "/lessons/zeros",
-    "x": 250,
-    "y": -200
+    "parentId": "funkcja-kwadratowa",
+    "orbitRadius": 80,
+    "angle": 240
   },
   {
     "id": "problem-kurnika",
@@ -115,8 +122,9 @@
     "status": "locked",
     "dependencies": ["wierzcholek", "miejsca-zerowe"],
     "url": "/problems/chicken-coop",
-    "x": 100,
-    "y": 150
+    "parentId": "myslenie-analityczne",
+    "orbitRadius": 80,
+    "angle": 0
   },
   {
     "id": "problem-furtki",
@@ -125,7 +133,8 @@
     "status": "locked",
     "dependencies": ["problem-kurnika"],
     "url": "/problems/gate-problem",
-    "x": -100,
-    "y": 250
+    "parentId": "myslenie-analityczne",
+    "orbitRadius": 80,
+    "angle": 180
   }
 ]
