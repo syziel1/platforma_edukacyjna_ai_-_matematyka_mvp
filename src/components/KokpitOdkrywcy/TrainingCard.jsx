@@ -12,7 +12,7 @@ const TrainingCard = ({ onStartGame }) => {
     <div className="bg-bg-card rounded-xl p-6 shadow-lg border border-bg-neutral">
       <h3 className="text-lg font-bold text-text-color mb-4 flex items-center gap-2">
         <Gamepad2 className="w-5 h-5 text-accent-primary" />
-        Trening: Mistrz Mnożenia
+        Trening: Matematyczna Dżungla
       </h3>
       
       {/* Grafika gry */}
