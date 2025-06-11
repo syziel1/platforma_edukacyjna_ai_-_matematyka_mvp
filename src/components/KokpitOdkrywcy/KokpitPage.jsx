@@ -97,15 +97,20 @@ const KokpitPage = ({ onProblemSelect }) => {
                 mentorSession={kokpitData.mentorSession}
                 currentLesson={kokpitData.currentLesson}
                 onScheduleMentor={handleScheduleMentor}
-                onContinueLesson={handleContinueLesson}
               />
             </div>
             
             {/* Kolumna prawa - 35% szerokości */}
             <div className="lg:col-span-1">
-              <RightColumn 
+              <CenterColumn 
                 onStartGame={handleStartGame}
                 onOpenKnowledgeMap={handleOpenKnowledgeMap}
+              />
+            </div>
+            
+            <div className="lg:col-span-1">
+              <LeftColumn 
+                onContinueLesson={handleContinueLesson}
               />
             </div>
           </div>
