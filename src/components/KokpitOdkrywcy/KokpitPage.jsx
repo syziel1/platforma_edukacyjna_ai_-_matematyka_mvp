@@ -3,6 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useProgress } from '../../contexts/ProgressContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { mentorAvailability } from '../../config/mentorAvailability';
+import { KnowledgeMapModal } from '../KnowledgeSpace';
 import LeftColumn from './LeftColumn';
 import RightColumn from './RightColumn';
 import GlobalHeader from '../GlobalHeader';
