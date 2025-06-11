@@ -682,23 +682,25 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
             />
           </div>
 
-          {/* 2D View - Bottom Half */}
-          <div className="h-1/2 bg-bg-card flex flex-col md:flex-row">
-            {/* Map Section */}
-            <div className="flex-1 md:w-3/5 flex flex-col justify-center items-center p-2 md:p-4">
-              <MapGrid 
-                boardData={gameState.visibleBoardData}
-                playerPosition={gameState.playerPosition}
-                currentLevelSize={gameState.currentViewSize}
-                level={gameState.currentViewSize}
-                showGrassPercentage={settings.showGrassPercentage}
-              />
+          {/* 2D View - Bottom Half - FIXED HEIGHT */}
+          <div className="h-1/2 bg-bg-card flex flex-col md:flex-row overflow-hidden">
+            {/* Map Section - FIXED TO FIT PROPERLY */}
+            <div className="flex-1 md:w-3/5 flex flex-col justify-center items-center p-2 md:p-4 overflow-hidden">
+              <div className="w-full h-full flex items-center justify-center">
+                <MapGrid 
+                  boardData={gameState.visibleBoardData}
+                  playerPosition={gameState.playerPosition}
+                  currentLevelSize={gameState.currentViewSize}
+                  level={gameState.currentViewSize}
+                  showGrassPercentage={settings.showGrassPercentage}
+                />
+              </div>
             </div>
 
-            {/* Stats Section */}
-            <div className="md:w-2/5 p-2 md:p-6 md:border-l border-bg-neutral">
-              <div className="h-full">
-                <div className="grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-4">
+            {/* Stats Section - REMOVED LEVEL PROGRESS */}
+            <div className="md:w-2/5 p-2 md:p-6 md:border-l border-bg-neutral overflow-hidden">
+              <div className="h-full flex flex-col">
+                <div className="grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-4 flex-1">
                   {/* Points */}
                   <div className="bg-green-100 p-2 md:p-4 rounded-lg border border-green-300">
                     <div className="text-center">
@@ -741,29 +743,6 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
                       </div>
                       <div className="text-orange-600 text-xs">🌴 Size</div>
                     </div>
-                  </div>
-                </div>
-
-                {/* Level progression indicator */}
-                <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <div className="text-center">
-                    <div className="text-yellow-800 font-bold text-sm mb-2">
-                      Level Progress
-                    </div>
-                    <div className="w-full bg-yellow-200 rounded-full h-3 mb-2">
-                      <div 
-                        className="bg-yellow-500 h-3 rounded-full transition-all duration-300"
-                        style={{ width: `${Math.min(100, (calculateGrassClearedPercentage() / 40) * 100)}%` }}
-                      />
-                    </div>
-                    <div className="text-yellow-700 text-xs">
-                      {calculateGrassClearedPercentage()}/40% to next level
-                    </div>
-                    {gameState.currentViewSize < 10 && (
-                      <div className="text-yellow-600 text-xs mt-1">
-                        Full board: 10×10 (exploring {gameState.currentViewSize}×{gameState.currentViewSize})
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
