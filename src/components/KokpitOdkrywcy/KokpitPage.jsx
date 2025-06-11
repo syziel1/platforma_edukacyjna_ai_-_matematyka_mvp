@@ -90,27 +90,22 @@ const KokpitPage = ({ onProblemSelect }) => {
       <div className="flex-1 p-4 md:p-6">
         <div className="max-w-7xl mx-auto">
           {/* Główny układ dwukolumnowy */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Kolumna lewa - 65% szerokości */}
             <div className="lg:col-span-1">
               <LeftColumn 
                 mentorSession={kokpitData.mentorSession}
                 currentLesson={kokpitData.currentLesson}
                 onScheduleMentor={handleScheduleMentor}
+                onContinueLesson={handleContinueLesson}
               />
             </div>
             
             {/* Kolumna prawa - 35% szerokości */}
             <div className="lg:col-span-1">
-              <CentreColumn 
+              <RightColumn 
                 onStartGame={handleStartGame}
                 onOpenKnowledgeMap={handleOpenKnowledgeMap}
-              />
-            </div>
-            
-            <div className="lg:col-span-1">
-              <LeftColumn 
-                onContinueLesson={handleContinueLesson}
               />
             </div>
           </div>
