@@ -6,7 +6,7 @@ const KnowledgeMapCard = ({ onOpenKnowledgeMap }) => {
     <div className="bg-bg-card rounded-xl p-6 shadow-lg border border-bg-neutral">
       <h3 className="text-lg font-bold text-text-color mb-4 flex items-center gap-2">
         <Map className="w-5 h-5 text-nav-bg" />
-        Constellation of Competencies
+        Constellation of Skills
       </h3>
       
       {/* Mini-mapa z kosmicznym motywem */}
