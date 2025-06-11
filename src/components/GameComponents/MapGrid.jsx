@@ -249,15 +249,6 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level, showGrass
           );
         })}
       </div>
-      
-      {/* Level progress indicator */}
-      <div className="mt-4 text-center">
-        <div className="inline-flex items-center space-x-2 bg-amber-100 px-3 py-1 rounded-full border border-amber-300">
-          <span className="text-amber-800 font-medium">Poziom {level}</span>
-          <span className="text-amber-600">🌴</span>
-          <span className="text-amber-700 text-sm">{currentLevelSize}×{currentLevelSize}</span>
-        </div>
-      </div>
     </>
   );
 };
