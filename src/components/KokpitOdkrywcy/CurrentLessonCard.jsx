@@ -13,7 +13,7 @@ const CurrentLessonCard = ({ lesson, onContinueLesson }) => {
       <div className="mb-4 rounded-lg overflow-hidden">
         <video 
           controls
-          className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
+          className="w-full object-cover hover:scale-105 transition-transform duration-300"
           poster="/videos/chicken_coop-poster.jpg"
         >
           <source src="/videos/chicken_coop.mp4" type="video/mp4" />
