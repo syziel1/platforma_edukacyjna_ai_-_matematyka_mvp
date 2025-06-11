@@ -121,7 +121,7 @@ const LessonContent = ({ currentStep, setCurrentStep }) => {
                 className="w-full h-full rounded-lg"
                 poster="/videos/intro-kurnik-poster.jpg"
               >
-                <source src="/videos/intro-kurnik.mp4" type="video/mp4" />
+                <source src="/videos/chicken-coop.mp4" type="video/mp4" />
                 <source src="/videos/intro-kurnik.webm" type="video/webm" />
                 <div className="bg-text-color/90 rounded-lg aspect-video flex items-center justify-center">
                   <div className="text-center text-white">
