@@ -335,12 +335,9 @@ const Scene3D = ({
                   >
                     {formatQuestionDisplay(cellData)}
                   </div>
-                  <div className="text-xs text-gray-600">
-                    {t('pressUpToSolve')}
-                  </div>
                   {/* Click/Touch indicator */}
                   <div className="text-xs text-gray-500 mt-1 opacity-75">
-                    👆 Kliknij lub naciśnij ↑
+                    {t('pressUpToSolve')}
                   </div>
                 </div>
               </div>
