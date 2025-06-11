@@ -8,6 +8,12 @@ const TrainingCard = ({ onStartGame }) => {
   const totalGames = records.jungleGame.totalGamesPlayed;
   const averageScore = records.jungleGame.averageScore;
 
+  // Modified to start with mode selector
+  const handlePlayClick = () => {
+    // Call onStartGame with a flag to show mode selector
+    onStartGame(true); // Pass true to indicate starting with mode selector
+  };
+
   return (
     <div className="bg-bg-card rounded-xl p-6 shadow-lg border border-bg-neutral">
       <h3 className="text-lg font-bold text-text-color mb-4 flex items-center gap-2">
@@ -70,9 +76,9 @@ const TrainingCard = ({ onStartGame }) => {
         )}
       </div>
 
-      {/* Przycisk */}
+      {/* Przycisk - Modified to show mode selector */}
       <button
-        onClick={onStartGame}
+        onClick={handlePlayClick}
         className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 px-4 rounded-lg hover:from-green-600 hover:to-blue-600 transition-all duration-200 font-medium flex items-center justify-center gap-2 transform hover:scale-105 active:scale-95"
       >
         {totalGames > 0 ? 'PLAY AGAIN' : 'PLAY'}
