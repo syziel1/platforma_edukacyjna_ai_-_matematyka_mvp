@@ -18,7 +18,7 @@ const AchievementsWidget = () => {
       {/* Kontener odznak */}
       <div className="mb-4">
         {recentBadges.length > 0 ? (
-          <div className="grid grid-cols-4 gap-2 mb-3">
+          <div className="grid grid-cols-5 gap-2 mb-3">
             {recentBadges.map((badge) => (
               <Badge 
                 key={badge.id}
