@@ -88,9 +88,9 @@ const TrainingCard = ({ onStartGame }) => {
       {bestScore > 0 && (
         <div className="mt-3 text-center">
           <p className="text-xs text-text-color/70">
-            {bestScore < 1000 ? '🎯 Goal: 1000 points!' : 
-             bestScore < 2000 ? '🌟 Goal: 2000 points!' : 
-             bestScore < 5000 ? '👑 Goal: 5000 points!' : 
+            {bestScore < 500 ? '🎯 Goal: 500 points!' : 
+             bestScore < 1000 ? '🌟 Goal: 1000 points!' : 
+             bestScore < 2000 ? '👑 Goal: 2000 points!' : 
              '🏆 You are a master!'}
           </p>
         </div>
