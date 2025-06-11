@@ -196,6 +196,33 @@ const Scene3D = ({
     return `linear-gradient(180deg, ${skyColor} 0%, ${skyColor} 50%, ${currentCellColor} 100%)`;
   };
 
+  // FIXED: Handle side view clicks for left/right rotation
+  const handleSideViewClick = (isLeftSide) => {
+    const keyCode = isLeftSide ? 'ArrowLeft' : 'ArrowRight';
+    const event = new KeyboardEvent('keydown', {
+      key: keyCode,
+      code: keyCode,
+      keyCode: isLeftSide ? 37 : 39,
+      which: isLeftSide ? 37 : 39,
+      bubbles: true
+    });
+    
+    window.dispatchEvent(event);
+  };
+
+  // FIXED: Handle front view click - simulate arrow up key press
+  const handleFrontViewClick = () => {
+    const event = new KeyboardEvent('keydown', {
+      key: 'ArrowUp',
+      code: 'ArrowUp',
+      keyCode: 38,
+      which: 38,
+      bubbles: true
+    });
+    
+    window.dispatchEvent(event);
+  };
+
   // Handle task click/touch - simulate arrow up key press
   const handleTaskClick = (cellData) => {
     if (!cellData || cellData.grass < 10) return; // Only clickable if grassy
