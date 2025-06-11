@@ -205,11 +205,6 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
             </span>
           </div>
         </div>
-
-        {/* Informacja o czasie sesji */}
-        <div className="text-center text-sm text-text-color/70">
-          Session time: {formattedTime}
-        </div>
       </div>
 
       {/* Cel dnia */}
