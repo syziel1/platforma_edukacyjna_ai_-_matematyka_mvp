@@ -269,9 +269,9 @@ const Scene3D = ({
             border: '2px solid #2a2a2a',
             borderRadius: '8px',
             background: `linear-gradient(180deg, 
-              #87CEEB 0%, 
-              #E0F6FF 20%, 
-              #F0F8FF 40%, 
+              transparent 0%, 
+              transparent 20%, 
+              rgba(240,248,255,0.3) 40%, 
               ${currentCellColor} 100%)`,
             boxShadow: '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)',
             animation: `cellPulse 0.5s ease-out ${index * 0.1}s both`
@@ -282,10 +282,10 @@ const Scene3D = ({
             if (isClickable) handleTaskClick(cellData);
           }}
         >
-          {/* Sky with animated clouds */}
+          {/* Sky with animated clouds - now fully transparent */}
           <div className="absolute top-0 w-full h-16 overflow-hidden bg-transparent">
             <div 
-              className="absolute w-8 h-4 bg-white/30 rounded-full animate-float"
+              className="absolute w-8 h-4 bg-white/20 rounded-full animate-float"
               style={{
                 top: '20%',
                 left: '10%',
@@ -294,7 +294,7 @@ const Scene3D = ({
               }}
             />
             <div 
-              className="absolute w-6 h-3 bg-white/20 rounded-full animate-float"
+              className="absolute w-6 h-3 bg-white/15 rounded-full animate-float"
               style={{
                 top: '40%',
                 right: '15%',
@@ -497,10 +497,10 @@ const Scene3D = ({
           border: '2px solid #1a1a1a',
           borderRadius: '8px',
           background: `linear-gradient(${isLeftSide ? '135deg' : '225deg'}, 
-            #87CEEB 0%, 
-            #B0E0E6 15%, 
-            #E0F6FF 35%, 
-            #F0F8FF 50%, 
+            transparent 0%, 
+            transparent 15%, 
+            rgba(176,224,230,0.3) 35%, 
+            rgba(240,248,255,0.5) 50%, 
             ${currentCellColor} 100%)`,
           boxShadow: isLeftSide 
             ? '12px 6px 24px rgba(0,0,0,0.5), inset -3px 0 6px rgba(0,0,0,0.3)'
@@ -515,10 +515,10 @@ const Scene3D = ({
           handleSideViewClick(isLeftSide);
         }}
       >
-        {/* Enhanced sky with animated elements */}
+        {/* Enhanced sky with animated elements - now transparent */}
         <div className="absolute inset-x-0 top-0 h-20 overflow-hidden bg-transparent">
           <div 
-            className="absolute w-6 h-3 bg-white/25 rounded-full animate-drift"
+            className="absolute w-6 h-3 bg-white/15 rounded-full animate-drift"
             style={{
               top: '25%',
               [isLeftSide ? 'left' : 'right']: '20%',
@@ -762,7 +762,7 @@ const Scene3D = ({
           perspective: '900px',
           perspectiveOrigin: 'center top',
           filter: 'drop-shadow(0 10px 25px rgba(0,0,0,0.3))',
-          background: getBackgroundGradient(),
+          background: 'transparent',
           height: '100%'
         }}
         role="img"
