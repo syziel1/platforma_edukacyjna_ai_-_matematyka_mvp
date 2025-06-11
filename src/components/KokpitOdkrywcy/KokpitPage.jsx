@@ -122,6 +122,11 @@ const KokpitPage = ({ onProblemSelect }) => {
           </div>
         </div>
       </div>
+      {/* Knowledge Map Modal */}
+      <KnowledgeMapModal 
+        isOpen={showKnowledgeMap}
+        onClose={handleCloseKnowledgeMap}
+      />
     </div>
   );
 };
