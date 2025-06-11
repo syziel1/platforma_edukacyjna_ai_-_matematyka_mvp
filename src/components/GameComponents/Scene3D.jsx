@@ -200,12 +200,6 @@ const Scene3D = ({
   const currentCell = getCell(pr, pc);
   const currentCellColor = getCellBackgroundColor(currentCell);
 
-  // Create gradient background that transitions from sky to current cell color
-  const getBackgroundGradient = () => {
-    const skyColor = '#87CEEB'; // Sky blue
-    return `linear-gradient(180deg, ${skyColor} 0%, ${skyColor} 50%, ${currentCellColor} 100%)`;
-  };
-
   // FIXED: Handle side view clicks for left/right rotation
   const handleSideViewClick = (isLeftSide) => {
     const keyCode = isLeftSide ? 'ArrowLeft' : 'ArrowRight';
@@ -250,7 +244,7 @@ const Scene3D = ({
     window.dispatchEvent(event);
   };
 
-  const render3DCell = (coords, index, isInFrontGroup, currentCellColor) => {
+  const render3DCell = (coords, index, isInFrontGroup) => {
     const cellData = getCell(coords.r, coords.c);
     const isOutOfBounds = coords.r < 0 || coords.r >= currentLevelSize || coords.c < 0 || coords.c >= currentLevelSize;
     const grassHeight = cellData ? Math.min(100, Math.max(20, (cellData.grass / 100) * 100)) : 60;
@@ -265,7 +259,7 @@ const Scene3D = ({
           className={`scene-cell ${viewClasses[index]} relative flex items-end overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105 ${isClickable ? 'cursor-pointer' : ''}`}
           style={{
             width: '33.33%',
-            height: '180px',
+            height: '100%',
             border: '2px solid #2a2a2a',
             borderRadius: '8px',
             background: `linear-gradient(180deg, 
@@ -475,19 +469,17 @@ const Scene3D = ({
       );
     }
 
-    // Enhanced side cells with improved 3D perspective
+    // FIXED: Enhanced side cells with corrected positioning
     const isLeftSide = index === 0;
-    const startRotation = isLeftSide ? '65deg' : '-65deg';
-    const endRotation = isLeftSide ? '45deg' : '-45deg';
 
     return (
       <div
         key={`${coords.r}-${coords.c}-${index}-${animationTrigger}`}
-        className={`scene-cell ${viewClasses[index]} absolute overflow-hidden transition-all duration-500 ease-out`}
+        className={`scene-cell ${viewClasses[index]} absolute overflow-hidden transition-all duration-500 ease-out cursor-pointer`}
         style={{
           width: '35%',
-          height: '200px',
-          bottom: 0,
+          height: '100%',
+          top: 0,
           left: isLeftSide ? '-5%' : 'auto',
           right: isLeftSide ? 'auto' : '-5%',
           transform: isLeftSide 
@@ -506,8 +498,6 @@ const Scene3D = ({
           boxShadow: isLeftSide 
             ? '12px 6px 24px rgba(0,0,0,0.5), inset -3px 0 6px rgba(0,0,0,0.3)'
             : '-12px 6px 24px rgba(0,0,0,0.5), inset 3px 0 6px rgba(0,0,0,0.3)',
-          '--start-rotation': startRotation,
-          '--end-rotation': endRotation,
           animation: 'sideSlide 0.6s ease-out both'
         }}
         onClick={() => handleSideViewClick(isLeftSide)}
@@ -529,9 +519,9 @@ const Scene3D = ({
           />
         </div>
         
-        {/* Enhanced ground section with 3D depth */}
+        {/* FIXED: Ground section with proper bottom alignment */}
         <div 
-          className="absolute bottom-0 w-full transition-all duration-700 ease-out"
+          className="absolute bottom-0 w-full transition-all duration-700 ease-out flex items-end"
           style={{
             height: `${grassHeight}%`,
             background: `linear-gradient(${isLeftSide ? '145deg' : '215deg'}, 
@@ -581,12 +571,13 @@ const Scene3D = ({
             }}
           />
           
-          {/* Enhanced bonus with 3D side perspective */}
+          {/* FIXED: Enhanced bonus positioning */}
           {bonusData && (
             <div 
-              className="absolute top-3 animate-float-side"
+              className="absolute animate-float-side"
               style={{ 
-                [isLeftSide ? 'left' : 'right']: '12px',
+                top: '20%',
+                [isLeftSide ? 'left' : 'right']: '20%',
                 filter: `drop-shadow(0 4px 8px rgba(0,0,0,0.7)) drop-shadow(0 0 16px ${bonusData.glow})`,
                 fontSize: '16px',
                 transform: `perspective(150px) rotateY(${isLeftSide ? '25deg' : '-25deg'}) rotateX(10deg)`,
@@ -638,7 +629,7 @@ const Scene3D = ({
             }}
           />
         )}
-        
+              
         {/* Enhanced 3D edge highlighting */}
         <div 
           className="absolute inset-0 pointer-events-none"
@@ -760,7 +751,7 @@ const Scene3D = ({
       <div 
         className="flex justify-center items-center gap-0 w-full p-0 box-border relative transition-all duration-500 ease-in-out"
         style={{ 
-/*          perspective: '900px',*/
+          perspective: '900px',
           perspectiveOrigin: 'center center',
           filter: 'drop-shadow(0 10px 25px rgba(0,0,0,0.3))',
           background: getBackgroundGradient(),
