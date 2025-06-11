@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import NavigationPanel from './components/NavigationPanel';
 import LessonHeader from './components/LessonHeader';
-import LessonContent from './components/LessonContent';
+import ChickenCoopContent from './components/ChickenCoopContent';
 import WaterTankContent from './components/WaterTankContent';
 import EcoTshirtContent from './components/EcoTshirtContent';
 import ChatPanel from './components/ChatPanel';
@@ -69,7 +69,7 @@ function App() {
   const renderContent = () => {
     switch (selectedProblem) {
       case 'chicken-coop':
-        return <LessonContent currentStep={currentStep} setCurrentStep={handleStepChange} />;
+        return <ChickenCoopContent currentStep={currentStep} setCurrentStep={handleStepChange} />;
       case 'water-tank':
         return <WaterTankContent currentStep={currentStep} setCurrentStep={handleStepChange} />;
       case 'eco-tshirt':
