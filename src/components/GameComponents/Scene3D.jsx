@@ -763,7 +763,8 @@ const Scene3D = ({
           perspective: '900px',
           perspectiveOrigin: 'center center',
           filter: 'drop-shadow(0 10px 25px rgba(0,0,0,0.3))',
-          background: getBackgroundGradient()
+          background: getBackgroundGradient(),
+          height: '100%'
         }}
         role="img"
         aria-label="Enhanced 3D view of the jungle from player's perspective"
