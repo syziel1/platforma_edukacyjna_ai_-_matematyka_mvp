@@ -12,7 +12,7 @@ const AchievementsWidget = () => {
     <div className="bg-bg-card rounded-xl p-6 shadow-lg border border-bg-neutral">
       <h4 className="text-lg font-bold text-text-color mb-4 flex items-center gap-2">
         <Award className="w-5 h-5 text-accent-secondary" />
-        Recent Achievements
+        Recent Achievements ({totalBadgeCount})
       </h4>
       
       {/* Kontener odznak */}
@@ -38,7 +38,7 @@ const AchievementsWidget = () => {
 
       {/* Link do wszystkich odznak */}
       <button className="w-full text-nav-bg hover:text-nav-bg/80 transition-colors font-medium text-sm flex items-center justify-center gap-2 py-2 border border-nav-bg/30 rounded-lg hover:bg-nav-bg/5">
-        View all ({totalBadgeCount})
+        View all 
         <ArrowRight className="w-4 h-4" />
       </button>
     </div>
