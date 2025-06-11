@@ -9,13 +9,23 @@ const CurrentLessonCard = ({ lesson, onContinueLesson }) => {
         {lesson.title}
       </h2>
       
-      {/* Grafika lekcji */}
+      {/* Video lekcji */}
       <div className="mb-4 rounded-lg overflow-hidden">
-        <img 
-          src={lesson.graphic}
-          alt="Wizualizacja problemu"
+        <video 
+          controls
           className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
-        />
+          poster="/videos/chicken_coop-poster.jpg"
+        >
+          <source src="/videos/chicken_coop.mp4" type="video/mp4" />
+          <source src="/videos/chicken_coop.webm" type="video/webm" />
+          {/* Fallback content when video fails to load */}
+          <div className="w-full h-48 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white">
+            <div className="text-center">
+              <div className="text-4xl mb-2">🐔</div>
+              <p className="text-sm">Problem kurnika</p>
+            </div>
+          </div>
+        </video>
       </div>
 
       {/* Pasek postępu */}
