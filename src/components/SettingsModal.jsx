@@ -18,14 +18,14 @@ const SettingsModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
+      <div className="bg-gray-800 p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-text-color">
+          <h2 className="text-xl font-bold text-white">
             {t('settings')}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 transition-colors"
+            className="text-gray-400 hover:text-white transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -36,7 +36,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Globe className="w-5 h-5 text-accent-primary" />
-              <span className="font-medium text-text-color">
+              <span className="font-medium text-white">
                 {t('language')}
               </span>
             </div>
@@ -56,14 +56,14 @@ const SettingsModal = ({ isOpen, onClose }) => {
               ) : (
                 <VolumeX className="w-5 h-5 text-gray-400" />
               )}
-              <span className="font-medium text-text-color">
+              <span className="font-medium text-white">
                 {t('soundEffects')}
               </span>
             </div>
             <button
               onClick={toggleSound}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                settings.soundEnabled ? 'bg-accent-primary' : 'bg-gray-300'
+                settings.soundEnabled ? 'bg-accent-primary' : 'bg-gray-600'
               }`}
             >
               <span
@@ -77,7 +77,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
           {/* Volume Slider */}
           {settings.soundEnabled && (
             <div>
-              <label className="block text-sm font-medium text-text-color mb-2">
+              <label className="block text-sm font-medium text-white mb-2">
                 {t('volume')}: {Math.round(settings.volume * 100)}%
               </label>
               <input
@@ -87,7 +87,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                 step="0.1"
                 value={settings.volume}
                 onChange={(e) => setVolume(parseFloat(e.target.value))}
-                className="w-full h-2 bg-bg-neutral rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-accent-primary [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-accent-primary [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:cursor-pointer"
+                className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-accent-primary [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-accent-primary [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-none"
               />
             </div>
           )}
@@ -101,10 +101,10 @@ const SettingsModal = ({ isOpen, onClose }) => {
                 <EyeOff className="w-5 h-5 text-gray-400" />
               )}
               <div>
-                <span className="font-medium text-text-color block">
+                <span className="font-medium text-white block">
                   {t('showGrassPercentage')}
                 </span>
-                <span className="text-xs text-text-color/60">
+                <span className="text-xs text-gray-400">
                   {t('showGrassPercentageDesc')}
                 </span>
               </div>
@@ -112,7 +112,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
             <button
               onClick={toggleGrassPercentage}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                settings.showGrassPercentage ? 'bg-accent-primary' : 'bg-gray-300'
+                settings.showGrassPercentage ? 'bg-accent-primary' : 'bg-gray-600'
               }`}
             >
               <span
@@ -124,15 +124,15 @@ const SettingsModal = ({ isOpen, onClose }) => {
           </div>
 
           {/* Reset Game State */}
-          <div className="border-t border-gray-200 pt-4">
+          <div className="border-t border-gray-600 pt-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <RotateCcw className="w-5 h-5 text-red-500" />
+                <RotateCcw className="w-5 h-5 text-red-400" />
                 <div>
-                  <span className="font-medium text-text-color block">
+                  <span className="font-medium text-white block">
                     {t('resetGameState')}
                   </span>
-                  <span className="text-xs text-text-color/60">
+                  <span className="text-xs text-gray-400">
                     {t('resetGameStateDesc')}
                   </span>
                 </div>
