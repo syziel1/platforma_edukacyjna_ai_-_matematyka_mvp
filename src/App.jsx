@@ -9,6 +9,7 @@ import StartScreen from './components/StartScreen';
 import LoginScreen from './components/LoginScreen';
 import JungleGame from './components/JungleGame';
 import CockpitPage from './components/ExplorerCockpit/CockpitPage';
+import LandingPage from './components/LandingPage';
 import { useAuth } from './contexts/AuthContext';
 import { useProgress } from './contexts/ProgressContext';
 import { useGlobalTimer } from './hooks/useGlobalTimer';
@@ -17,8 +18,9 @@ function App() {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedProblem, setSelectedProblem] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
-  const [showCockpit, setShowCockpit] = useState(true); // Kokpit domyślnie widoczny
+  const [showCockpit, setShowCockpit] = useState(false);
   const [showStartScreen, setShowStartScreen] = useState(false);
+  const [showLandingPage, setShowLandingPage] = useState(true); // Show landing page by default
   const totalSteps = 5;
   const { user } = useAuth();
   const { updateProgress } = useProgress();
@@ -28,6 +30,7 @@ function App() {
     setSelectedProblem(problemId);
     setShowCockpit(false);
     setShowStartScreen(false);
+    setShowLandingPage(false);
     
     // Rozpocznij liczenie czasu nauki
     startLearning();
@@ -57,6 +60,7 @@ function App() {
     setSelectedProblem(null);
     setShowCockpit(true);
     setShowStartScreen(false);
+    setShowLandingPage(false);
     
     // Zatrzymaj liczenie czasu nauki
     stopLearning();
@@ -66,6 +70,7 @@ function App() {
     setShowCockpit(true);
     setShowStartScreen(false);
     setSelectedProblem(null);
+    setShowLandingPage(false);
     
     // Zatrzymaj liczenie czasu nauki jeśli było aktywne
     stopLearning();
@@ -75,9 +80,15 @@ function App() {
     setShowStartScreen(true);
     setShowCockpit(false);
     setSelectedProblem(null);
+    setShowLandingPage(false);
     
     // Zatrzymaj liczenie czasu nauki jeśli było aktywne
     stopLearning();
+  };
+
+  const handleEnterApp = () => {
+    setShowLandingPage(false);
+    setShowCockpit(true);
   };
 
   const renderContent = () => {
@@ -97,6 +108,10 @@ function App() {
 
   if (showLogin) {
     return <LoginScreen onSkip={() => setShowLogin(false)} />;
+  }
+
+  if (showLandingPage) {
+    return <LandingPage onEnterApp={handleEnterApp} />;
   }
 
   return (
