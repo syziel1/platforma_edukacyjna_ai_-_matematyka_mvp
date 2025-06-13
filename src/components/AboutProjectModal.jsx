@@ -209,7 +209,7 @@ const AboutProjectModal = ({ isOpen, onClose }) => {
 
         {/* Footer */}
         <div className="border-t border-gray-200 p-4 text-center text-gray-500 text-sm">
-          <p>© 2025 Edu Future. All rights reserved. Author: Sylwester Zieliński. Project developed as part of Bolt Hackathon.</p> 
+          <p>© 2025 Edu Future. All rights reserved. Author: Sylwester Zieliński. Project developed as part of bolt.new Hackathon.</p> 
         </div>
       </div>
     </div>
