@@ -1,51 +1,59 @@
 import { useState, useEffect } from 'react';
 
 export const useGlobalTimer = () => {
-  const [timeElapsed, setTimeElapsed] = useState(() => {
-    // Sprawdź czy timer powinien być zresetowany
-    const lastActivity = localStorage.getItem('lastActivity');
-    const timerStart = localStorage.getItem('globalTimerStart');
-    const isLearningActive = localStorage.getItem('isLearningActive') === 'true';
+  // Sprawdź czy timer powinien być zresetowany ze względu na zmianę dnia
+  const shouldResetDueToNewDay = () => {
+    const lastDate = localStorage.getItem('lastLearningDate');
+    if (!lastDate) return false;
     
-    if (lastActivity && timerStart && isLearningActive) {
-      const now = Date.now();
-      const lastActivityTime = parseInt(lastActivity);
-      const timeSinceLastActivity = now - lastActivityTime;
-      
-      // Reset timera jeśli minęło więcej niż 30 minut od ostatniej aktywności
-      // lub jeśli użytkownik wrócił po dłuższej przerwie
-      if (timeSinceLastActivity > 30 * 60 * 1000) { // 30 minut
-        localStorage.removeItem('globalTimerStart');
-        localStorage.setItem('isLearningActive', 'false');
-        return 0;
-      }
-      
-      // Oblicz czas od rozpoczęcia sesji
-      const startTime = parseInt(timerStart);
-      return Math.floor((now - startTime) / 1000);
+    const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
+    return lastDate !== today;
+  };
+
+  // Inicjalizacja stanu timera
+  const [timeElapsed, setTimeElapsed] = useState(() => {
+    // Sprawdź czy to nowy dzień - jeśli tak, zresetuj timer
+    if (shouldResetDueToNewDay()) {
+      localStorage.setItem('learningTimeElapsed', '0');
+      localStorage.setItem('lastLearningDate', new Date().toISOString().split('T')[0]);
+      return 0;
     }
     
-    return 0;
+    // Wczytaj zapisany czas nauki
+    const savedTime = localStorage.getItem('learningTimeElapsed');
+    return savedTime ? parseInt(savedTime, 10) : 0;
   });
 
   const [isActive, setIsActive] = useState(() => {
     return localStorage.getItem('isLearningActive') === 'true';
   });
 
+  // Zapisz dzisiejszą datę przy pierwszym uruchomieniu
+  useEffect(() => {
+    const today = new Date().toISOString().split('T')[0];
+    localStorage.setItem('lastLearningDate', today);
+  }, []);
+
   // Funkcja do rozpoczęcia nauki
   const startLearning = () => {
-    const now = Date.now();
-    localStorage.setItem('globalTimerStart', now.toString());
-    localStorage.setItem('lastActivity', now.toString());
+    // Sprawdź czy to nowy dzień
+    if (shouldResetDueToNewDay()) {
+      setTimeElapsed(0);
+      localStorage.setItem('learningTimeElapsed', '0');
+      localStorage.setItem('lastLearningDate', new Date().toISOString().split('T')[0]);
+    }
+    
     localStorage.setItem('isLearningActive', 'true');
+    localStorage.setItem('lastActivity', Date.now().toString());
     setIsActive(true);
-    setTimeElapsed(0);
   };
 
-  // Funkcja do zatrzymania nauki
+  // Funkcja do zatrzymania nauki - zapisuje aktualny czas
   const stopLearning = () => {
     localStorage.setItem('isLearningActive', 'false');
     localStorage.setItem('lastActivity', Date.now().toString());
+    // Zapisz aktualny czas nauki przed zatrzymaniem
+    localStorage.setItem('learningTimeElapsed', timeElapsed.toString());
     setIsActive(false);
   };
 
@@ -53,6 +61,10 @@ export const useGlobalTimer = () => {
   useEffect(() => {
     if (isActive) {
       localStorage.setItem('lastActivity', Date.now().toString());
+      // Zapisuj czas nauki co 5 sekund
+      if (timeElapsed % 5 === 0) {
+        localStorage.setItem('learningTimeElapsed', timeElapsed.toString());
+      }
     }
   }, [timeElapsed, isActive]);
 
@@ -85,6 +97,7 @@ export const useGlobalTimer = () => {
         // Strona została ukryta - zapisz czas
         if (isActive) {
           localStorage.setItem('lastActivity', Date.now().toString());
+          localStorage.setItem('learningTimeElapsed', timeElapsed.toString());
         }
       } else {
         // Strona została przywrócona - sprawdź czy resetować timer
@@ -94,20 +107,29 @@ export const useGlobalTimer = () => {
             const now = Date.now();
             const timeSinceLastActivity = now - parseInt(lastActivity);
             
-            // Reset timera jeśli minęło więcej niż 30 minut
+            // Jeśli minęło więcej niż 30 minut, zatrzymaj liczenie czasu
             if (timeSinceLastActivity > 30 * 60 * 1000) {
               stopLearning();
             } else {
               localStorage.setItem('lastActivity', now.toString());
             }
           }
+          
+          // Sprawdź czy to nowy dzień
+          if (shouldResetDueToNewDay()) {
+            setTimeElapsed(0);
+            localStorage.setItem('learningTimeElapsed', '0');
+            localStorage.setItem('lastLearningDate', new Date().toISOString().split('T')[0]);
+          }
         }
       }
     };
 
     const handleBeforeUnload = () => {
+      // Zapisz czas nauki przed zamknięciem strony
       if (isActive) {
         localStorage.setItem('lastActivity', Date.now().toString());
+        localStorage.setItem('learningTimeElapsed', timeElapsed.toString());
       }
     };
 
@@ -118,14 +140,22 @@ export const useGlobalTimer = () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [isActive]);
+  }, [isActive, timeElapsed, stopLearning]);
 
+  // Aktualizuj timer co sekundę, gdy nauka jest aktywna
   useEffect(() => {
     let interval = null;
     
     if (isActive) {
       interval = setInterval(() => {
-        setTimeElapsed(time => time + 1);
+        setTimeElapsed(time => {
+          const newTime = time + 1;
+          // Zapisuj czas co 5 sekund
+          if (newTime % 5 === 0) {
+            localStorage.setItem('learningTimeElapsed', newTime.toString());
+          }
+          return newTime;
+        });
       }, 1000);
     }
 
@@ -133,6 +163,19 @@ export const useGlobalTimer = () => {
       if (interval) clearInterval(interval);
     };
   }, [isActive]);
+
+  // Zapisz czas nauki do statystyk dziennych
+  useEffect(() => {
+    if (isActive && timeElapsed > 0 && timeElapsed % 60 === 0) { // Co minutę
+      const today = new Date().toISOString().split('T')[0];
+      const savedStats = localStorage.getItem('dailyLearningStats');
+      const stats = savedStats ? JSON.parse(savedStats) : {};
+      
+      // Zapisz czas w minutach
+      stats[today] = Math.floor(timeElapsed / 60);
+      localStorage.setItem('dailyLearningStats', JSON.stringify(stats));
+    }
+  }, [timeElapsed, isActive]);
 
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);
@@ -147,9 +190,8 @@ export const useGlobalTimer = () => {
 
   const resetTimer = () => {
     setTimeElapsed(0);
-    const now = Date.now();
-    localStorage.setItem('globalTimerStart', now.toString());
-    localStorage.setItem('lastActivity', now.toString());
+    localStorage.setItem('learningTimeElapsed', '0');
+    localStorage.setItem('lastActivity', Date.now().toString());
     localStorage.setItem('isLearningActive', 'true');
     setIsActive(true);
   };
@@ -158,6 +200,7 @@ export const useGlobalTimer = () => {
     setIsActive(false);
     localStorage.setItem('isLearningActive', 'false');
     localStorage.setItem('lastActivity', Date.now().toString());
+    localStorage.setItem('learningTimeElapsed', timeElapsed.toString());
   };
 
   const resumeTimer = () => {

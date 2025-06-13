@@ -25,13 +25,27 @@ export const useBreakTimer = (breakIntervalMinutes = 25) => {
     let timer;
     
     if (isLearningActive) {
+      // Wczytaj zapisany czas do przerwy
+      const savedBreakTime = localStorage.getItem('timeUntilBreak');
+      if (savedBreakTime && !showBreakAlert) {
+        setTimeUntilBreak(parseInt(savedBreakTime, 10));
+      }
+      
       timer = setInterval(() => {
         setTimeUntilBreak(prev => {
+          const newTime = prev <= 1 ? breakIntervalMinutes * 60 : prev - 1;
+          
+          // Zapisz czas do przerwy co 5 sekund
+          if (newTime % 5 === 0) {
+            localStorage.setItem('timeUntilBreak', newTime.toString());
+          }
+          
+          // Pokaż alert o przerwie
           if (prev <= 1) {
             setShowBreakAlert(true);
-            return breakIntervalMinutes * 60;
           }
-          return prev - 1;
+          
+          return newTime;
         });
       }, 1000);
     }
@@ -39,10 +53,12 @@ export const useBreakTimer = (breakIntervalMinutes = 25) => {
     return () => {
       if (timer) clearInterval(timer);
     };
-  }, [breakIntervalMinutes, isLearningActive]);
+  }, [breakIntervalMinutes, isLearningActive, showBreakAlert]);
 
   const resetTimer = () => {
-    setTimeUntilBreak(breakIntervalMinutes * 60);
+    const newTime = breakIntervalMinutes * 60;
+    setTimeUntilBreak(newTime);
+    localStorage.setItem('timeUntilBreak', newTime.toString());
     setShowBreakAlert(false);
   };
 
