@@ -15,9 +15,6 @@ export default {
         'accent-secondary': '#FFD700', // Gold - Secondary accent (e.g., progress)
         'text-color': '#4A3B33', // Dark Brown - Main text and elements
         'ai-bg': '#E8F5E9', // Light Green - AI panel background
-      },
-      perspective: {
-        '800': '800px',
       }
     },
   },
