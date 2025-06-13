@@ -17,7 +17,7 @@ export const SettingsProvider = ({ children }) => {
       soundEnabled: true,
       volume: 0.5,
       showGrassPercentage: false,
-      dailyLearningGoal: 30 // Zmieniono z 60 na 30 minut
+      dailyLearningGoal: 30 // minut
     };
   });
 
