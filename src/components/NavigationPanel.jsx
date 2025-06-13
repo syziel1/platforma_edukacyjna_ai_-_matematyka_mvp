@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { Menu, CheckSquare, Calendar, Settings, LogOut, LogIn, Home, Info, BookOpen } from 'lucide-react';
+import { Menu, Calendar, Settings, LogOut, LogIn, Home, Info, BookOpen, BarChart3 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import SettingsModal from './SettingsModal';
 import AboutProjectModal from './AboutProjectModal';
+import LearningStatsModal from './LearningStatsModal';
 
 const NavigationPanel = ({ onLoginClick, onShowKokpit, onShowStartScreen }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showAboutProject, setShowAboutProject] = useState(false);
+  const [showLearningStats, setShowLearningStats] = useState(false);
   const { t } = useLanguage();
   const { user, logout } = useAuth();
 
@@ -17,14 +19,6 @@ const NavigationPanel = ({ onLoginClick, onShowKokpit, onShowStartScreen }) => {
       window.open('https://calendar.google.com', '_blank');
     } else {
       alert('Please log in with Google to access your calendar.');
-    }
-  };
-
-  const handleTasks = () => {
-    if (user) {
-      window.open('https://tasks.google.com', '_blank');
-    } else {
-      alert('Please log in with Google to access your tasks.');
     }
   };
 
@@ -37,6 +31,13 @@ const NavigationPanel = ({ onLoginClick, onShowKokpit, onShowStartScreen }) => {
 
   const handleAboutProject = () => {
     setShowAboutProject(true);
+    if (window.innerWidth < 768) {
+      setIsExpanded(false);
+    }
+  };
+
+  const handleLearningStats = () => {
+    setShowLearningStats(true);
     if (window.innerWidth < 768) {
       setIsExpanded(false);
     }
@@ -60,50 +61,67 @@ const NavigationPanel = ({ onLoginClick, onShowKokpit, onShowStartScreen }) => {
     }
   };
 
-  const menuItems = [
-    { 
-      icon: Menu,
-      label: t('menu'),
-      action: () => setIsExpanded(!isExpanded)
-    },
-    // Explorer Cockpit available for everyone
-    { 
-      icon: Home, 
-      label: 'Explorer Cockpit', 
-      action: handleKokpit
-    },
-    // StartScreen - lessons list
-    { 
-      icon: BookOpen, 
-      label: t('lessonsList'), 
-      action: handleStartScreen
-    },
-    { 
-      icon: CheckSquare, 
-      label: t('myTasks'), 
-      action: handleTasks
-    },
-    { 
-      icon: Calendar, 
-      label: t('dayPlan'), 
-      action: handleDayPlan 
-    },
-    { 
-      icon: Info, 
-      label: 'About Project', 
-      action: handleAboutProject
-    },
-    { 
-      icon: Settings, 
-      label: t('settings'), 
-      action: handleSettings
-    },
-    { 
-      icon: user ? LogOut : LogIn, 
-      label: user ? t('logout') : t('login'), 
-      action: user ? logout : onLoginClick
+  // Build menu items dynamically based on user login status
+  const getMenuItems = () => {
+    const baseItems = [
+      { 
+        icon: Menu,
+        label: t('menu'),
+        action: () => setIsExpanded(!isExpanded)
+      },
+      // Explorer Cockpit available for everyone
+      { 
+        icon: Home, 
+        label: 'Explorer Cockpit', 
+        action: handleKokpit
+      },
+      // StartScreen - lessons list
+      { 
+        icon: BookOpen, 
+        label: t('lessonsList'), 
+        action: handleStartScreen
+      }
+    ];
+
+    // Add Day Plan only if user is logged in
+    if (user) {
+      baseItems.push({
+        icon: Calendar, 
+        label: t('dayPlan'), 
+        action: handleDayPlan 
+      });
     }
-  ];
+
+    // Add Learning Statistics
+    baseItems.push({
+      icon: BarChart3,
+      label: t('learningStats'),
+      action: handleLearningStats
+    });
+
+    // Add remaining items
+    baseItems.push(
+      { 
+        icon: Info, 
+        label: 'About Project', 
+        action: handleAboutProject
+      },
+      { 
+        icon: Settings, 
+        label: t('settings'), 
+        action: handleSettings
+      },
+      { 
+        icon: user ? LogOut : LogIn, 
+        label: user ? t('logout') : t('login'), 
+        action: user ? logout : onLoginClick
+      }
+    );
+
+    return baseItems;
+  };
+
+  const menuItems = getMenuItems();
 
   const decodeHtmlEntities = (str) => {
     const parser = new DOMParser();
@@ -215,6 +233,12 @@ const NavigationPanel = ({ onLoginClick, onShowKokpit, onShowStartScreen }) => {
       <AboutProjectModal 
         isOpen={showAboutProject} 
         onClose={() => setShowAboutProject(false)} 
+      />
+
+      {/* Learning Statistics Modal */}
+      <LearningStatsModal 
+        isOpen={showLearningStats} 
+        onClose={() => setShowLearningStats(false)} 
       />
     </>
   );

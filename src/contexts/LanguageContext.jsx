@@ -10,6 +10,7 @@ const translations = {
     'backToProblems': 'Powrót do listy zadań',
     'connectWithMentor': 'Połącz się z mentorem',
     'lessonsList': 'Lista zadań',
+    'learningStats': 'Statystyki nauki',
     
     // Global Header
     'sessionTime': 'Czas sesji',
@@ -115,7 +116,6 @@ const translations = {
     
     // Navigation
     'menu': 'Menu',
-    'myTasks': 'Moje zadania',
     'dayPlan': 'Plan dnia',
     'settings': 'Ustawienia',
     'logout': 'Wyloguj się',
@@ -248,6 +248,7 @@ const translations = {
     'backToProblems': 'Back to tasks list',
     'connectWithMentor': 'Connect with mentor',
     'lessonsList': 'Lessons List',
+    'learningStats': 'Learning Statistics',
     
     // Global Header
     'sessionTime': 'Session Time',
@@ -353,7 +354,6 @@ const translations = {
     
     // Navigation
     'menu': 'Menu',
-    'myTasks': 'My Tasks',
     'dayPlan': 'Day Plan',
     'settings': 'Settings',
     'logout': 'Sign out',
