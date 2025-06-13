@@ -28,21 +28,21 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
     }
   }, [isOpen]);
 
-  // Save today's learning time when modal opens
+  // Update today's learning time (replace, don't add)
   useEffect(() => {
     if (isOpen && timeElapsed > 0) {
       const today = new Date().toISOString().split('T')[0];
       const currentData = { ...learningData };
       
-      // Add today's time (convert seconds to minutes)
+      // Set today's time (convert seconds to minutes) - replace, don't add
       const todayMinutes = Math.floor(timeElapsed / 60);
       if (todayMinutes > 0) {
-        currentData[today] = (currentData[today] || 0) + todayMinutes;
+        currentData[today] = todayMinutes; // Replace instead of adding
         setLearningData(currentData);
         localStorage.setItem('dailyLearningStats', JSON.stringify(currentData));
       }
     }
-  }, [isOpen, timeElapsed]);
+  }, [isOpen, timeElapsed, learningData]);
 
   if (!isOpen) return null;
 
