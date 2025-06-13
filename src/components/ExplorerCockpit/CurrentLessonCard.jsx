@@ -17,6 +17,7 @@ const CurrentLessonCard = ({ lesson, onContinueLesson }) => {
         <video 
           autoPlay
           muted
+          loop
           controls
           className="w-full object-cover hover:scale-105 transition-transform duration-300"
           poster="/videos/chicken_coop-poster.jpg"
