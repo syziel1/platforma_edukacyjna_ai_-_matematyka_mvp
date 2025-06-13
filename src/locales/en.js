@@ -183,6 +183,7 @@ export const en = {
   'menu': 'Menu',
   'dayPlan': 'Day Plan',
   'settings': 'Settings',
+  'aboutProject': 'About Project',
   'logout': 'Sign out',
   'login': 'Sign in',
   'skipLogin': 'Continue without signing in',
