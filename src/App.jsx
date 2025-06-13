@@ -50,19 +50,19 @@ function App() {
 
   const handleBackToCockpit = () => {
     setSelectedProblem(null);
-    setShowKokpit(true);
+    setShowCockpit(true);
     setShowStartScreen(false);
   };
 
-  const handleShowKokpit = () => {
-    setShowKokpit(true);
+  const handleShowCockpit = () => {
+    setShowCockpit(true);
     setShowStartScreen(false);
     setSelectedProblem(null);
   };
 
   const handleShowStartScreen = () => {
     setShowStartScreen(true);
-    setShowKokpit(false);
+    setShowCockpit(false);
     setSelectedProblem(null);
   };
 
@@ -89,13 +89,13 @@ function App() {
     <div className="min-h-screen bg-bg-main flex relative">
       <NavigationPanel 
         onLoginClick={() => setShowLogin(true)}
-        onShowKokpit={handleShowKokpit}
+        onShowCockpit={handleShowCockpit}
         onShowStartScreen={handleShowStartScreen}
       />
 
-      {showKokpit ? (
+      {showCockpit ? (
         <div className="flex-1 pt-16 md:pt-0">
-          <KokpitPage onProblemSelect={handleProblemSelect} />
+          <CockpitPage onProblemSelect={handleProblemSelect} />
         </div>
       ) : showStartScreen ? (
         <div className="flex-1 pt-16 md:pt-0">
@@ -104,7 +104,7 @@ function App() {
       ) : selectedProblem ? (
         selectedProblem === 'jungle-game' ? (
           <div className="flex-1 pt-16 md:pt-0">
-            <JungleGame onBack={handleBackToKokpit} startWithModeSelector={true} />
+            <JungleGame onBack={handleBackToCockpit} startWithModeSelector={true} />
           </div>
         ) : (
           <div className="flex flex-1">
@@ -113,7 +113,7 @@ function App() {
                 <LessonHeader 
                   currentStep={currentStep} 
                   totalSteps={totalSteps} 
-                  onBack={handleBackToKokpit}
+                  onBack={handleBackToCockpit}
                 />
                 <div className="flex-1 overflow-y-auto">
                   {renderContent()}
@@ -131,7 +131,7 @@ function App() {
       ) : (
         // Fallback - nie powinno się zdarzyć, ale dla bezpieczeństwa
         <div className="flex-1 pt-16 md:pt-0">
-          <KokpitPage onProblemSelect={handleProblemSelect} />
+          <CockpitPage onProblemSelect={handleProblemSelect} />
         </div>
       )}
     </div>
