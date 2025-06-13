@@ -55,7 +55,7 @@ const KnowledgeMapCard = ({ onOpenKnowledgeMap }) => {
       {/* Przycisk */}
       <button
         onClick={onOpenKnowledgeMap}
-        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 font-medium flex items-center justify-center gap-2 shadow-lg"
+        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 font-medium flex items-center justify-center gap-2 shadow-lg hover:scale-105"
       >
         {t('exploreConstellation')}
         <ArrowRight className="w-4 h-4" />
