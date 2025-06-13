@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Clock, Video, Calendar, RotateCcw, User, X } from 'lucide-react';
 import { useGlobalTimer } from '../../hooks/useGlobalTimer';
 import { mentorAvailability } from '../../config/mentorAvailability';
+import { useAuth } from '../../contexts/AuthContext';
 
 const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
   const { timeElapsed, formattedTime, resetAfterBreak } = useGlobalTimer();
+  const { user } = useAuth(); // Add auth context
   const [mentorStatus, setMentorStatus] = useState('unavailable');
   const [nextSession, setNextSession] = useState(null);
   
@@ -214,123 +216,141 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
         </p>
       </div>
 
-      {/* Sekcja mentora */}
-      <div className="border-t border-bg-neutral pt-4">
-        {!mentorSession ? (
-          <div className="text-center">
-            <div className="mb-3">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <User className="w-6 h-6 text-nav-bg" />
-                <span className="font-medium text-text-color">
-                  Math Mentor
-                </span>
+      {/* Sekcja mentora - TYLKO dla zalogowanych użytkowników */}
+      {user && (
+        <div className="border-t border-bg-neutral pt-4">
+          {!mentorSession ? (
+            <div className="text-center">
+              <div className="mb-3">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <User className="w-6 h-6 text-nav-bg" />
+                  <span className="font-medium text-text-color">
+                    Math Mentor
+                  </span>
+                </div>
+                <p className="text-text-color/70 text-sm mb-1">
+                  No scheduled meetings
+                </p>
+                <p className="text-text-color/60 text-xs">
+                  Schedule a meeting with a mentor to receive personalized help
+                </p>
               </div>
-              <p className="text-text-color/70 text-sm mb-1">
-                No scheduled meetings
-              </p>
-              <p className="text-text-color/60 text-xs">
-                Schedule a meeting with a mentor to receive personalized help
-              </p>
+              <button
+                onClick={handleScheduleMentor}
+                className="w-full bg-nav-bg text-white py-3 px-6 rounded-lg hover:bg-nav-bg/90 transition-colors font-medium flex items-center justify-center gap-2"
+              >
+                <Calendar className="w-5 h-5" />
+                SCHEDULE MEETING
+              </button>
             </div>
-            <button
-              onClick={handleScheduleMentor}
-              className="w-full bg-nav-bg text-white py-3 px-6 rounded-lg hover:bg-nav-bg/90 transition-colors font-medium flex items-center justify-center gap-2"
-            >
-              <Calendar className="w-5 h-5" />
-              SCHEDULE MEETING
-            </button>
-          </div>
-        ) : (
-          <div className="text-center">
-            <div className="mb-3">
-              <div className="flex items-center justify-center gap-3 mb-2">
-                {/* Zdjęcie mentora */}
-                <div className="relative">
-                  <img 
-                    src="/images/Syziel_AIMentor_profile_photo.jpg"
-                    alt={mentorSession.name}
-                    className="w-12 h-12 rounded-full object-cover border-2 border-green-500 shadow-lg"
-                  />
-                  {/* Status indicator */}
-                  <div className={`absolute -bottom-1 -right-1 w-4 h-4 ${statusInfo.bgColor} rounded-full border-2 border-white flex items-center justify-center`}>
-                    <span className="text-xs text-white">
-                      {statusInfo.icon === '🟢' ? '●' : statusInfo.icon === '🔵' ? '●' : statusInfo.icon === '🟡' ? '●' : '●'}
+          ) : (
+            <div className="text-center">
+              <div className="mb-3">
+                <div className="flex items-center justify-center gap-3 mb-2">
+                  {/* Zdjęcie mentora */}
+                  <div className="relative">
+                    <img 
+                      src="/images/Syziel_AIMentor_profile_photo.jpg"
+                      alt={mentorSession.name}
+                      className="w-12 h-12 rounded-full object-cover border-2 border-green-500 shadow-lg"
+                    />
+                    {/* Status indicator */}
+                    <div className={`absolute -bottom-1 -right-1 w-4 h-4 ${statusInfo.bgColor} rounded-full border-2 border-white flex items-center justify-center`}>
+                      <span className="text-xs text-white">
+                        {statusInfo.icon === '🟢' ? '●' : statusInfo.icon === '🔵' ? '●' : statusInfo.icon === '🟡' ? '●' : '●'}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-left">
+                    <span className="font-medium text-text-color block">
+                      {mentorSession.name}
+                    </span>
+                    <span className="text-text-color/70 text-xs">
+                      {mentorSession.title}
                     </span>
                   </div>
                 </div>
-                <div className="text-left">
-                  <span className="font-medium text-text-color block">
-                    {mentorSession.name}
-                  </span>
-                  <span className="text-text-color/70 text-xs">
-                    {mentorSession.title}
-                  </span>
-                </div>
+                
+                {/* Zaktualizowane informacje o spotkaniu */}
+                {(() => {
+                  const meetingInfo = formatMeetingDateTime(mentorSession);
+                  return (
+                    <div className="text-text-color font-medium">
+                      <p className="text-base">
+                        Meeting: {meetingInfo.date} at {meetingInfo.time}
+                      </p>
+                      {meetingInfo.dayName && meetingInfo.date !== 'Today' && meetingInfo.date !== 'Tomorrow' && (
+                        <p className="text-sm text-text-color/70 mt-1">
+                          ({meetingInfo.dayName})
+                        </p>
+                      )}
+                    </div>
+                  );
+                })()}
+                
+                <p className={`text-xs font-medium ${statusInfo.color} mt-1`}>
+                  {statusInfo.message}
+                </p>
               </div>
               
-              {/* Zaktualizowane informacje o spotkaniu */}
-              {(() => {
-                const meetingInfo = formatMeetingDateTime(mentorSession);
-                return (
-                  <div className="text-text-color font-medium">
-                    <p className="text-base">
-                      Meeting: {meetingInfo.date} at {meetingInfo.time}
-                    </p>
-                    {meetingInfo.dayName && meetingInfo.date !== 'Today' && meetingInfo.date !== 'Tomorrow' && (
-                      <p className="text-sm text-text-color/70 mt-1">
-                        ({meetingInfo.dayName})
-                      </p>
-                    )}
-                  </div>
-                );
-              })()}
+              {/* Przycisk dołączenia do spotkania */}
+              <div className="space-y-3">
+                <a
+                  href={mentorSession.zoomLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`w-full py-3 px-6 rounded-lg transition-colors font-medium flex items-center justify-center gap-2 inline-flex ${
+                    mentorSession.isActive 
+                      ? 'bg-green-600 hover:bg-green-700 text-white cursor-pointer' 
+                      : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                  }`}
+                  onClick={(e) => {
+                    if (!mentorSession.isActive) {
+                      e.preventDefault();
+                      const meetingInfo = formatMeetingDateTime(mentorSession);
+                      alert(`Meeting will be active ${meetingInfo.date} at ${meetingInfo.time}. Currently: ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`);
+                    }
+                  }}
+                >
+                  <Video className="w-5 h-5" />
+                  {mentorSession.isActive ? 'JOIN MEETING' : `MEETING AT ${mentorSession.time}`}
+                </a>
+                {!mentorSession.isActive && (
+                  <p className="text-xs text-text-color/60 mt-2">
+                    Button will be active at {mentorSession.time}
+                  </p>
+                )}
+                
+                {/* Przycisk anulowania spotkania */}
+                <button
+                  onClick={handleCancelMeeting}
+                  className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg transition-colors font-medium flex items-center justify-center gap-2 text-sm"
+                >
+                  <X className="w-4 h-4" />
+                  CANCEL MEETING
+                </button>
+              </div>
               
-              <p className={`text-xs font-medium ${statusInfo.color} mt-1`}>
-                {statusInfo.message}
-              </p>
             </div>
-            
-            {/* Przycisk dołączenia do spotkania */}
-            <div className="space-y-3">
-              <a
-                href={mentorSession.zoomLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`w-full py-3 px-6 rounded-lg transition-colors font-medium flex items-center justify-center gap-2 inline-flex ${
-                  mentorSession.isActive 
-                    ? 'bg-green-600 hover:bg-green-700 text-white cursor-pointer' 
-                    : 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                }`}
-                onClick={(e) => {
-                  if (!mentorSession.isActive) {
-                    e.preventDefault();
-                    const meetingInfo = formatMeetingDateTime(mentorSession);
-                    alert(`Meeting will be active ${meetingInfo.date} at ${meetingInfo.time}. Currently: ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`);
-                  }
-                }}
-              >
-                <Video className="w-5 h-5" />
-                {mentorSession.isActive ? 'JOIN MEETING' : `MEETING AT ${mentorSession.time}`}
-              </a>
-              {!mentorSession.isActive && (
-                <p className="text-xs text-text-color/60 mt-2">
-                  Button will be active at {mentorSession.time}
-                </p>
-              )}
-              
-              {/* Przycisk anulowania spotkania */}
-              <button
-                onClick={handleCancelMeeting}
-                className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg transition-colors font-medium flex items-center justify-center gap-2 text-sm"
-              >
-                <X className="w-4 h-4" />
-                CANCEL MEETING
-              </button>
-            </div>
-            
+          )}
+        </div>
+      )}
+
+      {/* Informacja dla niezalogowanych użytkowników */}
+      {!user && (
+        <div className="border-t border-bg-neutral pt-4">
+          <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <User className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+            <h3 className="font-medium text-blue-800 mb-2">Math Mentor Available</h3>
+            <p className="text-blue-700 text-sm mb-3">
+              Get personalized help from our experienced math mentor. Schedule one-on-one sessions to boost your learning.
+            </p>
+            <p className="text-blue-600 text-xs font-medium">
+              🔒 Sign in to access mentor features
+            </p>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
