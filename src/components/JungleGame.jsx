@@ -501,6 +501,53 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
     }
   };
 
+  // ESC key handler for exiting game
+  const handleEscapeKey = useCallback((e) => {
+    if (e.key === 'Escape') {
+      // If in a modal, close the modal first
+      if (gameState.showQuestion) {
+        setGameState(prev => ({
+          ...prev,
+          showQuestion: false,
+          currentQuestion: null,
+          wrongAnswersCount: 0
+        }));
+        return;
+      }
+      
+      if (gameState.showInstructions) {
+        setGameState(prev => ({
+          ...prev,
+          showInstructions: false,
+          showWelcome: true
+        }));
+        return;
+      }
+      
+      if (gameState.showWelcome) {
+        setGameState(prev => ({
+          ...prev,
+          showWelcome: false,
+          showModeSelector: true
+        }));
+        return;
+      }
+      
+      if (gameState.showModeSelector) {
+        onBack();
+        return;
+      }
+      
+      // If in main game, show confirmation dialog
+      if (confirm(t('exitGameConfirm'))) {
+        if (gameState.score > 0 && gameState.gameStartTime) {
+          handleGameEnd();
+        }
+        onBack();
+      }
+    }
+  }, [gameState, onBack, handleGameEnd, t]);
+
   const handleKeyPress = useCallback((e) => {
     if (gameState.showModeSelector || gameState.showWelcome || gameState.showInstructions || gameState.showQuestion) return;
 
@@ -605,10 +652,19 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
     }
   }, [gameState, t, playSound, extractVisibleBoard]);
 
+  // Combined keyboard event handler
   useEffect(() => {
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [handleKeyPress]);
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        handleEscapeKey(e);
+      } else {
+        handleKeyPress(e);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyPress, handleEscapeKey]);
 
   const showMessage = (text, duration = 2000) => {
     setGameState(prev => ({ ...prev, message: text, showMessage: true }));
@@ -656,6 +712,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
           gameModeConfig={gameModeConfig}
           onStart={handleStartGame}
           onShowInstructions={handleShowInstructions}
+          onCancel={handleCancel}
         />
       ) : gameState.showInstructions ? (
         <InstructionsModal 
@@ -663,6 +720,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
           gameModeConfig={gameModeConfig}
           onBack={handleBackToWelcome}
           onStart={handleStartGame}
+          onCancel={handleCancel}
         />
       ) : (
         <div className="flex-1 flex flex-col overflow-hidden">
@@ -671,7 +729,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
             <div id="playerActionFeedback" className="text-lg mb-2 text-white text-shadow min-h-[25px]" />
             <div id="avatarAnimationFeedback" className="text-2xl min-h-[30px]" />
             
-            <Scene3D 
+            Scene3D 
               boardData={gameState.visibleBoardData}
               playerPosition={gameState.playerPosition}
               currentLevelSize={gameState.currentViewSize}
@@ -760,6 +818,12 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
           playSound={playSound}
           selectedMode={gameState.selectedMode}
           gameModeConfig={gameModeConfig}
+          onCancel={() => setGameState(prev => ({
+            ...prev,
+            showQuestion: false,
+            currentQuestion: null,
+            wrongAnswersCount: 0
+          }))}
         />
       )}
 

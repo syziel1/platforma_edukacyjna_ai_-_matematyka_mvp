@@ -1,7 +1,8 @@
 import React from 'react';
+import { X } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
-const InstructionsModal = ({ selectedMode, gameModeConfig, onBack, onStart }) => {
+const InstructionsModal = ({ selectedMode, gameModeConfig, onBack, onStart, onCancel }) => {
   const { t } = useLanguage();
   const modeInfo = gameModeConfig[selectedMode];
   
@@ -31,7 +32,16 @@ const InstructionsModal = ({ selectedMode, gameModeConfig, onBack, onStart }) =>
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 md:p-8 rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white p-6 md:p-8 rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto relative">
+        {/* Exit button */}
+        <button
+          onClick={onCancel}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors p-1 rounded-md hover:bg-gray-100"
+          title="Exit game"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
         <div className="text-center mb-6">
           <div className="text-3xl md:text-4xl mb-3">{getModeIcon(selectedMode)}</div>
           <h2 className="text-xl md:text-2xl font-bold mb-2 text-gray-800">
@@ -48,6 +58,7 @@ const InstructionsModal = ({ selectedMode, gameModeConfig, onBack, onStart }) =>
                 <li><strong>⬆️</strong> {t('arrowUp')}</li>
                 <li><strong>⬅️</strong> {t('arrowLeft')}</li>
                 <li><strong>➡️</strong> {t('arrowRight')}</li>
+                <li><strong>ESC</strong> Exit game or close dialogs</li>
               </ul>
             </div>
           </div>
@@ -86,6 +97,11 @@ const InstructionsModal = ({ selectedMode, gameModeConfig, onBack, onStart }) =>
           >
             ⬅️ {t('back')}
           </button>
+        </div>
+
+        {/* ESC hint */}
+        <div className="mt-4 text-center text-xs text-gray-500">
+          Press ESC to go back
         </div>
       </div>
     </div>

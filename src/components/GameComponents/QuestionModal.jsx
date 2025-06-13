@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 const QuestionModal = ({ 
@@ -10,7 +11,8 @@ const QuestionModal = ({
   wiseOwlAdvice,
   playSound,
   selectedMode,
-  gameModeConfig
+  gameModeConfig,
+  onCancel
 }) => {
   const { t } = useLanguage();
   const [answer, setAnswer] = useState('');
@@ -206,7 +208,18 @@ const QuestionModal = ({
       `}</style>
       
       <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
-        <div className={`bg-white p-8 rounded-xl shadow-2xl max-w-md w-full mx-4 modal-enter border-2 border-amber-200 ${isShaking ? 'shake' : ''}`}>
+        <div className={`bg-white p-8 rounded-xl shadow-2xl max-w-md w-full mx-4 modal-enter border-2 border-amber-200 relative ${isShaking ? 'shake' : ''}`}>
+          {/* Exit button */}
+          {onCancel && (
+            <button
+              onClick={onCancel}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors p-1 rounded-md hover:bg-gray-100"
+              title="Close (ESC)"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
+
           {/* Question Header with visual enhancement */}
           <div className="question-highlight mb-6 relative">
             <div className="absolute top-2 right-2 sparkle text-yellow-500">✨</div>
@@ -313,6 +326,11 @@ const QuestionModal = ({
               💡 {t('hint')}: {t('tryBreakDown')}
             </p>
           )}
+
+          {/* ESC hint */}
+          <div className="mt-4 text-center text-xs text-gray-500">
+            Press ESC to close
+          </div>
         </div>
       </div>
     </>

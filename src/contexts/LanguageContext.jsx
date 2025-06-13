@@ -113,6 +113,7 @@ const translations = {
     'wrong': 'Niestety, źle. Trawa odrasta...',
     'cannotGo': 'Nie możesz tam iść (ściana!)',
     'bonusCollected': 'Bonus zebrano!',
+    'exitGameConfirm': 'Czy na pewno chcesz wyjść z gry? Twój postęp zostanie zapisany.',
     
     // Navigation
     'menu': 'Menu',
@@ -351,6 +352,7 @@ const translations = {
     'wrong': 'Sorry, wrong. Grass is growing back...',
     'cannotGo': 'You cannot go there (wall!)',
     'bonusCollected': 'Bonus collected!',
+    'exitGameConfirm': 'Are you sure you want to exit the game? Your progress will be saved.',
     
     // Navigation
     'menu': 'Menu',

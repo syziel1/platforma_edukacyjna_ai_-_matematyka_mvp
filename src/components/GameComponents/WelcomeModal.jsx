@@ -1,7 +1,8 @@
 import React from 'react';
+import { X } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
-const WelcomeModal = ({ selectedMode, gameModeConfig, onStart, onShowInstructions }) => {
+const WelcomeModal = ({ selectedMode, gameModeConfig, onStart, onShowInstructions, onCancel }) => {
   const { t } = useLanguage();
   const modeInfo = gameModeConfig[selectedMode];
   
@@ -80,7 +81,16 @@ const WelcomeModal = ({ selectedMode, gameModeConfig, onStart, onShowInstruction
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 md:p-8 rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white p-6 md:p-8 rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto relative">
+        {/* Exit button */}
+        <button
+          onClick={onCancel}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors p-1 rounded-md hover:bg-gray-100"
+          title="Exit game"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
         <div className="text-center mb-6">
           <div className="text-4xl md:text-6xl mb-4">{getModeIcon(selectedMode)}</div>
           <h2 className={`text-2xl md:text-3xl font-bold mb-2 ${getModeColor(selectedMode)}`}>
@@ -114,6 +124,11 @@ const WelcomeModal = ({ selectedMode, gameModeConfig, onStart, onShowInstruction
           >
             📖 {t('showInstructions')}
           </button>
+        </div>
+
+        {/* ESC hint */}
+        <div className="mt-4 text-center text-xs text-gray-500">
+          Press ESC to go back
         </div>
       </div>
     </div>
