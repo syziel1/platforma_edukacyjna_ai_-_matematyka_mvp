@@ -44,6 +44,14 @@ const StartScreen = ({ onProblemSelect }) => {
       icon: Trophy,
       color: 'nav-bg',
       totalSteps: 5
+    },
+    {
+      id: 'powers-roots',
+      title: 'Powers & Roots',
+      description: 'Interaktywne wzory i definicje.',
+      icon: Zap,
+      color: 'accent-primary',
+      totalSteps: 1
     }
   ];
 
