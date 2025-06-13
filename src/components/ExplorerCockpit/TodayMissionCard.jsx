@@ -156,13 +156,6 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
         <h2 className="text-2xl font-bold text-text-color flex items-center gap-2">
           🎯 {t('yourMissionToday')}
         </h2>
-        <button
-          onClick={handleResetTimer}
-          className="text-text-color/50 hover:text-text-color transition-colors p-1 rounded"
-          title={t('resetGameState')}
-        >
-          <RotateCcw className="w-4 h-4" />
-        </button>
       </div>
       
       {/* Wskaźnik czasu */}
