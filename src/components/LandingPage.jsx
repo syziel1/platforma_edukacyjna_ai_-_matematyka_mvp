@@ -48,7 +48,7 @@ const LandingPage = ({ onEnterApp }) => {
             </button>
             
             <button
-              onClick={() => scrollToSection('how-it-works')}
+              onClick={() => scrollToSection('solution')}
               className="text-white hover:text-accent-secondary transition-colors duration-300 flex items-center gap-2 underline"
             >
               Dowiedz się więcej ↓
@@ -58,7 +58,7 @@ const LandingPage = ({ onEnterApp }) => {
       </section>
 
       {/* Problem Section */}
-      <section className="py-16 bg-white">
+      <section id="solution" className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-text-color mb-12">
             Czy nauka musi być nudnym obowiązkiem?
