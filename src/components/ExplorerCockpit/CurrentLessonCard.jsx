@@ -19,7 +19,7 @@ const CurrentLessonCard = ({ lesson, onContinueLesson }) => {
           muted
           loop
           controls
-          className="w-full object-cover hover:scale-105 transition-transform duration-300"
+          className="w-full object-cover"
           poster="/videos/chicken_coop-poster.jpg"
         >
           <source src="/videos/chicken_coop.mp4" type="video/mp4" />
