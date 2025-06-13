@@ -51,7 +51,7 @@ const LandingPage = ({ onEnterApp }) => {
               onClick={() => scrollToSection('solution')}
               className="font-bold text-white hover:text-accent-secondary transition-colors duration-300 flex items-center gap-2 underline"
             >
-              Dowiedz się więcej ↓
+              ↓ Dowiedz się więcej ↓
             </button>
           </div>
         </div>
