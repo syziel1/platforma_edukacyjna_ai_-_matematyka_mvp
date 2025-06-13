@@ -16,7 +16,8 @@ export const SettingsProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : {
       soundEnabled: true,
       volume: 0.5,
-      showGrassPercentage: false
+      showGrassPercentage: false,
+      dailyLearningGoal: 60 // Default to 60 minutes
     };
   });
 
@@ -43,6 +44,10 @@ export const SettingsProvider = ({ children }) => {
     updateSetting('showGrassPercentage', !settings.showGrassPercentage);
   };
 
+  const setDailyLearningGoal = (minutes) => {
+    updateSetting('dailyLearningGoal', minutes);
+  };
+
   const resetGameState = () => {
     // Remove game state from localStorage
     localStorage.removeItem('jungleGameState');
@@ -58,6 +63,7 @@ export const SettingsProvider = ({ children }) => {
       toggleSound, 
       setVolume,
       toggleGrassPercentage,
+      setDailyLearningGoal,
       resetGameState
     }}>
       {children}

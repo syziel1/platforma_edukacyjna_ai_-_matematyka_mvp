@@ -18,6 +18,7 @@ export const pl = {
   'remainingStudyTime': 'Pozostały czas nauki:',
   'goal': 'Cel',
   'spendOneHour': 'Spędź godzinę na nauce.',
+  'spendTimeStudying': 'Spędź {minutes} minut na nauce.',
   'mathMentor': 'Mentor Matematyki',
   'noScheduledMeetings': 'Brak zaplanowanych spotkań',
   'scheduleMeetingHelp': 'Zaplanuj spotkanie z mentorem, aby otrzymać spersonalizowaną pomoc',
@@ -26,6 +27,7 @@ export const pl = {
   'today': 'Dzisiaj',
   'tomorrow': 'Jutro',
   'at': 'o',
+  'now': 'Teraz',
   'meetingInProgress': 'Spotkanie w toku - dołącz teraz!',
   'availableOutsideMeeting': 'Dostępny (poza czasem spotkania)',
   'busy': 'Zajęty',
@@ -200,12 +202,15 @@ export const pl = {
   'resetGameStateDesc': 'Powrót do pierwszego poziomu (zachowuje rekordy)',
   'resetGameStateConfirm': 'Czy na pewno chcesz zresetować stan gry? To działanie usunie postęp w grze, ale zachowa rekordy punktów.',
   'gameStateReset': 'Stan gry został zresetowany!',
+  'dailyLearningGoal': 'Dzienny cel nauki',
+  'dailyLearningGoalDesc': 'Ustaw ile minut dziennie chcesz się uczyć',
   
   // Lesson Header
   'lessonTitle': 'Zadanie: Optymalny kurnik',
   'nextBreak': 'Następna przerwa za:',
   
   // Steps
+  'step': 'Krok',
   'step1Title': 'Wprowadzenie do zadania',
   'step2Title': 'Opis problemu',
   'step3Title': 'Eksperymentowanie',

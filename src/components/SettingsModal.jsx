@@ -1,10 +1,10 @@
 import React from 'react';
-import { Volume2, VolumeX, X, RotateCcw, Eye, EyeOff, Globe } from 'lucide-react';
+import { Volume2, VolumeX, X, RotateCcw, Eye, EyeOff, Globe, Target } from 'lucide-react';
 import { useSettings } from '../contexts/SettingsContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const SettingsModal = ({ isOpen, onClose }) => {
-  const { settings, toggleSound, setVolume, toggleGrassPercentage, resetGameState } = useSettings();
+  const { settings, toggleSound, setVolume, toggleGrassPercentage, setDailyLearningGoal, resetGameState } = useSettings();
   const { t, currentLanguage, switchLanguage } = useLanguage();
 
   if (!isOpen) return null;
@@ -15,6 +15,13 @@ const SettingsModal = ({ isOpen, onClose }) => {
       alert(t('gameStateReset'));
     }
   };
+
+  const learningGoalOptions = [
+    { value: 15, label: '15 min' },
+    { value: 30, label: '30 min' },
+    { value: 45, label: '45 min' },
+    { value: 60, label: '60 min' }
+  ];
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -46,6 +53,34 @@ const SettingsModal = ({ isOpen, onClose }) => {
             >
               {currentLanguage.toUpperCase()}
             </button>
+          </div>
+
+          {/* Daily Learning Goal */}
+          <div>
+            <div className="flex items-center gap-3 mb-3">
+              <Target className="w-5 h-5 text-nav-bg" />
+              <span className="font-medium text-text-color">
+                {t('dailyLearningGoal')}
+              </span>
+            </div>
+            <div className="grid grid-cols-4 gap-2">
+              {learningGoalOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setDailyLearningGoal(option.value)}
+                  className={`py-2 px-3 rounded-md text-sm font-medium transition-colors ${
+                    settings.dailyLearningGoal === option.value
+                      ? 'bg-nav-bg text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-text-color/60 mt-2">
+              {t('dailyLearningGoalDesc')}
+            </p>
           </div>
 
           {/* Sound Toggle */}

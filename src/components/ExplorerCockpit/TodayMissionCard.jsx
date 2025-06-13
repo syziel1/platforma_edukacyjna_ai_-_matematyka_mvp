@@ -4,16 +4,18 @@ import { useGlobalTimer } from '../../hooks/useGlobalTimer';
 import { mentorAvailability } from '../../config/mentorAvailability';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useSettings } from '../../contexts/SettingsContext';
 
 const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
   const { timeElapsed, formattedTime, resetAfterBreak } = useGlobalTimer();
   const { user } = useAuth();
   const { t } = useLanguage();
+  const { settings } = useSettings();
   const [mentorStatus, setMentorStatus] = useState('unavailable');
   const [nextSession, setNextSession] = useState(null);
   
-  // Oblicz pozostały czas (cel: 1 godzina nauki)
-  const targetTime = 3600; // 1 godzina w sekundach
+  // Oblicz pozostały czas na podstawie ustawionego celu
+  const targetTime = settings.dailyLearningGoal * 60; // Konwertuj minuty na sekundy
   const timeRemaining = Math.max(0, targetTime - timeElapsed);
 
   // Aktualizuj status mentora co minutę
@@ -214,7 +216,7 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
       {/* Cel dnia */}
       <div className="mb-6 p-4 bg-accent-secondary/10 rounded-lg border border-accent-secondary/30">
         <p className="text-text-color font-medium">
-          <strong>{t('goal')}:</strong> {t('spendOneHour')}
+          <strong>{t('goal')}:</strong> {t('spendTimeStudying', { minutes: settings.dailyLearningGoal })}
         </p>
       </div>
 

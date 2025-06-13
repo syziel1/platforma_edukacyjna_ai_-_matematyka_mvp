@@ -18,6 +18,7 @@ export const en = {
   'remainingStudyTime': 'Remaining study time:',
   'goal': 'Goal',
   'spendOneHour': 'Spend one hour learning.',
+  'spendTimeStudying': 'Spend {minutes} minutes learning.',
   'mathMentor': 'Math Mentor',
   'noScheduledMeetings': 'No scheduled meetings',
   'scheduleMeetingHelp': 'Schedule a meeting with a mentor to receive personalized help',
@@ -26,6 +27,7 @@ export const en = {
   'today': 'Today',
   'tomorrow': 'Tomorrow',
   'at': 'at',
+  'now': 'Now',
   'meetingInProgress': 'Meeting in progress - join now!',
   'availableOutsideMeeting': 'Available (outside meeting time)',
   'busy': 'Busy',
@@ -200,12 +202,15 @@ export const en = {
   'resetGameStateDesc': 'Return to first level (keeps records)',
   'resetGameStateConfirm': 'Are you sure you want to reset the game state? This will remove game progress but keep score records.',
   'gameStateReset': 'Game state has been reset!',
+  'dailyLearningGoal': 'Daily learning goal',
+  'dailyLearningGoalDesc': 'Set how many minutes per day you want to study',
   
   // Lesson Header
   'lessonTitle': 'Task: Optimal Chicken Coop',
   'nextBreak': 'Next break in:',
   
   // Steps
+  'step': 'Step',
   'step1Title': 'Task Introduction',
   'step2Title': 'Problem Description',
   'step3Title': 'Experimentation',

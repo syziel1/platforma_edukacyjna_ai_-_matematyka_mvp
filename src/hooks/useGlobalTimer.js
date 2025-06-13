@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useSettings } from '../contexts/SettingsContext';
 
 export const useGlobalTimer = () => {
+  const { settings } = useSettings();
+  
   // Sprawdź czy timer powinien być zresetowany ze względu na zmianę dnia
   const shouldResetDueToNewDay = () => {
     const lastDate = localStorage.getItem('lastLearningDate');
