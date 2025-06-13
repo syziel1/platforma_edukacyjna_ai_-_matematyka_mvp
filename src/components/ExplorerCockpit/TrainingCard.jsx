@@ -45,8 +45,6 @@ const TrainingCard = ({ onStartGame }) => {
         {/* Overlay with game elements (visible over video) */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         </div>
-        <div className="absolute top-2 right-2 text-2xl drop-shadow-lg pointer-events-none">🧮</div>
-        <div className="absolute bottom-2 left-2 text-xl drop-shadow-lg pointer-events-none">⚡</div>
       </div>
 
       {/* Statystyki gracza */}
