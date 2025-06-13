@@ -17,7 +17,7 @@ const LandingPage = ({ onEnterApp }) => {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(/images/jungle%20galaxy.jpg)',
+            backgroundImage: 'url(/images/jungle_galaxy.jpg)',
             filter: 'brightness(0.7)'
           }}
         />
@@ -110,7 +110,7 @@ const LandingPage = ({ onEnterApp }) => {
               <div 
                 className="w-full h-64 md:h-80 bg-cover bg-center rounded-xl shadow-xl"
                 style={{
-                  backgroundImage: 'url(/images/Edu%20future.jpg)'
+                  backgroundImage: 'url(/images/Edu_future.jpg)'
                 }}
               />
             </div>
