@@ -729,7 +729,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
             <div id="playerActionFeedback" className="text-lg mb-2 text-white text-shadow min-h-[25px]" />
             <div id="avatarAnimationFeedback" className="text-2xl min-h-[30px]" />
             
-            Scene3D 
+            <Scene3D 
               boardData={gameState.visibleBoardData}
               playerPosition={gameState.playerPosition}
               currentLevelSize={gameState.currentViewSize}
