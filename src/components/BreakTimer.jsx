@@ -5,9 +5,14 @@ import { useGlobalTimer } from '../hooks/useGlobalTimer';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const BreakTimer = () => {
-  const { formattedTime, showBreakAlert, resetTimer, setShowBreakAlert, handleBreakTaken } = useBreakTimer(25);
+  const { formattedTime, showBreakAlert, resetTimer, setShowBreakAlert, handleBreakTaken, isLearningActive } = useBreakTimer(25);
   const { resetAfterBreak } = useGlobalTimer();
   const { t } = useLanguage();
+
+  // Nie pokazuj timera, jeśli nauka nie jest aktywna
+  if (!isLearningActive) {
+    return null;
+  }
 
   const handleBreakClick = () => {
     alert(t('breakSuggestions'));

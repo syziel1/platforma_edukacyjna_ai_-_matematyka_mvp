@@ -12,6 +12,7 @@ import { useSoundEffects } from '../hooks/useSoundEffects';
 import { useGameRecords } from '../contexts/GameRecordsContext';
 import { useSettings } from '../contexts/SettingsContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useGlobalTimer } from '../hooks/useGlobalTimer';
 
 const JungleGame = ({ onBack, startWithModeSelector = false }) => {
   const { t } = useLanguage();
@@ -19,6 +20,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
   const { updateJungleGameScore } = useGameRecords();
   const { settings } = useSettings();
   const { user } = useAuth();
+  const { startLearning, stopLearning } = useGlobalTimer();
   
   // Game mode configurations
   const gameModeConfig = {
@@ -374,6 +376,8 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
 
   const handleCancel = () => {
     playSound('move');
+    // Zatrzymaj liczenie czasu nauki
+    stopLearning();
     onBack();
   };
 
@@ -402,6 +406,9 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
       showWelcome: false,
       showInstructions: false
     }));
+    
+    // Rozpocznij liczenie czasu nauki gdy gra faktycznie się rozpoczyna
+    startLearning();
     
     // Initialize board when game starts
     if (gameState.selectedMode) {
@@ -534,7 +541,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
       }
       
       if (gameState.showModeSelector) {
-        onBack();
+        handleCancel();
         return;
       }
       
@@ -543,10 +550,10 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
         if (gameState.score > 0 && gameState.gameStartTime) {
           handleGameEnd();
         }
-        onBack();
+        handleCancel();
       }
     }
-  }, [gameState, onBack, handleGameEnd, t]);
+  }, [gameState, handleCancel, handleGameEnd, t]);
 
   const handleKeyPress = useCallback((e) => {
     if (gameState.showModeSelector || gameState.showWelcome || gameState.showInstructions || gameState.showQuestion) return;
@@ -690,8 +697,17 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
     if (gameState.score > 0 && gameState.gameStartTime) {
       handleGameEnd();
     }
+    // Zatrzymaj liczenie czasu nauki
+    stopLearning();
     onBack();
   };
+
+  // Rozpocznij liczenie czasu nauki gdy gra faktycznie się rozpoczyna
+  useEffect(() => {
+    if (!gameState.showModeSelector && !gameState.showWelcome && !gameState.showInstructions) {
+      startLearning();
+    }
+  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, startLearning]);
 
   return (
     <div className="h-screen flex flex-col bg-bg-main">

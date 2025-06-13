@@ -5,7 +5,7 @@ import { useGlobalTimer } from '../hooks/useGlobalTimer';
 
 const LearningStatsModal = ({ isOpen, onClose }) => {
   const { t } = useLanguage();
-  const { timeElapsed } = useGlobalTimer();
+  const { timeElapsed, isActive } = useGlobalTimer();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [learningData, setLearningData] = useState({});
 
@@ -30,7 +30,7 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
 
   // Update today's learning time (replace, don't add)
   useEffect(() => {
-    if (isOpen && timeElapsed > 0) {
+    if (isOpen && timeElapsed > 0 && isActive) {
       const today = new Date().toISOString().split('T')[0];
       const currentData = { ...learningData };
       
@@ -42,7 +42,7 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
         localStorage.setItem('dailyLearningStats', JSON.stringify(currentData));
       }
     }
-  }, [isOpen, timeElapsed, learningData]);
+  }, [isOpen, timeElapsed, learningData, isActive]);
 
   if (!isOpen) return null;
 

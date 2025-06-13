@@ -5,8 +5,9 @@ export const useGlobalTimer = () => {
     // Sprawdź czy timer powinien być zresetowany
     const lastActivity = localStorage.getItem('lastActivity');
     const timerStart = localStorage.getItem('globalTimerStart');
+    const isLearningActive = localStorage.getItem('isLearningActive') === 'true';
     
-    if (lastActivity && timerStart) {
+    if (lastActivity && timerStart && isLearningActive) {
       const now = Date.now();
       const lastActivityTime = parseInt(lastActivity);
       const timeSinceLastActivity = now - lastActivityTime;
@@ -15,7 +16,7 @@ export const useGlobalTimer = () => {
       // lub jeśli użytkownik wrócił po dłuższej przerwie
       if (timeSinceLastActivity > 30 * 60 * 1000) { // 30 minut
         localStorage.removeItem('globalTimerStart');
-        localStorage.setItem('globalTimerStart', now.toString());
+        localStorage.setItem('isLearningActive', 'false');
         return 0;
       }
       
@@ -27,17 +28,26 @@ export const useGlobalTimer = () => {
     return 0;
   });
 
-  const [isActive, setIsActive] = useState(true);
+  const [isActive, setIsActive] = useState(() => {
+    return localStorage.getItem('isLearningActive') === 'true';
+  });
 
-  // Zapisz czas rozpoczęcia przy pierwszym uruchomieniu
-  useEffect(() => {
-    const saved = localStorage.getItem('globalTimerStart');
-    if (!saved) {
-      const now = Date.now();
-      localStorage.setItem('globalTimerStart', now.toString());
-      localStorage.setItem('lastActivity', now.toString());
-    }
-  }, []);
+  // Funkcja do rozpoczęcia nauki
+  const startLearning = () => {
+    const now = Date.now();
+    localStorage.setItem('globalTimerStart', now.toString());
+    localStorage.setItem('lastActivity', now.toString());
+    localStorage.setItem('isLearningActive', 'true');
+    setIsActive(true);
+    setTimeElapsed(0);
+  };
+
+  // Funkcja do zatrzymania nauki
+  const stopLearning = () => {
+    localStorage.setItem('isLearningActive', 'false');
+    localStorage.setItem('lastActivity', Date.now().toString());
+    setIsActive(false);
+  };
 
   // Aktualizuj ostatnią aktywność przy każdej zmianie timera
   useEffect(() => {
@@ -46,10 +56,12 @@ export const useGlobalTimer = () => {
     }
   }, [timeElapsed, isActive]);
 
-  // Nasłuchuj na zdarzenia aktywności użytkownika
+  // Nasłuchuj na zdarzenia aktywności użytkownika (tylko gdy nauka jest aktywna)
   useEffect(() => {
     const updateActivity = () => {
-      localStorage.setItem('lastActivity', Date.now().toString());
+      if (isActive) {
+        localStorage.setItem('lastActivity', Date.now().toString());
+      }
     };
 
     // Zdarzenia wskazujące na aktywność użytkownika
@@ -64,35 +76,39 @@ export const useGlobalTimer = () => {
         document.removeEventListener(event, updateActivity, true);
       });
     };
-  }, []);
+  }, [isActive]);
 
   // Nasłuchuj na zdarzenia opuszczenia/powrotu do strony
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
         // Strona została ukryta - zapisz czas
-        localStorage.setItem('lastActivity', Date.now().toString());
-        setIsActive(false);
+        if (isActive) {
+          localStorage.setItem('lastActivity', Date.now().toString());
+        }
       } else {
         // Strona została przywrócona - sprawdź czy resetować timer
-        const lastActivity = localStorage.getItem('lastActivity');
-        if (lastActivity) {
-          const now = Date.now();
-          const timeSinceLastActivity = now - parseInt(lastActivity);
-          
-          // Reset timera jeśli minęło więcej niż 30 minut
-          if (timeSinceLastActivity > 30 * 60 * 1000) {
-            resetTimer();
-          } else {
-            setIsActive(true);
-            localStorage.setItem('lastActivity', now.toString());
+        if (isActive) {
+          const lastActivity = localStorage.getItem('lastActivity');
+          if (lastActivity) {
+            const now = Date.now();
+            const timeSinceLastActivity = now - parseInt(lastActivity);
+            
+            // Reset timera jeśli minęło więcej niż 30 minut
+            if (timeSinceLastActivity > 30 * 60 * 1000) {
+              stopLearning();
+            } else {
+              localStorage.setItem('lastActivity', now.toString());
+            }
           }
         }
       }
     };
 
     const handleBeforeUnload = () => {
-      localStorage.setItem('lastActivity', Date.now().toString());
+      if (isActive) {
+        localStorage.setItem('lastActivity', Date.now().toString());
+      }
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -102,7 +118,7 @@ export const useGlobalTimer = () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, []);
+  }, [isActive]);
 
   useEffect(() => {
     let interval = null;
@@ -134,16 +150,19 @@ export const useGlobalTimer = () => {
     const now = Date.now();
     localStorage.setItem('globalTimerStart', now.toString());
     localStorage.setItem('lastActivity', now.toString());
+    localStorage.setItem('isLearningActive', 'true');
     setIsActive(true);
   };
 
   const pauseTimer = () => {
     setIsActive(false);
+    localStorage.setItem('isLearningActive', 'false');
     localStorage.setItem('lastActivity', Date.now().toString());
   };
 
   const resumeTimer = () => {
     setIsActive(true);
+    localStorage.setItem('isLearningActive', 'true');
     localStorage.setItem('lastActivity', Date.now().toString());
   };
 
@@ -159,6 +178,8 @@ export const useGlobalTimer = () => {
     resetTimer,
     resetAfterBreak,
     pauseTimer,
-    resumeTimer
+    resumeTimer,
+    startLearning,
+    stopLearning
   };
 };

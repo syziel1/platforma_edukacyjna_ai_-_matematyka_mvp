@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavigationPanel from './components/NavigationPanel';
 import LessonHeader from './components/LessonHeader';
 import ChickenCoopContent from './components/ChickenCoopContent';
@@ -11,6 +11,7 @@ import JungleGame from './components/JungleGame';
 import CockpitPage from './components/ExplorerCockpit/CockpitPage';
 import { useAuth } from './contexts/AuthContext';
 import { useProgress } from './contexts/ProgressContext';
+import { useGlobalTimer } from './hooks/useGlobalTimer';
 
 function App() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -21,11 +22,15 @@ function App() {
   const totalSteps = 5;
   const { user } = useAuth();
   const { updateProgress } = useProgress();
+  const { startLearning, stopLearning } = useGlobalTimer();
 
   const handleProblemSelect = (problemId) => {
     setSelectedProblem(problemId);
     setShowCockpit(false);
     setShowStartScreen(false);
+    
+    // Rozpocznij liczenie czasu nauki
+    startLearning();
     
     // For jungle-game, always start with mode selector
     if (problemId === 'jungle-game') {
@@ -52,18 +57,27 @@ function App() {
     setSelectedProblem(null);
     setShowCockpit(true);
     setShowStartScreen(false);
+    
+    // Zatrzymaj liczenie czasu nauki
+    stopLearning();
   };
 
   const handleShowCockpit = () => {
     setShowCockpit(true);
     setShowStartScreen(false);
     setSelectedProblem(null);
+    
+    // Zatrzymaj liczenie czasu nauki jeśli było aktywne
+    stopLearning();
   };
 
   const handleShowStartScreen = () => {
     setShowStartScreen(true);
     setShowCockpit(false);
     setSelectedProblem(null);
+    
+    // Zatrzymaj liczenie czasu nauki jeśli było aktywne
+    stopLearning();
   };
 
   const renderContent = () => {
