@@ -107,12 +107,27 @@ const LandingPage = ({ onEnterApp }) => {
           
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <div className="lg:w-1/2">
-              <div 
-                className="w-full h-64 md:h-80 bg-cover bg-center rounded-xl shadow-xl"
-                style={{
-                  backgroundImage: 'url(/images/Edu_future.jpg)'
+              <img 
+                src="/images/Edu_future.jpg"
+                alt="Edu Future - Synergia człowieka i technologii"
+                className="w-full h-64 md:h-80 object-cover rounded-xl shadow-xl"
+                onError={(e) => {
+                  // Fallback if image doesn't load
+                  e.target.style.display = 'none';
+                  e.target.nextElementSibling.style.display = 'block';
                 }}
               />
+              {/* Fallback content */}
+              <div 
+                className="w-full h-64 md:h-80 bg-gradient-to-br from-accent-primary/20 to-accent-secondary/20 rounded-xl shadow-xl flex items-center justify-center border border-accent-primary/30"
+                style={{ display: 'none' }}
+              >
+                <div className="text-center">
+                  <div className="text-6xl mb-4">🚀</div>
+                  <h3 className="text-xl font-bold text-text-color">Edu Future</h3>
+                  <p className="text-text-color/70">Przyszłość edukacji</p>
+                </div>
+              </div>
             </div>
             
             <div className="lg:w-1/2">
