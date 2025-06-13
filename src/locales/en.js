@@ -77,7 +77,7 @@ export const en = {
   'more': 'More',
   
   // Global Header
-  'sessionTime': 'Session Time',
+  'sessionTime': 'Learning Time',
   'mentor': 'Mentor',
   'mentorAvailable': 'Available',
   'mentorBusy': 'Busy',
