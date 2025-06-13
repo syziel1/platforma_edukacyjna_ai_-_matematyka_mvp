@@ -46,7 +46,7 @@ export const pl = {
   'continuelearning': 'KONTYNUUJ NAUKĘ',
   
   // Training Card
-  'training': 'Trening',
+  'training': 'GRA',
   'mathematicalJungle': 'Matematyczna Dżungla',
   'yourRecord': 'Twój rekord',
   'gamesPlayed': 'Rozegrane gry',
