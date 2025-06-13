@@ -8,14 +8,14 @@ import LeftColumn from './LeftColumn';
 import RightColumn from './RightColumn';
 import GlobalHeader from '../GlobalHeader';
 
-const KokpitPage = ({ onProblemSelect }) => {
+const CockpitPage = ({ onProblemSelect }) => {
   const { user } = useAuth();
   const { getProgress } = useProgress();
   const { t } = useLanguage();
   const [showKnowledgeMap, setShowKnowledgeMap] = useState(false);
 
   // Stan dla danych kokpitu
-  const [kokpitData, setKokpitData] = useState({
+  const [cockpitData, setCockpitData] = useState({
     mentorSession: null, // lub obiekt z danymi sesji
     currentLesson: {
       id: 'chicken-coop',
@@ -43,7 +43,7 @@ const KokpitPage = ({ onProblemSelect }) => {
       stepDescription = `Step ${currentProgress}/4`;
     }
     
-    setKokpitData(prev => ({
+    setCockpitData(prev => ({
       ...prev,
       currentLesson: {
         ...prev.currentLesson,
@@ -55,14 +55,14 @@ const KokpitPage = ({ onProblemSelect }) => {
 
   // Funkcja planowania spotkania z mentorem
   const handleScheduleMentor = (sessionData) => {
-    setKokpitData(prev => ({
+    setCockpitData(prev => ({
       ...prev,
       mentorSession: sessionData
     }));
   };
 
   const handleContinueLesson = () => {
-    onProblemSelect(kokpitData.currentLesson.id);
+    onProblemSelect(cockpitData.currentLesson.id);
   };
 
   // Modified to handle game mode selector
@@ -106,8 +106,8 @@ const KokpitPage = ({ onProblemSelect }) => {
             {/* Kolumna lewa - 65% szerokości */}
             <div className="lg:col-span-1">
               <LeftColumn 
-                mentorSession={kokpitData.mentorSession}
-                currentLesson={kokpitData.currentLesson}
+                mentorSession={cockpitData.mentorSession}
+                currentLesson={cockpitData.currentLesson}
                 onScheduleMentor={handleScheduleMentor}
                 onContinueLesson={handleContinueLesson}
               />
@@ -132,4 +132,4 @@ const KokpitPage = ({ onProblemSelect }) => {
   );
 };
 
-export default KokpitPage;
+export default CockpitPage;
