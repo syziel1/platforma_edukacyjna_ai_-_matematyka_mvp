@@ -1,9 +1,11 @@
 import React from 'react';
 import { Gamepad2, Trophy, ArrowRight } from 'lucide-react';
 import { useGameRecords } from '../../contexts/GameRecordsContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const TrainingCard = ({ onStartGame }) => {
   const { records } = useGameRecords();
+  const { t } = useLanguage();
   const bestScore = records.jungleGame.bestScore;
   const totalGames = records.jungleGame.totalGamesPlayed;
   const averageScore = records.jungleGame.averageScore;
@@ -18,7 +20,7 @@ const TrainingCard = ({ onStartGame }) => {
     <div className="bg-bg-card rounded-xl p-6 shadow-lg border border-bg-neutral">
       <h3 className="text-lg font-bold text-text-color mb-4 flex items-center gap-2">
         <Gamepad2 className="w-5 h-5 text-accent-primary" />
-        Training: Mathematical Jungle
+        {t('training')}: {t('mathematicalJungle')}
       </h3>
       
       {/* Video gry */}
@@ -54,7 +56,7 @@ const TrainingCard = ({ onStartGame }) => {
         <div className="p-3 bg-accent-secondary/10 rounded-lg border border-accent-secondary/30 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Trophy className="w-4 h-4 text-accent-secondary" />
-            <span className="text-text-color font-medium text-sm">Your record:</span>
+            <span className="text-text-color font-medium text-sm">{t('yourRecord')}:</span>
           </div>
           <span className="text-text_color font-bold text-lg">
             {bestScore > 0 ? bestScore.toLocaleString() : '---'}
@@ -65,11 +67,11 @@ const TrainingCard = ({ onStartGame }) => {
         {totalGames > 0 && (
           <div className="grid grid-cols-2 gap-2 text-xs">
             <div className="bg-blue-50 p-2 rounded border border-blue-200 text-center">
-              <div className="text-blue-600 font-medium">Games played</div>
+              <div className="text-blue-600 font-medium">{t('gamesPlayed')}</div>
               <div className="text-blue-800 font-bold">{totalGames}</div>
             </div>
             <div className="bg-green-50 p-2 rounded border border-green-200 text-center">
-              <div className="text-green-600 font-medium">Average score</div>
+              <div className="text-green-600 font-medium">{t('averageScore')}</div>
               <div className="text-green-800 font-bold">{averageScore}</div>
             </div>
           </div>
@@ -81,17 +83,17 @@ const TrainingCard = ({ onStartGame }) => {
         onClick={handlePlayClick}
         className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 px-4 rounded-lg hover:from-green-600 hover:to-blue-600 transition-all duration-200 font-medium flex items-center justify-center gap-2 transform hover:scale-105 active:scale-95"
       >
-        PLAY THE GAME <ArrowRight className="w-4 h-4" />
+        {t('playTheGame')} <ArrowRight className="w-4 h-4" />
       </button>
 
       {/* Motywacyjny tekst */}
       {bestScore > 0 && (
         <div className="mt-3 text-center">
           <p className="text-xs text-text-color/70">
-            {bestScore < 500 ? '🎯 Goal: 500 points!' : 
-             bestScore < 1000 ? '🌟 Goal: 1000 points!' : 
-             bestScore < 2000 ? '👑 Goal: 2000 points!' : 
-             '🏆 You are a master!'}
+            {bestScore < 500 ? t('goal500') : 
+             bestScore < 1000 ? t('goal1000') : 
+             bestScore < 2000 ? t('goal2000') : 
+             t('youAreMaster')}
           </p>
         </div>
       )}

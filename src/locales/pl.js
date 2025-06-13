@@ -9,6 +9,73 @@ export const pl = {
   'lessonsList': 'Lista zadań',
   'learningStats': 'Statystyki nauki',
   
+  // Explorer Cockpit
+  'explorerCockpit': 'Kokpit Odkrywcy',
+  'welcomeBack': 'Witaj ponownie, {name}! 🚀',
+  'welcomeToCockpit': 'Witaj w Kokpicie Odkrywcy! 🚀',
+  'yourMissionToday': 'Twoja misja na dziś',
+  'goalAchieved': 'Cel osiągnięty! 🎉',
+  'remainingStudyTime': 'Pozostały czas nauki:',
+  'goal': 'Cel',
+  'spendOneHour': 'Spędź godzinę na nauce.',
+  'mathMentor': 'Mentor Matematyki',
+  'noScheduledMeetings': 'Brak zaplanowanych spotkań',
+  'scheduleMeetingHelp': 'Zaplanuj spotkanie z mentorem, aby otrzymać spersonalizowaną pomoc',
+  'scheduleMeeting': 'ZAPLANUJ SPOTKANIE',
+  'meeting': 'Spotkanie',
+  'today': 'Dzisiaj',
+  'tomorrow': 'Jutro',
+  'at': 'o',
+  'meetingInProgress': 'Spotkanie w toku - dołącz teraz!',
+  'availableOutsideMeeting': 'Dostępny (poza czasem spotkania)',
+  'busy': 'Zajęty',
+  'unavailable': 'Niedostępny',
+  'joinMeeting': 'DOŁĄCZ DO SPOTKANIA',
+  'meetingAt': 'SPOTKANIE O {time}',
+  'buttonActiveAt': 'Przycisk będzie aktywny o {time}',
+  'cancelMeeting': 'ANULUJ SPOTKANIE',
+  'mentorAvailableTitle': 'Mentor Matematyki Dostępny',
+  'mentorAvailableDesc': 'Otrzymaj spersonalizowaną pomoc od naszego doświadczonego mentora matematyki. Zaplanuj sesje jeden na jeden, aby wzmocnić swoją naukę.',
+  'signInToAccess': '🔒 Zaloguj się, aby uzyskać dostęp do funkcji mentora',
+  
+  // Current Lesson Card
+  'currentLesson': 'Aktualna lekcja',
+  'lessonChickenCoop': 'Lekcja: Optymalizacja Kurnika',
+  'progress': 'Postęp',
+  'currentStep': 'Aktualny krok',
+  'continuelearning': 'KONTYNUUJ NAUKĘ',
+  
+  // Training Card
+  'training': 'Trening',
+  'mathematicalJungle': 'Matematyczna Dżungla',
+  'yourRecord': 'Twój rekord',
+  'gamesPlayed': 'Rozegrane gry',
+  'averageScore': 'Średni wynik',
+  'playTheGame': 'ZAGRAJ W GRĘ',
+  'goal500': '🎯 Cel: 500 punktów!',
+  'goal1000': '🌟 Cel: 1000 punktów!',
+  'goal2000': '👑 Cel: 2000 punktów!',
+  'youAreMaster': '🏆 Jesteś mistrzem!',
+  
+  // Knowledge Map Card
+  'constellationOfSkills': 'Konstelacja Umiejętności',
+  'exploreGalaxy': 'Odkrywaj galaktykę wiedzy matematycznej. Odkrywaj nowe tematy i śledź swój postęp w kosmicznej konstelacji umiejętności.',
+  'exploreConstellation': 'ODKRYWAJ KONSTELACJĘ',
+  
+  // Achievements Widget
+  'recentAchievements': 'Ostatnie Osiągnięcia',
+  'playGamesEarnAchievements': 'Graj w gry, aby zdobyć swoje pierwsze osiągnięcia!',
+  
+  // Learning Statistics Modal
+  'learningStatistics': 'Statystyki Nauki',
+  'totalTime': 'Całkowity Czas',
+  'activeDays': 'Aktywne Dni',
+  'dailyAverage': 'Średnia Dzienna',
+  'longestStreak': 'Najdłuższa Seria',
+  'todaysSession': 'Dzisiejsza Sesja',
+  'less': 'Mniej',
+  'more': 'Więcej',
+  
   // Global Header
   'sessionTime': 'Czas sesji',
   'mentor': 'Mentor',

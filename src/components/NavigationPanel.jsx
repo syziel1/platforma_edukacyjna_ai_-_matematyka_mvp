@@ -18,7 +18,7 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
     if (user) {
       window.open('https://calendar.google.com', '_blank');
     } else {
-      alert('Please log in with Google to access your calendar.');
+      alert(t('signInToAccess'));
     }
   };
 
@@ -72,7 +72,7 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
       // Explorer Cockpit available for everyone
       { 
         icon: Home, 
-        label: 'Explorer Cockpit', 
+        label: t('explorerCockpit'), 
         action: handleCockpit
       },
       // StartScreen - lessons list

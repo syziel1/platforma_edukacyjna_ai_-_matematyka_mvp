@@ -3,10 +3,12 @@ import { Clock, Video, Calendar, RotateCcw, User, X } from 'lucide-react';
 import { useGlobalTimer } from '../../hooks/useGlobalTimer';
 import { mentorAvailability } from '../../config/mentorAvailability';
 import { useAuth } from '../../contexts/AuthContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
   const { timeElapsed, formattedTime, resetAfterBreak } = useGlobalTimer();
-  const { user } = useAuth(); // Add auth context
+  const { user } = useAuth();
+  const { t } = useLanguage();
   const [mentorStatus, setMentorStatus] = useState('unavailable');
   const [nextSession, setNextSession] = useState(null);
   
@@ -35,7 +37,7 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
   };
 
   const handleResetTimer = () => {
-    if (confirm('Are you sure you want to reset the session timer? This action cannot be undone.')) {
+    if (confirm(t('resetGameStateConfirm'))) {
       resetAfterBreak();
     }
   };
@@ -57,7 +59,7 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
   };
 
   const handleCancelMeeting = () => {
-    if (confirm('Are you sure you want to cancel the scheduled meeting with the mentor?')) {
+    if (confirm(t('resetGameStateConfirm'))) {
       onScheduleMentor(null); // Anuluj spotkanie
     }
   };
@@ -80,28 +82,28 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
           color: 'text-green-600',
           bgColor: 'bg-green-600',
           icon: '🟢',
-          message: 'Meeting in progress - join now!'
+          message: t('meetingInProgress')
         };
       case 'available':
         return {
           color: 'text-blue-600',
           bgColor: 'bg-blue-600',
           icon: '🔵',
-          message: 'Available (outside meeting time)'
+          message: t('availableOutsideMeeting')
         };
       case 'busy':
         return {
           color: 'text-yellow-600',
           bgColor: 'bg-yellow-600',
           icon: '🟡',
-          message: 'Busy'
+          message: t('busy')
         };
       default:
         return {
           color: 'text-gray-600',
           bgColor: 'bg-gray-600',
           icon: '⚫',
-          message: 'Unavailable'
+          message: t('unavailable')
         };
     }
   };
@@ -109,7 +111,7 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
   // Funkcja formatująca datę i czas spotkania
   const formatMeetingDateTime = (session) => {
     if (!session || !session.fullDateTime) {
-      return { date: session?.date || 'Unknown date', time: session?.time || '8:30' };
+      return { date: session?.date || t('today'), time: session?.time || '8:30' };
     }
 
     const meetingDate = new Date(session.fullDateTime);
@@ -125,9 +127,9 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
     
     let dateText;
     if (isToday) {
-      dateText = 'Today';
+      dateText = t('today');
     } else if (isTomorrow) {
-      dateText = 'Tomorrow';
+      dateText = t('tomorrow');
     } else {
       // Formatuj datę w formacie DD.MM.YYYY
       dateText = meetingDate.toLocaleDateString('en-US', {
@@ -150,12 +152,12 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
     <div className="bg-bg-card rounded-xl p-6 shadow-lg border border-bg-neutral">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-text-color flex items-center gap-2">
-          🎯 Your mission for today
+          🎯 {t('yourMissionToday')}
         </h2>
         <button
           onClick={handleResetTimer}
           className="text-text-color/50 hover:text-text-color transition-colors p-1 rounded"
-          title="Reset session timer"
+          title={t('resetGameState')}
         >
           <RotateCcw className="w-4 h-4" />
         </button>
@@ -167,7 +169,7 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
           <div className="flex items-center gap-2">
             <Clock className="w-5 h-5 text-accent-primary" />
             <span className="font-medium text-text-color">
-              {timeRemaining > 0 ? 'Remaining study time:' : 'Goal achieved! 🎉'}
+              {timeRemaining > 0 ? t('remainingStudyTime') : t('goalAchieved')}
             </span>
           </div>
           <span className="text-2xl font-bold text-accent-primary">
@@ -212,7 +214,7 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
       {/* Cel dnia */}
       <div className="mb-6 p-4 bg-accent-secondary/10 rounded-lg border border-accent-secondary/30">
         <p className="text-text-color font-medium">
-          <strong>Goal:</strong> Spend one hour learning.
+          <strong>{t('goal')}:</strong> {t('spendOneHour')}
         </p>
       </div>
 
@@ -225,14 +227,14 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <User className="w-6 h-6 text-nav-bg" />
                   <span className="font-medium text-text-color">
-                    Math Mentor
+                    {t('mathMentor')}
                   </span>
                 </div>
                 <p className="text-text-color/70 text-sm mb-1">
-                  No scheduled meetings
+                  {t('noScheduledMeetings')}
                 </p>
                 <p className="text-text-color/60 text-xs">
-                  Schedule a meeting with a mentor to receive personalized help
+                  {t('scheduleMeetingHelp')}
                 </p>
               </div>
               <button
@@ -240,7 +242,7 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
                 className="w-full bg-nav-bg text-white py-3 px-6 rounded-lg hover:bg-nav-bg/90 transition-colors font-medium flex items-center justify-center gap-2"
               >
                 <Calendar className="w-5 h-5" />
-                SCHEDULE MEETING
+                {t('scheduleMeeting')}
               </button>
             </div>
           ) : (
@@ -277,9 +279,9 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
                   return (
                     <div className="text-text-color font-medium">
                       <p className="text-base">
-                        Meeting: {meetingInfo.date} at {meetingInfo.time}
+                        {t('meeting')}: {meetingInfo.date} {t('at')} {meetingInfo.time}
                       </p>
-                      {meetingInfo.dayName && meetingInfo.date !== 'Today' && meetingInfo.date !== 'Tomorrow' && (
+                      {meetingInfo.dayName && meetingInfo.date !== t('today') && meetingInfo.date !== t('tomorrow') && (
                         <p className="text-sm text-text-color/70 mt-1">
                           ({meetingInfo.dayName})
                         </p>
@@ -308,16 +310,16 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
                     if (!mentorSession.isActive) {
                       e.preventDefault();
                       const meetingInfo = formatMeetingDateTime(mentorSession);
-                      alert(`Meeting will be active ${meetingInfo.date} at ${meetingInfo.time}. Currently: ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`);
+                      alert(`${t('meeting')} ${meetingInfo.date} ${t('at')} ${meetingInfo.time}. ${t('now')}: ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`);
                     }
                   }}
                 >
                   <Video className="w-5 h-5" />
-                  {mentorSession.isActive ? 'JOIN MEETING' : `MEETING AT ${mentorSession.time}`}
+                  {mentorSession.isActive ? t('joinMeeting') : t('meetingAt', { time: mentorSession.time })}
                 </a>
                 {!mentorSession.isActive && (
                   <p className="text-xs text-text-color/60 mt-2">
-                    Button will be active at {mentorSession.time}
+                    {t('buttonActiveAt', { time: mentorSession.time })}
                   </p>
                 )}
                 
@@ -327,7 +329,7 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
                   className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg transition-colors font-medium flex items-center justify-center gap-2 text-sm"
                 >
                   <X className="w-4 h-4" />
-                  CANCEL MEETING
+                  {t('cancelMeeting')}
                 </button>
               </div>
               
@@ -341,12 +343,12 @@ const TodayMissionCard = ({ mentorSession, onScheduleMentor }) => {
         <div className="border-t border-bg-neutral pt-4">
           <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
             <User className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-            <h3 className="font-medium text-blue-800 mb-2">Math Mentor Available</h3>
+            <h3 className="font-medium text-blue-800 mb-2">{t('mentorAvailableTitle')}</h3>
             <p className="text-blue-700 text-sm mb-3">
-              Get personalized help from our experienced math mentor. Schedule one-on-one sessions to boost your learning.
+              {t('mentorAvailableDesc')}
             </p>
             <p className="text-blue-600 text-xs font-medium">
-              🔒 Sign in to access mentor features
+              {t('signInToAccess')}
             </p>
           </div>
         </div>

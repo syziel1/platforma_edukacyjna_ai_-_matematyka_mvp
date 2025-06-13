@@ -19,10 +19,10 @@ const CockpitPage = ({ onProblemSelect }) => {
     mentorSession: null, // lub obiekt z danymi sesji
     currentLesson: {
       id: 'chicken-coop',
-      title: 'Lesson: Chicken Coop Optimization',
+      title: t('lessonChickenCoop'),
       graphic: 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=400',
       progress: 0,
-      currentStep: 'Introduction to the task'
+      currentStep: t('step1Title')
     }
   });
 
@@ -34,30 +34,31 @@ const CockpitPage = ({ onProblemSelect }) => {
     const progressPercentage = (currentProgress / totalSteps) * 100;
     
     // Określ status na podstawie postępu
-    let stepDescription = 'Introduction to the task';
+    let stepDescription = t('step1Title');
     if (currentProgress >= 8) {
-      stepDescription = 'Task completed! 🎉';
+      stepDescription = t('goalAchieved');
     } else if (currentProgress >= 5) {
-      stepDescription = `Formal solution - Step ${currentProgress - 4}/3`;
+      stepDescription = `${t('goToFormal')} - ${t('step')} ${currentProgress - 4}/3`;
     } else if (currentProgress > 0) {
-      stepDescription = `Step ${currentProgress}/4`;
+      stepDescription = `${t('step')} ${currentProgress}/4`;
     }
     
     setCockpitData(prev => ({
       ...prev,
       currentLesson: {
         ...prev.currentLesson,
+        title: t('lessonChickenCoop'),
         progress: progressPercentage,
         currentStep: stepDescription
       }
     }));
-  }, [getProgress]);
+  }, [getProgress, t]);
 
   // Funkcja planowania spotkania z mentorem
-  const handleScheduleMentor = (sessionData) => {
+  const handleScheduleMentor = (session) => {
     setCockpitData(prev => ({
       ...prev,
-      mentorSession: sessionData
+      mentorSession: session
     }));
   };
 
@@ -87,9 +88,9 @@ const CockpitPage = ({ onProblemSelect }) => {
   // Wyświetl odpowiednie powitanie w zależności od statusu logowania
   const getWelcomeMessage = () => {
     if (user) {
-      return `Welcome back, ${user.name}! 🚀`;
+      return t('welcomeBack', { name: user.name });
     }
-    return 'Welcome to Explorer Cockpit! 🚀';
+    return t('welcomeToCockpit');
   };
 
   return (

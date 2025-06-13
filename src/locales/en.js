@@ -9,6 +9,73 @@ export const en = {
   'lessonsList': 'Lessons List',
   'learningStats': 'Learning Statistics',
   
+  // Explorer Cockpit
+  'explorerCockpit': 'Explorer Cockpit',
+  'welcomeBack': 'Welcome back, {name}! 🚀',
+  'welcomeToCockpit': 'Welcome to Explorer Cockpit! 🚀',
+  'yourMissionToday': 'Your mission for today',
+  'goalAchieved': 'Goal achieved! 🎉',
+  'remainingStudyTime': 'Remaining study time:',
+  'goal': 'Goal',
+  'spendOneHour': 'Spend one hour learning.',
+  'mathMentor': 'Math Mentor',
+  'noScheduledMeetings': 'No scheduled meetings',
+  'scheduleMeetingHelp': 'Schedule a meeting with a mentor to receive personalized help',
+  'scheduleMeeting': 'SCHEDULE MEETING',
+  'meeting': 'Meeting',
+  'today': 'Today',
+  'tomorrow': 'Tomorrow',
+  'at': 'at',
+  'meetingInProgress': 'Meeting in progress - join now!',
+  'availableOutsideMeeting': 'Available (outside meeting time)',
+  'busy': 'Busy',
+  'unavailable': 'Unavailable',
+  'joinMeeting': 'JOIN MEETING',
+  'meetingAt': 'MEETING AT {time}',
+  'buttonActiveAt': 'Button will be active at {time}',
+  'cancelMeeting': 'CANCEL MEETING',
+  'mentorAvailableTitle': 'Math Mentor Available',
+  'mentorAvailableDesc': 'Get personalized help from our experienced math mentor. Schedule one-on-one sessions to boost your learning.',
+  'signInToAccess': '🔒 Sign in to access mentor features',
+  
+  // Current Lesson Card
+  'currentLesson': 'Current Lesson',
+  'lessonChickenCoop': 'Lesson: Chicken Coop Optimization',
+  'progress': 'Progress',
+  'currentStep': 'Current step',
+  'continuelearning': 'CONTINUE LEARNING',
+  
+  // Training Card
+  'training': 'Training',
+  'mathematicalJungle': 'Mathematical Jungle',
+  'yourRecord': 'Your record',
+  'gamesPlayed': 'Games played',
+  'averageScore': 'Average score',
+  'playTheGame': 'PLAY THE GAME',
+  'goal500': '🎯 Goal: 500 points!',
+  'goal1000': '🌟 Goal: 1000 points!',
+  'goal2000': '👑 Goal: 2000 points!',
+  'youAreMaster': '🏆 You are a master!',
+  
+  // Knowledge Map Card
+  'constellationOfSkills': 'Constellation of Skills',
+  'exploreGalaxy': 'Explore the galaxy of mathematical knowledge. Discover new topics and track your progress in the cosmic constellation of skills.',
+  'exploreConstellation': 'EXPLORE CONSTELLATION',
+  
+  // Achievements Widget
+  'recentAchievements': 'Recent Achievements',
+  'playGamesEarnAchievements': 'Play games to earn your first achievements!',
+  
+  // Learning Statistics Modal
+  'learningStatistics': 'Learning Statistics',
+  'totalTime': 'Total Time',
+  'activeDays': 'Active Days',
+  'dailyAverage': 'Daily Average',
+  'longestStreak': 'Longest Streak',
+  'todaysSession': 'Today\'s Session',
+  'less': 'Less',
+  'more': 'More',
+  
   // Global Header
   'sessionTime': 'Session Time',
   'mentor': 'Mentor',

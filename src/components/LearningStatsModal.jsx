@@ -156,8 +156,8 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
   const calendarDays = getCalendarData();
   const stats = calculateStats();
   const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
+    'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'
   ];
 
   return (
@@ -167,7 +167,7 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h2 className="text-2xl font-bold text-text-color flex items-center gap-2">
             <BarChart3 className="w-6 h-6 text-accent-primary" />
-            {t('learningStats')}
+            {t('learningStatistics')}
           </h2>
           <button
             onClick={onClose}
@@ -186,32 +186,32 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
               <div className="text-2xl font-bold text-blue-800">
                 {stats.totalHours}h {stats.totalMinutes}m
               </div>
-              <div className="text-sm text-blue-600">Total Time</div>
+              <div className="text-sm text-blue-600">{t('totalTime')}</div>
             </div>
             
             <div className="bg-green-50 p-4 rounded-lg border border-green-200 text-center">
               <Calendar className="w-6 h-6 text-green-600 mx-auto mb-2" />
               <div className="text-2xl font-bold text-green-800">{stats.activeDays}</div>
-              <div className="text-sm text-green-600">Active Days</div>
+              <div className="text-sm text-green-600">{t('activeDays')}</div>
             </div>
             
             <div className="bg-purple-50 p-4 rounded-lg border border-purple-200 text-center">
               <TrendingUp className="w-6 h-6 text-purple-600 mx-auto mb-2" />
               <div className="text-2xl font-bold text-purple-800">{stats.averageMinutes}m</div>
-              <div className="text-sm text-purple-600">Daily Average</div>
+              <div className="text-sm text-purple-600">{t('dailyAverage')}</div>
             </div>
             
             <div className="bg-orange-50 p-4 rounded-lg border border-orange-200 text-center">
               <Award className="w-6 h-6 text-orange-600 mx-auto mb-2" />
               <div className="text-2xl font-bold text-orange-800">{stats.longestStreak}</div>
-              <div className="text-sm text-orange-600">Longest Streak</div>
+              <div className="text-sm text-orange-600">{t('longestStreak')}</div>
             </div>
             
             <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 text-center">
               <div className="text-2xl font-bold text-yellow-800">
                 {Math.floor(timeElapsed / 60)}m
               </div>
-              <div className="text-sm text-yellow-600">Today's Session</div>
+              <div className="text-sm text-yellow-600">{t('todaysSession')}</div>
             </div>
           </div>
 
@@ -240,7 +240,7 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
           <div className="bg-gray-50 rounded-lg p-4">
             {/* Day headers */}
             <div className="grid grid-cols-7 gap-1 mb-2">
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+              {['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'Sb'].map(day => (
                 <div key={day} className="text-center text-sm font-medium text-gray-600 p-2">
                   {day}
                 </div>
@@ -259,7 +259,7 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
                     ${getLearningIntensity(day.learningMinutes)}
                     hover:scale-105
                   `}
-                  title={`${day.date.toLocaleDateString()}: ${day.learningMinutes} minutes`}
+                  title={`${day.date.toLocaleDateString()}: ${day.learningMinutes} minut`}
                 >
                   <div className={`
                     text-center text-sm font-medium h-full flex flex-col justify-center
@@ -281,7 +281,7 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
 
           {/* Legend */}
           <div className="mt-4 flex items-center justify-center gap-4 text-sm text-gray-600">
-            <span>Less</span>
+            <span>{t('less')}</span>
             <div className="flex gap-1">
               <div className="w-3 h-3 bg-gray-100 rounded-sm"></div>
               <div className="w-3 h-3 bg-green-100 rounded-sm"></div>
@@ -290,7 +290,7 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
               <div className="w-3 h-3 bg-green-400 rounded-sm"></div>
               <div className="w-3 h-3 bg-green-500 rounded-sm"></div>
             </div>
-            <span>More</span>
+            <span>{t('more')}</span>
           </div>
         </div>
       </div>
