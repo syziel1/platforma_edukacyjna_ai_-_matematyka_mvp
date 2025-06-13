@@ -6,7 +6,7 @@ import SettingsModal from './SettingsModal';
 import AboutProjectModal from './AboutProjectModal';
 import LearningStatsModal from './LearningStatsModal';
 
-const NavigationPanel = ({ onLoginClick, onShowKokpit, onShowStartScreen }) => {
+const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showAboutProject, setShowAboutProject] = useState(false);
@@ -43,9 +43,9 @@ const NavigationPanel = ({ onLoginClick, onShowKokpit, onShowStartScreen }) => {
     }
   };
 
-  const handleKokpit = () => {
-    if (onShowKokpit) {
-      onShowKokpit();
+  const handleCockpit = () => {
+    if (onShowCockpit) {
+      onShowCockpit();
     }
     if (window.innerWidth < 768) {
       setIsExpanded(false);
@@ -73,7 +73,7 @@ const NavigationPanel = ({ onLoginClick, onShowKokpit, onShowStartScreen }) => {
       { 
         icon: Home, 
         label: 'Explorer Cockpit', 
-        action: handleKokpit
+        action: handleCockpit
       },
       // StartScreen - lessons list
       { 
