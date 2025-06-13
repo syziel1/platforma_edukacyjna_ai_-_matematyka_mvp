@@ -92,15 +92,13 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
       });
     }
 
-    // Add Learning Statistics
-    baseItems.push({
-      icon: BarChart3,
-      label: t('learningStats'),
-      action: handleLearningStats
-    });
-
     // Add remaining items
     baseItems.push(
+      {
+        icon: BarChart3,
+        label: t('learningStats'),
+        action: handleLearningStats
+      },
       { 
         icon: Info, 
         label: t('aboutProject'), 
