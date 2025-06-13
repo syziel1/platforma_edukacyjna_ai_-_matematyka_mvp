@@ -103,7 +103,7 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
     baseItems.push(
       { 
         icon: Info, 
-        label: 'About Project', 
+        label: t('aboutProject'), 
         action: handleAboutProject
       },
       { 
