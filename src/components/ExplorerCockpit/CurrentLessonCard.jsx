@@ -60,7 +60,7 @@ const CurrentLessonCard = ({ lesson, onContinueLesson }) => {
       {/* Przycisk kontynuacji */}
       <button
         onClick={onContinueLesson}
-        className="w-full bg-gradient-to-r from-accent-primary to-accent-secondary text-white py-4 px-6 rounded-lg hover:from-accent-primary/90 hover:to-accent-secondary/90 transition-all duration-200 font-bold text-lg flex items-center justify-center gap-2 transform hover:scale-105 active:scale-95"
+        className="w-full bg-gradient-to-r from-accent-primary to-accent-secondary text-white py-3 px-4 rounded-lg hover:from-accent-primary/90 hover:to-accent-secondary/90 transition-all duration-200 font-bold text-lg flex items-center justify-center gap-2 transform hover:scale-105 active:scale-95"
       >
         {t('continuelearning')}
         <ArrowRight className="w-5 h-5" />
