@@ -18,7 +18,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-bg-neutral p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
+      <div className="bg-yellow p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-text-color">
             {t('settings')}
