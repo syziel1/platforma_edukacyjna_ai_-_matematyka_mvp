@@ -101,6 +101,8 @@ function App() {
         return <EcoTshirtContent currentStep={currentStep} setCurrentStep={handleStepChange} />;
       case 'jungle-game':
         return <JungleGame startWithModeSelector={true} />;
+      case 'powers-roots':
+        return <PowersRoots />;
       default:
         return null;
     }
