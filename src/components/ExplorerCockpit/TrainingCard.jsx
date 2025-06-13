@@ -36,15 +36,14 @@ const TrainingCard = ({ onStartGame }) => {
           <source src="/videos/math_jungle.mp4" type="video/mp4" />
           {/* Fallback content when video fails to load */}
           <div className="absolute inset-0 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+            <div className="text-4xl">🌴</div>
+            <div className="absolute top-2 right-2 text-2xl">🧮</div>
+            <div className="absolute bottom-2 left-2 text-xl">⚡</div>
           </div>
         </video>
         
         {/* Overlay with game elements (visible over video) */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="text-4xl drop-shadow-lg">🌴</div>
-        </div>
-        <div className="absolute top-2 right-2 text-2xl drop-shadow-lg pointer-events-none">🧮</div>
-        <div className="absolute bottom-2 left-2 text-xl drop-shadow-lg pointer-events-none">⚡</div>
       </div>
 
       {/* Statystyki gracza */}
