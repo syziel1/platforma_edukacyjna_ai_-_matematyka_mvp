@@ -49,7 +49,7 @@ const LandingPage = ({ onEnterApp }) => {
             
             <button
               onClick={() => scrollToSection('solution')}
-              className="text-white hover:text-accent-secondary transition-colors duration-300 flex items-center gap-2 underline"
+              className="font-bold text-white hover:text-accent-secondary transition-colors duration-300 flex items-center gap-2 underline"
             >
               Dowiedz się więcej ↓
             </button>
