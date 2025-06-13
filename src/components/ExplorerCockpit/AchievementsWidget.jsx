@@ -21,7 +21,7 @@ const AchievementsWidget = () => {
       <div className="mb-4">
         {recentBadges.length > 0 ? (
           <div className="grid grid-cols-5 gap-2 mb-3">
-            {recentBadges.map((badge) => (
+            {recentBadges.reverse().map((badge) => (
               <Badge 
                 key={badge.id}
                 iconUrl={badge.icon}
