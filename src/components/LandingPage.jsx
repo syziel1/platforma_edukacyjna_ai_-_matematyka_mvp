@@ -193,7 +193,7 @@ const LandingPage = ({ onEnterApp }) => {
                 <div className="bg-gradient-to-br from-accent-primary/20 to-accent-secondary/20 p-6 rounded-xl border border-accent-primary/30">
                   <div className="flex items-center gap-2 mb-4">
                     <Target className="w-6 h-6 text-accent-primary" />
-                    <span className="font-bold text-text-color">Your mission for today</span>
+                    <span className="font-bold text-text-color">Twoja misja na dziś</span>
                   </div>
                   <div className="text-sm text-text-color/70">
                     🎯 Spędź 30 minut na nauce<br/>
@@ -210,7 +210,7 @@ const LandingPage = ({ onEnterApp }) => {
                 <div className="bg-gradient-to-br from-nav-bg/20 to-accent-primary/20 p-6 rounded-xl border border-nav-bg/30">
                   <div className="flex items-center gap-2 mb-4">
                     <Play className="w-6 h-6 text-nav-bg" />
-                    <span className="font-bold text-text-color">Mathematical Jungle & Constellation</span>
+                    <span className="font-bold text-text-color">Matematyczna Dżungla & Konstelacja</span>
                   </div>
                   <div className="text-sm text-text-color/70">
                     🌴 Eksploruj dżunglę matematyczną<br/>
@@ -251,7 +251,7 @@ const LandingPage = ({ onEnterApp }) => {
                 <div className="bg-gradient-to-br from-accent-secondary/20 to-nav-bg/20 p-6 rounded-xl border border-accent-secondary/30">
                   <div className="flex items-center gap-2 mb-4">
                     <MessageCircle className="w-6 h-6 text-accent-secondary" />
-                    <span className="font-bold text-text-color">Schedule Meeting</span>
+                    <span className="font-bold text-text-color">Umów spotkanie z mentorem</span>
                   </div>
                   <div className="text-sm text-text-color/70">
                     🤖 Asystent AI dostępny 24/7<br/>
