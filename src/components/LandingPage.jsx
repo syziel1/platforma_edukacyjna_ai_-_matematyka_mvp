@@ -110,7 +110,7 @@ const LandingPage = ({ onEnterApp }) => {
               <img 
                 src="/images/Edu_future.jpg"
                 alt="Edu Future - Synergia człowieka i technologii"
-                className="w-full h-64 md:h-80 object-cover rounded-xl shadow-xl"
+                className="h-64 md:h-80 object-cover rounded-xl shadow-xl"
                 onError={(e) => {
                   // Fallback if image doesn't load
                   e.target.style.display = 'none';
