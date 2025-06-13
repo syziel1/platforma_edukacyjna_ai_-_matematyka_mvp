@@ -8,7 +8,7 @@ import ChatPanel from './components/ChatPanel';
 import StartScreen from './components/StartScreen';
 import LoginScreen from './components/LoginScreen';
 import JungleGame from './components/JungleGame';
-import KokpitPage from './components/KokpitOdkrywcy/KokpitPage';
+import CockpitPage from './components/ExplorerCockpit/CockpitPage';
 import { useAuth } from './contexts/AuthContext';
 import { useProgress } from './contexts/ProgressContext';
 
@@ -16,7 +16,7 @@ function App() {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedProblem, setSelectedProblem] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
-  const [showKokpit, setShowKokpit] = useState(true); // Kokpit domyślnie widoczny
+  const [showCockpit, setShowCockpit] = useState(true); // Kokpit domyślnie widoczny
   const [showStartScreen, setShowStartScreen] = useState(false);
   const totalSteps = 5;
   const { user } = useAuth();
@@ -24,7 +24,7 @@ function App() {
 
   const handleProblemSelect = (problemId) => {
     setSelectedProblem(problemId);
-    setShowKokpit(false);
+    setShowCockpit(false);
     setShowStartScreen(false);
     
     // For jungle-game, always start with mode selector
@@ -48,7 +48,7 @@ function App() {
     }
   };
 
-  const handleBackToKokpit = () => {
+  const handleBackToCockpit = () => {
     setSelectedProblem(null);
     setShowKokpit(true);
     setShowStartScreen(false);
