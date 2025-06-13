@@ -106,11 +106,11 @@ const LandingPage = ({ onEnterApp }) => {
           </h2>
           
           <div className="flex flex-col lg:flex-row items-center gap-12">
-            <div className="justify-center lg:w-1/2">
+            <div className="lg:w-1/2">
               <img 
                 src="/images/Edu_future.jpg"
                 alt="Edu Future - Synergia człowieka i technologii"
-                className="h-64 md:h-80 object-cover rounded-xl shadow-xl"
+                className="justify-center h-64 md:h-80 object-cover rounded-xl shadow-xl"
                 onError={(e) => {
                   // Fallback if image doesn't load
                   e.target.style.display = 'none';
