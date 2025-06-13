@@ -321,7 +321,7 @@ const LandingPage = ({ onEnterApp }) => {
       <footer className="bg-text-color text-white py-8">
         <div className="max-w-6xl mx-auto px-4 text-center">
           <p className="text-white/70">
-            © 2024 Edu-Future. Wszystkie prawa zastrzeżone. 
+            © 2025 Edu Future. Wszystkie prawa zastrzeżone. 
             Autor: Sylwester Zieliński. Projekt rozwijany w ramach Bolt Hackathon.
           </p>
         </div>
