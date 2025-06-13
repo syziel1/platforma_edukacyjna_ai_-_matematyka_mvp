@@ -10,6 +10,7 @@ import LoginScreen from './components/LoginScreen';
 import JungleGame from './components/JungleGame';
 import CockpitPage from './components/ExplorerCockpit/CockpitPage';
 import LandingPage from './components/LandingPage';
+import PowersRoots from './components/Formulas/PowersRoots';
 import { useAuth } from './contexts/AuthContext';
 import { useProgress } from './contexts/ProgressContext';
 import { useGlobalTimer } from './hooks/useGlobalTimer';
