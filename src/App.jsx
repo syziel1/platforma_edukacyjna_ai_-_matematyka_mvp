@@ -27,6 +27,11 @@ function App() {
   const { updateProgress } = useProgress();
   const { startLearning, stopLearning } = useGlobalTimer();
 
+  // Upewnij się, że timer jest wyłączony przy starcie aplikacji
+  useEffect(() => {
+    stopLearning();
+  }, []); // Pusta tablica zależności = uruchom tylko raz, po zamontowaniu komponentu
+
   const handleProblemSelect = (problemId) => {
     setSelectedProblem(problemId);
     setShowCockpit(false);
