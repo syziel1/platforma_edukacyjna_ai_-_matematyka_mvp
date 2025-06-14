@@ -15,6 +15,7 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
   const [showWhiteboard, setShowWhiteboard] = useState(false);
   const { t } = useLanguage();
   const { user, logout } = useAuth();
+  const testInProgress = useState(true); // is it during/under tests?
 
   const handleDayPlan = () => {
     if (user) {
