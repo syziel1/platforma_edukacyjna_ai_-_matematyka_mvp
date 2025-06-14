@@ -1,9 +1,25 @@
-import React from 'react';
-import { X, ExternalLink } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, ExternalLink, AlertCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
+import { developmentConfig } from '../config/developmentMode';
 
 const InteractiveWhiteboard = ({ isOpen, onClose }) => {
   const { t } = useLanguage();
+  const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsLoading(true);
+      // Hide loading after 3 seconds
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 3000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -12,6 +28,8 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
   const handleOpenInNewTab = () => {
     window.open(whiteboardUrl, '_blank', 'noopener,noreferrer');
   };
+
+  const isInDevelopmentMode = developmentConfig.underConstruction && !user;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -22,9 +40,16 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
               <span className="text-white text-sm">📝</span>
             </div>
-            <h2 className="text-xl font-bold text-text-color">
-              {t('interactiveWhiteboard')}
-            </h2>
+            <div>
+              <h2 className="text-xl font-bold text-text-color">
+                {t('interactiveWhiteboard')}
+              </h2>
+              {isInDevelopmentMode && (
+                <span className="text-xs text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full">
+                  🚧 Development Mode
+                </span>
+              )}
+            </div>
           </div>
           
           <div className="flex items-center gap-2">
@@ -45,23 +70,37 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
           </div>
         </div>
 
+        {/* Development Mode Warning */}
+        {isInDevelopmentMode && (
+          <div className="bg-yellow-50 border-b border-yellow-200 p-3">
+            <div className="flex items-center gap-2 text-yellow-800">
+              <AlertCircle className="w-4 h-4" />
+              <span className="text-sm">
+                This feature is in development mode. Sign in for full functionality.
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* Iframe Content */}
         <div className="flex-1 relative">
+          {isLoading && (
+            <div className="absolute inset-0 bg-gray-100 flex items-center justify-center rounded-b-xl z-10">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                <p className="text-gray-600">{t('loadingWhiteboard')}</p>
+              </div>
+            </div>
+          )}
+          
           <iframe
             src={whiteboardUrl}
             className="w-full h-full border-0 rounded-b-xl"
             title={t('interactiveWhiteboard')}
             allow="camera; microphone; fullscreen; display-capture"
             sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-presentation"
+            onLoad={() => setIsLoading(false)}
           />
-          
-          {/* Loading overlay */}
-          <div className="absolute inset-0 bg-gray-100 flex items-center justify-center rounded-b-xl" id="loading-overlay">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">{t('loadingWhiteboard')}</p>
-            </div>
-          </div>
         </div>
 
         {/* Footer with instructions */}
@@ -80,18 +119,6 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
           </div>
         </div>
       </div>
-
-      {/* Script to hide loading overlay when iframe loads */}
-      <script dangerouslySetInnerHTML={{
-        __html: `
-          setTimeout(() => {
-            const overlay = document.getElementById('loading-overlay');
-            if (overlay) {
-              overlay.style.display = 'none';
-            }
-          }, 3000);
-        `
-      }} />
     </div>
   );
 };

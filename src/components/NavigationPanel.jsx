@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Menu, Calendar, Settings, LogOut, LogIn, Home, Info, BookOpen, BarChart3, PenTool } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
+import { developmentConfig } from '../config/developmentMode';
 import SettingsModal from './SettingsModal';
 import AboutProjectModal from './AboutProjectModal';
 import LearningStatsModal from './LearningStatsModal';
@@ -46,7 +47,8 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
   };
 
   const handleWhiteboard = () => {
-    if (true) {
+    // Check if user is logged in OR if we're in development mode
+    if (user || developmentConfig.underConstruction) {
       setShowWhiteboard(true);
       if (window.innerWidth < 768) {
         setIsExpanded(false);
@@ -105,11 +107,11 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
       });
     }
 
-    // Add Interactive Whiteboard only if user is logged in
-    if (user) {
+    // Add Interactive Whiteboard if user is logged in OR in development mode
+    if (user || developmentConfig.underConstruction) {
       baseItems.push({
         icon: PenTool,
-        label: t('interactiveWhiteboard'),
+        label: t('interactiveWhiteboard') + (developmentConfig.underConstruction && !user ? ' 🚧' : ''),
         action: handleWhiteboard
       });
     }
@@ -204,6 +206,16 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
                   {decodeHtmlEntities(user.name)}
                 </p>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Development Mode Indicator */}
+        {isExpanded && developmentConfig.underConstruction && (
+          <div className="p-4 border-b border-nav-bg/50 bg-yellow-600/20">
+            <div className="text-center">
+              <p className="text-xs text-yellow-200">🚧 Development Mode</p>
+              <p className="text-xs text-yellow-300">Some features visible for testing</p>
             </div>
           </div>
         )}
