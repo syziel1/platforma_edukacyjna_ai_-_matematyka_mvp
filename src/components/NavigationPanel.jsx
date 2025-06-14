@@ -46,14 +46,14 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
   };
 
   const handleWhiteboard = () => {
-/*    if (user) {*/
+    if (true) {
       setShowWhiteboard(true);
       if (window.innerWidth < 768) {
         setIsExpanded(false);
       }
-/*    } else {
+    } else {
       alert(t('signInToAccess'));
-    }*/
+    }
   };
 
   const handleCockpit = () => {
