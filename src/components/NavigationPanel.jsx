@@ -15,7 +15,6 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
   const [showWhiteboard, setShowWhiteboard] = useState(false);
   const { t } = useLanguage();
   const { user, logout } = useAuth();
-  const testInProgress = useState(true); // is it during/under tests?
 
   const handleDayPlan = () => {
     if (user) {
@@ -47,14 +46,14 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
   };
 
   const handleWhiteboard = () => {
-    if (user || testInProgress) {
+/*    if (user) {*/
       setShowWhiteboard(true);
       if (window.innerWidth < 768) {
         setIsExpanded(false);
       }
-    } else {
+/*    } else {
       alert(t('signInToAccess'));
-    }
+    }*/
   };
 
   const handleCockpit = () => {
