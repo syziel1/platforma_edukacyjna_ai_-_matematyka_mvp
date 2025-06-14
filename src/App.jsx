@@ -90,6 +90,7 @@ function App() {
   const handleEnterApp = () => {
     setShowLandingPage(false);
     setShowCockpit(true);
+    stopLearning();
   };
 
   const renderContent = () => {
