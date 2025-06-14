@@ -46,7 +46,7 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
   };
 
   const handleWhiteboard = () => {
-    if (user) {
+    if (user || testInProgress) {
       setShowWhiteboard(true);
       if (window.innerWidth < 768) {
         setIsExpanded(false);
