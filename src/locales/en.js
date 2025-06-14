@@ -8,6 +8,7 @@ export const en = {
   'connectWithMentor': 'Connect with mentor',
   'lessonsList': 'Lessons List',
   'learningStats': 'Learning Statistics',
+  'interactiveWhiteboard': 'Interactive Whiteboard',
   
   // Explorer Cockpit
   'explorerCockpit': 'Explorer Cockpit',
@@ -39,6 +40,11 @@ export const en = {
   'mentorAvailableTitle': 'Math Mentor Available',
   'mentorAvailableDesc': 'Get personalized help from our experienced math mentor. Schedule one-on-one sessions to boost your learning.',
   'signInToAccess': '🔒 Sign in to access mentor features',
+  
+  // Interactive Whiteboard
+  'openInNewTab': 'Open in new tab',
+  'loadingWhiteboard': 'Loading interactive whiteboard...',
+  'whiteboardTip': 'You can draw, write and collaborate in real-time',
   
   // Current Lesson Card
   'currentLesson': 'Current Lesson',

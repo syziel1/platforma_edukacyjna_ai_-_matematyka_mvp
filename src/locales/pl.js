@@ -8,6 +8,7 @@ export const pl = {
   'connectWithMentor': 'Połącz się z mentorem',
   'lessonsList': 'Lista zadań',
   'learningStats': 'Statystyki nauki',
+  'interactiveWhiteboard': 'Tablica interaktywna',
   
   // Explorer Cockpit
   'explorerCockpit': 'Kokpit Odkrywcy',
@@ -39,6 +40,11 @@ export const pl = {
   'mentorAvailableTitle': 'Mentor Matematyki Dostępny',
   'mentorAvailableDesc': 'Otrzymaj spersonalizowaną pomoc od naszego doświadczonego mentora matematyki. Zaplanuj sesje jeden na jeden, aby wzmocnić swoją naukę.',
   'signInToAccess': '🔒 Zaloguj się, aby uzyskać dostęp do funkcji mentora',
+  
+  // Interactive Whiteboard
+  'openInNewTab': 'Otwórz w nowej karcie',
+  'loadingWhiteboard': 'Ładowanie tablicy interaktywnej...',
+  'whiteboardTip': 'Możesz rysować, pisać i współpracować w czasie rzeczywistym',
   
   // Current Lesson Card
   'currentLesson': 'Aktualna lekcja',

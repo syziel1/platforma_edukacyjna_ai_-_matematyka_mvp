@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { Menu, Calendar, Settings, LogOut, LogIn, Home, Info, BookOpen, BarChart3 } from 'lucide-react';
+import { Menu, Calendar, Settings, LogOut, LogIn, Home, Info, BookOpen, BarChart3, PenTool } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import SettingsModal from './SettingsModal';
 import AboutProjectModal from './AboutProjectModal';
 import LearningStatsModal from './LearningStatsModal';
+import InteractiveWhiteboard from './InteractiveWhiteboard';
 
 const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showAboutProject, setShowAboutProject] = useState(false);
   const [showLearningStats, setShowLearningStats] = useState(false);
+  const [showWhiteboard, setShowWhiteboard] = useState(false);
   const { t } = useLanguage();
   const { user, logout } = useAuth();
 
@@ -40,6 +42,17 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
     setShowLearningStats(true);
     if (window.innerWidth < 768) {
       setIsExpanded(false);
+    }
+  };
+
+  const handleWhiteboard = () => {
+    if (user) {
+      setShowWhiteboard(true);
+      if (window.innerWidth < 768) {
+        setIsExpanded(false);
+      }
+    } else {
+      alert(t('signInToAccess'));
     }
   };
 
@@ -89,6 +102,15 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
         icon: Calendar, 
         label: t('dayPlan'), 
         action: handleDayPlan 
+      });
+    }
+
+    // Add Interactive Whiteboard only if user is logged in
+    if (user) {
+      baseItems.push({
+        icon: PenTool,
+        label: t('interactiveWhiteboard'),
+        action: handleWhiteboard
       });
     }
 
@@ -237,6 +259,12 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
       <LearningStatsModal 
         isOpen={showLearningStats} 
         onClose={() => setShowLearningStats(false)} 
+      />
+
+      {/* Interactive Whiteboard Modal */}
+      <InteractiveWhiteboard 
+        isOpen={showWhiteboard} 
+        onClose={() => setShowWhiteboard(false)} 
       />
     </>
   );
