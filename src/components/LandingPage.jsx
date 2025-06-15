@@ -34,7 +34,7 @@ const LandingPage = ({ onEnterApp }) => {
           </h1>
           
           <h2 className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed max-w-3xl mx-auto">
-            Odkryj Edu Future – pierwszą w Polsce platformę, która łączy mądrość prawdziwych mentorów 
+            Odkryj Edu-Future – pierwszą w Polsce platformę, która łączy mądrość prawdziwych mentorów 
             z mocą sztucznej inteligencji, aby przygotować Twoje dziecko na wyzwania jutra.
           </h2>
           
@@ -102,14 +102,14 @@ const LandingPage = ({ onEnterApp }) => {
       <section className="py-16 bg-gradient-to-br from-nav-bg/10 to-accent-primary/10">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-text-color mb-12">
-            Poznaj Edu Future: Synergia Człowieka i Technologii
+            Poznaj Edu-Future: Synergia Człowieka i Technologii
           </h2>
           
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <div className="lg:w-1/2">
               <img 
                 src="/images/Edu_future.jpg"
-                alt="Edu Future - Synergia człowieka i technologii"
+                alt="Edu-Future - Synergia człowieka i technologii"
                 className="justify-center h-64 md:h-80 object-cover rounded-xl shadow-xl"
                 onError={(e) => {
                   // Fallback if image doesn't load
@@ -124,7 +124,7 @@ const LandingPage = ({ onEnterApp }) => {
               >
                 <div className="text-center">
                   <div className="text-6xl mb-4">🚀</div>
-                  <h3 className="text-xl font-bold text-text-color">Edu Future</h3>
+                  <h3 className="text-xl font-bold text-text-color">Edu-Future</h3>
                   <p className="text-text-color/70">Przyszłość edukacji</p>
                 </div>
               </div>
@@ -269,7 +269,7 @@ const LandingPage = ({ onEnterApp }) => {
       <section className="py-16 bg-gradient-to-br from-nav-bg/10 to-accent-primary/10">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-text-color mb-8">
-            Kto stoi za Edu Future?
+            Kto stoi za Edu-Future?
           </h2>
           
           <div className="flex flex-col md:flex-row items-center gap-8 mb-8">
@@ -287,7 +287,7 @@ const LandingPage = ({ onEnterApp }) => {
                 pomagając innym rozwijać kompetencje przyszłości.
               </p>
               <p className="text-lg text-text-color leading-relaxed">
-                Edu Future to owoc tego doświadczenia, stworzony z głębokiej wiary, że każdy uczeń zasługuje na edukację, 
+                Edu-Future to owoc tego doświadczenia, stworzony z głębokiej wiary, że każdy uczeń zasługuje na edukację, 
                 która go inspiruje. Projekt rozwijamy w ramach największego na świecie hackathonu, <strong>#WorldsLargestHackathon</strong>.
               </p>
             </div>
@@ -303,7 +303,7 @@ const LandingPage = ({ onEnterApp }) => {
           </h2>
           
           <p className="text-xl mb-8 leading-relaxed opacity-90">
-            Dołącz do grona pierwszych odkrywców Edu Future. Zarejestruj się, przetestuj naszą platformę 
+            Dołącz do grona pierwszych odkrywców Edu-Future. Zarejestruj się, przetestuj naszą platformę 
             i pomóż nam kształtować przyszłość nauki w Polsce.
           </p>
           
@@ -321,7 +321,7 @@ const LandingPage = ({ onEnterApp }) => {
       <footer className="bg-text-color text-white py-8">
         <div className="max-w-6xl mx-auto px-4 text-center">
           <p className="text-white/70">
-            © 2025 Edu Future. Wszystkie prawa zastrzeżone. 
+            © 2025 Edu-Future. Wszystkie prawa zastrzeżone. 
             Autor: Sylwester Zieliński. Projekt rozwijany w ramach bolt.new Hackathon.
           </p>
         </div>
