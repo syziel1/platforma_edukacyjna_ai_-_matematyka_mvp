@@ -196,9 +196,9 @@ const LandingPage = ({ onEnterApp }) => {
                     <span className="font-bold text-text-color">Twoja misja na dziś</span>
                   </div>
                   <div className="text-sm text-text-color/70">
-                    🎯 Spędź 30 minut na nauce<br/>
-                    📚 Kontynuuj: Optymalizacja Kurnika<br/>
-                    🎮 Zagraj w Matematyczną Dżunglę
+                    🎯 Spędź 30 minut na nauce dziennie<br/>
+                    📚 Zoptymalizuj powierzchnię kurnika<br/>
+                    🎮 Zagraj w grę matematyczną 3D
                   </div>
                 </div>
               </div>
@@ -213,8 +213,8 @@ const LandingPage = ({ onEnterApp }) => {
                     <span className="font-bold text-text-color">Matematyczna Dżungla & Konstelacja</span>
                   </div>
                   <div className="text-sm text-text-color/70">
-                    🌴 Eksploruj dżunglę matematyczną<br/>
-                    ⭐ Odkrywaj konstelację kompetencji<br/>
+                    🌴 Eksploruj Matematyczną Dżunglę<br/>
+                    ⭐ Odkrywaj Konstelację Kompetencji<br/>
                     🏆 Zdobywaj punkty i osiągnięcia
                   </div>
                 </div>
@@ -227,7 +227,7 @@ const LandingPage = ({ onEnterApp }) => {
                   <h3 className="text-2xl font-bold text-text-color">Ucz się przez działanie i zabawę</h3>
                 </div>
                 <p className="text-text-color/70 leading-relaxed text-lg">
-                  Rozwiązuj praktyczne problemy, jak "Optymalizacja Kurnika", lub trenuj umiejętności w "Matematycznej Dżungli". 
+                  Rozwiązuj praktyczne problemy, jak "Optymalizacja powierzchni kurnika", lub trenuj umiejętności w "Matematycznej Dżungli". 
                   Zdobywaj punkty, bij rekordy i zobacz, jak rośnie Twoja "Konstelacja Kompetencji".
                 </p>
               </div>
