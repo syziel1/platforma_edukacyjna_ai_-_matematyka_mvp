@@ -208,6 +208,7 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
             </div>
             
             <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 text-center">
+              <Clock className="w-6 h-6 text-blue-600 mx-auto mb-2" />
               <div className="text-2xl font-bold text-yellow-800">
                 {Math.floor(timeElapsed / 60)}m
               </div>
