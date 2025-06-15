@@ -132,7 +132,7 @@ const LandingPage = ({ onEnterApp }) => {
             
             <div className="lg:w-1/2">
               <p className="text-lg text-text-color mb-8 leading-relaxed">
-                W Edu Future nie zmuszamy do nauki – my ją projektujemy na nowo. 
+                W Edu-Future nie zmuszamy do nauki – my ją projektujemy na nowo. 
                 Nasza unikalna metoda opiera się na dwóch filarach:
               </p>
               
