@@ -3,13 +3,18 @@ import { translations } from '../locales';
 
 // Function to detect user's language based on location
 const detectUserLanguage = () => {
-  // Check if user has a saved preference
+  // Priority 1: Check for language parameter in the URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const langFromUrl = urlParams.get('lang');
+  if (langFromUrl && (langFromUrl === 'pl' || langFromUrl === 'en')) {
+    return langFromUrl;
+  }
+  // Priority 2: Check if user has a saved preference
   const savedLanguage = localStorage.getItem('userLanguage');
   if (savedLanguage && (savedLanguage === 'pl' || savedLanguage === 'en')) {
     return savedLanguage;
   }
-
-  // Default to English for global audience
+  // Priority 3: Default to English for global audience
   return 'en';
 };
 
