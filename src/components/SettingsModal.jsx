@@ -37,7 +37,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
   const getVoiceOptionsForLanguage = () => {
     if (currentLanguage === 'pl') {
       return [
-        { id: 'T5l58N8RNz5DKoClpKIJ', name: 'Piotr Fronczewski (domyślny)', isDefault: true },
+        { id: 'zzBTsLBFM6AOJtkr1e9b', name: 'Paweł (domyślny)', isDefault: true },
         { id: 'MFYIqIc5gZiNnuySA5V7', name: 'Grok', isDefault: false }
       ];
     } else {
