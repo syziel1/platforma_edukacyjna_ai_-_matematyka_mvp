@@ -3,7 +3,6 @@ import { Send, Bot, ChevronUp } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useTextToSpeech } from '../hooks/useTextToSpeech';
-import { developmentConfig } from '../config/developmentMode';
 
 const ChatPanel = ({ isMobile = false }) => {
   const [messages, setMessages] = useState([
