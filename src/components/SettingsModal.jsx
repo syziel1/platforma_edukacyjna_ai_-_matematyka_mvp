@@ -35,12 +35,22 @@ const SettingsModal = ({ isOpen, onClose }) => {
     { value: 60, label: '60 min' }
   ];
 
-  const voiceOptions = [
-    { id: 'ZT9u07TYPVl83ejeLakq', name: 'Adam (Angielski)' },
-    { id: 'pNInz6obpgDQGcFmaJgB', name: 'Antoni (Polski)' },
-    { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Bella (Angielski)' },
-    { id: 'VR6AewLTigWG4xSOukaG', name: 'Arnold (Angielski)' }
-  ];
+  // Voice options filtered by current platform language
+  const getVoiceOptionsForLanguage = () => {
+    if (currentLanguage === 'pl') {
+      return [
+        { id: 'T5l58N8RNz5DKoClpKIJ', name: 'Piotr Fronczewski (domyślny)', isDefault: true },
+        { id: 'fEfGdiGJK4l3imI70mtC', name: 'Magdalena', isDefault: false }
+      ];
+    } else {
+      return [
+        { id: 'ZT9u07TYPVl83ejeLakq', name: 'Rachelle (default)', isDefault: true },
+        { id: 'scOwDtmlUjD3prqpp97I', name: 'Sam', isDefault: false }
+      ];
+    }
+  };
+
+  const voiceOptions = getVoiceOptionsForLanguage();
 
   const speedOptions = [
     { value: 0.5, label: '0.5x' },
@@ -77,6 +87,17 @@ const SettingsModal = ({ isOpen, onClose }) => {
       playVoiceSample();
     }, 100);
   };
+
+  // Check if current voice is available for current language, if not set default
+  React.useEffect(() => {
+    const currentVoiceAvailable = voiceOptions.some(voice => voice.id === settings.textToSpeechVoice);
+    if (!currentVoiceAvailable) {
+      const defaultVoice = voiceOptions.find(voice => voice.isDefault);
+      if (defaultVoice) {
+        setTextToSpeechVoice(defaultVoice.id);
+      }
+    }
+  }, [currentLanguage, voiceOptions, settings.textToSpeechVoice, setTextToSpeechVoice]);
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -175,7 +196,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
               <div className="space-y-4 ml-8">
                 <div>
                   <label className="block text-sm font-medium text-text-color mb-2">
-                    {t('voiceSelection')}
+                    {t('voiceSelection')} ({currentLanguage === 'pl' ? 'Polski' : 'English'})
                   </label>
                   <select
                     value={settings.textToSpeechVoice}
@@ -188,6 +209,12 @@ const SettingsModal = ({ isOpen, onClose }) => {
                       </option>
                     ))}
                   </select>
+                  <p className="text-xs text-text-color/60 mt-1">
+                    {currentLanguage === 'pl' 
+                      ? 'Głosy dostępne dla języka polskiego'
+                      : 'Voices available for English language'
+                    }
+                  </p>
                 </div>
 
                 <div>
