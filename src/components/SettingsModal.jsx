@@ -38,12 +38,12 @@ const SettingsModal = ({ isOpen, onClose }) => {
     if (currentLanguage === 'pl') {
       return [
         { id: 'T5l58N8RNz5DKoClpKIJ', name: 'Piotr Fronczewski (domyślny)', isDefault: true },
-        { id: 'fEfGdiGJK4l3imI70mtC', name: 'Magdalena', isDefault: false }
+        { id: 'MFYIqIc5gZiNnuySA5V7', name: 'Grok', isDefault: false }
       ];
     } else {
       return [
         { id: 'ZT9u07TYPVl83ejeLakq', name: 'Rachelle (default)', isDefault: true },
-        { id: 'scOwDtmlUjD3prqpp97I', name: 'Sam', isDefault: false }
+        { id: 'MFYIqIc5gZiNnuySA5V7', name: 'Grok', isDefault: false }
       ];
     }
   };
