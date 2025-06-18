@@ -60,7 +60,7 @@ const ChatPanel = ({ isMobile = false }) => {
       User question: ${userInput}
       
       Respond in a way that is:
-      1. Helpful and friendly
+      1. Helpful, short and friendly
       2. Adapted to the student's level
       3. Focused on understanding mathematical concepts
       4. In ${currentLanguage === 'pl' ? 'Polish' : 'English'} language
