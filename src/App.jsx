@@ -12,10 +12,12 @@ import CockpitPage from './components/ExplorerCockpit/CockpitPage';
 import VoiceAssistantTest from "./VoiceAssistantTest";
 
 import LandingPage from './components/LandingPage';
+import LandingPagePL from './components/LandingPagePL';
 import PowersRoots from './components/Formulas/PowersRoots';
 import { useAuth } from './contexts/AuthContext';
 import { useProgress } from './contexts/ProgressContext';
 import { useGlobalTimer } from './hooks/useGlobalTimer';
+import { useLanguage } from './contexts/LanguageContext';
 
 function App() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -28,6 +30,7 @@ function App() {
   const { user } = useAuth();
   const { updateProgress } = useProgress();
   const { startLearning, stopLearning } = useGlobalTimer();
+  const { currentLanguage } = useLanguage();
 
   // Upewnij się, że timer jest wyłączony przy starcie aplikacji
   useEffect(() => {
@@ -121,7 +124,9 @@ function App() {
   }
 
   if (showLandingPage) {
-    return <LandingPage onEnterApp={handleEnterApp} />;
+    // Use Polish landing page if current language is Polish, otherwise use English
+    const LandingComponent = currentLanguage === 'pl' ? LandingPagePL : LandingPage;
+    return <LandingComponent onEnterApp={handleEnterApp} />;
   }
 
   return (
