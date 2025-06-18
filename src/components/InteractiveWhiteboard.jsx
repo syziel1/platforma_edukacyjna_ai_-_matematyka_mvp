@@ -106,7 +106,7 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
   };
 
   const handleClearCanvas = () => {
-    if (excalidrawAPI && confirm('Czy na pewno chcesz wyczyścić tablicę?')) {
+    if (excalidrawAPI && confirm(t('clearWhiteboard'))) {
       excalidrawAPI.resetScene();
       // Clear saved data as well
       localStorage.removeItem('interactiveWhiteboardData');
@@ -117,7 +117,7 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
   const handleManualSave = () => {
     autoSave();
     // Show confirmation
-    const saveButton = document.querySelector('[title="Zapisz ręcznie"]');
+    const saveButton = document.querySelector('[title="' + t('saveManually') + '"]');
     if (saveButton) {
       const originalText = saveButton.textContent;
       saveButton.textContent = '✅';
@@ -185,7 +185,7 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
               </h2>
               {whiteboardData?.lastSaved && (
                 <span className="text-xs text-gray-500">
-                  Ostatnio zapisano: {new Date(whiteboardData.lastSaved).toLocaleString()}
+                  {t('lastSaved')}: {new Date(whiteboardData.lastSaved).toLocaleString()}
                 </span>
               )}
             </div>
@@ -196,7 +196,7 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
             <button
               onClick={handleManualSave}
               className="text-gray-600 hover:text-green-600 transition-colors p-2 rounded-md hover:bg-gray-100"
-              title="Zapisz ręcznie"
+              title={t('saveManually')}
             >
               💾
             </button>
@@ -205,7 +205,7 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
             <button
               onClick={handleOpenZoomWhiteboard}
               className="text-gray-600 hover:text-blue-600 transition-colors p-2 rounded-md hover:bg-gray-100 flex items-center gap-1"
-              title="Otwórz tablicę Zoom"
+              title={t('openZoomWhiteboard')}
             >
               <Video className="w-4 h-4" />
               <span className="text-xs hidden md:inline">Zoom</span>
@@ -215,7 +215,7 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
             <button
               onClick={handleExportImage}
               className="text-gray-600 hover:text-green-600 transition-colors p-2 rounded-md hover:bg-gray-100"
-              title="Eksportuj jako obraz"
+              title="Export as image"
             >
               📷
             </button>
@@ -224,7 +224,7 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
             <button
               onClick={handleClearCanvas}
               className="text-gray-600 hover:text-red-600 transition-colors p-2 rounded-md hover:bg-gray-100"
-              title="Wyczyść tablicę"
+              title="Clear whiteboard"
             >
               🗑️
             </button>
@@ -233,7 +233,7 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
             <button
               onClick={toggleFullscreen}
               className="text-gray-600 hover:text-gray-800 transition-colors p-2 rounded-md hover:bg-gray-100"
-              title={isFullscreen ? 'Wyjdź z pełnego ekranu' : 'Pełny ekran'}
+              title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
             >
               {isFullscreen ? (
                 <Minimize2 className="w-5 h-5" />
@@ -284,10 +284,10 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
               <MainMenu.DefaultItems.Help />
               <MainMenu.Separator />
               <MainMenu.Item onSelect={handleOpenZoomWhiteboard}>
-                🎥 Otwórz tablicę Zoom
+                🎥 {t('openZoomWhiteboard')}
               </MainMenu.Item>
               <MainMenu.Item onSelect={handleManualSave}>
-                💾 Zapisz teraz
+                💾 {t('saveNow')}
               </MainMenu.Item>
             </MainMenu>
             <WelcomeScreen>
@@ -298,7 +298,7 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
                   <div className="text-4xl">📝</div>
                 </WelcomeScreen.Center.Logo>
                 <WelcomeScreen.Center.Heading>
-                  Witaj w tablicy interaktywnej Edu-Future!
+                  {t('interactiveWhiteboard')} Edu-Future!
                 </WelcomeScreen.Center.Heading>
                 <WelcomeScreen.Center.Menu>
                   <WelcomeScreen.Center.MenuItemLoadScene />
@@ -314,11 +314,11 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
           <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-gray-600">
             <div className="flex items-center gap-4">
               <span>💡 {t('whiteboardTip')}</span>
-              <span className="text-xs">• Rysuj • Pisz • Dodawaj kształty • Współpracuj</span>
+              <span className="text-xs">• Draw • Write • Add shapes • Collaborate</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
-                ✅ Auto-zapis co 5s
+                ✅ {t('autoSave5s')}
               </div>
               <button
                 onClick={() => setViewModeEnabled(!viewModeEnabled)}
@@ -328,14 +328,14 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
-                {viewModeEnabled ? '👁️ Tryb podglądu' : '✏️ Tryb edycji'}
+                {viewModeEnabled ? `👁️ ${t('viewMode')}` : `✏️ ${t('editMode')}`}
               </button>
               <button
                 onClick={handleOpenZoomWhiteboard}
                 className="flex items-center gap-1 text-blue-600 hover:text-blue-800 transition-colors text-xs"
               >
                 <Video className="w-3 h-3" />
-                Tablica Zoom
+                Zoom Whiteboard
               </button>
             </div>
           </div>
