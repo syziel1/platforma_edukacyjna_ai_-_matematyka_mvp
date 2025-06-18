@@ -106,6 +106,8 @@ export const pl = {
   'waterTankDesc': 'Oblicz optymalne wymiary cylindrycznego zbiornika na wodę.',
   'jungleGameTitle': 'Gra',
   'jungleGameDesc': 'Odkrywaj tajemniczą dżunglę, ucząc się działań matematycznych w formie gry przygodowej.',
+  'powersRootsTitle': 'Potęgi i pierwiastki',
+  'powersRootsDesc': 'Interaktywne wzory i definicje.',
   
   // Game Mode Selector
   'chooseMathOperations': 'Wybierz rodzaj działań matematycznych',

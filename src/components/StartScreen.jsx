@@ -47,8 +47,8 @@ const StartScreen = ({ onProblemSelect }) => {
     },
     {
       id: 'powers-roots',
-      title: 'Powers & Roots',
-      description: 'Interaktywne wzory i definicje.',
+      title: t('powersRootsTitle'),
+      description: t('powersRootsDesc'),
       icon: Zap,
       color: 'accent-primary',
       totalSteps: 1
