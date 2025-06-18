@@ -9,7 +9,6 @@ import StartScreen from './components/StartScreen';
 import LoginScreen from './components/LoginScreen';
 import JungleGame from './components/JungleGame';
 import CockpitPage from './components/ExplorerCockpit/CockpitPage';
-import VoiceAssistantTest from "./VoiceAssistantTest";
 
 import LandingPage from './components/LandingPage';
 import PowersRoots from './components/Formulas/PowersRoots';
