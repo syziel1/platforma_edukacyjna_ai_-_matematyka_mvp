@@ -68,7 +68,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
     speak(sampleText);
   };
 
-  // Handle voice change with sample
+  // Handle voice change with automatic sample
   const handleVoiceChange = (voiceId) => {
     setTextToSpeechVoice(voiceId);
     // Play sample after a short delay to ensure settings are updated
@@ -77,13 +77,26 @@ const SettingsModal = ({ isOpen, onClose }) => {
     }, 100);
   };
 
-  // Handle speed change with sample
+  // Handle speed change with automatic sample
   const handleSpeedChange = (speed) => {
     setTextToSpeechSpeed(speed);
     // Play sample after a short delay to ensure settings are updated
     setTimeout(() => {
       playVoiceSample();
     }, 100);
+  };
+
+  // Handle TTS toggle with automatic sample when enabled
+  const handleToggleTextToSpeech = () => {
+    const wasEnabled = settings.textToSpeechEnabled;
+    toggleTextToSpeech();
+    
+    // If we're enabling TTS, play a sample after a short delay
+    if (!wasEnabled) {
+      setTimeout(() => {
+        playVoiceSample();
+      }, 100);
+    }
   };
 
   // Check if current voice is available for current language, if not set default
@@ -179,7 +192,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
               <button
-                onClick={toggleTextToSpeech}
+                onClick={handleToggleTextToSpeech}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                   settings.textToSpeechEnabled ? 'bg-accent-primary' : 'bg-gray-300'
                 }`}
