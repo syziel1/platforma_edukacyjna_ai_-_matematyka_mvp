@@ -81,7 +81,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
   const handleSpeedChange = (speed) => {
     setTextToSpeechSpeed(speed);
     // Play sample after a short delay to ensure settings are updated
-    setTimeout((200) => {
+    setTimeout(() => {
       playVoiceSample();
     }, 100);
   };
@@ -93,7 +93,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
     
     // If we're enabling TTS, play a sample after a short delay
     if (!wasEnabled) {
-      setTimeout((200) => {
+      setTimeout(() => {
         playVoiceSample();
       }, 100);
     }
