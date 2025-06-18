@@ -71,18 +71,26 @@ const SettingsModal = ({ isOpen, onClose }) => {
   // Handle voice change with automatic sample
   const handleVoiceChange = (voiceId) => {
     setTextToSpeechVoice(voiceId);
+    // Play sample after a short delay to ensure settings are updated
+    setTimeout(() => {
+      playVoiceSample();
+    }, 200);
   };
 
   // Handle speed change with automatic sample
   const handleSpeedChange = (speed) => {
     setTextToSpeechSpeed(speed);
+    // Play sample after a short delay to ensure settings are updated
+    setTimeout(() => {
+      playVoiceSample();
+    }, 200);
   };
 
   // Handle TTS toggle with automatic sample when enabled
   const handleToggleTextToSpeech = () => {
     const wasEnabled = settings.textToSpeechEnabled;
     toggleTextToSpeech();
-    }
+     }
   };
 
   // Check if current voice is available for current language, if not set default
