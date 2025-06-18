@@ -20,7 +20,7 @@ const VoiceAssistantTest = () => {
       });
       
       const audio = await elevenlabs.generate({
-        voice: "Rachellle", // Możesz tu wybrać dowolny głos, np. "Rachel" lub "Adam"
+        voice: "ZT9u07TYPVl83ejeLakq", // Możesz tu wybrać dowolny głos, np. "Rachel" lub "Adam"
         text: "Witaj w Edu Future! Czas na naukę matematyki.",
         model_id: "eleven_multilingual_v2"
       });
