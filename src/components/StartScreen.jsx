@@ -62,7 +62,7 @@ const StartScreen = ({ onProblemSelect }) => {
         showBackButton={false}
       />
       
-      <div className="flex-1 p-6 mt-16">
+      <div className="flex-1 p-6 mt-12">
         <div className="mb-6">
           <p className="text-text-color/70">
             {t('welcomeDesc')}

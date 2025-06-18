@@ -19,30 +19,30 @@ const GlobalHeader = ({ title, onBack, showBackButton = false }) => {
   };
 
   return (
-    <div className="fixed top-0 left-0 md:left-16 right-0 bg-bg-card shadow-sm border-b border-bg-neutral p-2 md:p-4 z-30">
-      <div className="flex items-center justify-between">
+    <div className="fixed top-0 left-0 md:left-16 right-0 bg-bg-card shadow-sm border-b border-bg-neutral px-2 md:px-4 py-1 md:py-2 z-30 h-12">
+      <div className="flex items-center justify-between h-full">
         {/* Left side - Back button and title */}
-        <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
+        <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
           {showBackButton && onBack && (
             <button
               onClick={onBack}
-              className="text-text-color hover:text-accent-primary transition-colors flex-shrink-0"
+              className="text-text-color hover:text-accent-primary transition-colors flex-shrink-0 p-1"
               title={t('backToProblems')}
             >
-              <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
+              <ArrowLeft className="w-4 h-4" />
             </button>
           )}
-          <h1 className="text-sm md:text-lg lg:text-xl font-bold text-text-color truncate">
+          <h1 className="text-sm md:text-base lg:text-lg font-bold text-text-color truncate">
             {title}
           </h1>
         </div>
 
         {/* Right side - Timer and Mentor status */}
-        <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
+        <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
           {/* Global Timer */}
-          <div className="flex items-center gap-1 md:gap-2 text-text-color">
+          <div className="flex items-center gap-1 text-text-color">
             <Clock className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" />
-            <span className="text-xs md:text-sm font-medium hidden sm:inline">
+            <span className="text-xs font-medium hidden sm:inline">
               {t('sessionTime')}:
             </span>
             <span className="text-xs md:text-sm font-bold">
@@ -51,10 +51,10 @@ const GlobalHeader = ({ title, onBack, showBackButton = false }) => {
           </div>
 
           {/* Mentor Status */}
-          <div className="flex items-center gap-1 md:gap-2">
+          <div className="flex items-center gap-1">
             <button
               onClick={handleVideoCall}
-              className={`flex items-center gap-1 md:gap-2 p-1 md:p-2 rounded-md transition-all duration-200 ${
+              className={`flex items-center gap-1 p-1 rounded-md transition-all duration-200 ${
                 status === 'available' 
                   ? 'hover:bg-green-50 hover:scale-105' 
                   : 'hover:bg-gray-50 cursor-not-allowed opacity-75'
@@ -62,14 +62,14 @@ const GlobalHeader = ({ title, onBack, showBackButton = false }) => {
               title={`${getStatusText(t)} ${formatNextAvailability(t) ? `- ${t('nextAvailability')}: ${formatNextAvailability(t)}` : ''}`}
             >
               <div className="relative">
-                <Video className={`w-3 h-3 md:w-6 md:h-6 ${getStatusColor()}`} />
+                <Video className={`w-3 h-3 md:w-5 md:h-5 ${getStatusColor()}`} />
                 {/* Status indicator */}
                 <div className="absolute -bottom-0.5 -right-0.5 text-xs">
                   {getStatusIcon()}
                 </div>
                 {/* Busy indicator */}
                 {status === 'busy' && (
-                  <div className="absolute -bottom-0.5 -right-0.5 w-1.5 h-1.5 md:w-2 md:h-2 bg-yellow-500 rounded-full animate-pulse" />
+                  <div className="absolute -bottom-0.5 -right-0.5 w-1.5 h-1.5 bg-yellow-500 rounded-full animate-pulse" />
                 )}
               </div>
               <div className="hidden lg:flex flex-col items-start">
