@@ -133,6 +133,7 @@ function App() {
       {showCockpit ? (
         <div className="flex-1 pt-16 md:pt-0">
           <CockpitPage onProblemSelect={handleProblemSelect} />
+          <VoiceAssistantTest />
         </div>
       ) : showStartScreen ? (
         <div className="flex-1 pt-16 md:pt-0">
