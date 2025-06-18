@@ -19,7 +19,7 @@ const GlobalHeader = ({ title, onBack, showBackButton = false }) => {
   };
 
   return (
-    <div className="fixed top-0 left-0 md:left-16 right-0 bg-bg-card shadow-sm border-b border-bg-neutral p-2 md:p-4 z-30 h-16">
+    <div className="fixed top-0 left-0 md:left-16 right-0 bg-bg-card shadow-sm border-b border-bg-neutral p-2 md:p-4 z-30">
       <div className="flex items-center justify-between">
         {/* Left side - Back button and title */}
         <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
