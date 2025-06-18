@@ -10,6 +10,7 @@ const RightPanel = () => {
   const [activeWidget, setActiveWidget] = useState('chat'); // 'chat', 'whiteboard', 'formulas', null
   const [isExpanded, setIsExpanded] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [whiteboardState, setWhiteboardState] = useState({ isOpen: false });
 
   const widgets = [
     {
@@ -51,10 +52,20 @@ const RightPanel = () => {
       setIsExpanded(true);
     }
     setIsFullscreen(false);
+    
+    // Special handling for whiteboard
+    if (widgetId === 'whiteboard') {
+      setWhiteboardState({ isOpen: true });
+    }
   };
 
   const handleFullscreen = () => {
     setIsFullscreen(true);
+    
+    // Special handling for whiteboard in fullscreen
+    if (activeWidget === 'whiteboard') {
+      setWhiteboardState({ isOpen: true });
+    }
   };
 
   const handleCloseFullscreen = () => {
@@ -63,12 +74,33 @@ const RightPanel = () => {
 
   const handleMinimize = () => {
     setIsExpanded(false);
+    
+    // Keep whiteboard state when minimizing
+    if (activeWidget === 'whiteboard') {
+      setWhiteboardState({ isOpen: false });
+    }
   };
 
   const handleClose = () => {
     setActiveWidget(null);
     setIsExpanded(false);
     setIsFullscreen(false);
+    
+    // Close whiteboard but keep its data
+    if (activeWidget === 'whiteboard') {
+      setWhiteboardState({ isOpen: false });
+    }
+  };
+
+  const handleWhiteboardClose = () => {
+    // When whiteboard is closed from within the component
+    setWhiteboardState({ isOpen: false });
+    setIsFullscreen(false);
+    
+    // If we're in panel mode, just minimize
+    if (!isFullscreen) {
+      setIsExpanded(false);
+    }
   };
 
   const renderWidgetContent = () => {
@@ -83,8 +115,8 @@ const RightPanel = () => {
       case 'whiteboard':
         return (
           <WidgetComponent 
-            isOpen={true} 
-            onClose={handleClose}
+            isOpen={whiteboardState.isOpen} 
+            onClose={handleWhiteboardClose}
           />
         );
       case 'formulas':
@@ -168,6 +200,12 @@ const RightPanel = () => {
               <h3 className="font-medium text-gray-800 text-sm">
                 {activeWidgetData.name}
               </h3>
+              {/* Show saved indicator for whiteboard */}
+              {activeWidget === 'whiteboard' && (
+                <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
+                  💾 Zapisane
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-1">
               <button
@@ -203,7 +241,47 @@ const RightPanel = () => {
       {/* Widget content */}
       {activeWidget && isExpanded && (
         <div className="flex-1 overflow-hidden">
-          {renderWidgetContent()}
+          {/* Special handling for whiteboard in panel mode */}
+          {activeWidget === 'whiteboard' ? (
+            <div className="h-full flex flex-col">
+              <div className="p-4 text-center border-b border-gray-200">
+                <p className="text-sm text-gray-600 mb-3">
+                  {currentLanguage === 'pl' 
+                    ? 'Tablica interaktywna w trybie panelu'
+                    : 'Interactive whiteboard in panel mode'
+                  }
+                </p>
+                <button
+                  onClick={() => setWhiteboardState({ isOpen: true })}
+                  className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors text-sm flex items-center gap-2 mx-auto"
+                >
+                  <PenTool className="w-4 h-4" />
+                  {currentLanguage === 'pl' ? 'Otwórz tablicę' : 'Open Whiteboard'}
+                </button>
+                <p className="text-xs text-gray-500 mt-2">
+                  {currentLanguage === 'pl' 
+                    ? 'Twoja praca zostanie automatycznie zapisana'
+                    : 'Your work will be automatically saved'
+                  }
+                </p>
+              </div>
+              
+              {/* Show whiteboard preview or status */}
+              <div className="flex-1 p-4 flex items-center justify-center">
+                <div className="text-center text-gray-500">
+                  <div className="text-4xl mb-2">📝</div>
+                  <p className="text-sm">
+                    {currentLanguage === 'pl' 
+                      ? 'Kliknij przycisk powyżej aby rozpocząć rysowanie'
+                      : 'Click the button above to start drawing'
+                    }
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            renderWidgetContent()
+          )}
         </div>
       )}
 
@@ -221,6 +299,9 @@ const RightPanel = () => {
           </div>
         </div>
       )}
+
+      {/* Render whiteboard modal when needed */}
+      {activeWidget === 'whiteboard' && renderWidgetContent()}
     </div>
   );
 };

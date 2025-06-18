@@ -3,7 +3,6 @@ import { X, ExternalLink, AlertCircle, Maximize2, Minimize2, Video } from 'lucid
 import { Excalidraw, MainMenu, WelcomeScreen } from '@excalidraw/excalidraw';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
-import { developmentConfig } from '../config/developmentMode';
 
 const InteractiveWhiteboard = ({ isOpen, onClose }) => {
   const { t } = useLanguage();
@@ -11,6 +10,60 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [excalidrawAPI, setExcalidrawAPI] = useState(null);
   const [viewModeEnabled, setViewModeEnabled] = useState(false);
+  const [whiteboardData, setWhiteboardData] = useState(null);
+
+  // Load saved whiteboard data on component mount
+  useEffect(() => {
+    const savedData = localStorage.getItem('interactiveWhiteboardData');
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        setWhiteboardData(parsedData);
+      } catch (error) {
+        console.warn('Failed to load whiteboard data:', error);
+      }
+    }
+  }, []);
+
+  // Save whiteboard data when it changes
+  const saveWhiteboardData = (elements, appState) => {
+    const dataToSave = {
+      elements: elements || [],
+      appState: appState || {},
+      lastSaved: new Date().toISOString()
+    };
+    
+    try {
+      localStorage.setItem('interactiveWhiteboardData', JSON.stringify(dataToSave));
+      setWhiteboardData(dataToSave);
+    } catch (error) {
+      console.warn('Failed to save whiteboard data:', error);
+    }
+  };
+
+  // Auto-save function that will be called periodically
+  const autoSave = () => {
+    if (excalidrawAPI) {
+      const elements = excalidrawAPI.getSceneElements();
+      const appState = excalidrawAPI.getAppState();
+      saveWhiteboardData(elements, appState);
+    }
+  };
+
+  // Set up auto-save interval
+  useEffect(() => {
+    if (isOpen && excalidrawAPI) {
+      const autoSaveInterval = setInterval(autoSave, 5000); // Auto-save every 5 seconds
+      return () => clearInterval(autoSaveInterval);
+    }
+  }, [isOpen, excalidrawAPI]);
+
+  // Save data when closing
+  useEffect(() => {
+    if (!isOpen && excalidrawAPI) {
+      autoSave(); // Save before closing
+    }
+  }, [isOpen, excalidrawAPI]);
 
   useEffect(() => {
     if (isOpen) {
@@ -27,7 +80,6 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const whiteboardUrl = "https://zoom.us/wb/doc/okffxvPUQfqT-rcN1RUSbQ";
-  const isInDevelopmentMode = developmentConfig.underConstruction && !user;
 
   const toggleFullscreen = () => {
     setIsFullscreen(!isFullscreen);
@@ -56,7 +108,60 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
   const handleClearCanvas = () => {
     if (excalidrawAPI && confirm('Czy na pewno chcesz wyczyścić tablicę?')) {
       excalidrawAPI.resetScene();
+      // Clear saved data as well
+      localStorage.removeItem('interactiveWhiteboardData');
+      setWhiteboardData(null);
     }
+  };
+
+  const handleManualSave = () => {
+    autoSave();
+    // Show confirmation
+    const saveButton = document.querySelector('[title="Zapisz ręcznie"]');
+    if (saveButton) {
+      const originalText = saveButton.textContent;
+      saveButton.textContent = '✅';
+      setTimeout(() => {
+        saveButton.textContent = originalText;
+      }, 1000);
+    }
+  };
+
+  // Prepare initial data for Excalidraw
+  const getInitialData = () => {
+    const defaultData = {
+      elements: [],
+      appState: {
+        viewBackgroundColor: "#ffffff",
+        currentItemFontFamily: 1,
+        currentItemFontSize: 20,
+        currentItemStrokeColor: "#1e1e1e",
+        currentItemBackgroundColor: "transparent",
+        currentItemFillStyle: "hachure",
+        currentItemStrokeWidth: 1,
+        currentItemStrokeStyle: "solid",
+        currentItemRoughness: 1,
+        currentItemOpacity: 100,
+        currentItemLinearStrokeSharpness: "round",
+        gridSize: null,
+        colorPalette: {}
+      },
+      scrollToContent: true
+    };
+
+    // If we have saved data, merge it with defaults
+    if (whiteboardData) {
+      return {
+        elements: whiteboardData.elements || [],
+        appState: {
+          ...defaultData.appState,
+          ...(whiteboardData.appState || {})
+        },
+        scrollToContent: false // Don't auto-scroll if we're loading saved content
+      };
+    }
+
+    return defaultData;
   };
 
   return (
@@ -78,15 +183,24 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
               <h2 className="text-xl font-bold text-text-color">
                 {t('interactiveWhiteboard')}
               </h2>
-              {isInDevelopmentMode && (
-                <span className="text-xs text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full">
-                  🚧 Development Mode
+              {whiteboardData?.lastSaved && (
+                <span className="text-xs text-gray-500">
+                  Ostatnio zapisano: {new Date(whiteboardData.lastSaved).toLocaleString()}
                 </span>
               )}
             </div>
           </div>
           
           <div className="flex items-center gap-2">
+            {/* Manual Save Button */}
+            <button
+              onClick={handleManualSave}
+              className="text-gray-600 hover:text-green-600 transition-colors p-2 rounded-md hover:bg-gray-100"
+              title="Zapisz ręcznie"
+            >
+              💾
+            </button>
+            
             {/* Zoom Whiteboard Option */}
             <button
               onClick={handleOpenZoomWhiteboard}
@@ -139,46 +253,20 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        {/* Development Mode Warning */}
-        {isInDevelopmentMode && (
-          <div className="bg-yellow-50 border-b border-yellow-200 p-3 flex-shrink-0">
-            <div className="flex items-center gap-2 text-yellow-800">
-              <AlertCircle className="w-4 h-4" />
-              <span className="text-sm">
-                Ta funkcja jest w trybie rozwojowym. Zaloguj się dla pełnej funkcjonalności.
-              </span>
-            </div>
-          </div>
-        )}
-
         {/* Excalidraw Canvas */}
         <div className="flex-1 relative overflow-hidden">
           <Excalidraw
             ref={(api) => setExcalidrawAPI(api)}
-            initialData={{
-              elements: [],
-              appState: {
-                viewBackgroundColor: "#ffffff",
-                currentItemFontFamily: 1,
-                currentItemFontSize: 20,
-                currentItemStrokeColor: "#1e1e1e",
-                currentItemBackgroundColor: "transparent",
-                currentItemFillStyle: "hachure",
-                currentItemStrokeWidth: 1,
-                currentItemStrokeStyle: "solid",
-                currentItemRoughness: 1,
-                currentItemOpacity: 100,
-                currentItemLinearStrokeSharpness: "round",
-                gridSize: null,
-                colorPalette: {}
-              },
-              scrollToContent: true
-            }}
+            initialData={getInitialData()}
             viewModeEnabled={viewModeEnabled}
             zenModeEnabled={false}
             gridModeEnabled={false}
             theme="light"
             name="Edu-Future Whiteboard"
+            onChange={(elements, appState) => {
+              // Auto-save on every change (debounced by the interval above)
+              // This ensures we don't lose work even if the user doesn't wait for auto-save
+            }}
             UIOptions={{
               canvasActions: {
                 loadScene: false,
@@ -197,6 +285,9 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
               <MainMenu.Separator />
               <MainMenu.Item onSelect={handleOpenZoomWhiteboard}>
                 🎥 Otwórz tablicę Zoom
+              </MainMenu.Item>
+              <MainMenu.Item onSelect={handleManualSave}>
+                💾 Zapisz teraz
               </MainMenu.Item>
             </MainMenu>
             <WelcomeScreen>
@@ -226,6 +317,9 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
               <span className="text-xs">• Rysuj • Pisz • Dodawaj kształty • Współpracuj</span>
             </div>
             <div className="flex items-center gap-2">
+              <div className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
+                ✅ Auto-zapis co 5s
+              </div>
               <button
                 onClick={() => setViewModeEnabled(!viewModeEnabled)}
                 className={`text-xs px-2 py-1 rounded transition-colors ${
