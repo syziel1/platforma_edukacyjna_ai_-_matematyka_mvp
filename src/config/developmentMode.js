@@ -1,7 +1,7 @@
 // Development configuration
 export const developmentConfig = {
   // Set to true to show features under construction (even without login)
-  underConstruction: true,
+  underConstruction: false,
   
   // Features that are under construction
   features: {
