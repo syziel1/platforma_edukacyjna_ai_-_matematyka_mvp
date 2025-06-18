@@ -8,7 +8,6 @@ import { KnowledgeMapModal } from '../KnowledgeSpace';
 import LeftColumn from './LeftColumn';
 import RightColumn from './RightColumn';
 import GlobalHeader from '../GlobalHeader';
-import VoiceAssistantTest from "../../VoiceAssistantTest";
 
 const CockpitPage = ({ onProblemSelect }) => {
   const { user } = useAuth();
