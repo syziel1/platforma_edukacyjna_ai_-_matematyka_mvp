@@ -36,7 +36,7 @@ const ChatPanel = ({ isMobile = false }) => {
     // Speak welcome message only once
     if (!welcomeSpokenRef.current) {
       welcomeSpokenRef.current = true;
-      speakIfEnabled(welcomeMessage);
+//      speakIfEnabled(welcomeMessage);
     }
   }, [t, speakIfEnabled]);
 
