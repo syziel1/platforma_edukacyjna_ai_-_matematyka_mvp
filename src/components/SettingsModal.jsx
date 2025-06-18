@@ -93,9 +93,9 @@ const SettingsModal = ({ isOpen, onClose }) => {
     
     // If we're enabling TTS, play a sample after a short delay
     if (!wasEnabled) {
-      setTimeout(() => {
-        playVoiceSample();
-      }, 200);
+//      setTimeout(() => {
+//        playVoiceSample();
+//      }, 200);
     }
   };
 
