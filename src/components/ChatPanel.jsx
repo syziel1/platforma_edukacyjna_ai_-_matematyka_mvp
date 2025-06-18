@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Send, Bot, ChevronUp } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -19,6 +19,9 @@ const ChatPanel = ({ isMobile = false }) => {
   const { t, currentLanguage } = useLanguage();
   const { user } = useAuth();
   const { speakIfEnabled } = useTextToSpeech();
+  
+  // Flag to prevent double speaking of welcome message
+  const welcomeSpokenRef = useRef(false);
 
   // Initialize welcome message with translation
   React.useEffect(() => {
@@ -30,8 +33,11 @@ const ChatPanel = ({ isMobile = false }) => {
       timestamp: new Date()
     }]);
     
-    // Speak welcome message if TTS is enabled
-    speakIfEnabled(welcomeMessage);
+    // Speak welcome message only once
+    if (!welcomeSpokenRef.current) {
+      speakIfEnabled(welcomeMessage);
+      welcomeSpokenRef.current = true;
+    }
   }, [t, speakIfEnabled]);
 
   const generateGeminiResponse = async (userInput) => {
