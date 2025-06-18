@@ -90,7 +90,13 @@ const SettingsModal = ({ isOpen, onClose }) => {
   const handleToggleTextToSpeech = () => {
     const wasEnabled = settings.textToSpeechEnabled;
     toggleTextToSpeech();
-     }
+    
+    // If we're enabling TTS, play a sample after a short delay
+    if (!wasEnabled) {
+      setTimeout(() => {
+        playVoiceSample();
+      }, 200);
+    }
   };
 
   // Check if current voice is available for current language, if not set default
