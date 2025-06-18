@@ -72,18 +72,18 @@ const SettingsModal = ({ isOpen, onClose }) => {
   const handleVoiceChange = (voiceId) => {
     setTextToSpeechVoice(voiceId);
     // Play sample after a short delay to ensure settings are updated
-    setTimeout((200) => {
+    setTimeout(() => {
       playVoiceSample();
-    }, 100);
+    }, 200);
   };
 
   // Handle speed change with automatic sample
   const handleSpeedChange = (speed) => {
     setTextToSpeechSpeed(speed);
     // Play sample after a short delay to ensure settings are updated
-    setTimeout((200) => {
+    setTimeout(() => {
       playVoiceSample();
-    }, 100);
+    }, 200);
   };
 
   // Handle TTS toggle with automatic sample when enabled
@@ -93,9 +93,9 @@ const SettingsModal = ({ isOpen, onClose }) => {
     
     // If we're enabling TTS, play a sample after a short delay
     if (!wasEnabled) {
-      setTimeout((200) => {
+      setTimeout(() => {
         playVoiceSample();
-      }, 100);
+      }, 200);
     }
   };
 
