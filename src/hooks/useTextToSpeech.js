@@ -14,10 +14,10 @@ export const useTextToSpeech = () => {
         return;
       }
 
-      // Clean text from HTML tags and special characters
+      // Clean text from HTML tags but preserve Polish characters
       const cleanText = text
         .replace(/<[^>]*>/g, '') // Remove HTML tags
-        .replace(/[^\w\s.,!?;:-]/g, '') // Keep only basic punctuation
+        .replace(/[^\w\s.,!?;:\-ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, '') // Keep Polish characters and basic punctuation
         .trim();
 
       if (!cleanText) return;
