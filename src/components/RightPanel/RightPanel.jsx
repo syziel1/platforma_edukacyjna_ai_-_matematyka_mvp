@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MessageCircle, PenTool, BookOpen, ChevronDown, ChevronUp, Maximize2, Minimize2, X } from 'lucide-react';
 import ChatPanel from '../ChatPanel';
 import InteractiveWhiteboard from '../InteractiveWhiteboard';
@@ -11,6 +11,41 @@ const RightPanel = () => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [whiteboardState, setWhiteboardState] = useState({ isOpen: false });
+  const [hasWhiteboardData, setHasWhiteboardData] = useState(false);
+
+  // Check if whiteboard has saved data
+  useEffect(() => {
+    const checkWhiteboardData = () => {
+      const savedData = localStorage.getItem('interactiveWhiteboardData');
+      if (savedData) {
+        try {
+          const parsedData = JSON.parse(savedData);
+          setHasWhiteboardData(parsedData.elements && parsedData.elements.length > 0);
+        } catch (error) {
+          setHasWhiteboardData(false);
+        }
+      } else {
+        setHasWhiteboardData(false);
+      }
+    };
+
+    checkWhiteboardData();
+    
+    // Listen for whiteboard save events
+    const handleWhiteboardSaved = () => {
+      checkWhiteboardData();
+    };
+
+    window.addEventListener('whiteboardSaved', handleWhiteboardSaved);
+    
+    // Check periodically for changes
+    const interval = setInterval(checkWhiteboardData, 2000);
+
+    return () => {
+      window.removeEventListener('whiteboardSaved', handleWhiteboardSaved);
+      clearInterval(interval);
+    };
+  }, []);
 
   const widgets = [
     {
@@ -103,6 +138,11 @@ const RightPanel = () => {
     }
   };
 
+  const handleOpenWhiteboardFullscreen = () => {
+    setWhiteboardState({ isOpen: true });
+    setIsFullscreen(true);
+  };
+
   const renderWidgetContent = () => {
     if (!activeWidget || !activeWidgetData) return null;
 
@@ -176,7 +216,7 @@ const RightPanel = () => {
           <button
             key={widget.id}
             onClick={() => handleWidgetClick(widget.id)}
-            className={`flex-1 p-3 flex items-center justify-center gap-2 transition-colors border-b-2 ${
+            className={`flex-1 p-3 flex items-center justify-center gap-2 transition-colors border-b-2 relative ${
               activeWidget === widget.id
                 ? `${widget.borderColor} ${widget.bgColor} ${widget.color}`
                 : 'border-transparent hover:bg-gray-100 text-gray-600'
@@ -187,6 +227,10 @@ const RightPanel = () => {
             <span className="text-xs font-medium hidden lg:inline">
               {widget.name.length > 8 ? widget.name.substring(0, 8) + '...' : widget.name}
             </span>
+            {/* Show indicator for whiteboard with saved data */}
+            {widget.id === 'whiteboard' && hasWhiteboardData && (
+              <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full"></div>
+            )}
           </button>
         ))}
       </div>
@@ -201,7 +245,7 @@ const RightPanel = () => {
                 {activeWidgetData.name}
               </h3>
               {/* Show saved indicator for whiteboard */}
-              {activeWidget === 'whiteboard' && (
+              {activeWidget === 'whiteboard' && hasWhiteboardData && (
                 <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
                   💾 {t('saved')}
                 </span>
@@ -248,16 +292,30 @@ const RightPanel = () => {
                 <p className="text-sm text-gray-600 mb-3">
                   {t('whiteboardPanelMode')}
                 </p>
-                <button
-                  onClick={() => setWhiteboardState({ isOpen: true })}
-                  className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors text-sm flex items-center gap-2 mx-auto"
-                >
-                  <PenTool className="w-4 h-4" />
-                  {t('openWhiteboard')}
-                </button>
+                <div className="space-y-2">
+                  <button
+                    onClick={() => setWhiteboardState({ isOpen: true })}
+                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors text-sm flex items-center gap-2 mx-auto"
+                  >
+                    <PenTool className="w-4 h-4" />
+                    {t('openWhiteboard')}
+                  </button>
+                  <button
+                    onClick={handleOpenWhiteboardFullscreen}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors text-sm flex items-center gap-2 mx-auto"
+                  >
+                    <Maximize2 className="w-4 h-4" />
+                    Fullscreen
+                  </button>
+                </div>
                 <p className="text-xs text-gray-500 mt-2">
                   {t('workAutoSaved')}
                 </p>
+                {hasWhiteboardData && (
+                  <p className="text-xs text-green-600 mt-1">
+                    ✅ {t('saved')} - {t('lastSaved')}
+                  </p>
+                )}
               </div>
               
               {/* Show whiteboard preview or status */}
@@ -265,7 +323,10 @@ const RightPanel = () => {
                 <div className="text-center text-gray-500">
                   <div className="text-4xl mb-2">📝</div>
                   <p className="text-sm">
-                    {t('clickToStartDrawing')}
+                    {hasWhiteboardData 
+                      ? `${t('saved')} - ${t('clickToStartDrawing')}`
+                      : t('clickToStartDrawing')
+                    }
                   </p>
                 </div>
               </div>
