@@ -1,4 +1,4 @@
-2import React from 'react';
+import React from 'react';
 import { Volume2, VolumeX, X, RotateCcw, Eye, EyeOff, Globe, Target, Mic, MicOff } from 'lucide-react';
 import { useSettings } from '../contexts/SettingsContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -81,9 +81,9 @@ const SettingsModal = ({ isOpen, onClose }) => {
   const handleSpeedChange = (speed) => {
     setTextToSpeechSpeed(speed);
     // Play sample after a short delay to ensure settings are updated
-    setTimeout(() => {
+    setTimeout((200) => {
       playVoiceSample();
-    }, 200);
+    }, 100);
   };
 
   // Handle TTS toggle with automatic sample when enabled
@@ -93,9 +93,9 @@ const SettingsModal = ({ isOpen, onClose }) => {
     
     // If we're enabling TTS, play a sample after a short delay
     if (!wasEnabled) {
-      setTimeout(() => {
+      setTimeout((200) => {
         playVoiceSample();
-      }, 200);
+      }, 100);
     }
   };
 
