@@ -53,7 +53,7 @@ const PowersRoots = () => {
                         <input
                             id="base"
                             type="range"
-                            min="0"
+                            min="-10"
                             max="10"
                             value={base}
                             onChange={(e) => setBase(Number(e.target.value))}
