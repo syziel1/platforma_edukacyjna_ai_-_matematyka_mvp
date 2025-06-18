@@ -21,7 +21,7 @@ const ChatPanel = ({ isMobile = false }) => {
   const { speakIfEnabled } = useTextToSpeech();
   
   // Flag to prevent double speaking of welcome message
-//  const welcomeSpokenRef = useRef(false);
+  const welcomeSpokenRef = useRef(false);
 
   // Initialize welcome message with translation
   React.useEffect(() => {
@@ -34,10 +34,10 @@ const ChatPanel = ({ isMobile = false }) => {
     }]);
     
     // Speak welcome message only once
-//    if (!welcomeSpokenRef.current) {
-//      speakIfEnabled(welcomeMessage);
-//      welcomeSpokenRef.current = true;
-//    }
+    if (!welcomeSpokenRef.current) {
+      welcomeSpokenRef.current = true;
+      speakIfEnabled(welcomeMessage);
+    }
   }, [t, speakIfEnabled]);
 
   const generateGeminiResponse = async (userInput) => {
