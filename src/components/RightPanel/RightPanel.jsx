@@ -6,7 +6,7 @@ import PowersRoots from '../Formulas/PowersRoots';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 const RightPanel = () => {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const [activeWidget, setActiveWidget] = useState('chat'); // 'chat', 'whiteboard', 'formulas', null
   const [isExpanded, setIsExpanded] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -137,7 +137,7 @@ const RightPanel = () => {
   }
 
   return (
-    <div className="w-80 h-full bg-white border-l border-gray-200 flex flex-col shadow-lg">
+    <div className="w-80 h-full bg-white border-l border-gray-200 flex flex-col shadow-lg mt-16">
       {/* Widget tabs */}
       <div className="flex border-b border-gray-200 bg-gray-50">
         {widgets.map((widget) => (
