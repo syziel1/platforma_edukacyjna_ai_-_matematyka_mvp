@@ -210,6 +210,10 @@ export const pl = {
   'gameStateReset': 'Stan gry został zresetowany!',
   'dailyLearningGoal': 'Dzienny cel nauki',
   'dailyLearningGoalDesc': 'Ustaw ile minut dziennie chcesz się uczyć',
+  'textToSpeech': 'Czytanie na głos',
+  'textToSpeechDesc': 'Automatyczne odczytywanie tekstu za pomocą AI',
+  'voiceSelection': 'Wybór głosu',
+  'speechSpeed': 'Prędkość mowy',
   
   // Lesson Header
   'lessonTitle': 'Zadanie: Optymalny kurnik',

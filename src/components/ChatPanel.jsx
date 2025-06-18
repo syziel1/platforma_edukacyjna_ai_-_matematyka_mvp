@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Send, Bot, ChevronUp } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useTextToSpeech } from '../hooks/useTextToSpeech';
 
 const ChatPanel = ({ isMobile = false }) => {
   const [messages, setMessages] = useState([
@@ -17,16 +18,21 @@ const ChatPanel = ({ isMobile = false }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { t, currentLanguage } = useLanguage();
   const { user } = useAuth();
+  const { speakIfEnabled } = useTextToSpeech();
 
   // Initialize welcome message with translation
   React.useEffect(() => {
+    const welcomeMessage = t('chatWelcomeMessage');
     setMessages([{
       id: 1,
       type: 'ai',
-      content: t('chatWelcomeMessage'),
+      content: welcomeMessage,
       timestamp: new Date()
     }]);
-  }, [t]);
+    
+    // Speak welcome message if TTS is enabled
+    speakIfEnabled(welcomeMessage);
+  }, [t, speakIfEnabled]);
 
   const generateGeminiResponse = async (userInput) => {
     if (isLoading) return t('chatWaitMessage');
@@ -121,6 +127,9 @@ const ChatPanel = ({ isMobile = false }) => {
     };
 
     setMessages(prev => [...prev, aiMessage]);
+    
+    // Speak AI response if TTS is enabled
+    speakIfEnabled(aiResponse);
   };
 
   const handleKeyPress = (e) => {

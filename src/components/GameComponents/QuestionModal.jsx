@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useTextToSpeech } from '../../hooks/useTextToSpeech';
 
 const QuestionModal = ({ 
   question, 
@@ -14,7 +15,8 @@ const QuestionModal = ({
   gameModeConfig,
   onCancel
 }) => {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
+  const { speakIfEnabled } = useTextToSpeech();
   const [answer, setAnswer] = useState('');
   const [showAdvice, setShowAdvice] = useState(false);
   const [isShaking, setIsShaking] = useState(false);
@@ -24,7 +26,13 @@ const QuestionModal = ({
     if (playSound) {
       playSound('question');
     }
-  }, [question, playSound]);
+    
+    // Speak the question if TTS is enabled
+    if (question) {
+      const questionText = formatQuestion().display + ' = ?';
+      speakIfEnabled(questionText);
+    }
+  }, [question, playSound, speakIfEnabled]);
 
   useEffect(() => {
     if (wiseOwlAdvice) {
@@ -32,8 +40,10 @@ const QuestionModal = ({
       if (playSound) {
         playSound('owl');
       }
+      // Speak the wise owl advice
+      speakIfEnabled(wiseOwlAdvice);
     }
-  }, [wiseOwlAdvice, playSound]);
+  }, [wiseOwlAdvice, playSound, speakIfEnabled]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -210,6 +210,10 @@ export const en = {
   'gameStateReset': 'Game state has been reset!',
   'dailyLearningGoal': 'Daily learning goal',
   'dailyLearningGoalDesc': 'Set how many minutes per day you want to study',
+  'textToSpeech': 'Text-to-Speech',
+  'textToSpeechDesc': 'Automatic text reading using AI',
+  'voiceSelection': 'Voice Selection',
+  'speechSpeed': 'Speech Speed',
   
   // Lesson Header
   'lessonTitle': 'Task: Optimal Chicken Coop',
