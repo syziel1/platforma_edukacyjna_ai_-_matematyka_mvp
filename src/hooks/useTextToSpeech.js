@@ -43,8 +43,21 @@ export const useTextToSpeech = () => {
       });
 
       if (!response.ok) {
+        // Handle specific error cases with user-friendly messages
+        if (response.status === 401) {
+          console.warn('Text-to-speech service unavailable: Account limitations detected. Consider disabling text-to-speech in settings or upgrading your ElevenLabs subscription.');
+          return;
+        }
+        
+        if (response.status === 429) {
+          console.warn('Text-to-speech service busy: Too many requests. Please wait a moment before trying again or consider disabling text-to-speech in settings.');
+          return;
+        }
+
+        // For other errors, still log but don't throw
         const errorText = await response.text();
-        throw new Error(`ElevenLabs API Error: ${response.status} - ${errorText}`);
+        console.warn(`Text-to-speech service error (${response.status}): Service temporarily unavailable. You may want to disable text-to-speech in settings.`);
+        return;
       }
 
       // Convert response to blob and play
@@ -68,7 +81,7 @@ export const useTextToSpeech = () => {
       console.log('Speech playback started');
 
     } catch (error) {
-      console.error('Text-to-speech error:', error);
+      console.warn('Text-to-speech temporarily unavailable:', error.message);
     }
   }, [settings.textToSpeechEnabled, settings.textToSpeechVoice, settings.textToSpeechSpeed, settings.volume]);
 
