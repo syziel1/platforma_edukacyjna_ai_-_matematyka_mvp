@@ -9,6 +9,7 @@ import StartScreen from './components/StartScreen';
 import LoginScreen from './components/LoginScreen';
 import JungleGame from './components/JungleGame';
 import CockpitPage from './components/ExplorerCockpit/CockpitPage';
+import RightPanel from './components/RightPanel/RightPanel';
 import VoiceAssistantTest from "./VoiceAssistantTest";
 
 import LandingPage from './components/LandingPage';
@@ -141,7 +142,7 @@ function App() {
       </div>
 
       {/* Main content area with proper margins */}
-      <div className="flex-1 flex flex-col ml-16">
+      <div className="flex-1 flex flex-col ml-0 md:ml-16">
         {showCockpit ? (
           <CockpitPage onProblemSelect={handleProblemSelect} />
         ) : showStartScreen ? (
@@ -162,14 +163,10 @@ function App() {
                     {renderContent()}
                   </div>
                 </div>
-                {/* Mobile Chat Panel */}
-                <div className="md:hidden">
-                  <ChatPanel isMobile={true} />
-                </div>
               </div>
-              {/* Desktop Chat Panel - Fixed position */}
-              <div className="hidden md:block fixed right-0 top-0 bottom-0 z-30">
-                <ChatPanel />
+              {/* Right Panel for lesson pages */}
+              <div className="hidden md:block">
+                <RightPanel />
               </div>
             </div>
           )
