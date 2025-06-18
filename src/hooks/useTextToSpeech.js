@@ -23,6 +23,8 @@ export const useTextToSpeech = () => {
       if (!cleanText) return;
 
       console.log('Generating speech for:', cleanText);
+      console.log('Using voice ID:', settings.textToSpeechVoice);
+      console.log('Using speed:', settings.textToSpeechSpeed);
 
       const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${settings.textToSpeechVoice}`, {
         method: 'POST',
