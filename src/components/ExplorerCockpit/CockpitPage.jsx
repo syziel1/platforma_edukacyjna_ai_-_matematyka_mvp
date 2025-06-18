@@ -3,10 +3,12 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useProgress } from '../../contexts/ProgressContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { mentorAvailability } from '../../config/mentorAvailability';
+import { developmentConfig } from '../../config/developmentMode';
 import { KnowledgeMapModal } from '../KnowledgeSpace';
 import LeftColumn from './LeftColumn';
 import RightColumn from './RightColumn';
 import GlobalHeader from '../GlobalHeader';
+import VoiceAssistantTest from "../../VoiceAssistantTest";
 
 const CockpitPage = ({ onProblemSelect }) => {
   const { user } = useAuth();
@@ -101,6 +103,11 @@ const CockpitPage = ({ onProblemSelect }) => {
       />
       
       <div className="flex-1 p-4 md:p-6">
+        {/* Voice Assistant Test - tylko w trybie deweloperskim */}
+        {developmentConfig.underConstruction && (
+          <VoiceAssistantTest />
+        )}
+        
         <div className="max-w-7xl mx-auto">
           {/* Główny układ dwukolumnowy */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
