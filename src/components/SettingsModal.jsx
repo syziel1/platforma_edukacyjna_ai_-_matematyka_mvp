@@ -1,10 +1,20 @@
 import React from 'react';
-import { Volume2, VolumeX, X, RotateCcw, Eye, EyeOff, Globe, Target } from 'lucide-react';
+import { Volume2, VolumeX, X, RotateCcw, Eye, EyeOff, Globe, Target, Mic, MicOff } from 'lucide-react';
 import { useSettings } from '../contexts/SettingsContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const SettingsModal = ({ isOpen, onClose }) => {
-  const { settings, toggleSound, setVolume, toggleGrassPercentage, setDailyLearningGoal, resetGameState } = useSettings();
+  const { 
+    settings, 
+    toggleSound, 
+    setVolume, 
+    toggleGrassPercentage, 
+    setDailyLearningGoal, 
+    toggleTextToSpeech,
+    setTextToSpeechVoice,
+    setTextToSpeechSpeed,
+    resetGameState 
+  } = useSettings();
   const { t, currentLanguage, switchLanguage } = useLanguage();
 
   if (!isOpen) return null;
@@ -23,9 +33,24 @@ const SettingsModal = ({ isOpen, onClose }) => {
     { value: 60, label: '60 min' }
   ];
 
+  const voiceOptions = [
+    { id: 'ZT9u07TYPVl83ejeLakq', name: 'Adam (Angielski)' },
+    { id: 'pNInz6obpgDQGcFmaJgB', name: 'Antoni (Polski)' },
+    { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Bella (Angielski)' },
+    { id: 'VR6AewLTigWG4xSOukaG', name: 'Arnold (Angielski)' }
+  ];
+
+  const speedOptions = [
+    { value: 0.5, label: '0.5x' },
+    { value: 0.75, label: '0.75x' },
+    { value: 1.0, label: '1.0x' },
+    { value: 1.25, label: '1.25x' },
+    { value: 1.5, label: '1.5x' }
+  ];
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-bg-card p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
+      <div className="bg-bg-card p-6 rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-text-color">
             {t('settings')}
@@ -81,6 +106,82 @@ const SettingsModal = ({ isOpen, onClose }) => {
             <p className="text-xs text-text-color/60 mt-2">
               {t('dailyLearningGoalDesc')}
             </p>
+          </div>
+
+          {/* Text-to-Speech Settings */}
+          <div className="border-t border-gray-200 pt-4">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                {settings.textToSpeechEnabled ? (
+                  <Mic className="w-5 h-5 text-accent-primary" />
+                ) : (
+                  <MicOff className="w-5 h-5 text-gray-400" />
+                )}
+                <div>
+                  <span className="font-medium text-text-color block">
+                    {t('textToSpeech')}
+                  </span>
+                  <span className="text-xs text-text-color/60">
+                    {t('textToSpeechDesc')}
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={toggleTextToSpeech}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  settings.textToSpeechEnabled ? 'bg-accent-primary' : 'bg-gray-300'
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    settings.textToSpeechEnabled ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
+
+            {/* Voice Selection */}
+            {settings.textToSpeechEnabled && (
+              <div className="space-y-4 ml-8">
+                <div>
+                  <label className="block text-sm font-medium text-text-color mb-2">
+                    {t('voiceSelection')}
+                  </label>
+                  <select
+                    value={settings.textToSpeechVoice}
+                    onChange={(e) => setTextToSpeechVoice(e.target.value)}
+                    className="w-full p-2 border border-bg-neutral rounded-md focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color bg-white"
+                  >
+                    {voiceOptions.map((voice) => (
+                      <option key={voice.id} value={voice.id}>
+                        {voice.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-text-color mb-2">
+                    {t('speechSpeed')}: {settings.textToSpeechSpeed}x
+                  </label>
+                  <div className="grid grid-cols-5 gap-1">
+                    {speedOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() => setTextToSpeechSpeed(option.value)}
+                        className={`py-1 px-2 rounded text-xs font-medium transition-colors ${
+                          settings.textToSpeechSpeed === option.value
+                            ? 'bg-accent-primary text-white'
+                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Sound Toggle */}

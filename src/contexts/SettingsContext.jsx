@@ -17,7 +17,10 @@ export const SettingsProvider = ({ children }) => {
       soundEnabled: true,
       volume: 0.5,
       showGrassPercentage: false,
-      dailyLearningGoal: 30 // minut
+      dailyLearningGoal: 30, // minut
+      textToSpeechEnabled: false,
+      textToSpeechVoice: 'ZT9u07TYPVl83ejeLakq', // Default ElevenLabs voice ID
+      textToSpeechSpeed: 1.0
     };
   });
 
@@ -48,6 +51,18 @@ export const SettingsProvider = ({ children }) => {
     updateSetting('dailyLearningGoal', minutes);
   };
 
+  const toggleTextToSpeech = () => {
+    updateSetting('textToSpeechEnabled', !settings.textToSpeechEnabled);
+  };
+
+  const setTextToSpeechVoice = (voiceId) => {
+    updateSetting('textToSpeechVoice', voiceId);
+  };
+
+  const setTextToSpeechSpeed = (speed) => {
+    updateSetting('textToSpeechSpeed', Math.max(0.5, Math.min(2.0, speed)));
+  };
+
   const resetGameState = () => {
     // Remove game state from localStorage
     localStorage.removeItem('jungleGameState');
@@ -64,6 +79,9 @@ export const SettingsProvider = ({ children }) => {
       setVolume,
       toggleGrassPercentage,
       setDailyLearningGoal,
+      toggleTextToSpeech,
+      setTextToSpeechVoice,
+      setTextToSpeechSpeed,
       resetGameState
     }}>
       {children}
