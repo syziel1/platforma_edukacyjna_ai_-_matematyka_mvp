@@ -12,8 +12,7 @@ export const useSettings = () => {
 
 export const SettingsProvider = ({ children }) => {
   const [settings, setSettings] = useState(() => {
-    const saved = localStorage.getItem('gameSettings');
-    return saved ? JSON.parse(saved) : {
+    const defaultSettings = {
       soundEnabled: true,
       volume: 0.5,
       showGrassPercentage: false,
@@ -22,6 +21,19 @@ export const SettingsProvider = ({ children }) => {
       textToSpeechVoice: 'ZT9u07TYPVl83ejeLakq', // Default ElevenLabs voice ID
       textToSpeechSpeed: 1.0
     };
+
+    const saved = localStorage.getItem('gameSettings');
+    if (saved) {
+      try {
+        const parsedSettings = JSON.parse(saved);
+        // Merge saved settings with default settings to ensure all properties exist
+        return { ...defaultSettings, ...parsedSettings };
+      } catch (error) {
+        console.warn('Failed to parse saved settings, using defaults:', error);
+        return defaultSettings;
+      }
+    }
+    return defaultSettings;
   });
 
   useEffect(() => {
