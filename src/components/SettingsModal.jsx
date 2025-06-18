@@ -83,7 +83,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
     // Play sample after a short delay to ensure settings are updated
     setTimeout(() => {
       playVoiceSample();
-    }, 100);
+    }, 200);
   };
 
   // Handle TTS toggle with automatic sample when enabled
@@ -95,7 +95,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
     if (!wasEnabled) {
       setTimeout(() => {
         playVoiceSample();
-      }, 100);
+      }, 200);
     }
   };
 
