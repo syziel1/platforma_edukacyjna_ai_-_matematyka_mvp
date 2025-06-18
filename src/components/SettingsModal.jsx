@@ -5,9 +5,6 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useTextToSpeech } from '../hooks/useTextToSpeech';
 
 const SettingsModal = ({ isOpen, onClose }) => {
-  // Move the early return to the very beginning, before any hooks
-  if (!isOpen) return null;
-
   const { 
     settings, 
     toggleSound, 
@@ -21,6 +18,11 @@ const SettingsModal = ({ isOpen, onClose }) => {
   } = useSettings();
   const { t, currentLanguage, switchLanguage } = useLanguage();
   const { speak } = useTextToSpeech();
+
+  // Return hidden div instead of null to maintain consistent hook calls
+  if (!isOpen) {
+    return <div style={{ display: 'none' }} />;
+  }
 
   const handleResetGameState = () => {
     if (confirm(t('resetGameStateConfirm'))) {
