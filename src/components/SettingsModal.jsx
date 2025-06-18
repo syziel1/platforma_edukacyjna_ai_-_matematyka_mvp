@@ -2,6 +2,7 @@ import React from 'react';
 import { Volume2, VolumeX, X, RotateCcw, Eye, EyeOff, Globe, Target, Mic, MicOff } from 'lucide-react';
 import { useSettings } from '../contexts/SettingsContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useTextToSpeech } from '../hooks/useTextToSpeech';
 
 const SettingsModal = ({ isOpen, onClose }) => {
   const { 
@@ -16,6 +17,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
     resetGameState 
   } = useSettings();
   const { t, currentLanguage, switchLanguage } = useLanguage();
+  const { speak } = useTextToSpeech();
 
   if (!isOpen) return null;
 
@@ -47,6 +49,34 @@ const SettingsModal = ({ isOpen, onClose }) => {
     { value: 1.25, label: '1.25x' },
     { value: 1.5, label: '1.5x' }
   ];
+
+  // Function to play voice sample
+  const playVoiceSample = () => {
+    const sampleText = currentLanguage === 'pl' 
+      ? 'Witaj w Edu-Future! To jest próbka głosu w nowych ustawieniach.'
+      : 'Welcome to Edu-Future! This is a voice sample with your new settings.';
+    
+    // Use speak directly to bypass the enabled check since we want to test the voice
+    speak(sampleText);
+  };
+
+  // Handle voice change with sample
+  const handleVoiceChange = (voiceId) => {
+    setTextToSpeechVoice(voiceId);
+    // Play sample after a short delay to ensure settings are updated
+    setTimeout(() => {
+      playVoiceSample();
+    }, 100);
+  };
+
+  // Handle speed change with sample
+  const handleSpeedChange = (speed) => {
+    setTextToSpeechSpeed(speed);
+    // Play sample after a short delay to ensure settings are updated
+    setTimeout(() => {
+      playVoiceSample();
+    }, 100);
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -149,7 +179,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                   </label>
                   <select
                     value={settings.textToSpeechVoice}
-                    onChange={(e) => setTextToSpeechVoice(e.target.value)}
+                    onChange={(e) => handleVoiceChange(e.target.value)}
                     className="w-full p-2 border border-bg-neutral rounded-md focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color bg-white"
                   >
                     {voiceOptions.map((voice) => (
@@ -168,7 +198,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                     {speedOptions.map((option) => (
                       <button
                         key={option.value}
-                        onClick={() => setTextToSpeechSpeed(option.value)}
+                        onClick={() => handleSpeedChange(option.value)}
                         className={`py-1 px-2 rounded text-xs font-medium transition-colors ${
                           settings.textToSpeechSpeed === option.value
                             ? 'bg-accent-primary text-white'
@@ -179,6 +209,17 @@ const SettingsModal = ({ isOpen, onClose }) => {
                       </button>
                     ))}
                   </div>
+                </div>
+
+                {/* Test Voice Button */}
+                <div>
+                  <button
+                    onClick={playVoiceSample}
+                    className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition-colors font-medium text-sm flex items-center justify-center gap-2"
+                  >
+                    <Mic className="w-4 h-4" />
+                    {currentLanguage === 'pl' ? 'Przetestuj głos' : 'Test Voice'}
+                  </button>
                 </div>
               </div>
             )}
