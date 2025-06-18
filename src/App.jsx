@@ -163,8 +163,12 @@ function App() {
                     {renderContent()}
                   </div>
                 </div>
+                {/* Mobile Chat Panel */}
+                <div className="md:hidden">
+                  <ChatPanel isMobile={true} />
+                </div>
               </div>
-              {/* Right Panel for lesson pages */}
+              {/* Right Panel for lesson pages - Desktop only */}
               <div className="hidden md:block">
                 <RightPanel />
               </div>
