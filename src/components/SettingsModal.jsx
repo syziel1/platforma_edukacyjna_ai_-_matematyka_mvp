@@ -37,13 +37,13 @@ const SettingsModal = ({ isOpen, onClose }) => {
   const getVoiceOptionsForLanguage = () => {
     if (currentLanguage === 'pl') {
       return [
-        { id: 'zzBTsLBFM6AOJtkr1e9b', name: 'Paweł (domyślny)', isDefault: true },
-        { id: 'MFYIqIc5gZiNnuySA5V7', name: 'Grok', isDefault: false }
+        { id: 'zzBTsLBFM6AOJtkr1e9b', name: 'Paweł', isDefault: false },
+        { id: 'MFYIqIc5gZiNnuySA5V7', name: 'Groki', isDefault: true }
       ];
     } else {
       return [
-        { id: 'ZT9u07TYPVl83ejeLakq', name: 'Rachelle (default)', isDefault: true },
-        { id: 'MFYIqIc5gZiNnuySA5V7', name: 'Grok', isDefault: false }
+        { id: 'ZT9u07TYPVl83ejeLakq', name: 'Rachelle', isDefault: false },
+        { id: 'MFYIqIc5gZiNnuySA5V7', name: 'Groky', isDefault: true }
       ];
     }
   };
