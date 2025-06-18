@@ -137,14 +137,14 @@ const RightPanel = () => {
   }
 
   return (
-    <div className="w-80 h-full bg-white border-l border-gray-200 flex flex-col shadow-lg mt-12">
+    <div className="w-80 h-full bg-white border-l border-gray-200 flex flex-col shadow-lg mt-16">
       {/* Widget tabs */}
       <div className="flex border-b border-gray-200 bg-gray-50">
         {widgets.map((widget) => (
           <button
             key={widget.id}
             onClick={() => handleWidgetClick(widget.id)}
-            className={`flex-1 p-2 flex items-center justify-center gap-1 transition-colors border-b-2 ${
+            className={`flex-1 p-3 flex items-center justify-center gap-2 transition-colors border-b-2 ${
               activeWidget === widget.id
                 ? `${widget.borderColor} ${widget.bgColor} ${widget.color}`
                 : 'border-transparent hover:bg-gray-100 text-gray-600'
@@ -161,7 +161,7 @@ const RightPanel = () => {
 
       {/* Widget header */}
       {activeWidget && activeWidgetData && (
-        <div className={`p-2 border-b border-gray-200 ${activeWidgetData.bgColor}`}>
+        <div className={`p-3 border-b border-gray-200 ${activeWidgetData.bgColor}`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <activeWidgetData.icon className={`w-4 h-4 ${activeWidgetData.color}`} />
