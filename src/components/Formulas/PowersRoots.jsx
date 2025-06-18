@@ -53,7 +53,7 @@ const PowersRoots = () => {
                         <input
                             id="base"
                             type="range"
-                            min="2"
+                            min="0"
                             max="10"
                             value={base}
                             onChange={(e) => setBase(Number(e.target.value))}
@@ -66,7 +66,7 @@ const PowersRoots = () => {
                         <input
                             id="exponent"
                             type="range"
-                            min="2"
+                            min="0"
                             max="10"
                             value={exponent}
                             onChange={(e) => setExponent(Number(e.target.value))}
