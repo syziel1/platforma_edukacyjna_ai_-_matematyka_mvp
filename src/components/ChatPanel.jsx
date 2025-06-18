@@ -147,7 +147,7 @@ const ChatPanel = ({ isMobile = false }) => {
 
   if (isMobile) {
     return (
-      <div className={`bg-ai-bg shadow-lg transition-all duration-300 ${isExpanded ? 'h-96' : 'h-16'}`}>
+      <div className={`bg-ai-bg shadow-lg transition-all duration-300 ${isExpanded ? 'h-96' : 'h-16'} fixed bottom-0 left-16 right-0 z-20`}>
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className="w-full p-4 flex items-center justify-between border-b border-ai-bg/50"
@@ -209,8 +209,9 @@ const ChatPanel = ({ isMobile = false }) => {
   }
 
   return (
-    <div className="bg-ai-bg shadow-lg w-80 min-h-screen flex flex-col">
-      <div className="p-4 border-b border-ai-bg/50 bg-ai-bg">
+    <div className="bg-ai-bg shadow-lg w-80 h-full flex flex-col">
+      {/* Fixed header with top padding for Global Header */}
+      <div className="p-4 border-b border-ai-bg/50 bg-ai-bg mt-16">
         <div className="flex items-center gap-2">
           <Bot className="w-5 h-5 text-nav-bg" />
           <h3 className="font-semibold text-text-color">

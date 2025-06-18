@@ -94,13 +94,13 @@ const CockpitPage = ({ onProblemSelect }) => {
   };
 
   return (
-    <div className="min-h-screen bg-bg-main">
+    <div className="min-h-screen bg-bg-main flex flex-col">
       <GlobalHeader 
         title={getWelcomeMessage()}
         showBackButton={false}
       />
       
-      <div className="flex-1 p-4 md:p-6">
+      <div className="flex-1 p-4 md:p-6 mt-16">
         <div className="max-w-7xl mx-auto">
           {/* Główny układ dwukolumnowy */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

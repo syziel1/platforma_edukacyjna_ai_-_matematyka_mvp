@@ -130,54 +130,54 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-bg-main flex relative">
-      <NavigationPanel 
-        onLoginClick={() => setShowLogin(true)}
-        onShowCockpit={handleShowCockpit}
-        onShowStartScreen={handleShowStartScreen}
-      />
+    <div className="min-h-screen bg-bg-main flex">
+      {/* Fixed Navigation Panel */}
+      <div className="fixed left-0 top-0 bottom-0 z-40">
+        <NavigationPanel 
+          onLoginClick={() => setShowLogin(true)}
+          onShowCockpit={handleShowCockpit}
+          onShowStartScreen={handleShowStartScreen}
+        />
+      </div>
 
-      {showCockpit ? (
-        <div className="flex-1 pt-16 md:pt-0">
+      {/* Main content area with proper margins */}
+      <div className="flex-1 flex flex-col ml-16">
+        {showCockpit ? (
           <CockpitPage onProblemSelect={handleProblemSelect} />
-        </div>
-      ) : showStartScreen ? (
-        <div className="flex-1 pt-16 md:pt-0">
+        ) : showStartScreen ? (
           <StartScreen onProblemSelect={handleProblemSelect} />
-        </div>
-      ) : selectedProblem ? (
-        selectedProblem === 'jungle-game' ? (
-          <div className="flex-1 pt-16 md:pt-0">
+        ) : selectedProblem ? (
+          selectedProblem === 'jungle-game' ? (
             <JungleGame onBack={handleBackToCockpit} startWithModeSelector={true} />
-          </div>
-        ) : (
-          <div className="flex flex-1">
-            <div className="flex-1 flex flex-col">
-              <div className="flex-1 flex flex-col pt-16 md:pt-0">
-                <LessonHeader 
-                  currentStep={currentStep} 
-                  totalSteps={totalSteps} 
-                  onBack={handleBackToCockpit}
-                />
-                <div className="flex-1 overflow-y-auto">
-                  {renderContent()}
+          ) : (
+            <div className="flex flex-1">
+              <div className="flex-1 flex flex-col">
+                <div className="flex-1 flex flex-col">
+                  <LessonHeader 
+                    currentStep={currentStep} 
+                    totalSteps={totalSteps} 
+                    onBack={handleBackToCockpit}
+                  />
+                  <div className="flex-1 overflow-y-auto">
+                    {renderContent()}
+                  </div>
+                </div>
+                {/* Mobile Chat Panel */}
+                <div className="md:hidden">
+                  <ChatPanel isMobile={true} />
                 </div>
               </div>
-              <div className="md:hidden">
-                <ChatPanel isMobile={true} />
+              {/* Desktop Chat Panel - Fixed position */}
+              <div className="hidden md:block fixed right-0 top-0 bottom-0 z-30">
+                <ChatPanel />
               </div>
             </div>
-            <div className="hidden md:block">
-              <ChatPanel />
-            </div>
-          </div>
-        )
-      ) : (
-        // Fallback - nie powinno się zdarzyć, ale dla bezpieczeństwa
-        <div className="flex-1 pt-16 md:pt-0">
+          )
+        ) : (
+          // Fallback - nie powinno się zdarzyć, ale dla bezpieczeństwa
           <CockpitPage onProblemSelect={handleProblemSelect} />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

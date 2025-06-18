@@ -153,8 +153,8 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
 
   return (
     <>
-      {/* Mobile Top Menu Bar */}
-      <div className="fixed md:hidden top-0 left-0 right-0 bg-nav-bg h-16 flex items-center justify-around px-4 z-40">
+      {/* Mobile Top Menu Bar - Fixed */}
+      <div className="fixed md:hidden top-0 left-0 right-0 bg-nav-bg h-16 flex items-center justify-around px-4 z-50">
         {menuItems.map((item, index) => (
           <button
             key={index}
@@ -172,11 +172,11 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
         ))}
       </div>
 
-      {/* Full Screen Menu (Mobile) / Sidebar (Desktop) */}
+      {/* Full Screen Menu (Mobile) / Sidebar (Desktop) - Fixed */}
       <div 
-        className={`fixed md:relative bg-nav-bg text-white shadow-lg transition-all duration-300 z-50 
+        className={`fixed bg-nav-bg text-white shadow-lg transition-all duration-300 z-50 
           ${isExpanded ? 'w-full md:w-64' : 'w-16'} 
-          min-h-screen flex flex-col
+          h-full flex flex-col
           ${isExpanded ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
       >
         {/* Header */}
@@ -231,7 +231,7 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
         )}
 
         {/* Menu Items */}
-        <nav className="flex-1 p-2 mt-16 md:mt-0">
+        <nav className="flex-1 p-2 mt-16 md:mt-0 overflow-y-auto">
           {menuItems.slice(1).map((item, index) => ( // Skip first item (Menu) in sidebar
             <button
               key={index}
