@@ -72,9 +72,9 @@ const SettingsModal = ({ isOpen, onClose }) => {
   const handleVoiceChange = (voiceId) => {
     setTextToSpeechVoice(voiceId);
     // Play sample after a short delay to ensure settings are updated
-    setTimeout(() => {
-      playVoiceSample();
-    }, 200);
+    //setTimeout(() => {
+      //playVoiceSample();
+    //}, 200);
   };
 
   // Handle speed change with automatic sample
