@@ -120,7 +120,7 @@ export const en = {
   'waterTankDesc': 'Calculate optimal dimensions for a cylindrical water tank.',
   'jungleGameTitle': 'Game: Mathematical Jungle',
   'jungleGameDesc': 'Explore a mysterious jungle while learning mathematical operations in an adventure game.',
-  'powersRootsTitle': 'Forumulas: Powers & Roots',
+  'powersRootsTitle': 'Formulas: Powers & Roots',
   'powersRootsDesc': 'Interactive formulas and definitions of powers and roots.',
   
   // Game Mode Selector
