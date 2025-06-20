@@ -16,6 +16,10 @@ const AboutProjectModal = ({ isOpen, onClose }) => {
     window.open('https://www.linkedin.com/in/sylwekpl', '_blank');
   };
 
+  const handleTechClick = (url) => {
+    window.open(url, '_blank');
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
@@ -53,25 +57,25 @@ const AboutProjectModal = ({ isOpen, onClose }) => {
 
           {/* Key Features */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
               <h4 className="font-bold text-blue-800 mb-2">🎯 Problem-Based Learning</h4>
               <p className="text-blue-700 text-sm">
                 Every topic starts with a practical, real-world problem.
               </p>
             </div>
-            <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
               <h4 className="font-bold text-green-800 mb-2">🤖 Personalized AI Mentor</h4>
               <p className="text-green-700 text-sm">
                 Dedicated AI assistant adapts to individual learning pace.
               </p>
             </div>
-            <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+            <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
               <h4 className="font-bold text-purple-800 mb-2">🎮 Gamification</h4>
               <p className="text-purple-700 text-sm">
                 Learning through interactive games and challenges.
               </p>
             </div>
-            <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
+            <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
               <h4 className="font-bold text-orange-800 mb-2">👨‍🏫 Mentor Support</h4>
               <p className="text-orange-700 text-sm">
                 Platform connects students with real teachers and tutors.
@@ -79,20 +83,20 @@ const AboutProjectModal = ({ isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Team Section */}
+          {/* Team Section - Only Project Leader */}
           <div className="bg-nav-bg/5 rounded-lg p-6 border border-nav-bg/20">
             <h3 className="text-xl font-bold text-text-color mb-4 flex items-center gap-2">
               <Users className="w-5 h-5 text-nav-bg" />
-              Project Team
+              Project Leader
             </h3>
             
             {/* Project Leader */}
-            <div className="bg-white rounded-lg p-4 border border-nav-bg/30 mb-4">
-              <div className="flex items-center gap-4 mb-3">
-                {/* Mentor photo - placeholder that can be replaced */}
-                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-accent-primary shadow-lg">
+            <div className="bg-white rounded-lg p-6 border border-nav-bg/30">
+              <div className="flex items-center gap-4 mb-4">
+                {/* Leader photo */}
+                <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-accent-primary shadow-lg">
                   <img 
-                    src="/mentor-photo.jpg"
+                    src="/images/Syziel_AIMentor_profile_photo.jpg"
                     alt="Sylwester Zieliński"
                     className="w-full h-full object-cover"
                     onError={(e) => {
@@ -103,15 +107,20 @@ const AboutProjectModal = ({ isOpen, onClose }) => {
                   />
                   {/* Fallback with initials */}
                   <div 
-                    className="w-full h-full bg-gradient-to-br from-accent-primary to-accent-secondary rounded-full flex items-center justify-center text-white font-bold text-xl"
+                    className="w-full h-full bg-gradient-to-br from-accent-primary to-accent-secondary rounded-full flex items-center justify-center text-white font-bold text-2xl"
                     style={{ display: 'none' }}
                   >
                     SZ
                   </div>
                 </div>
-                <div>
-                  <h4 className="font-bold text-text-color text-lg">Sylwester Zieliński</h4>
-                  <p className="text-text-color/70">Project Leader, Visionary, UI Prototyping</p>
+                <div className="flex-1">
+                  <h4 className="font-bold text-text-color text-xl mb-1">Sylwester Zieliński</h4>
+                  <p className="text-text-color/70 mb-2">Project Leader, Visionary, UI Prototyping</p>
+                  <p className="text-text-color/60 text-sm leading-relaxed">
+                    For over 30 years, Sylwester has been connecting the worlds of technology and education, 
+                    helping others develop future skills. Edu-Future is the fruit of this experience, 
+                    created from a deep belief that every student deserves education that inspires them.
+                  </p>
                 </div>
               </div>
               
@@ -132,44 +141,81 @@ const AboutProjectModal = ({ isOpen, onClose }) => {
                 </button>
               </div>
             </div>
-
-            {/* Other Team Members */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-white/50 rounded-lg p-3 border border-nav-bg/20">
-                <h5 className="font-bold text-text-color">Arkadiusz Słota</h5>
-                <p className="text-text-color/70 text-sm">System Architecture, AI Developer (RAG & Gen AI)</p>
-              </div>
-              <div className="bg-white/50 rounded-lg p-3 border border-nav-bg/20">
-                <h5 className="font-bold text-text-color">Mateusz Tyburski</h5>
-                <p className="text-text-color/70 text-sm">Automation, Technical Support</p>
-              </div>
-              <div className="bg-white/50 rounded-lg p-3 border border-nav-bg/20">
-                <h5 className="font-bold text-text-color">Michał Marini</h5>
-                <p className="text-text-color/70 text-sm">Processes, Analytics</p>
-              </div>
-            </div>
           </div>
 
           {/* Technology Stack */}
           <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
             <h3 className="text-xl font-bold text-text-color mb-4">🛠️ Technology Stack</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="bg-white rounded-lg p-3 text-center border border-gray-200">
-                <div className="text-2xl mb-1">⚛️</div>
+              <button
+                onClick={() => handleTechClick('https://reactjs.org/')}
+                className="bg-white rounded-lg p-3 text-center border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-200 group"
+              >
+                <div className="text-2xl mb-1 group-hover:scale-110 transition-transform">⚛️</div>
                 <div className="text-sm font-medium text-text-color">React.js</div>
-              </div>
-              <div className="bg-white rounded-lg p-3 text-center border border-gray-200">
-                <div className="text-2xl mb-1">⚡</div>
+              </button>
+              
+              <button
+                onClick={() => handleTechClick('https://vitejs.dev/')}
+                className="bg-white rounded-lg p-3 text-center border border-gray-200 hover:border-purple-300 hover:shadow-md transition-all duration-200 group"
+              >
+                <div className="text-2xl mb-1 group-hover:scale-110 transition-transform">⚡</div>
                 <div className="text-sm font-medium text-text-color">Vite</div>
-              </div>
-              <div className="bg-white rounded-lg p-3 text-center border border-gray-200">
-                <div className="text-2xl mb-1">🤖</div>
+              </button>
+              
+              <button
+                onClick={() => handleTechClick('https://ai.google.dev/')}
+                className="bg-white rounded-lg p-3 text-center border border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-200 group"
+              >
+                <div className="text-2xl mb-1 group-hover:scale-110 transition-transform">🤖</div>
                 <div className="text-sm font-medium text-text-color">Google Gemini</div>
-              </div>
-              <div className="bg-white rounded-lg p-3 text-center border border-gray-200">
-                <div className="text-2xl mb-1">🎨</div>
+              </button>
+              
+              <button
+                onClick={() => handleTechClick('https://tailwindcss.com/')}
+                className="bg-white rounded-lg p-3 text-center border border-gray-200 hover:border-cyan-300 hover:shadow-md transition-all duration-200 group"
+              >
+                <div className="text-2xl mb-1 group-hover:scale-110 transition-transform">🎨</div>
                 <div className="text-sm font-medium text-text-color">Tailwind CSS</div>
-              </div>
+              </button>
+              
+              <button
+                onClick={() => handleTechClick('https://bolt.new/?rid=0kzvq1')}
+                className="bg-white rounded-lg p-3 text-center border border-gray-200 hover:border-yellow-300 hover:shadow-md transition-all duration-200 group"
+              >
+                <div className="text-2xl mb-1 group-hover:scale-110 transition-transform">⚡</div>
+                <div className="text-sm font-medium text-text-color">bolt.new</div>
+              </button>
+              
+              <button
+                onClick={() => handleTechClick('https://try.elevenlabs.io/jg4jnb5rp13k')}
+                className="bg-white rounded-lg p-3 text-center border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all duration-200 group"
+              >
+                <div className="text-2xl mb-1 group-hover:scale-110 transition-transform">🎤</div>
+                <div className="text-sm font-medium text-text-color">ElevenLabs</div>
+              </button>
+              
+              <button
+                onClick={() => handleTechClick('https://supabase.com/')}
+                className="bg-white rounded-lg p-3 text-center border border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-200 group"
+              >
+                <div className="text-2xl mb-1 group-hover:scale-110 transition-transform">🗄️</div>
+                <div className="text-sm font-medium text-text-color">Supabase</div>
+              </button>
+              
+              <button
+                onClick={() => handleTechClick('https://www.tavus.io/')}
+                className="bg-white rounded-lg p-3 text-center border border-gray-200 hover:border-red-300 hover:shadow-md transition-all duration-200 group"
+              >
+                <div className="text-2xl mb-1 group-hover:scale-110 transition-transform">🎥</div>
+                <div className="text-sm font-medium text-text-color">Tavus</div>
+              </button>
+            </div>
+            
+            <div className="mt-4 text-center">
+              <p className="text-sm text-gray-600">
+                Click on any technology to learn more about it
+              </p>
             </div>
           </div>
 
