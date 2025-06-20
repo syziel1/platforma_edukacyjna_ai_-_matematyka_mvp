@@ -114,14 +114,14 @@ export const en = {
   // Problems
   'chickenCoopTitle': 'Task: Optimal Chicken Coop',
   'chickenCoopDesc': 'Find the best dimensions for a chicken coop with limited fence length.',
-  'ecoTshirtTitle': 'Startup: Eco T-shirt',
+  'ecoTshirtTitle': 'Task: Startup Eco T-shirt',
   'ecoTshirtDesc': 'Start your own eco-friendly t-shirt startup with AI-generated prints. Make smart financial decisions!',
   'waterTankTitle': 'Task: Water Tank',
   'waterTankDesc': 'Calculate optimal dimensions for a cylindrical water tank.',
-  'jungleGameTitle': 'Game',
+  'jungleGameTitle': 'Game: Mathematical Jungle',
   'jungleGameDesc': 'Explore a mysterious jungle while learning mathematical operations in an adventure game.',
-  'powersRootsTitle': 'Powers & Roots',
-  'powersRootsDesc': 'Interactive formulas and definitions.',
+  'powersRootsTitle': 'Forumulas: Powers & Roots',
+  'powersRootsDesc': 'Interactive formulas and definitions of powers and roots.',
   
   // Game Mode Selector
   'chooseMathOperations': 'Choose Mathematical Operations',
