@@ -5,14 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTextToSpeech } from '../hooks/useTextToSpeech';
 
 const ChatPanel = ({ isMobile = false }) => {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      type: 'ai',
-      content: '',
-      timestamp: new Date()
-    }
-  ]);
+  const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -20,25 +13,47 @@ const ChatPanel = ({ isMobile = false }) => {
   const { user } = useAuth();
   const { speakIfEnabled } = useTextToSpeech();
   
-  // Flag to prevent double speaking of welcome message
-  const welcomeSpokenRef = useRef(false);
+  // Tworzymy unikalny klucz do localStorage dla każdego użytkownika lub gościa
+  const storageKey = `chatHistory_${user?.id || 'anonymous'}`;
 
-  // Initialize welcome message with translation
-  React.useEffect(() => {
-    const welcomeMessage = t('chatWelcomeMessage');
-    setMessages([{
-      id: 1,
-      type: 'ai',
-      content: welcomeMessage,
-      timestamp: new Date()
-    }]);
-    
-    // Speak welcome message only once
-    if (!welcomeSpokenRef.current) {
-      welcomeSpokenRef.current = true;
-      speakIfEnabled(welcomeMessage);
+  // --- NOWY KOD: Efekt do wczytywania historii czatu przy starcie ---
+  useEffect(() => {
+    try {
+      const savedMessages = localStorage.getItem(storageKey);
+      if (savedMessages && savedMessages.length > 2) { // Prosta walidacja, czy dane nie są puste "[]"
+        setMessages(JSON.parse(savedMessages));
+      } else {
+        // Jeśli brak historii, utwórz nową z wiadomością powitalną
+        const welcomeMessage = t('chatWelcomeMessage');
+        setMessages([{
+          id: 1,
+          type: 'ai',
+          content: welcomeMessage,
+          timestamp: new Date().toISOString() // Używamy ISOString dla spójności
+        }]);
+        speakIfEnabled(welcomeMessage);
+      }
+    } catch (error) {
+        console.error("Failed to parse chat history from localStorage", error);
+        // W razie błędu, zacznij od nowa
+        const welcomeMessage = t('chatWelcomeMessage');
+        setMessages([{
+          id: 1,
+          type: 'ai',
+          content: welcomeMessage,
+          timestamp: new Date().toISOString()
+        }]);
     }
-  }, [t, speakIfEnabled]);
+  }, [storageKey, t]); // Uruchom tylko raz, gdy zmieni się klucz (np. po zalogowaniu)
+
+  // --- NOWY KOD: Efekt do zapisywania historii czatu po każdej zmianie ---
+  useEffect(() => {
+    // Zapisujemy tylko jeśli są jakieś wiadomości, aby uniknąć nadpisania pustą tablicą
+    if (messages.length > 0) {
+      localStorage.setItem(storageKey, JSON.stringify(messages));
+    }
+  }, [messages, storageKey]);
+
 
   const generateGeminiResponse = async (userInput) => {
     if (isLoading) return t('chatWaitMessage');
@@ -117,7 +132,7 @@ const ChatPanel = ({ isMobile = false }) => {
       id: Date.now(),
       type: 'user',
       content: inputValue,
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     };
 
     setMessages(prev => [...prev, userMessage]);
@@ -129,12 +144,10 @@ const ChatPanel = ({ isMobile = false }) => {
       id: Date.now() + 1,
       type: 'ai',
       content: aiResponse,
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     };
 
     setMessages(prev => [...prev, aiMessage]);
-    
-    // Speak AI response if TTS is enabled
     speakIfEnabled(aiResponse);
   };
 
@@ -144,7 +157,8 @@ const ChatPanel = ({ isMobile = false }) => {
       handleSendMessage();
     }
   };
-
+  
+  // Reszta komponentu (część JSX) pozostaje bez zmian
   if (isMobile) {
     return (
       <div className={`bg-ai-bg shadow-lg transition-all duration-300 ${isExpanded ? 'h-96' : 'h-16'} fixed bottom-0 left-0 md:left-16 right-0 z-20`}>
