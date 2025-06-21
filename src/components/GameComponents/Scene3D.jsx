@@ -164,46 +164,28 @@ const Scene3D = ({
     }
   };
 
-  const formatQuestionDisplay = (cellData) => {
-    if (!cellData || !cellData.questionData) {
-      return cellData?.question || '';
-    }
-
-    const { questionData } = cellData;
-    switch(questionData.operation) {
-      case 'addition':
-        return `${questionData.num1} + ${questionData.num2} = ?`;
-      case 'subtraction':
-        return `${questionData.num1} - ${questionData.num2} = ?`;
-      case 'multiplication':
-        return `${questionData.num1} × ${questionData.num2} = ?`;
-      case 'division':
-        return `${questionData.num1} ÷ ${questionData.num2} = ?`;
-      case 'exponentiation':
-        return `${questionData.num1}^${questionData.num2} = ?`;
-      case 'square-root':
-        return `√${questionData.num1} = ?`;
-      default:
-        return cellData.question;
-    }
+  // Calculate points to earn for a cell
+  const calculateCellPoints = (cellData) => {
+    if (!cellData) return 0;
+    const baseScore = cellData.row + cellData.col + 2;
+    return cellData.isBonus && cellData.grass > 50 ? baseScore * 2 : baseScore;
   };
 
-  // Get the cell directly in front of the player (center front view)
-  const getFrontCenterCell = () => {
-    const frontCenterCoords = currentViewConfig.frontView[1]; // Middle cell of front view
-    return getCell(frontCenterCoords.r, frontCenterCoords.c);
-  };
-
-  const frontCenterCell = getFrontCenterCell();
-
-  // Get current player position cell data for background color
-  const currentCell = getCell(pr, pc);
-  const currentCellColor = getCellBackgroundColor(currentCell);
-
-  // Create gradient background that transitions from sky to current cell color
-  const getBackgroundGradient = () => {
-    const skyColor = '#87CEEB'; // Sky blue
-    return `linear-gradient(180deg, ${skyColor} 0%, ${skyColor} 30%, ${currentCellColor} 100%)`;
+  // Handle task click/touch - simulate arrow up key press
+  const handleTaskClick = (cellData) => {
+    if (!cellData || cellData.grass < 10) return; // Only clickable if grassy
+    
+    // Create a synthetic keyboard event for arrow up
+    const event = new KeyboardEvent('keydown', {
+      key: 'ArrowUp',
+      code: 'ArrowUp',
+      keyCode: 38,
+      which: 38,
+      bubbles: true
+    });
+    
+    // Dispatch the event to trigger the existing keyboard handler
+    window.dispatchEvent(event);
   };
 
   // FIXED: Handle side view clicks for left/right rotation
@@ -233,21 +215,22 @@ const Scene3D = ({
     window.dispatchEvent(event);
   };
 
-  // Handle task click/touch - simulate arrow up key press
-  const handleTaskClick = (cellData) => {
-    if (!cellData || cellData.grass < 10) return; // Only clickable if grassy
-    
-    // Create a synthetic keyboard event for arrow up
-    const event = new KeyboardEvent('keydown', {
-      key: 'ArrowUp',
-      code: 'ArrowUp',
-      keyCode: 38,
-      which: 38,
-      bubbles: true
-    });
-    
-    // Dispatch the event to trigger the existing keyboard handler
-    window.dispatchEvent(event);
+  // Get the cell directly in front of the player (center front view)
+  const getFrontCenterCell = () => {
+    const frontCenterCoords = currentViewConfig.frontView[1]; // Middle cell of front view
+    return getCell(frontCenterCoords.r, frontCenterCoords.c);
+  };
+
+  const frontCenterCell = getFrontCenterCell();
+
+  // Get current player position cell data for background color
+  const currentCell = getCell(pr, pc);
+  const currentCellColor = getCellBackgroundColor(currentCell);
+
+  // Create gradient background that transitions from sky to current cell color
+  const getBackgroundGradient = () => {
+    const skyColor = '#87CEEB'; // Sky blue
+    return `linear-gradient(180deg, ${skyColor} 0%, ${skyColor} 30%, ${currentCellColor} 100%)`;
   };
 
   const render3DCell = (coords, index, isInFrontGroup, currentCellColor) => {
@@ -304,7 +287,7 @@ const Scene3D = ({
             />
           </div>
 
-          {/* Mathematical task display for front center cell */}
+          {/* Points display for front center cell */}
           {isFrontCenter && cellData && cellData.grass >= 10 && (
             <div 
               className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20 cursor-pointer"
@@ -333,7 +316,7 @@ const Scene3D = ({
                     className="text-lg font-bold mb-1"
                     style={{ color: getModeColor(selectedMode) }}
                   >
-                    {formatQuestionDisplay(cellData)}
+                    +{calculateCellPoints(cellData)} {t('points')}
                   </div>
                   {/* Click/Touch indicator */}
                   <div className="text-xs text-gray-500 mt-1 opacity-75">

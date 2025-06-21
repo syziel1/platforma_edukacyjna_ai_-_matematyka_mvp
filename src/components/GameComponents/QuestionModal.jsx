@@ -45,6 +45,17 @@ const QuestionModal = ({
     }
   }, [wiseOwlAdvice, playSound, speakIfEnabled]);
 
+  // Auto-close modal after 3 wrong answers
+  useEffect(() => {
+    if (wrongAnswersCount >= 3) {
+      setTimeout(() => {
+        if (onCancel) {
+          onCancel();
+        }
+      }, 1500); // Give user time to see the feedback
+    }
+  }, [wrongAnswersCount, onCancel]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!answer || parseInt(answer) <= 0) {
@@ -114,6 +125,11 @@ const QuestionModal = ({
     }
   };
 
+  // Calculate points lost for wrong answers
+  const getPointsLost = () => {
+    return wrongAnswersCount + 1; // 1x, 2x, 3x
+  };
+
   const formatQuestion = () => {
     if (!question || !question.questionData) {
       return { display: question?.question || '', symbol: '=' };
@@ -169,6 +185,17 @@ const QuestionModal = ({
           50% { opacity: 1; transform: scale(1); }
         }
         
+        @keyframes pulseRed {
+          0%, 100% { 
+            background-color: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+          }
+          50% { 
+            background-color: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.5);
+          }
+        }
+        
         .modal-enter {
           animation: modalSlideIn 0.3s ease-out;
         }
@@ -215,10 +242,14 @@ const QuestionModal = ({
           padding: 1rem;
           box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
+        
+        .danger-zone {
+          animation: pulseRed 1s ease-in-out infinite;
+        }
       `}</style>
       
       <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
-        <div className={`bg-white p-8 rounded-xl shadow-2xl max-w-md w-full mx-4 modal-enter border-2 border-amber-200 relative ${isShaking ? 'shake' : ''}`}>
+        <div className={`bg-white p-8 rounded-xl shadow-2xl max-w-md w-full mx-4 modal-enter border-2 border-amber-200 relative ${isShaking ? 'shake' : ''} ${wrongAnswersCount >= 2 ? 'danger-zone' : ''}`}>
           {/* Exit button */}
           {onCancel && (
             <button
@@ -258,23 +289,45 @@ const QuestionModal = ({
                 className="w-full p-4 border-2 border-blue-300 rounded-lg text-center text-2xl font-bold focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all duration-200"
                 placeholder={t('yourAnswer')}
                 autoFocus
+                disabled={wrongAnswersCount >= 3}
               />
               {wrongAnswersCount > 0 && (
                 <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                  {t('errors')} {wrongAnswersCount}
+                  {t('errors')} {wrongAnswersCount}/3
                 </div>
               )}
             </div>
             
+            {/* Points penalty warning */}
+            {wrongAnswersCount > 0 && wrongAnswersCount < 3 && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-center">
+                <p className="text-red-700 text-sm font-medium">
+                  ⚠️ {t('nextWrongAnswer')}: -{getPointsLost()} {t('points')}
+                </p>
+              </div>
+            )}
+
+            {/* Final warning */}
+            {wrongAnswersCount >= 3 && (
+              <div className="bg-red-100 border border-red-300 rounded-lg p-4 text-center">
+                <p className="text-red-800 font-bold">
+                  ❌ {t('tooManyErrors')}
+                </p>
+                <p className="text-red-700 text-sm mt-1">
+                  {t('modalClosing')}
+                </p>
+              </div>
+            )}
+            
             <button
               type="submit"
-              disabled={!answer}
+              disabled={!answer || wrongAnswersCount >= 3}
               className={`w-full bg-gradient-to-r ${getGradientColors(selectedMode)} text-white py-3 px-6 rounded-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg transform active:scale-95`}
             >
               ✅ {t('checkAnswer')}
             </button>
 
-            {wrongAnswersCount >= 1 && onAskWiseOwl && (
+            {wrongAnswersCount >= 1 && wrongAnswersCount < 3 && onAskWiseOwl && (
               <button
                 type="button"
                 onClick={handleWiseOwlClick}
@@ -331,7 +384,7 @@ const QuestionModal = ({
             ))}
           </div>
           
-          {wrongAnswersCount >= 2 && (
+          {wrongAnswersCount >= 2 && wrongAnswersCount < 3 && (
             <p className="text-center text-sm text-gray-600 mt-2">
               💡 {t('hint')}: {t('tryBreakDown')}
             </p>

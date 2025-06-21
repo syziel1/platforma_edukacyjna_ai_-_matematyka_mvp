@@ -195,6 +195,9 @@ export const pl = {
   'adviceFromOwl': 'Rada od Mądrej Sowy:',
   'errors': 'Błędów:',
   'tryBreakDown': 'Spróbuj rozłożyć działanie na prostsze części',
+  'nextWrongAnswer': 'Kara za następny błąd',
+  'tooManyErrors': 'Zbyt wiele błędów!',
+  'modalClosing': 'Pytanie zostanie automatycznie zamknięte...',
   
   // 3D Scene Task Display
   'task': 'Zadanie',

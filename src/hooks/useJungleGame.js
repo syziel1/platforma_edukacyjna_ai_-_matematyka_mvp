@@ -379,7 +379,9 @@ export const useJungleGame = (startWithModeSelector = false) => {
         checkLevelProgression();
       }, 100);
     } else {
-      // Wrong answer logic
+      // Wrong answer logic - lose points based on error count
+      const pointsLost = gameState.wrongAnswersCount + 1; // 1x, 2x, 3x
+      
       const newFullBoardData = gameState.fullBoardData.map(cell => {
         if (cell.row === currentCell.row && cell.col === currentCell.col) {
           const newGrass = Math.min(200, cell.grass + Math.ceil(cell.grass * 0.20));
@@ -397,11 +399,24 @@ export const useJungleGame = (startWithModeSelector = false) => {
         ...prev,
         fullBoardData: newFullBoardData,
         visibleBoardData: newVisibleBoardData,
-        score: Math.max(0, prev.score - 1),
+        score: Math.max(0, prev.score - pointsLost),
         wrongAnswersCount: prev.wrongAnswersCount + 1
       }));
 
-      showMessage('Wrong answer. Grass is growing back...', 2000);
+      // Close modal after 3rd wrong answer
+      if (gameState.wrongAnswersCount + 1 >= 3) {
+        showMessage(`Wrong answer! -${pointsLost} points. Too many errors - try again!`, 2000);
+        setTimeout(() => {
+          setGameState(prev => ({
+            ...prev,
+            showQuestion: false,
+            currentQuestion: null,
+            wrongAnswersCount: 0
+          }));
+        }, 1500);
+      } else {
+        showMessage(`Wrong answer! -${pointsLost} points. Grass is growing back...`, 2000);
+      }
     }
   };
 
