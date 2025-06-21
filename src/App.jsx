@@ -146,6 +146,11 @@ function App() {
             <div className="flex flex-1">
               <div className="flex-1 flex flex-col">
                 <div className="flex-1 flex flex-col">
+      <GlobalHeader 
+        title={title || t('lessonTitle')}
+        onBack={onBack}
+        showBackButton={true}
+      />
                   <LessonHeader 
                     currentStep={currentStep} 
                     totalSteps={totalSteps} 
