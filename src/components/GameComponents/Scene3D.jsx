@@ -202,7 +202,7 @@ const Scene3D = ({
     window.dispatchEvent(event);
   };
 
-  // FIXED: Handle front view click - simulate arrow up key press
+  // Handle front view click - simulate arrow up key press
   const handleFrontViewClick = () => {
     const event = new KeyboardEvent('keydown', {
       key: 'ArrowUp',
