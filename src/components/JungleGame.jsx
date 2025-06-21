@@ -279,7 +279,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
           onCancel={handleCancel}
         />
       ) : (
-        <div className="flex-1 flex flex-col pt-16 overflow-hidden">
+        <div className="flex-1 flex flex-col pt-14 overflow-hidden">
           {/* 3D View - 40% of height */}
           <div className="h-2/5 view-3d">
             <div id="playerActionFeedback" className="text-lg mb-2 text-white text-shadow min-h-[25px]" />
