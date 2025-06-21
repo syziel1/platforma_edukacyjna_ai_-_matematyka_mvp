@@ -29,7 +29,7 @@ const PowersRoots = () => {
     const exponentLabel = currentLanguage === 'pl' ? 'Wykładnik (n)' : 'Exponent (n)';
 
     return (
-        <div className="p-6">
+        <div className="p-6 bg-bg-main">
             <h1 className="text-3xl font-bold text-text-color mb-6 flex items-center">
                 <Zap className="mr-2" />
                 {title}
