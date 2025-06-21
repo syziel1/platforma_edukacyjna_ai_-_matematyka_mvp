@@ -5,62 +5,62 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useProgress } from '../contexts/ProgressContext';
 import GlobalHeader from './GlobalHeader';
 
+export const problems = [
+  {
+    id: 'jungle-game',
+    title: t('jungleGameTitle'),
+    description: t('jungleGameDesc'),
+    difficulty: 'medium',
+    icon: Calculator,
+    color: 'accent-secondary',
+    totalSteps: 1,
+    route: '/game/jungle'
+  },
+  {
+    id: 'chicken-coop',
+    title: t('chickenCoopTitle'),
+    description: t('chickenCoopDesc'),
+    difficulty: 'easy',
+    icon: Star,
+    color: 'accent-primary',
+    totalSteps: 8,
+    route: '/lesson/chicken-coop'
+  },
+  {
+    id: 'eco-tshirt',
+    title: t('ecoTshirtTitle'),
+    description: t('ecoTshirtDesc'),
+    difficulty: 'medium',
+    icon: TrendingUp,
+    color: 'nav-bg',
+    totalSteps: 5,
+    route: '/lesson/eco-tshirt'
+  },
+  {
+    id: 'water-tank',
+    title: t('waterTankTitle'),
+    description: t('waterTankDesc'),
+    difficulty: 'hard',
+    icon: Trophy,
+    color: 'nav-bg',
+    totalSteps: 5,
+    route: '/lesson/water-tank'
+  },
+  {
+    id: 'powers-roots',
+    title: t('powersRootsTitle'),
+    description: t('powersRootsDesc'),
+    icon: Zap,
+    color: 'accent-primary',
+    totalSteps: 1,
+    route: '/lesson/powers-roots'
+  }
+];
+
 const StartScreen = () => {
   const { t } = useLanguage();
   const { getProgress } = useProgress();
   const navigate = useNavigate();
-
-  export const problems = [
-    {
-      id: 'jungle-game',
-      title: t('jungleGameTitle'),
-      description: t('jungleGameDesc'),
-      difficulty: 'medium',
-      icon: Calculator,
-      color: 'accent-secondary',
-      totalSteps: 1,
-      route: '/game/jungle'
-    },
-    {
-      id: 'chicken-coop',
-      title: t('chickenCoopTitle'),
-      description: t('chickenCoopDesc'),
-      difficulty: 'easy',
-      icon: Star,
-      color: 'accent-primary',
-      totalSteps: 8,
-      route: '/lesson/chicken-coop'
-    },
-    {
-      id: 'eco-tshirt',
-      title: t('ecoTshirtTitle'),
-      description: t('ecoTshirtDesc'),
-      difficulty: 'medium',
-      icon: TrendingUp,
-      color: 'nav-bg',
-      totalSteps: 5,
-      route: '/lesson/eco-tshirt'
-    },
-    {
-      id: 'water-tank',
-      title: t('waterTankTitle'),
-      description: t('waterTankDesc'),
-      difficulty: 'hard',
-      icon: Trophy,
-      color: 'nav-bg',
-      totalSteps: 5,
-      route: '/lesson/water-tank'
-    },
-    {
-      id: 'powers-roots',
-      title: t('powersRootsTitle'),
-      description: t('powersRootsDesc'),
-      icon: Zap,
-      color: 'accent-primary',
-      totalSteps: 1,
-      route: '/lesson/powers-roots'
-    }
-  ];
 
   const handleProblemSelect = (problem) => {
     navigate(problem.route);
