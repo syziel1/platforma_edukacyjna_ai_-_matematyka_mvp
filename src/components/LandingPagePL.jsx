@@ -10,7 +10,7 @@ const LandingPagePL = ({ onEnterApp }) => {
       try {
         if (audioRef.current) {
           audioRef.current.volume = 0.7; // Set volume to 70%
-          // await audioRef.current.play();
+          await audioRef.current.play();
         }
       } catch (error) {
         // Auto-play might be blocked by browser policy
