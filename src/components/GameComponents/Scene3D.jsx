@@ -188,7 +188,7 @@ const Scene3D = ({
     window.dispatchEvent(event);
   };
 
-  // FIXED: Handle side view clicks for left/right rotation
+  // Handle side view clicks for left/right rotation
   const handleSideViewClick = (isLeftSide) => {
     const keyCode = isLeftSide ? 'ArrowLeft' : 'ArrowRight';
     const event = new KeyboardEvent('keydown', {
