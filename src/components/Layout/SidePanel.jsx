@@ -7,7 +7,6 @@ import { useLanguage } from '../../contexts/LanguageContext';
 
 const SidePanel = ({ isMobile = false }) => {
   const { t } = useLanguage();
-  // Stan do śledzenia, który widżet jest aktualnie rozwinięty. Domyślnie czat.
   const [expandedWidget, setExpandedWidget] = useState('chat'); 
   const [isWhiteboardModalOpen, setWhiteboardModalOpen] = useState(false);
 
@@ -23,7 +22,7 @@ const SidePanel = ({ isMobile = false }) => {
       id: 'whiteboard',
       name: t('interactiveWhiteboard'),
       icon: PenTool,
-      component: null, // Będzie obsługiwany przez przycisk
+      component: null,
       color: 'text-green-600',
     },
     {
@@ -35,19 +34,15 @@ const SidePanel = ({ isMobile = false }) => {
     }
   ];
 
-  // Funkcja do przełączania widoczności widżetów
   const handleToggleWidget = (widgetId) => {
-    // Jeśli klikniemy na już otwarty widżet, zamknie się on.
-    // W przeciwnym razie, otworzy się nowo kliknięty.
     setExpandedWidget(prev => (prev === widgetId ? null : widgetId));
   };
 
   const renderWidgetContent = (widget) => {
-    // Specjalna obsługa dla tablicy - pokazuje przycisk do otwarcia modala
     if (widget.id === 'whiteboard') {
       return (
-        <div className="p-4 text-center border-t border-gray-200">
-          <p className="text-sm text-gray-600 mb-3">
+        <div className="p-4 text-center border-t border-bg-neutral">
+          <p className="text-sm text-text-color/70 mb-3">
             {t('whiteboardPanelMode')}
           </p>
           <button
@@ -57,39 +52,43 @@ const SidePanel = ({ isMobile = false }) => {
             <PenTool className="w-4 h-4" />
             {t('openWhiteboard')}
           </button>
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-text-color/60 mt-2">
             {t('workAutoSaved')}
           </p>
         </div>
       );
     }
 
-    // Renderowanie pozostałych komponentów
     const WidgetComponent = widget.component;
     if (!WidgetComponent) return null;
 
     if (widget.id === 'chat') {
+      // ChatPanel ma własne tło, więc nie potrzebuje dodatkowego opakowania
       return <WidgetComponent isMobile={isMobile} />;
     }
     
     return (
-      <div className="p-4 h-full overflow-y-auto border-t border-gray-200">
-        <WidgetComponent />
+      <div className="h-full overflow-y-auto border-t border-bg-neutral">
+        <div className="p-4">
+            <WidgetComponent />
+        </div>
       </div>
     );
   };
 
   return (
     <>
-      <div className="h-full bg-white flex flex-col shadow-lg overflow-y-auto">
+      {/* GŁÓWNA ZMIANA: Zastosowanie tła 'bg-bg-card' */}
+      <div className="h-full bg-bg-card flex flex-col shadow-lg overflow-y-auto">
         {widgets.map((widget) => {
           const isExpanded = expandedWidget === widget.id;
           return (
-            <div key={widget.id} className="border-b border-gray-200">
-              {/* Nagłówek widżetu - zawsze widoczny i klikalny */}
+            // GŁÓWNA ZMIANA: Zastosowanie ramki 'border-bg-neutral'
+            <div key={widget.id} className="border-b border-bg-neutral">
               <button
                 onClick={() => handleToggleWidget(widget.id)}
-                className="w-full p-4 flex items-center justify-between text-left hover:bg-gray-50 transition-colors"
+                // GŁÓWNA ZMIANA: Użycie 'bg-bg-main' dla spójnego efektu hover
+                className="w-full p-4 flex items-center justify-between text-left hover:bg-bg-main transition-colors"
               >
                 <div className="flex items-center gap-3">
                   <widget.icon className={`w-5 h-5 ${widget.color}`} />
@@ -98,11 +97,10 @@ const SidePanel = ({ isMobile = false }) => {
                   </h3>
                 </div>
                 <ChevronDown
-                  className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+                  className={`w-5 h-5 text-text-color/50 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
                 />
               </button>
 
-              {/* Treść widżetu - renderowana warunkowo */}
               {isExpanded && (
                 <div className="flex-1 flex flex-col overflow-hidden">
                    {renderWidgetContent(widget)}
@@ -113,7 +111,6 @@ const SidePanel = ({ isMobile = false }) => {
         })}
       </div>
 
-      {/* Modal tablicy interaktywnej - jego logika pozostaje bez zmian */}
       <InteractiveWhiteboard 
         isOpen={isWhiteboardModalOpen}
         onClose={() => setWhiteboardModalOpen(false)}
