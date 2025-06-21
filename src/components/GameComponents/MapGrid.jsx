@@ -175,7 +175,7 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level, showGrass
         
         @keyframes playerPulse {
           0% { transform: rotate(var(--rotation)) scale(1); }
-          100% { transform: rotate(var(--rotation)) scale(1.1); }
+          100% { transform: rotate(var(--rotation)) scale(1.25); }
         }
       `}</style>
       
