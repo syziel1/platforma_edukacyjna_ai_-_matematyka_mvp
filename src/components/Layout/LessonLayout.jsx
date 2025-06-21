@@ -154,9 +154,9 @@ const LessonLayout = ({
             </div>
           </Panel>
           
-          {/* Resize Handle */}
-          <PanelResizeHandle className="w-2 bg-bg-neutral hover:bg-accent-primary/30 transition-colors cursor-col-resize flex items-center justify-center group">
-            <div className="w-1 h-8 bg-gray-400 rounded-full group-hover:bg-accent-primary transition-colors" />
+          {/* --- ZMIENIONY KOD SUWAKA --- */}
+          <PanelResizeHandle className="w-2.5 bg-gradient-to-b from-accent-primary to-accent-secondary flex items-center justify-center group cursor-col-resize transition-all duration-300 hover:w-4 hover:shadow-lg">
+              <div className="w-1 h-10 bg-white/50 rounded-full transition-colors group-hover:bg-white" />
           </PanelResizeHandle>
           
           {/* Side Panel */}
