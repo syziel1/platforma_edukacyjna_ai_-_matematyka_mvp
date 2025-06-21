@@ -95,10 +95,10 @@ const StartScreen = () => {
                   <problem.icon className={`w-5 h-5 text-${problem.color}`} />
                 </div>
                 <h3 className="font-semibold text-text-color mb-2">
-                  {problem.title}
+                  {t(problem.title)}
                 </h3>
                 <p className="text-sm text-text-color/70 mb-4">
-                  {problem.description}
+                  {t(problem.description)}
                 </p>
                 
                 {/* Progress bar */}
