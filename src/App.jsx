@@ -134,7 +134,7 @@ function App() {
       </div>
 
       {/* Main content area with proper margins */}
-      <div className="flex-1 flex flex-col ml-0 md:ml-16">
+      <div className="flex-1 flex flex-col"> {/* ml-0 md:ml-16 */}
         {showCockpit ? (
           <CockpitPage onProblemSelect={handleProblemSelect} />
         ) : showStartScreen ? (
