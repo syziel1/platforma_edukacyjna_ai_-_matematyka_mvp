@@ -123,7 +123,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-bg-main flex">
+    <div className="h-screen bg-bg-main flex">
       {/* Fixed Navigation Panel */}
       <div className="fixed left-0 top-0 bottom-0 z-40">
         <NavigationPanel 
