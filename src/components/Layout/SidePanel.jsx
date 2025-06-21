@@ -69,7 +69,7 @@ const SidePanel = ({ isMobile = false }) => {
     
     return (
       <div className="h-full overflow-y-auto border-t border-bg-neutral">
-            <WidgetComponent />
+        <WidgetComponent />
       </div>
     );
   };
