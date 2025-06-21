@@ -10,6 +10,11 @@ export const en = {
   'learningStats': 'Learning Statistics',
   'interactiveWhiteboard': 'Interactive Whiteboard',
   
+  // Layout
+  'hideTools': 'Hide Tools',
+  'showTools': 'Show Tools',
+  'learningTools': 'Learning Tools',
+  
   // Explorer Cockpit
   'explorerCockpit': 'Explorer Cockpit',
   'welcomeBack': 'Welcome back, {name}! 🚀',
