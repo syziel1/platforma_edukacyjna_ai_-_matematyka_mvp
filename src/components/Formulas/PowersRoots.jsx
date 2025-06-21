@@ -35,7 +35,7 @@ const PowersRoots = () => {
                 {title}
             </h1>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6">
                 {wzory.map((item, index) => (
                     <div key={index} className="bg-bg-card p-4 rounded-lg shadow-sm border border-nav-bg/20">
                         <h2 className="text-lg font-semibold text-nav-bg mb-2">{item.name}</h2>
