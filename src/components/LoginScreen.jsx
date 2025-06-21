@@ -1,11 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const LoginScreen = ({ onSkip }) => {
+const LoginScreen = () => {
   const { login } = useAuth();
   const { t } = useLanguage();
+  const navigate = useNavigate();
 
   const handleSuccess = (credentialResponse) => {
     const decoded = JSON.parse(atob(credentialResponse.credential.split('.')[1]));
@@ -15,11 +17,15 @@ const LoginScreen = ({ onSkip }) => {
       name: decoded.name,
       picture: decoded.picture
     });
-    onSkip();
+    navigate('/cockpit');
   };
 
   const handleError = () => {
     console.error('Login Failed');
+  };
+
+  const handleSkip = () => {
+    navigate('/cockpit');
   };
 
   return (
@@ -37,7 +43,7 @@ const LoginScreen = ({ onSkip }) => {
             onError={handleError}
           />
           <button
-            onClick={onSkip}
+            onClick={handleSkip}
             className="text-text-color hover:text-accent-primary transition-colors"
           >
             {t('skipLogin')}
@@ -48,4 +54,4 @@ const LoginScreen = ({ onSkip }) => {
   );
 };
 
-export default LoginScreen
+export default LoginScreen;

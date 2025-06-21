@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useProgress } from '../../contexts/ProgressContext';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -8,10 +9,11 @@ import LeftColumn from './LeftColumn';
 import RightColumn from './RightColumn';
 import GlobalHeader from '../GlobalHeader';
 
-const CockpitPage = ({ onProblemSelect }) => {
+const CockpitPage = () => {
   const { user } = useAuth();
   const { getProgress } = useProgress();
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [showKnowledgeMap, setShowKnowledgeMap] = useState(false);
 
   // Stan dla danych kokpitu
@@ -63,18 +65,12 @@ const CockpitPage = ({ onProblemSelect }) => {
   };
 
   const handleContinueLesson = () => {
-    onProblemSelect(cockpitData.currentLesson.id);
+    navigate('/lesson/chicken-coop');
   };
 
   // Modified to handle game mode selector
   const handleStartGame = (showModeSelector = false) => {
-    if (showModeSelector) {
-      // Start the jungle game with mode selector
-      onProblemSelect('jungle-game');
-    } else {
-      // Direct game start (legacy behavior)
-      onProblemSelect('jungle-game');
-    }
+    navigate('/game/jungle');
   };
 
   const handleOpenKnowledgeMap = () => {

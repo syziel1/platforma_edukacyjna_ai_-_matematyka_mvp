@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, Calendar, Settings, LogOut, LogIn, Home, Info, BookOpen, BarChart3, PenTool } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -7,7 +8,7 @@ import AboutProjectModal from './AboutProjectModal';
 import LearningStatsModal from './LearningStatsModal';
 import InteractiveWhiteboard from './InteractiveWhiteboard';
 
-const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => {
+const NavigationPanel = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showAboutProject, setShowAboutProject] = useState(false);
@@ -15,6 +16,8 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
   const [showWhiteboard, setShowWhiteboard] = useState(false);
   const { t } = useLanguage();
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleDayPlan = () => {
     if (user) {
@@ -46,7 +49,6 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
   };
 
   const handleWhiteboard = () => {
-    // Tablica interaktywna dostępna dla wszystkich
     setShowWhiteboard(true);
     if (window.innerWidth < 768) {
       setIsExpanded(false);
@@ -54,18 +56,21 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
   };
 
   const handleCockpit = () => {
-    if (onShowCockpit) {
-      onShowCockpit();
-    }
+    navigate('/cockpit');
     if (window.innerWidth < 768) {
       setIsExpanded(false);
     }
   };
 
-  const handleStartScreen = () => {
-    if (onShowStartScreen) {
-      onShowStartScreen();
+  const handleLessonsList = () => {
+    navigate('/lessons');
+    if (window.innerWidth < 768) {
+      setIsExpanded(false);
     }
+  };
+
+  const handleLogin = () => {
+    navigate('/login');
     if (window.innerWidth < 768) {
       setIsExpanded(false);
     }
@@ -83,13 +88,15 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
       { 
         icon: Home, 
         label: t('explorerCockpit'), 
-        action: handleCockpit
+        action: handleCockpit,
+        isActive: location.pathname === '/cockpit'
       },
       // StartScreen - lessons list
       { 
         icon: BookOpen, 
         label: t('lessonsList'), 
-        action: handleStartScreen
+        action: handleLessonsList,
+        isActive: location.pathname === '/lessons'
       }
     ];
 
@@ -129,7 +136,7 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
       { 
         icon: user ? LogOut : LogIn, 
         label: user ? t('logout') : t('login'), 
-        action: user ? logout : onLoginClick
+        action: user ? logout : handleLogin
       }
     );
 
@@ -157,7 +164,7 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
                 setIsExpanded(false);
               }
             }}
-            className="text-white p-2"
+            className={`text-white p-2 ${item.isActive ? 'bg-white/20 rounded-md' : ''}`}
             title={item.label}
           >
             <item.icon className="w-6 h-6" />
@@ -206,7 +213,7 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
         {/* Logo/Brand */}
         {isExpanded && (
           <button 
-            onClick={() => window.location.href = '/'}
+            onClick={() => navigate('/')}
             className="p-4 border-b border-nav-bg/50 hover:bg-nav-bg/80 transition-colors text-left"
           >
             <h2 className="text-lg font-bold text-white">Edu-Future</h2>
@@ -226,7 +233,7 @@ const NavigationPanel = ({ onLoginClick, onShowCockpit, onShowStartScreen }) => 
               }}
               className={`w-full flex items-center gap-3 p-3 rounded-md hover:bg-nav-bg/80 transition-colors mb-1 ${
                 !isExpanded ? 'justify-center' : ''
-              }`}
+              } ${item.isActive ? 'bg-white/20' : ''}`}
               title={!isExpanded ? item.label : ''}
             >
               <item.icon className="w-5 h-5 text-white flex-shrink-0" />

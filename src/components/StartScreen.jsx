@@ -1,12 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BookOpen, Star, Trophy, Zap, Calculator, TrendingUp } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useProgress } from '../contexts/ProgressContext';
 import GlobalHeader from './GlobalHeader';
 
-const StartScreen = ({ onProblemSelect }) => {
+const StartScreen = () => {
   const { t } = useLanguage();
   const { getProgress } = useProgress();
+  const navigate = useNavigate();
 
   const problems = [
     {
@@ -16,7 +18,8 @@ const StartScreen = ({ onProblemSelect }) => {
       difficulty: 'medium',
       icon: Calculator,
       color: 'accent-secondary',
-      totalSteps: 1
+      totalSteps: 1,
+      route: '/game/jungle'
     },
     {
       id: 'chicken-coop',
@@ -25,7 +28,8 @@ const StartScreen = ({ onProblemSelect }) => {
       difficulty: 'easy',
       icon: Star,
       color: 'accent-primary',
-      totalSteps: 5
+      totalSteps: 5,
+      route: '/lesson/chicken-coop'
     },
     {
       id: 'eco-tshirt',
@@ -34,7 +38,8 @@ const StartScreen = ({ onProblemSelect }) => {
       difficulty: 'medium',
       icon: TrendingUp,
       color: 'nav-bg',
-      totalSteps: 5
+      totalSteps: 5,
+      route: '/lesson/eco-tshirt'
     },
     {
       id: 'water-tank',
@@ -43,7 +48,8 @@ const StartScreen = ({ onProblemSelect }) => {
       difficulty: 'hard',
       icon: Trophy,
       color: 'nav-bg',
-      totalSteps: 5
+      totalSteps: 5,
+      route: '/lesson/water-tank'
     },
     {
       id: 'powers-roots',
@@ -51,9 +57,14 @@ const StartScreen = ({ onProblemSelect }) => {
       description: t('powersRootsDesc'),
       icon: Zap,
       color: 'accent-primary',
-      totalSteps: 1
+      totalSteps: 1,
+      route: '/lesson/powers-roots'
     }
   ];
+
+  const handleProblemSelect = (problem) => {
+    navigate(problem.route);
+  };
 
   return (
     <div className="flex-1 flex flex-col">
@@ -77,7 +88,7 @@ const StartScreen = ({ onProblemSelect }) => {
             return (
               <button
                 key={problem.id}
-                onClick={() => onProblemSelect(problem.id)}
+                onClick={() => handleProblemSelect(problem)}
                 className="bg-bg-card p-6 rounded-lg shadow-sm border border-bg-neutral hover:border-nav-bg/50 transition-all text-left relative"
               >
                 <div className={`w-10 h-10 rounded-full bg-${problem.color}/10 flex items-center justify-center mb-4`}>
