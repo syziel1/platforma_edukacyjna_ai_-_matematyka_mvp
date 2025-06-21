@@ -239,7 +239,7 @@ const Scene3D = ({
     const grassHeight = cellData ? Math.min(100, Math.max(20, (cellData.grass / 100) * 100)) : 60;
     const bonusData = getBonusIcon(cellData);
     const isFrontCenter = index === 2; // Center front cell
-    const isClickable = cellData && cellData.grass >= 10; // Only grassy cells are clickable
+    const isClickable = cellData; // && cellData.grass >= 10; // Only grassy cells are clickable
     
     if (isInFrontGroup) {
       return (
