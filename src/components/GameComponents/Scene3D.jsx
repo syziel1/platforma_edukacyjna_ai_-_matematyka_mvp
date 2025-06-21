@@ -288,7 +288,7 @@ const Scene3D = ({
           </div>
 
           {/* Points display for front center cell */}
-          {isFrontCenter && cellData && cellData.grass >= 10 && (
+          {isFrontCenter && cellData && ( // && cellData.grass >= 10
             <div 
               className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20 cursor-pointer"
               onClick={() => handleTaskClick(cellData)}
