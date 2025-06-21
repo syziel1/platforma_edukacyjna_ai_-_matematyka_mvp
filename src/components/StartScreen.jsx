@@ -8,8 +8,8 @@ import GlobalHeader from './GlobalHeader';
 export const problems = [
   {
     id: 'jungle-game',
-    title: t('jungleGameTitle'),
-    description: t('jungleGameDesc'),
+    title: 'jungleGameTitle', // Tłumaczenia zostaną dodane przez `t()` w komponencie
+    description: 'jungleGameDesc',
     difficulty: 'medium',
     icon: Calculator,
     color: 'accent-secondary',
@@ -18,18 +18,18 @@ export const problems = [
   },
   {
     id: 'chicken-coop',
-    title: t('chickenCoopTitle'),
-    description: t('chickenCoopDesc'),
+    title: 'chickenCoopTitle',
+    description: 'chickenCoopDesc',
     difficulty: 'easy',
     icon: Star,
     color: 'accent-primary',
-    totalSteps: 8,
+    totalSteps: 8, // ZMIANA: Poprawiona liczba kroków z 5 na 8
     route: '/lesson/chicken-coop'
   },
   {
     id: 'eco-tshirt',
-    title: t('ecoTshirtTitle'),
-    description: t('ecoTshirtDesc'),
+    title: 'ecoTshirtTitle',
+    description: 'ecoTshirtDesc',
     difficulty: 'medium',
     icon: TrendingUp,
     color: 'nav-bg',
@@ -38,8 +38,8 @@ export const problems = [
   },
   {
     id: 'water-tank',
-    title: t('waterTankTitle'),
-    description: t('waterTankDesc'),
+    title: 'waterTankTitle',
+    description: 'waterTankDesc',
     difficulty: 'hard',
     icon: Trophy,
     color: 'nav-bg',
@@ -48,8 +48,8 @@ export const problems = [
   },
   {
     id: 'powers-roots',
-    title: t('powersRootsTitle'),
-    description: t('powersRootsDesc'),
+    title: 'powersRootsTitle',
+    description: 'powersRootsDesc',
     icon: Zap,
     color: 'accent-primary',
     totalSteps: 1,
