@@ -72,7 +72,7 @@ const LessonLayout = ({
           <div className="flex-shrink-0 border-t border-bg-neutral bg-bg-card">
             <button
               onClick={() => setShowMobileSidePanel(!showMobileSidePanel)}
-              className="w-full p-3 flex items-center justify-center gap-2 text-text-color hover:bg-bg-neutral transition-colors"
+              className="w-full p-3 flex items-center justify-center gap-2 text-text-color bg-nav-bg hover:bg-bg-neutral transition-colors"
             >
               {showMobileSidePanel ? (
                 <>
