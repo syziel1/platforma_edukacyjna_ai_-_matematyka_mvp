@@ -1,7 +1,6 @@
 import React from 'react';
 import { Calculator, Plus, Minus, X, Divide, Zap, Square as SquareRoot, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import Modal from '../Modal';
 
 const GameModeSelector = ({ onModeSelect, onCancel }) => {
   const { t } = useLanguage();
@@ -64,14 +63,8 @@ const GameModeSelector = ({ onModeSelect, onCancel }) => {
   ];
 
   return (
-    <Modal
-      isOpen={true}
-      onClose={onCancel}
-      size="large"
-      closeOnEscape={true}
-      showCloseButton={false}
-    >
-      <div className="p-4 md:p-8">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
+      <div className="bg-white p-4 md:p-8 rounded-xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         {/* Mobile back button at the very top */}
         <div className="md:hidden mb-4">
           <button
@@ -162,7 +155,7 @@ const GameModeSelector = ({ onModeSelect, onCancel }) => {
           </div>
         </div>
       </div>
-    </Modal>
+    </div>
   );
 };
 
