@@ -13,33 +13,46 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
   const [whiteboardData, setWhiteboardData] = useState(null);
 
   // Load saved whiteboard data on component mount
+  // useEffect(() => {
+  //   const savedData = localStorage.getItem('interactiveWhiteboardData');
+  //   if (savedData) {
+  //     try {
+  //       const parsedData = JSON.parse(savedData);
+  //       setWhiteboardData(parsedData);
+  //     } catch (error) {
+  //       console.warn('Failed to load whiteboard data:', error);
+  //     }
+  //   }
+  // }, []);
+
+  // Load saved whiteboard data when the modal opens & API is ready
   useEffect(() => {
-    const savedData = localStorage.getItem('interactiveWhiteboardData');
-    if (savedData) {
-      try {
-        const parsedData = JSON.parse(savedData);
-        setWhiteboardData(parsedData);
-      } catch (error) {
-        console.warn('Failed to load whiteboard data:', error);
+    if (isOpen && excalidrawAPI) {
+      // Check if we have saved data in component state
+      if (whiteboardData && whiteboardData.elements) {
+        excalidrawAPI.updateScene({
+          elements: whiteboardData.elements,
+          appState: whiteboardData.appState
+        });
       }
     }
-  }, []);
-
+  }, [isOpen, excalidrawAPI, whiteboardData]);
+  
   // Save whiteboard data when it changes
-  const saveWhiteboardData = (elements, appState) => {
+  function saveWhiteboardData(elements, appState) {
     const dataToSave = {
       elements: elements || [],
       appState: appState || {},
       lastSaved: new Date().toISOString()
     };
-    
+
     try {
       localStorage.setItem('interactiveWhiteboardData', JSON.stringify(dataToSave));
       setWhiteboardData(dataToSave);
     } catch (error) {
       console.warn('Failed to save whiteboard data:', error);
     }
-  };
+  }
 
   // Auto-save function that will be called periodically
   const autoSave = () => {
