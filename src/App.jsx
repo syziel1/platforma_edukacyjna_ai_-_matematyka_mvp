@@ -43,8 +43,6 @@ function App() {
     setShowCockpit(false);
     setShowStartScreen(false);
     setShowLandingPage(false);
-    
-    // Rozpocznij liczenie czasu nauki
     startLearning();
     
     // For jungle-game, always start with mode selector
@@ -69,36 +67,31 @@ function App() {
   };
 
   const handleBackToCockpit = () => {
+    stopLearning();
     setSelectedProblem(null);
     setShowCockpit(true);
     setShowStartScreen(false);
     setShowLandingPage(false);
-    
-    // Zatrzymaj liczenie czasu nauki
-    stopLearning();
   };
 
   const handleShowCockpit = () => {
+    stopLearning();
     setShowCockpit(true);
     setShowStartScreen(false);
     setSelectedProblem(null);
-    setShowLandingPage(false);
-    
-    // Zatrzymaj liczenie czasu nauki jeśli było aktywne
-    stopLearning();
+    setShowLandingPage(false);    
   };
 
   const handleShowStartScreen = () => {
+    stopLearning();
     setShowStartScreen(true);
     setShowCockpit(false);
     setSelectedProblem(null);
-    setShowLandingPage(false);
-    
-    // Zatrzymaj liczenie czasu nauki jeśli było aktywne
-    stopLearning();
+    setShowLandingPage(false);    
   };
 
   const handleEnterApp = () => {
+    stopLearning();
     setShowLandingPage(false);
     setShowCockpit(true);
   };
@@ -125,7 +118,6 @@ function App() {
   }
 
   if (showLandingPage) {
-    // Use Polish landing page if current language is Polish, otherwise use English
     const LandingComponent = currentLanguage === 'pl' ? LandingPagePL : LandingPage;
     return <LandingComponent onEnterApp={handleEnterApp} />;
   }
