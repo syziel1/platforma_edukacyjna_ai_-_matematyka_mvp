@@ -155,7 +155,7 @@ const LessonLayout = ({
           </Panel>
           
           {/* Resize Handle */}
-          <PanelResizeHandle className="w-2 bg-nav-bg hover:bg-accent-primary/30 transition-colors cursor-col-resize flex items-center justify-center group">
+          <PanelResizeHandle className="w-2 bg-accent-primary/30 hover:bg-accent-primary transition-colors cursor-col-resize flex items-center justify-center group">
             <div className="w-1 h-8 bg-gray-400 rounded-full group-hover:bg-accent-primary transition-colors" />
           </PanelResizeHandle>
           
