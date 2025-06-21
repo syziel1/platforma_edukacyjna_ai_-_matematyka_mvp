@@ -8,6 +8,8 @@ import { KnowledgeMapModal } from '../KnowledgeSpace';
 import LeftColumn from './LeftColumn';
 import RightColumn from './RightColumn';
 import GlobalHeader from '../GlobalHeader';
+// ZMIANA: Importujemy dane o problemach
+import { problems } from '../StartScreen';
 
 const CockpitPage = () => {
   const { user } = useAuth();
@@ -16,9 +18,8 @@ const CockpitPage = () => {
   const navigate = useNavigate();
   const [showKnowledgeMap, setShowKnowledgeMap] = useState(false);
 
-  // Stan dla danych kokpitu
   const [cockpitData, setCockpitData] = useState({
-    mentorSession: null, // lub obiekt z danymi sesji
+    mentorSession: null,
     currentLesson: {
       id: 'chicken-coop',
       title: t('lessonChickenCoop'),
@@ -28,35 +29,35 @@ const CockpitPage = () => {
     }
   });
 
-  // Pobierz aktualny postęp lekcji
   useEffect(() => {
-    const currentProgress = getProgress('chicken-coop');
-    // Zwiększamy totalSteps do 8, ponieważ teraz mamy 8 kroków
-    const totalSteps = 8;
+    // ZMIANA: Pobieramy dane lekcji dynamicznie
+    const lessonData = problems.find(p => p.id === 'chicken-coop');
+    if (!lessonData) return;
+
+    const currentProgress = getProgress(lessonData.id);
+    const totalSteps = lessonData.totalSteps; // Używamy dynamicznej wartości
     const progressPercentage = (currentProgress / totalSteps) * 100;
     
-    // Określ status na podstawie postępu
     let stepDescription = t('step1Title');
-    if (currentProgress >= 8) {
+    if (currentProgress >= totalSteps) {
       stepDescription = t('goalAchieved');
-    } else if (currentProgress >= 5) {
-      stepDescription = `${t('goToFormal')} - ${t('step')} ${currentProgress - 4}/3`;
     } else if (currentProgress > 0) {
-      stepDescription = `${t('step')} ${currentProgress}/4`;
+      stepDescription = `${t('step')} ${currentProgress}/${totalSteps}`;
     }
     
     setCockpitData(prev => ({
       ...prev,
       currentLesson: {
         ...prev.currentLesson,
-        title: t('lessonChickenCoop'),
+        title: t(lessonData.title),
         progress: progressPercentage,
         currentStep: stepDescription
       }
     }));
   }, [getProgress, t]);
 
-  // Funkcja planowania spotkania z mentorem
+  // ... reszta komponentu bez zmian
+  
   const handleScheduleMentor = (session) => {
     setCockpitData(prev => ({
       ...prev,
@@ -68,7 +69,6 @@ const CockpitPage = () => {
     navigate('/lesson/chicken-coop');
   };
 
-  // Modified to handle game mode selector
   const handleStartGame = (showModeSelector = false) => {
     navigate('/game/jungle');
   };
@@ -81,7 +81,6 @@ const CockpitPage = () => {
     setShowKnowledgeMap(false);
   };
 
-  // Wyświetl odpowiednie powitanie w zależności od statusu logowania
   const getWelcomeMessage = () => {
     if (user) {
       return t('welcomeBack', { name: user.name });
@@ -98,9 +97,7 @@ const CockpitPage = () => {
       
       <div className="flex-1 p-4 md:p-6 mt-16">
         <div className="max-w-7xl mx-auto">
-          {/* Główny układ dwukolumnowy */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Kolumna lewa - 65% szerokości */}
             <div className="lg:col-span-1">
               <LeftColumn 
                 mentorSession={cockpitData.mentorSession}
@@ -109,8 +106,6 @@ const CockpitPage = () => {
                 onContinueLesson={handleContinueLesson}
               />
             </div>
-            
-            {/* Kolumna prawa - 35% szerokości */}
             <div className="lg:col-span-1">
               <RightColumn 
                 onStartGame={handleStartGame}
@@ -120,7 +115,6 @@ const CockpitPage = () => {
           </div>
         </div>
       </div>
-      {/* Knowledge Map Modal */}
       <KnowledgeMapModal 
         isOpen={showKnowledgeMap}
         onClose={handleCloseKnowledgeMap}
