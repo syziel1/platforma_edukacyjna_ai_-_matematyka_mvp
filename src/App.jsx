@@ -28,7 +28,7 @@ function App() {
   const [showStartScreen, setShowStartScreen] = useState(false);
   const [showLandingPage, setShowLandingPage] = useState(true); // Show landing page by default
   const totalSteps = 5;
-  // const { user } = useAuth();
+  const { user } = useAuth();
   const { updateProgress } = useProgress();
   const { startLearning, stopLearning } = useGlobalTimer();
   const { currentLanguage } = useLanguage();
@@ -123,9 +123,9 @@ function App() {
   }
 
   return (
-    <div className="h-screen bg-bg-main flex">
+    <div className="min-h-screen bg-bg-main flex">
       {/* Fixed Navigation Panel */}
-      <div /*className="fixed left-0 top-0 bottom-0 z-40"*/>
+      <div className="fixed left-0 top-0 bottom-0 z-40">
         <NavigationPanel 
           onLoginClick={() => setShowLogin(true)}
           onShowCockpit={handleShowCockpit}
@@ -134,7 +134,7 @@ function App() {
       </div>
 
       {/* Main content area with proper margins */}
-      <div className="flex-1 flex flex-col ml-0 md:ml-16"> 
+      <div className="flex-1 flex flex-col ml-0 md:ml-16">
         {showCockpit ? (
           <CockpitPage onProblemSelect={handleProblemSelect} />
         ) : showStartScreen ? (
@@ -146,11 +146,6 @@ function App() {
             <div className="flex flex-1">
               <div className="flex-1 flex flex-col">
                 <div className="flex-1 flex flex-col">
-      <GlobalHeader 
-        title={title || t('lessonTitle')}
-        onBack={onBack}
-        showBackButton={true}
-      />
                   <LessonHeader 
                     currentStep={currentStep} 
                     totalSteps={totalSteps} 
