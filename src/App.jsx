@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import NavigationPanel from './components/NavigationPanel';
+import GlobalHeader from './components/GlobalHeader';
 import LandingPage from './components/LandingPage';
 import LandingPagePL from './components/LandingPagePL';
 import CockpitPage from './components/ExplorerCockpit/CockpitPage';
