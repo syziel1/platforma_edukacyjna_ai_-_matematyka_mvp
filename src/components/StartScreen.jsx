@@ -10,7 +10,7 @@ const StartScreen = () => {
   const { getProgress } = useProgress();
   const navigate = useNavigate();
 
-  const problems = [
+  export const problems = [
     {
       id: 'jungle-game',
       title: t('jungleGameTitle'),
@@ -28,7 +28,7 @@ const StartScreen = () => {
       difficulty: 'easy',
       icon: Star,
       color: 'accent-primary',
-      totalSteps: 5,
+      totalSteps: 8,
       route: '/lesson/chicken-coop'
     },
     {
