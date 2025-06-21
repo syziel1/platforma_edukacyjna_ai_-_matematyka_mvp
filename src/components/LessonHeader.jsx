@@ -8,11 +8,6 @@ const LessonHeader = ({ currentStep, totalSteps, onBack, title }) => {
 
   return (
     <>
-      <GlobalHeader 
-        title={title || t('lessonTitle')}
-        onBack={onBack}
-        showBackButton={true}
-      />
       <div className="bg-bg-card p-4 border-b border-bg-neutral">
         <ProgressIndicator currentStep={currentStep} totalSteps={totalSteps} />
       </div>
