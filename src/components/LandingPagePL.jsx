@@ -1,7 +1,28 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ArrowRight, Clock, HelpCircle, Frown, User, Zap, Target, Play, Calendar, MessageCircle } from 'lucide-react';
 
 const LandingPagePL = ({ onEnterApp }) => {
+  const audioRef = useRef(null);
+
+  // Auto-play welcome audio when component mounts
+  useEffect(() => {
+    const playWelcomeAudio = async () => {
+      try {
+        if (audioRef.current) {
+          audioRef.current.volume = 0.7; // Set volume to 70%
+          await audioRef.current.play();
+        }
+      } catch (error) {
+        // Auto-play might be blocked by browser policy
+        console.log('Auto-play was prevented by browser policy');
+      }
+    };
+
+    // Small delay to ensure component is fully mounted
+    const timer = setTimeout(playWelcomeAudio, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -11,6 +32,16 @@ const LandingPagePL = ({ onEnterApp }) => {
 
   return (
     <div className="min-h-screen bg-bg-main">
+      {/* Hidden audio element for welcome message */}
+      <audio
+        ref={audioRef}
+        preload="auto"
+        className="hidden"
+      >
+        <source src="/audio/Welcome.pl.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}
