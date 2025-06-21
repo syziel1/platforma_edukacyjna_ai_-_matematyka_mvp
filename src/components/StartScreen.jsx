@@ -5,11 +5,12 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useProgress } from '../contexts/ProgressContext';
 import GlobalHeader from './GlobalHeader';
 
+// ZMIANA: Eksportujemy tablicę, aby była dostępna w całej aplikacji
 export const problems = [
   {
     id: 'jungle-game',
-    title: t('jungleGameTitle'),
-    description: t('jungleGameDesc'),
+    title: 'jungleGameTitle', // Tłumaczenia zostaną dodane przez `t()` w komponencie
+    description: 'jungleGameDesc',
     difficulty: 'medium',
     icon: Calculator,
     color: 'accent-secondary',
@@ -18,18 +19,18 @@ export const problems = [
   },
   {
     id: 'chicken-coop',
-    title: t('chickenCoopTitle'),
-    description: t('chickenCoopDesc'),
+    title: 'chickenCoopTitle',
+    description: 'chickenCoopDesc',
     difficulty: 'easy',
     icon: Star,
     color: 'accent-primary',
-    totalSteps: 8,
+    totalSteps: 8, // ZMIANA: Poprawiona liczba kroków z 5 na 8
     route: '/lesson/chicken-coop'
   },
   {
     id: 'eco-tshirt',
-    title: t('ecoTshirtTitle'),
-    description: t('ecoTshirtDesc'),
+    title: 'ecoTshirtTitle',
+    description: 'ecoTshirtDesc',
     difficulty: 'medium',
     icon: TrendingUp,
     color: 'nav-bg',
@@ -38,8 +39,8 @@ export const problems = [
   },
   {
     id: 'water-tank',
-    title: t('waterTankTitle'),
-    description: t('waterTankDesc'),
+    title: 'waterTankTitle',
+    description: 'waterTankDesc',
     difficulty: 'hard',
     icon: Trophy,
     color: 'nav-bg',
@@ -48,8 +49,8 @@ export const problems = [
   },
   {
     id: 'powers-roots',
-    title: t('powersRootsTitle'),
-    description: t('powersRootsDesc'),
+    title: 'powersRootsTitle',
+    description: 'powersRootsDesc',
     icon: Zap,
     color: 'accent-primary',
     totalSteps: 1,
@@ -95,10 +96,10 @@ const StartScreen = () => {
                   <problem.icon className={`w-5 h-5 text-${problem.color}`} />
                 </div>
                 <h3 className="font-semibold text-text-color mb-2">
-                  {problem.title}
+                  {t(problem.title)}
                 </h3>
                 <p className="text-sm text-text-color/70 mb-4">
-                  {problem.description}
+                  {t(problem.description)}
                 </p>
                 
                 {/* Progress bar */}
