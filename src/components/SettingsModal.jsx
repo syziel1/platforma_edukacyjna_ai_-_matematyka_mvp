@@ -1,8 +1,9 @@
 import React from 'react';
-import { Volume2, VolumeX, X, RotateCcw, Eye, EyeOff, Globe, Target, Mic, MicOff } from 'lucide-react';
+import { Volume2, VolumeX, RotateCcw, Eye, EyeOff, Globe, Target, Mic, MicOff } from 'lucide-react';
 import { useSettings } from '../contexts/SettingsContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTextToSpeech } from '../hooks/useTextToSpeech';
+import Modal from './Modal';
 
 const SettingsModal = ({ isOpen, onClose }) => {
   const { 
@@ -69,32 +70,17 @@ const SettingsModal = ({ isOpen, onClose }) => {
   // Handle voice change with automatic sample
   const handleVoiceChange = (voiceId) => {
     setTextToSpeechVoice(voiceId);
-    // Play sample after a short delay to ensure settings are updated
-    //setTimeout(() => {
-      //playVoiceSample();
-    //}, 200);
   };
 
   // Handle speed change with automatic sample
   const handleSpeedChange = (speed) => {
     setTextToSpeechSpeed(speed);
-    // Play sample after a short delay to ensure settings are updated
-    //setTimeout(() => {
-      //playVoiceSample();
-    //}, 200);
   };
 
   // Handle TTS toggle with automatic sample when enabled
   const handleToggleTextToSpeech = () => {
     const wasEnabled = settings.textToSpeechEnabled;
     toggleTextToSpeech();
-    
-    // If we're enabling TTS, play a sample after a short delay
-    if (!wasEnabled) {
-//      setTimeout(() => {
-//        playVoiceSample();
-//      }, 200);
-    }
   };
 
   // Check if current voice is available for current language, if not set default
@@ -109,261 +95,250 @@ const SettingsModal = ({ isOpen, onClose }) => {
   }, [currentLanguage, voiceOptions, settings.textToSpeechVoice, setTextToSpeechVoice]);
 
   return (
-    <div 
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-      style={{ display: isOpen ? 'flex' : 'none' }}
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={t('settings')}
+      size="default"
     >
-      <div className="bg-bg-card p-6 rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-text-color">
-            {t('settings')}
-          </h2>
+      <div className="p-6 space-y-6">
+        {/* Language Toggle */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Globe className="w-5 h-5 text-accent-primary" />
+            <span className="font-medium text-text-color">
+              {t('language')}
+            </span>
+          </div>
           <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 transition-colors"
+            onClick={switchLanguage}
+            className="bg-accent-primary text-white px-4 py-2 rounded-md hover:bg-accent-primary/90 transition-colors font-medium"
           >
-            <X className="w-5 h-5" />
+            {currentLanguage.toUpperCase()}
           </button>
         </div>
 
-        <div className="space-y-6">
-          {/* Language Toggle */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Globe className="w-5 h-5 text-accent-primary" />
-              <span className="font-medium text-text-color">
-                {t('language')}
-              </span>
-            </div>
-            <button
-              onClick={switchLanguage}
-              className="bg-accent-primary text-white px-4 py-2 rounded-md hover:bg-accent-primary/90 transition-colors font-medium"
-            >
-              {currentLanguage.toUpperCase()}
-            </button>
+        {/* Daily Learning Goal */}
+        <div>
+          <div className="flex items-center gap-3 mb-3">
+            <Target className="w-5 h-5 text-nav-bg" />
+            <span className="font-medium text-text-color">
+              {t('dailyLearningGoal')}
+            </span>
           </div>
-
-          {/* Daily Learning Goal */}
-          <div>
-            <div className="flex items-center gap-3 mb-3">
-              <Target className="w-5 h-5 text-nav-bg" />
-              <span className="font-medium text-text-color">
-                {t('dailyLearningGoal')}
-              </span>
-            </div>
-            <div className="grid grid-cols-4 gap-2">
-              {learningGoalOptions.map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() => setDailyLearningGoal(option.value)}
-                  className={`py-2 px-3 rounded-md text-sm font-medium transition-colors ${
-                    settings.dailyLearningGoal === option.value
-                      ? 'bg-nav-bg text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-            <p className="text-xs text-text-color/60 mt-2">
-              {t('dailyLearningGoalDesc')}
-            </p>
-          </div>
-
-          {/* Text-to-Speech Settings */}
-          <div className="border-t border-gray-200 pt-4">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                {settings.textToSpeechEnabled ? (
-                  <Mic className="w-5 h-5 text-accent-primary" />
-                ) : (
-                  <MicOff className="w-5 h-5 text-gray-400" />
-                )}
-                <div>
-                  <span className="font-medium text-text-color block">
-                    {t('textToSpeech')}
-                  </span>
-                  <span className="text-xs text-text-color/60">
-                    {t('textToSpeechDesc')}
-                  </span>
-                </div>
-              </div>
+          <div className="grid grid-cols-4 gap-2">
+            {learningGoalOptions.map((option) => (
               <button
-                onClick={handleToggleTextToSpeech}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  settings.textToSpeechEnabled ? 'bg-accent-primary' : 'bg-gray-300'
+                key={option.value}
+                onClick={() => setDailyLearningGoal(option.value)}
+                className={`py-2 px-3 rounded-md text-sm font-medium transition-colors ${
+                  settings.dailyLearningGoal === option.value
+                    ? 'bg-nav-bg text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    settings.textToSpeechEnabled ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
+                {option.label}
               </button>
-            </div>
-
-            {/* Voice Selection */}
-            {settings.textToSpeechEnabled && (
-              <div className="space-y-4 ml-8">
-                <div>
-                  <label className="block text-sm font-medium text-text-color mb-2">
-                    {t('voiceSelection')} ({currentLanguage === 'pl' ? 'Polski' : 'English'})
-                  </label>
-                  <select
-                    value={settings.textToSpeechVoice}
-                    onChange={(e) => handleVoiceChange(e.target.value)}
-                    className="w-full p-2 border border-bg-neutral rounded-md focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color bg-white"
-                  >
-                    {voiceOptions.map((voice) => (
-                      <option key={voice.id} value={voice.id}>
-                        {voice.name}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="text-xs text-text-color/60 mt-1">
-                    {currentLanguage === 'pl' 
-                      ? 'Głosy dostępne dla języka polskiego'
-                      : 'Voices available for English language'
-                    }
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-text-color mb-2">
-                    {t('speechSpeed')}: {settings.textToSpeechSpeed}x
-                  </label>
-                  <div className="grid grid-cols-5 gap-1">
-                    {speedOptions.map((option) => (
-                      <button
-                        key={option.value}
-                        onClick={() => handleSpeedChange(option.value)}
-                        className={`py-1 px-2 rounded text-xs font-medium transition-colors ${
-                          settings.textToSpeechSpeed === option.value
-                            ? 'bg-accent-primary text-white'
-                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                        }`}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Test Voice Button */}
-                <div>
-                  <button
-                    onClick={playVoiceSample}
-                    className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition-colors font-medium text-sm flex items-center justify-center gap-2"
-                  >
-                    <Mic className="w-4 h-4" />
-                    {currentLanguage === 'pl' ? 'Przetestuj głos' : 'Test Voice'}
-                  </button>
-                </div>
-              </div>
-            )}
+            ))}
           </div>
+          <p className="text-xs text-text-color/60 mt-2">
+            {t('dailyLearningGoalDesc')}
+          </p>
+        </div>
 
-          {/* Sound Toggle */}
-          <div className="flex items-center justify-between">
+        {/* Text-to-Speech Settings */}
+        <div className="border-t border-gray-200 pt-4">
+          <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              {settings.soundEnabled ? (
-                <Volume2 className="w-5 h-5 text-accent-primary" />
+              {settings.textToSpeechEnabled ? (
+                <Mic className="w-5 h-5 text-accent-primary" />
               ) : (
-                <VolumeX className="w-5 h-5 text-gray-400" />
-              )}
-              <span className="font-medium text-text-color">
-                {t('soundEffects')}
-              </span>
-            </div>
-            <button
-              onClick={toggleSound}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                settings.soundEnabled ? 'bg-accent-primary' : 'bg-gray-300'
-              }`}
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  settings.soundEnabled ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
-            </button>
-          </div>
-
-          {/* Volume Slider */}
-          {settings.soundEnabled && (
-            <div>
-              <label className="block text-sm font-medium text-text-color mb-2">
-                {t('volume')}: {Math.round(settings.volume * 100)}%
-              </label>
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.1"
-                value={settings.volume}
-                onChange={(e) => setVolume(parseFloat(e.target.value))}
-                className="w-full h-2 bg-bg-neutral rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-accent-primary [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-accent-primary [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:cursor-pointer"
-              />
-            </div>
-          )}
-
-          {/* Grass Percentage Toggle */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              {settings.showGrassPercentage ? (
-                <Eye className="w-5 h-5 text-accent-primary" />
-              ) : (
-                <EyeOff className="w-5 h-5 text-gray-400" />
+                <MicOff className="w-5 h-5 text-gray-400" />
               )}
               <div>
                 <span className="font-medium text-text-color block">
-                  {t('showGrassPercentage')}
+                  {t('textToSpeech')}
                 </span>
                 <span className="text-xs text-text-color/60">
-                  {t('showGrassPercentageDesc')}
+                  {t('textToSpeechDesc')}
                 </span>
               </div>
             </div>
             <button
-              onClick={toggleGrassPercentage}
+              onClick={handleToggleTextToSpeech}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                settings.showGrassPercentage ? 'bg-accent-primary' : 'bg-gray-300'
+                settings.textToSpeechEnabled ? 'bg-accent-primary' : 'bg-gray-300'
               }`}
             >
               <span
                 className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  settings.showGrassPercentage ? 'translate-x-6' : 'translate-x-1'
+                  settings.textToSpeechEnabled ? 'translate-x-6' : 'translate-x-1'
                 }`}
               />
             </button>
           </div>
 
-          {/* Reset Game State */}
-          <div className="border-t border-gray-200 pt-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <RotateCcw className="w-5 h-5 text-red-500" />
-                <div>
-                  <span className="font-medium text-text-color block">
-                    {t('resetGameState')}
-                  </span>
-                  <span className="text-xs text-text-color/60">
-                    {t('resetGameStateDesc')}
-                  </span>
+          {/* Voice Selection */}
+          {settings.textToSpeechEnabled && (
+            <div className="space-y-4 ml-8">
+              <div>
+                <label className="block text-sm font-medium text-text-color mb-2">
+                  {t('voiceSelection')} ({currentLanguage === 'pl' ? 'Polski' : 'English'})
+                </label>
+                <select
+                  value={settings.textToSpeechVoice}
+                  onChange={(e) => handleVoiceChange(e.target.value)}
+                  className="w-full p-2 border border-bg-neutral rounded-md focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color bg-white"
+                >
+                  {voiceOptions.map((voice) => (
+                    <option key={voice.id} value={voice.id}>
+                      {voice.name}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-text-color/60 mt-1">
+                  {currentLanguage === 'pl' 
+                    ? 'Głosy dostępne dla języka polskiego'
+                    : 'Voices available for English language'
+                  }
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-text-color mb-2">
+                  {t('speechSpeed')}: {settings.textToSpeechSpeed}x
+                </label>
+                <div className="grid grid-cols-5 gap-1">
+                  {speedOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => handleSpeedChange(option.value)}
+                      className={`py-1 px-2 rounded text-xs font-medium transition-colors ${
+                        settings.textToSpeechSpeed === option.value
+                          ? 'bg-accent-primary text-white'
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
                 </div>
               </div>
-              <button
-                onClick={handleResetGameState}
-                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-medium transition-colors"
-              >
-                Reset
-              </button>
+
+              {/* Test Voice Button */}
+              <div>
+                <button
+                  onClick={playVoiceSample}
+                  className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition-colors font-medium text-sm flex items-center justify-center gap-2"
+                >
+                  <Mic className="w-4 h-4" />
+                  {currentLanguage === 'pl' ? 'Przetestuj głos' : 'Test Voice'}
+                </button>
+              </div>
             </div>
+          )}
+        </div>
+
+        {/* Sound Toggle */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {settings.soundEnabled ? (
+              <Volume2 className="w-5 h-5 text-accent-primary" />
+            ) : (
+              <VolumeX className="w-5 h-5 text-gray-400" />
+            )}
+            <span className="font-medium text-text-color">
+              {t('soundEffects')}
+            </span>
+          </div>
+          <button
+            onClick={toggleSound}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+              settings.soundEnabled ? 'bg-accent-primary' : 'bg-gray-300'
+            }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                settings.soundEnabled ? 'translate-x-6' : 'translate-x-1'
+              }`}
+            />
+          </button>
+        </div>
+
+        {/* Volume Slider */}
+        {settings.soundEnabled && (
+          <div>
+            <label className="block text-sm font-medium text-text-color mb-2">
+              {t('volume')}: {Math.round(settings.volume * 100)}%
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.1"
+              value={settings.volume}
+              onChange={(e) => setVolume(parseFloat(e.target.value))}
+              className="w-full h-2 bg-bg-neutral rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-accent-primary [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-accent-primary [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:cursor-pointer"
+            />
+          </div>
+        )}
+
+        {/* Grass Percentage Toggle */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {settings.showGrassPercentage ? (
+              <Eye className="w-5 h-5 text-accent-primary" />
+            ) : (
+              <EyeOff className="w-5 h-5 text-gray-400" />
+            )}
+            <div>
+              <span className="font-medium text-text-color block">
+                {t('showGrassPercentage')}
+              </span>
+              <span className="text-xs text-text-color/60">
+                {t('showGrassPercentageDesc')}
+              </span>
+            </div>
+          </div>
+          <button
+            onClick={toggleGrassPercentage}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+              settings.showGrassPercentage ? 'bg-accent-primary' : 'bg-gray-300'
+            }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                settings.showGrassPercentage ? 'translate-x-6' : 'translate-x-1'
+              }`}
+            />
+          </button>
+        </div>
+
+        {/* Reset Game State */}
+        <div className="border-t border-gray-200 pt-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <RotateCcw className="w-5 h-5 text-red-500" />
+              <div>
+                <span className="font-medium text-text-color block">
+                  {t('resetGameState')}
+                </span>
+                <span className="text-xs text-text-color/60">
+                  {t('resetGameStateDesc')}
+                </span>
+              </div>
+            </div>
+            <button
+              onClick={handleResetGameState}
+              className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-medium transition-colors"
+            >
+              Reset
+            </button>
           </div>
         </div>
 
-        <div className="mt-6 flex justify-end">
+        {/* Close Button */}
+        <div className="flex justify-end pt-4 border-t border-gray-200">
           <button
             onClick={onClose}
             className="bg-accent-primary text-white px-4 py-2 rounded-md hover:bg-accent-primary/90 transition-colors"
@@ -372,7 +347,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

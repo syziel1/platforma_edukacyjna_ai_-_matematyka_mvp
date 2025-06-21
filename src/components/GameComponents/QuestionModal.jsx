@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useTextToSpeech } from '../../hooks/useTextToSpeech';
+import Modal from '../Modal';
 
 const QuestionModal = ({ 
   question, 
@@ -141,7 +141,13 @@ const QuestionModal = ({
   const questionFormat = formatQuestion();
 
   return (
-    <>
+    <Modal
+      isOpen={true}
+      onClose={onCancel}
+      size="default"
+      closeOnEscape={true}
+      className={isShaking ? 'animate-pulse' : ''}
+    >
       <style jsx>{`
         @keyframes modalSlideIn {
           0% { transform: scale(0.8) translateY(-20px); opacity: 0; }
@@ -217,133 +223,121 @@ const QuestionModal = ({
         }
       `}</style>
       
-      <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
-        <div className={`bg-white p-8 rounded-xl shadow-2xl max-w-md w-full mx-4 modal-enter border-2 border-amber-200 relative ${isShaking ? 'shake' : ''}`}>
-          {/* Exit button */}
-          {onCancel && (
-            <button
-              onClick={onCancel}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors p-1 rounded-md hover:bg-gray-100"
-              title="Close (ESC)"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          )}
-
-          {/* Question Header with visual enhancement */}
-          <div className="question-highlight mb-6 relative">
-            <div className="absolute top-2 right-2 sparkle text-yellow-500">✨</div>
-            <div className="flex items-center justify-center mb-2">
-              <span className="text-3xl mr-2">{getModeIcon(selectedMode)}</span>
-              <h3 className="text-xl font-bold text-gray-800">
-                {t('solveTask')}
-              </h3>
-            </div>
-            <div className="text-center">
-              <span className={`text-3xl font-bold ${getModeColor(selectedMode)}`}>
-                {questionFormat.display}
-              </span>
-              <span className="text-2xl font-bold text-gray-600 mx-3">{questionFormat.symbol}</span>
-              <span className="text-2xl font-bold text-green-600">?</span>
-            </div>
+      <div className="p-8">
+        {/* Question Header with visual enhancement */}
+        <div className="question-highlight mb-6 relative">
+          <div className="absolute top-2 right-2 sparkle text-yellow-500">✨</div>
+          <div className="flex items-center justify-center mb-2">
+            <span className="text-3xl mr-2">{getModeIcon(selectedMode)}</span>
+            <h3 className="text-xl font-bold text-gray-800">
+              {t('solveTask')}
+            </h3>
+          </div>
+          <div className="text-center">
+            <span className={`text-3xl font-bold ${getModeColor(selectedMode)}`}>
+              {questionFormat.display}
+            </span>
+            <span className="text-2xl font-bold text-gray-600 mx-3">{questionFormat.symbol}</span>
+            <span className="text-2xl font-bold text-green-600">?</span>
+          </div>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="relative">
+            <input
+              type="number"
+              min="0"
+              value={answer}
+              onChange={handleChange}
+              placeholder={t('yourAnswer')}
+              className="w-full p-4 border-2 border-blue-300 rounded-lg text-center text-2xl font-bold focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all duration-200"
+              autoFocus
+              disabled={isGeminiLoading}
+            />
+            {wrongAnswersCount > 0 && (
+              <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                {t('errors')} {wrongAnswersCount}
+              </div>
+            )}
           </div>
           
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="relative">
-              <input
-                type="number"
-                min="0"
-                value={answer}
-                onChange={handleChange}
-                className="w-full p-4 border-2 border-blue-300 rounded-lg text-center text-2xl font-bold focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all duration-200"
-                placeholder={t('yourAnswer')}
-                autoFocus
-              />
-              {wrongAnswersCount > 0 && (
-                <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                  {t('errors')} {wrongAnswersCount}
-                </div>
-              )}
-            </div>
-            
+          <button
+            type="submit"
+            disabled={!answer}
+            className={`w-full bg-gradient-to-r ${getGradientColors(selectedMode)} text-white py-3 px-6 rounded-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg transform active:scale-95`}
+          >
+            ✅ {t('checkAnswer')}
+          </button>
+
+          {wrongAnswersCount >= 1 && onAskWiseOwl && (
             <button
-              type="submit"
-              disabled={!answer}
-              className={`w-full bg-gradient-to-r ${getGradientColors(selectedMode)} text-white py-3 px-6 rounded-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg transform active:scale-95`}
+              type="button"
+              onClick={handleWiseOwlClick}
+              disabled={isGeminiLoading}
+              className="w-full owl-button bg-gradient-to-r from-amber-400 to-yellow-500 text-gray-800 py-3 px-6 rounded-lg hover:from-amber-500 hover:to-yellow-600 transition-all duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed font-bold text-lg transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2"
             >
-              ✅ {t('checkAnswer')}
+              <span className="owl-wing">🦉</span>
+              <span>
+                {isGeminiLoading ? t('wiseOwlThinking') : `✨ ${t('askWiseOwl')}`}
+              </span>
+              {isGeminiLoading && (
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-600 border-t-transparent"></div>
+              )}
             </button>
+          )}
+        </form>
 
-            {wrongAnswersCount >= 1 && onAskWiseOwl && (
-              <button
-                type="button"
-                onClick={handleWiseOwlClick}
-                disabled={isGeminiLoading}
-                className="w-full owl-button bg-gradient-to-r from-amber-400 to-yellow-500 text-gray-800 py-3 px-6 rounded-lg hover:from-amber-500 hover:to-yellow-600 transition-all duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed font-bold text-lg transform hover:scale-105 active:scale-95 flex items-center justify-center space-x-2"
-              >
+        {/* Wise Owl Advice */}
+        {showAdvice && wiseOwlAdvice && (
+          <div className="mt-6 advice-container">
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-lg p-4 relative overflow-hidden">
+              <div className="absolute top-2 right-2 text-blue-500">
                 <span className="owl-wing">🦉</span>
-                <span>
-                  {isGeminiLoading ? t('wiseOwlThinking') : `✨ ${t('askWiseOwl')}`}
-                </span>
-                {isGeminiLoading && (
-                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-600 border-t-transparent"></div>
-                )}
-              </button>
-            )}
-          </form>
-
-          {/* Wise Owl Advice */}
-          {showAdvice && wiseOwlAdvice && (
-            <div className="mt-6 advice-container">
-              <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-lg p-4 relative overflow-hidden">
-                <div className="absolute top-2 right-2 text-blue-500">
-                  <span className="owl-wing">🦉</span>
-                </div>
-                <h4 className="font-bold text-blue-800 mb-2 flex items-center">
-                  <span className="mr-2">💡</span>
-                  {t('adviceFromOwl')}
-                </h4>
-                <p className="text-blue-700 text-sm leading-relaxed">
-                  {wiseOwlAdvice}
-                </p>
-                <div className="absolute bottom-1 right-1 opacity-20">
-                  <div className="flex space-x-1">
-                    <span className="sparkle text-yellow-400">⭐</span>
-                    <span className="sparkle text-blue-400" style={{animationDelay: '0.5s'}}>⭐</span>
-                    <span className="sparkle text-purple-400" style={{animationDelay: '1s'}}>⭐</span>
-                  </div>
+              </div>
+              <h4 className="font-bold text-blue-800 mb-2 flex items-center">
+                <span className="mr-2">💡</span>
+                {t('adviceFromOwl')}
+              </h4>
+              <p className="text-blue-700 text-sm leading-relaxed">
+                {wiseOwlAdvice}
+              </p>
+              <div className="absolute bottom-1 right-1 opacity-20">
+                <div className="flex space-x-1">
+                  <span className="sparkle text-yellow-400">⭐</span>
+                  <span className="sparkle text-blue-400" style={{animationDelay: '0.5s'}}>⭐</span>
+                  <span className="sparkle text-purple-400" style={{animationDelay: '1s'}}>⭐</span>
                 </div>
               </div>
             </div>
-          )}
-
-          {/* Difficulty indicators */}
-          <div className="mt-4 flex justify-center space-x-2">
-            {[1, 2, 3].map((level) => (
-              <div
-                key={level}
-                className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                  wrongAnswersCount >= level 
-                    ? 'bg-red-400 shadow-lg' 
-                    : 'bg-gray-200'
-                }`}
-              />
-            ))}
           </div>
-          
-          {wrongAnswersCount >= 2 && (
-            <p className="text-center text-sm text-gray-600 mt-2">
-              💡 {t('hint')}: {t('tryBreakDown')}
-            </p>
-          )}
+        )}
 
-          {/* ESC hint */}
-          <div className="mt-4 text-center text-xs text-gray-500">
-            Press ESC to close
-          </div>
+        {/* Difficulty indicators */}
+        <div className="mt-4 flex justify-center space-x-2">
+          {[1, 2, 3].map((level) => (
+            <div
+              key={level}
+              className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                wrongAnswersCount >= level 
+                  ? 'bg-red-400 shadow-lg' 
+                  : 'bg-gray-200'
+              }`}
+            />
+          ))}
+        </div>
+        
+        {wrongAnswersCount >= 2 && (
+          <p className="text-center text-sm text-gray-600 mt-2">
+            💡 {t('hint')}: {t('tryBreakDown')}
+          </p>
+        )}
+
+        {/* ESC hint */}
+        <div className="mt-4 text-center text-xs text-gray-500">
+          Press ESC to close
         </div>
       </div>
-    </>
+    </Modal>
   );
 };
 

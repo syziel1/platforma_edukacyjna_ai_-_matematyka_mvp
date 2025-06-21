@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, Clock, TrendingUp, Award, ChevronLeft, ChevronRight, BarChart3 } from 'lucide-react';
+import { Calendar, Clock, TrendingUp, Award, ChevronLeft, ChevronRight, BarChart3 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useGlobalTimer } from '../hooks/useGlobalTimer';
+import Modal from './Modal';
 
 const LearningStatsModal = ({ isOpen, onClose }) => {
   const { t } = useLanguage();
@@ -43,8 +44,6 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
       }
     }
   }, [isOpen, timeElapsed, learningData, isActive]);
-
-  if (!isOpen) return null;
 
   // Calendar navigation
   const navigateMonth = (direction) => {
@@ -161,141 +160,134 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
   ];
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-text-color flex items-center gap-2">
-            <BarChart3 className="w-6 h-6 text-accent-primary" />
-            {t('learningStatistics')}
-          </h2>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={
+        <div className="flex items-center gap-2">
+          <BarChart3 className="w-6 h-6 text-accent-primary" />
+          {t('learningStatistics')}
+        </div>
+      }
+      size="large"
+    >
+      <div className="p-6">
+        {/* Statistics Summary */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 text-center">
+            <Clock className="w-6 h-6 text-blue-600 mx-auto mb-2" />
+            <div className="text-2xl font-bold text-blue-800">
+              {stats.totalHours}h {stats.totalMinutes}m
+            </div>
+            <div className="text-sm text-blue-600">{t('totalTime')}</div>
+          </div>
+          
+          <div className="bg-green-50 p-4 rounded-lg border border-green-200 text-center">
+            <Calendar className="w-6 h-6 text-green-600 mx-auto mb-2" />
+            <div className="text-2xl font-bold text-green-800">{stats.activeDays}</div>
+            <div className="text-sm text-green-600">{t('activeDays')}</div>
+          </div>
+          
+          <div className="bg-purple-50 p-4 rounded-lg border border-purple-200 text-center">
+            <TrendingUp className="w-6 h-6 text-purple-600 mx-auto mb-2" />
+            <div className="text-2xl font-bold text-purple-800">{stats.averageMinutes}m</div>
+            <div className="text-sm text-purple-600">{t('dailyAverage')}</div>
+          </div>
+          
+          <div className="bg-orange-50 p-4 rounded-lg border border-orange-200 text-center">
+            <Award className="w-6 h-6 text-orange-600 mx-auto mb-2" />
+            <div className="text-2xl font-bold text-orange-800">{stats.longestStreak}</div>
+            <div className="text-sm text-orange-600">{t('longestStreak')}</div>
+          </div>
+          
+          <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 text-center">
+            <Clock className="w-6 h-6 text-yellow-600 mx-auto mb-2" />
+            <div className="text-2xl font-bold text-yellow-800">
+              {Math.floor(timeElapsed / 60)}m
+            </div>
+            <div className="text-sm text-yellow-600">{t('todaysSession')}</div>
+          </div>
+        </div>
+
+        {/* Calendar Navigation */}
+        <div className="flex items-center justify-between mb-4">
           <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 transition-colors p-1 rounded-md hover:bg-gray-100"
+            onClick={() => navigateMonth(-1)}
+            className="p-2 hover:bg-gray-100 rounded-md transition-colors"
           >
-            <X className="w-6 h-6" />
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          
+          <h3 className="text-xl font-bold text-text-color">
+            {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+          </h3>
+          
+          <button
+            onClick={() => navigateMonth(1)}
+            className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+          >
+            <ChevronRight className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Content */}
-        <div className="p-6">
-          {/* Statistics Summary */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 text-center">
-              <Clock className="w-6 h-6 text-blue-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-blue-800">
-                {stats.totalHours}h {stats.totalMinutes}m
+        {/* Calendar Grid */}
+        <div className="bg-gray-50 rounded-lg p-4">
+          {/* Day headers */}
+          <div className="grid grid-cols-7 gap-1 mb-2">
+            {['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'Sb'].map(day => (
+              <div key={day} className="text-center text-sm font-medium text-gray-600 p-2">
+                {day}
               </div>
-              <div className="text-sm text-blue-600">{t('totalTime')}</div>
-            </div>
-            
-            <div className="bg-green-50 p-4 rounded-lg border border-green-200 text-center">
-              <Calendar className="w-6 h-6 text-green-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-green-800">{stats.activeDays}</div>
-              <div className="text-sm text-green-600">{t('activeDays')}</div>
-            </div>
-            
-            <div className="bg-purple-50 p-4 rounded-lg border border-purple-200 text-center">
-              <TrendingUp className="w-6 h-6 text-purple-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-purple-800">{stats.averageMinutes}m</div>
-              <div className="text-sm text-purple-600">{t('dailyAverage')}</div>
-            </div>
-            
-            <div className="bg-orange-50 p-4 rounded-lg border border-orange-200 text-center">
-              <Award className="w-6 h-6 text-orange-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-orange-800">{stats.longestStreak}</div>
-              <div className="text-sm text-orange-600">{t('longestStreak')}</div>
-            </div>
-            
-            <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 text-center">
-              <Clock className="w-6 h-6 text-yellow-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-yellow-800">
-                {Math.floor(timeElapsed / 60)}m
+            ))}
+          </div>
+          
+          {/* Calendar days */}
+          <div className="grid grid-cols-7 gap-1">
+            {calendarDays.map((day, index) => (
+              <div
+                key={index}
+                className={`
+                  aspect-square p-1 rounded-md border transition-all duration-200 cursor-pointer
+                  ${day.isCurrentMonth ? 'border-gray-200' : 'border-transparent'}
+                  ${day.isToday ? 'ring-2 ring-accent-primary' : ''}
+                  ${getLearningIntensity(day.learningMinutes)}
+                  hover:scale-105
+                `}
+                title={`${day.date.toLocaleDateString()}: ${day.learningMinutes} minut`}
+              >
+                <div className={`
+                  text-center text-sm font-medium h-full flex flex-col justify-center
+                  ${day.isCurrentMonth ? 'text-gray-900' : 'text-gray-400'}
+                  ${day.isToday ? 'text-accent-primary font-bold' : ''}
+                `}>
+                  <div>{day.day}</div>
+                  {day.learningMinutes > 0 && (
+                    <div className="text-xs text-gray-600 mt-1">
+                      {day.learningHours > 0 ? `${day.learningHours}h` : ''}
+                      {day.remainingMinutes > 0 ? `${day.remainingMinutes}m` : ''}
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="text-sm text-yellow-600">{t('todaysSession')}</div>
-            </div>
-          </div>
-
-          {/* Calendar Navigation */}
-          <div className="flex items-center justify-between mb-4">
-            <button
-              onClick={() => navigateMonth(-1)}
-              className="p-2 hover:bg-gray-100 rounded-md transition-colors"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            
-            <h3 className="text-xl font-bold text-text-color">
-              {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-            </h3>
-            
-            <button
-              onClick={() => navigateMonth(1)}
-              className="p-2 hover:bg-gray-100 rounded-md transition-colors"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Calendar Grid */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            {/* Day headers */}
-            <div className="grid grid-cols-7 gap-1 mb-2">
-              {['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'Sb'].map(day => (
-                <div key={day} className="text-center text-sm font-medium text-gray-600 p-2">
-                  {day}
-                </div>
-              ))}
-            </div>
-            
-            {/* Calendar days */}
-            <div className="grid grid-cols-7 gap-1">
-              {calendarDays.map((day, index) => (
-                <div
-                  key={index}
-                  className={`
-                    aspect-square p-1 rounded-md border transition-all duration-200 cursor-pointer
-                    ${day.isCurrentMonth ? 'border-gray-200' : 'border-transparent'}
-                    ${day.isToday ? 'ring-2 ring-accent-primary' : ''}
-                    ${getLearningIntensity(day.learningMinutes)}
-                    hover:scale-105
-                  `}
-                  title={`${day.date.toLocaleDateString()}: ${day.learningMinutes} minut`}
-                >
-                  <div className={`
-                    text-center text-sm font-medium h-full flex flex-col justify-center
-                    ${day.isCurrentMonth ? 'text-gray-900' : 'text-gray-400'}
-                    ${day.isToday ? 'text-accent-primary font-bold' : ''}
-                  `}>
-                    <div>{day.day}</div>
-                    {day.learningMinutes > 0 && (
-                      <div className="text-xs text-gray-600 mt-1">
-                        {day.learningHours > 0 ? `${day.learningHours}h` : ''}
-                        {day.remainingMinutes > 0 ? `${day.remainingMinutes}m` : ''}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Legend */}
-          <div className="mt-4 flex items-center justify-center gap-4 text-sm text-gray-600">
-            <span>{t('less')}</span>
-            <div className="flex gap-1">
-              <div className="w-3 h-3 bg-gray-100 rounded-sm"></div>
-              <div className="w-3 h-3 bg-green-100 rounded-sm"></div>
-              <div className="w-3 h-3 bg-green-200 rounded-sm"></div>
-              <div className="w-3 h-3 bg-green-300 rounded-sm"></div>
-              <div className="w-3 h-3 bg-green-400 rounded-sm"></div>
-              <div className="w-3 h-3 bg-green-500 rounded-sm"></div>
-            </div>
-            <span>{t('more')}</span>
+            ))}
           </div>
         </div>
+
+        {/* Legend */}
+        <div className="mt-4 flex items-center justify-center gap-4 text-sm text-gray-600">
+          <span>{t('less')}</span>
+          <div className="flex gap-1">
+            <div className="w-3 h-3 bg-gray-100 rounded-sm"></div>
+            <div className="w-3 h-3 bg-green-100 rounded-sm"></div>
+            <div className="w-3 h-3 bg-green-200 rounded-sm"></div>
+            <div className="w-3 h-3 bg-green-300 rounded-sm"></div>
+            <div className="w-3 h-3 bg-green-400 rounded-sm"></div>
+            <div className="w-3 h-3 bg-green-500 rounded-sm"></div>
+          </div>
+          <span>{t('more')}</span>
+        </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 
