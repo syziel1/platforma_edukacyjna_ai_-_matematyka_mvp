@@ -28,7 +28,7 @@ function App() {
   const [showStartScreen, setShowStartScreen] = useState(false);
   const [showLandingPage, setShowLandingPage] = useState(true); // Show landing page by default
   const totalSteps = 5;
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const { updateProgress } = useProgress();
   const { startLearning, stopLearning } = useGlobalTimer();
   const { currentLanguage } = useLanguage();
