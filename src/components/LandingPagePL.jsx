@@ -1,41 +1,28 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ArrowRight, Clock, HelpCircle, Frown, User, Zap, Target, Play, Calendar, MessageCircle } from 'lucide-react';
 
 const LandingPagePL = ({ onEnterApp }) => {
   const audioRef = useRef(null);
-  const [showPlayButton, setShowPlayButton] = useState(false);
 
   // Auto-play welcome audio when component mounts
   useEffect(() => {
     const playWelcomeAudio = async () => {
-      // Jeśli przycisk jest już widoczny, nie próbuj ponownie odtwarzać
-      if (showPlayButton || !audioRef.current) return;
-
       try {
-        audioRef.current.volume = 0.7; // Ustaw głośność
-        await audioRef.current.play(); // Spróbuj odtworzyć
-      } catch (error) {
-        // Jeśli błąd to NotAllowedError, pokaż przycisk
-        if (error.name === 'NotAllowedError') {
-          console.log('Autoodtwarzanie zablokowane. Pokaż przycisk ręcznego odtwarzania.');
-          setShowPlayButton(true);
-        } else {
-          console.error('Błąd odtwarzania audio:', error);
+        if (audioRef.current) {
+          audioRef.current.volume = 0.7; // Set volume to 70%
+          await audioRef.current.play();
         }
+      } catch (error) {
+        // Auto-play might be blocked by browser policy
+        console.log('Auto-play was prevented by browser policy');
       }
     };
 
+    // Small delay to ensure component is fully mounted
     const timer = setTimeout(playWelcomeAudio, 1000);
     return () => clearTimeout(timer);
   }, []);
 
-  const handleManualPlay = () => {
-    if (audioRef.current) {
-      audioRef.current.play().catch(error => console.error("Błąd przy ręcznym odtwarzaniu:", error));
-      setShowPlayButton(false); // Ukryj przycisk po kliknięciu
-    }
-  };
-  
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -332,7 +319,7 @@ const LandingPagePL = ({ onEnterApp }) => {
               </p>
               <p className="text-lg text-text-color leading-relaxed">
                 Edu-Future to owoc tego doświadczenia, stworzony z głębokiej wiary, że każdy uczeń zasługuje na edukację, 
-                która go inspiruje. Projekt rozwijamy w ramach największego na świecie hackathonu organizowanego przez <strong>bolt.new</strong>, #WorldsLargestHackathon.
+                która go inspiruje. Projekt rozwijamy w ramach największego na świecie hackathonu, <strong>#WorldsLargestHackathon</strong>.
               </p>
             </div>
           </div>
@@ -370,17 +357,6 @@ const LandingPagePL = ({ onEnterApp }) => {
           </p>
         </div>
       </footer>
-      {showPlayButton && (
-        <div className="fixed bottom-6 right-6 z-20">
-          <button
-            onClick={handleManualPlay}
-            className="bg-accent-primary text-white rounded-full p-4 shadow-lg hover:bg-accent-secondary transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-primary animate-pulse"
-            title="Odtwórz powitanie"
-          >
-            <Volume2 className="w-6 h-6" />
-          </button>
-        </div>
-      )}
     </div>
   );
 };
