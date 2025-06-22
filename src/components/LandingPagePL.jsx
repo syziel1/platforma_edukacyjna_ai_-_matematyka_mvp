@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Clock, HelpCircle, Frown, User, Zap, Target, Play, Calendar, MessageCircle } from 'lucide-react';
 
 const LandingPagePL = ({ onEnterApp }) => {
