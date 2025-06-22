@@ -319,7 +319,7 @@ const LandingPagePL = ({ onEnterApp }) => {
               </p>
               <p className="text-lg text-text-color leading-relaxed">
                 Edu-Future to owoc tego doświadczenia, stworzony z głębokiej wiary, że każdy uczeń zasługuje na edukację, 
-                która go inspiruje. Projekt rozwijamy w ramach największego na świecie hackathonu, <strong>#WorldsLargestHackathon</strong>.
+                która go inspiruje. Projekt rozwijamy w ramach największego na świecie hackathonu organizowanego przez <strong>bolt.new</strong>, #WorldsLargestHackathon.
               </p>
             </div>
           </div>
