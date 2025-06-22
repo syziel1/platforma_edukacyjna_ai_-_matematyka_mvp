@@ -27,7 +27,7 @@ const LandingPagePL = ({ onEnterApp }) => {
 
     const timer = setTimeout(playWelcomeAudio, 1000);
     return () => clearTimeout(timer);
-  }, [showPlayButton]);
+  }, []);
 
   const handleManualPlay = () => {
     if (audioRef.current) {
