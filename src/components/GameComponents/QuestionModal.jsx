@@ -12,7 +12,6 @@ const QuestionModal = ({
   wiseOwlAdvice,
   playSound,
   selectedMode,
-  gameModeConfig,
   onCancel
 }) => {
   const { t, currentLanguage } = useLanguage();
@@ -29,10 +28,12 @@ const QuestionModal = ({
     
     // Speak the question if TTS is enabled
     if (question) {
-      const questionText = formatQuestion().display + ' = ?';
+      // Add a prefix based on the current language
+      const prefix = currentLanguage === 'en' ? 'What is ': 'Ile to ';
+      const questionText = prefix + formatQuestion().display + ' ?';
       speakIfEnabled(questionText);
     }
-  }, [question, playSound, speakIfEnabled]);
+  }, [question, playSound, speakIfEnabled, currentLanguage]);
 
   useEffect(() => {
     if (wiseOwlAdvice) {
