@@ -1,6 +1,13 @@
-import React from 'react';
 import { Map, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
+
+/**
+ * The KnowledgeMapCard component displays a card with a cosmic-themed mini-map
+ * representing a constellation of skills. It includes a title, a mini-map with stars
+ * @param {object} props - Props for the KnowledgeMapCard component
+ * @param {function} props.onOpenKnowledgeMap - Function to call when the knowledge map is opened
+ * @returns {JSX.Element} - Rendered KnowledgeMapCard component
+ */
 
 const KnowledgeMapCard = ({ onOpenKnowledgeMap }) => {
   const { t } = useLanguage();
