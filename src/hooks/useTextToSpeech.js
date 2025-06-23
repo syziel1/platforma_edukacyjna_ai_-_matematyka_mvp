@@ -1,30 +1,46 @@
 import { useCallback } from 'react';
 import { useSettings } from '../contexts/SettingsContext';
 
+// Module-level lock to prevent multiple simultaneous speech requests
+let isCurrentlySpeaking = false;
+let speechTimeoutId = null;
+
 export const useTextToSpeech = () => {
   const { settings } = useSettings();
 
   const speak = useCallback(async (text) => {
-    if (!settings.textToSpeechEnabled || !text) return;
+    // Block if speech is disabled, no text is provided, or another speech is in progress.
+    if (!settings.textToSpeechEnabled || !text || isCurrentlySpeaking) {
+      if (isCurrentlySpeaking) {
+        console.log('TTS request blocked: another speech is already in progress.');
+      }
+      return;
+    }
 
     try {
+      // Set the lock
+      isCurrentlySpeaking = true;
+      
+      // Safety timeout to release the lock after 15 seconds in case of an issue
+      speechTimeoutId = setTimeout(() => {
+        console.warn('TTS lock released by timeout.');
+        isCurrentlySpeaking = false;
+      }, 15000);
+
       const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY;
       if (!apiKey) {
-        console.warn('ElevenLabs API key not found. Text-to-speech disabled.');
-        return;
+        throw new Error('ElevenLabs API key not found. Text-to-speech disabled.');
       }
 
-      // Clean text from HTML tags but preserve Polish characters and math symbols
+      // Clean text to prevent issues
       const cleanText = text
-        .replace(/<[^>]*>/g, '') // Remove HTML tags
-        .replace(/[^\w\s.,!?;:\-ąćęłńóśźżĄĆĘŁŃÓŚŹŻ+\-×÷=^√%()]/g, '') // Keep Polish characters, basic punctuation, and math symbols
+        .replace(/<[^>]*>/g, '')
+        .replace(/[^\w\s.,!?;:\-ąćęłńóśźżĄĆĘŁŃÓŚŹŻ+\-×÷=^√%()]/g, '')
         .trim();
 
-      if (!cleanText) return;
-
-      console.log('Generating speech for:', cleanText);
-      console.log('Using voice ID:', settings.textToSpeechVoice);
-      console.log('Using speed:', settings.textToSpeechSpeed);
+      if (!cleanText) {
+        throw new Error("Cleaned text is empty.");
+      }
 
       const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${settings.textToSpeechVoice}`, {
         method: 'POST',
@@ -45,45 +61,36 @@ export const useTextToSpeech = () => {
       });
 
       if (!response.ok) {
-        // Handle specific error cases with user-friendly messages
-        if (response.status === 401) {
-          console.warn('Text-to-speech service unavailable: Account limitations detected. Consider disabling text-to-speech in settings or upgrading your ElevenLabs subscription.');
-          return;
-        }
-        
-        if (response.status === 429) {
-          console.warn('Text-to-speech service busy: Too many requests. Please wait a moment before trying again or consider disabling text-to-speech in settings.');
-          return;
-        }
-
-        // For other errors, still log but don't throw
         const errorText = await response.text();
-        console.warn(`Text-to-speech service error (${response.status}): Service temporarily unavailable. You may want to disable text-to-speech in settings.`);
-        return;
+        throw new Error(`Text-to-speech service error (${response.status}): ${errorText}`);
       }
 
-      // Convert response to blob and play
       const audioBlob = await response.blob();
       const audioUrl = URL.createObjectURL(audioBlob);
-      
       const audioPlayer = new Audio(audioUrl);
       audioPlayer.volume = settings.volume || 0.5;
       
-      // Clean up URL after playback
-      audioPlayer.addEventListener('ended', () => {
+      // Function to release the lock and clean up resources
+      const releaseLock = () => {
+        isCurrentlySpeaking = false;
+        clearTimeout(speechTimeoutId);
         URL.revokeObjectURL(audioUrl);
-      });
+      };
 
+      // Release lock on 'ended' or 'error' events
+      audioPlayer.addEventListener('ended', releaseLock);
       audioPlayer.addEventListener('error', (e) => {
         console.error('Audio playback error:', e);
-        URL.revokeObjectURL(audioUrl);
+        releaseLock();
       });
 
       await audioPlayer.play();
-      console.log('Speech playback started');
 
     } catch (error) {
-      console.warn('Text-to-speech temporarily unavailable:', error.message);
+      console.warn('Text-to-speech failed:', error.message);
+      // Ensure lock is released on any exception
+      isCurrentlySpeaking = false;
+      if (speechTimeoutId) clearTimeout(speechTimeoutId);
     }
   }, [settings.textToSpeechEnabled, settings.textToSpeechVoice, settings.textToSpeechSpeed, settings.volume]);
 
