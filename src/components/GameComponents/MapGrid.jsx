@@ -1,6 +1,39 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 const MapGrid = ({ boardData, playerPosition, currentLevelSize, level, showGrassPercentage = false }) => {
+  const containerRef = useRef(null);
+  const [containerDimensions, setContainerDimensions] = useState({ width: 400, height: 300 });
+
+  // ResizeObserver do śledzenia zmian wymiarów kontenera
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        setContainerDimensions({ 
+          width: width - 32, // Account for padding
+          height: height - 32 
+        });
+      }
+    });
+
+    resizeObserver.observe(container);
+
+    // Ustaw początkowe wymiary
+    const rect = container.getBoundingClientRect();
+    setContainerDimensions({
+      width: rect.width - 32,
+      height: rect.height - 32
+    });
+
+    return () => {
+      resizeObserver.unobserve(container);
+      resizeObserver.disconnect();
+    };
+  }, []);
+
   const getDirectionRotation = (direction) => {
     switch (direction) {
       case 'N': return '180deg';
@@ -56,23 +89,9 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level, showGrass
     return animationClass;
   };
 
-  // IMPROVED: Calculate optimal cell size to fill available space
+  // IMPROVED: Calculate optimal cell size using React state instead of DOM queries
   const getCellSize = () => {
-    // Get the container dimensions - we need to account for the parent container
-    const containerElement = document.querySelector('.w-full.h-full.flex.items-center.justify-center');
-    
-    let availableWidth = 400; // Default fallback
-    let availableHeight = 300; // Default fallback
-    
-    if (containerElement) {
-      const rect = containerElement.getBoundingClientRect();
-      availableWidth = rect.width - 32; // Account for padding
-      availableHeight = rect.height - 32; // Account for padding
-    } else {
-      // Fallback calculation based on viewport
-      availableWidth = Math.min(window.innerWidth * 0.4, 500);
-      availableHeight = Math.min(window.innerHeight * 0.35, 400);
-    }
+    const { width: availableWidth, height: availableHeight } = containerDimensions;
     
     // Calculate the maximum cell size that fits in both dimensions
     const maxCellSizeByWidth = Math.floor(availableWidth / currentLevelSize);
@@ -180,118 +199,123 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level, showGrass
       `}</style>
       
       <div 
-        className="grid border-2 border-amber-600 shadow-lg rounded-lg overflow-hidden mx-auto"
-        style={{ 
-          gridTemplateColumns: `repeat(${currentLevelSize}, ${cellSize}px)`,
-          gridTemplateRows: `repeat(${currentLevelSize}, ${cellSize}px)`,
-          gap: '1px',
-          background: 'linear-gradient(45deg, #8B4513, #A0522D)',
-          width: `${currentLevelSize * cellSize + (currentLevelSize - 1)}px`,
-          height: `${currentLevelSize * cellSize + (currentLevelSize - 1)}px`
-        }}
+        ref={containerRef}
+        className="w-full h-full flex items-center justify-center"
       >
-        {boardData.map((cellData) => {
-          const isPlayerHere = cellData.row === playerPosition.row && cellData.col === playerPosition.col;
-          const animationClass = getCellAnimation(cellData, isPlayerHere);
-          
-          return (
-            <div
-              key={`${cellData.row}-${cellData.col}`}
-              className={`border border-gray-400 flex justify-center items-center relative bg-clip-padding transition-all duration-300 ease-in-out ${animationClass}`}
-              style={{
-                width: `${cellSize}px`,
-                height: `${cellSize}px`,
-                backgroundColor: getCellBackgroundColor(cellData),
-                fontSize: `${Math.max(10, cellSize * 0.3)}px`
-              }}
-            >
-              {/* Grass texture overlay for grassy cells */}
-              {cellData.grass >= 10 && (
-                <div 
-                  className="absolute inset-0 grass-wave opacity-30"
-                  style={{
-                    backgroundImage: `repeating-linear-gradient(
-                      45deg,
-                      rgba(0,0,0,0.1) 0px,
-                      rgba(0,0,0,0.1) 1px,
-                      transparent 1px,
-                      transparent 3px
-                    )`
-                  }}
-                />
-              )}
-              
-              {/* Bonus indicator - only show if grass > 50% */}
-              {cellData.isBonus && cellData.grass > 50 && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span 
-                    className="z-10 bonus-icon"
-                    style={{ 
-                      textShadow: '0 0 8px rgba(255,215,0,0.8), 0 0 4px rgba(0,0,0,0.5)',
-                      fontSize: `${Math.max(12, cellSize * 0.4)}px`
+        <div 
+          className="grid border-2 border-amber-600 shadow-lg rounded-lg overflow-hidden mx-auto"
+          style={{ 
+            gridTemplateColumns: `repeat(${currentLevelSize}, ${cellSize}px)`,
+            gridTemplateRows: `repeat(${currentLevelSize}, ${cellSize}px)`,
+            gap: '1px',
+            background: 'linear-gradient(45deg, #8B4513, #A0522D)',
+            width: `${currentLevelSize * cellSize + (currentLevelSize - 1)}px`,
+            height: `${currentLevelSize * cellSize + (currentLevelSize - 1)}px`
+          }}
+        >
+          {boardData.map((cellData) => {
+            const isPlayerHere = cellData.row === playerPosition.row && cellData.col === playerPosition.col;
+            const animationClass = getCellAnimation(cellData, isPlayerHere);
+            
+            return (
+              <div
+                key={`${cellData.row}-${cellData.col}`}
+                className={`border border-gray-400 flex justify-center items-center relative bg-clip-padding transition-all duration-300 ease-in-out ${animationClass}`}
+                style={{
+                  width: `${cellSize}px`,
+                  height: `${cellSize}px`,
+                  backgroundColor: getCellBackgroundColor(cellData),
+                  fontSize: `${Math.max(10, cellSize * 0.3)}px`
+                }}
+              >
+                {/* Grass texture overlay for grassy cells */}
+                {cellData.grass >= 10 && (
+                  <div 
+                    className="absolute inset-0 grass-wave opacity-30"
+                    style={{
+                      backgroundImage: `repeating-linear-gradient(
+                        45deg,
+                        rgba(0,0,0,0.1) 0px,
+                        rgba(0,0,0,0.1) 1px,
+                        transparent 1px,
+                        transparent 3px
+                      )`
                     }}
+                  />
+                )}
+                
+                {/* Bonus indicator - only show if grass > 50% */}
+                {cellData.isBonus && cellData.grass > 50 && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span 
+                      className="z-10 bonus-icon"
+                      style={{ 
+                        textShadow: '0 0 8px rgba(255,215,0,0.8), 0 0 4px rgba(0,0,0,0.5)',
+                        fontSize: `${Math.max(12, cellSize * 0.4)}px`
+                      }}
+                    >
+                      {getBonusIcon(cellData)}
+                    </span>
+                    {/* Bonus glow effect */}
+                    <div 
+                      className="absolute inset-0 rounded-full"
+                      style={{
+                        background: 'radial-gradient(circle, rgba(255,215,0,0.2) 0%, transparent 70%)',
+                        animation: 'bonusGlow 2s ease-in-out infinite'
+                      }}
+                    />
+                  </div>
+                )}
+                
+                {/* Grass percentage display */}
+                {showGrassPercentage && cellData.grass < 100 && cellData.grass > 0 && (
+                  <div 
+                    className="absolute top-0 left-0 font-bold text-white bg-black/50 px-1 rounded-br"
+                    style={{ fontSize: `${Math.max(8, cellSize * 0.2)}px` }}
                   >
-                    {getBonusIcon(cellData)}
-                  </span>
-                  {/* Bonus glow effect */}
+                    {Math.round(cellData.grass)}%
+                  </div>
+                )}
+                
+                {/* Player indicator with enhanced styling */}
+                {isPlayerHere && (
+                  <div className="absolute player-indicator">
+                    <div 
+                      className="border-transparent player-arrow"
+                      style={{
+                        width: 0,
+                        height: 0,
+                        borderLeft: `${Math.max(6, cellSize * 0.2)}px solid transparent`,
+                        borderRight: `${Math.max(6, cellSize * 0.2)}px solid transparent`,
+                        borderTop: `${Math.max(8, cellSize * 0.3)}px solid #ef4444`,
+                        '--rotation': getDirectionRotation(playerPosition.direction)
+                      }}
+                    />
+                    {/* Player glow effect */}
+                    <div 
+                      className="absolute rounded-full opacity-50"
+                      style={{
+                        inset: `-${Math.max(3, cellSize * 0.1)}px`,
+                        background: 'radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, transparent 70%)',
+                        animation: 'playerPulse 1s ease-in-out infinite alternate'
+                      }}
+                    />
+                  </div>
+                )}
+                
+                {/* Grass height indicator for visual feedback */}
+                {cellData.grass >= 10 && (
                   <div 
-                    className="absolute inset-0 rounded-full"
+                    className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-green-800 to-transparent opacity-20"
                     style={{
-                      background: 'radial-gradient(circle, rgba(255,215,0,0.2) 0%, transparent 70%)',
-                      animation: 'bonusGlow 2s ease-in-out infinite'
+                      height: `${Math.min(100, (cellData.grass / 200) * 100)}%`
                     }}
                   />
-                </div>
-              )}
-              
-              {/* Grass percentage display */}
-              {showGrassPercentage && cellData.grass < 100 && cellData.grass > 0 && (
-                <div 
-                  className="absolute top-0 left-0 font-bold text-white bg-black/50 px-1 rounded-br"
-                  style={{ fontSize: `${Math.max(8, cellSize * 0.2)}px` }}
-                >
-                  {Math.round(cellData.grass)}%
-                </div>
-              )}
-              
-              {/* Player indicator with enhanced styling */}
-              {isPlayerHere && (
-                <div className="absolute player-indicator">
-                  <div 
-                    className="border-transparent player-arrow"
-                    style={{
-                      width: 0,
-                      height: 0,
-                      borderLeft: `${Math.max(6, cellSize * 0.2)}px solid transparent`,
-                      borderRight: `${Math.max(6, cellSize * 0.2)}px solid transparent`,
-                      borderTop: `${Math.max(8, cellSize * 0.3)}px solid #ef4444`,
-                      '--rotation': getDirectionRotation(playerPosition.direction)
-                    }}
-                  />
-                  {/* Player glow effect */}
-                  <div 
-                    className="absolute rounded-full opacity-50"
-                    style={{
-                      inset: `-${Math.max(3, cellSize * 0.1)}px`,
-                      background: 'radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, transparent 70%)',
-                      animation: 'playerPulse 1s ease-in-out infinite alternate'
-                    }}
-                  />
-                </div>
-              )}
-              
-              {/* Grass height indicator for visual feedback */}
-              {cellData.grass >= 10 && (
-                <div 
-                  className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-green-800 to-transparent opacity-20"
-                  style={{
-                    height: `${Math.min(100, (cellData.grass / 200) * 100)}%`
-                  }}
-                />
-              )}
-            </div>
-          );
-        })}
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </>
   );
