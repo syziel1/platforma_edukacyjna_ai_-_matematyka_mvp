@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useGameRecords } from '../contexts/GameRecordsContext';
 import { useSettings } from '../contexts/SettingsContext';
 import { useAuth } from '../contexts/AuthContext';
-import { useGlobalTimer } from '../hooks/useGlobalTimer';
+import { useGlobalTimer } from '../contexts/GlobalTimerContext';
 import { useGameModeConfig } from '../config/gameModes';
 
 export const useJungleGame = (startWithModeSelector = false) => {
