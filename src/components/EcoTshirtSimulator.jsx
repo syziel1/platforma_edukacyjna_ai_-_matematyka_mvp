@@ -16,63 +16,68 @@ const EcoTshirtSimulator = () => {
   const [quantity, setQuantity] = useState(35);
   const [sellingPriceNet, setSellingPriceNet] = useState(32.31);
 
-  // Calculated values
-  const [unitCost, setUnitCost] = useState(0);
-  const [totalCost, setTotalCost] = useState(0);
-  const [maxQuantity, setMaxQuantity] = useState(0);
-  const [sellingPriceGross, setSellingPriceGross] = useState(0);
-  const [actualMargin, setActualMargin] = useState(0);
-  const [soldQuantity, setSoldQuantity] = useState(0);
-  const [revenue, setRevenue] = useState(0);
-  const [profit, setProfit] = useState(0);
-  const [remainingStock, setRemainingStock] = useState(0);
-
-  // Calculate unit cost with discount
-  useEffect(() => {
-    const cost = quantity >= discountThreshold 
+  // Centralized calculation function to ensure consistency
+  const calculateAllValues = (currentQuantity, currentSellingPriceNet) => {
+    // Calculate unit cost with discount
+    const unitCost = currentQuantity >= discountThreshold 
       ? baseCost * (1 - discountRate) 
       : baseCost;
-    setUnitCost(cost);
-    setTotalCost(cost * quantity);
-  }, [quantity, baseCost, discountThreshold, discountRate]);
-
-  // Calculate maximum quantity possible with budget
-  useEffect(() => {
+    
+    // Calculate total cost
+    const totalCost = unitCost * currentQuantity;
+    
+    // Calculate maximum quantity possible with budget
     const costWithDiscount = baseCost * (1 - discountRate);
     const costWithoutDiscount = baseCost;
     
     const maxWithDiscount = Math.floor(budget / costWithDiscount);
     const maxWithoutDiscount = Math.floor(budget / costWithoutDiscount);
     
-    // Check which option gives more t-shirts
-    if (maxWithDiscount >= discountThreshold) {
-      setMaxQuantity(maxWithDiscount);
-    } else {
-      setMaxQuantity(Math.max(maxWithDiscount, maxWithoutDiscount));
-    }
-  }, [budget, baseCost, discountRate, discountThreshold]);
+    const maxQuantity = maxWithDiscount >= discountThreshold 
+      ? maxWithDiscount 
+      : Math.max(maxWithDiscount, maxWithoutDiscount);
+    
+    // Calculate selling price with VAT
+    const sellingPriceGross = currentSellingPriceNet * (1 + vatRate);
+    
+    // Calculate actual margin
+    const actualMargin = currentSellingPriceNet > 0 
+      ? ((currentSellingPriceNet - unitCost) / currentSellingPriceNet) * 100 
+      : 0;
+    
+    // Calculate sales results (3/5 sold)
+    const soldQuantity = Math.floor(currentQuantity * (3/5));
+    const remainingStock = currentQuantity - soldQuantity;
+    const revenue = soldQuantity * currentSellingPriceNet;
+    const profit = revenue - totalCost;
+    
+    return {
+      unitCost,
+      totalCost,
+      maxQuantity,
+      sellingPriceGross,
+      actualMargin,
+      soldQuantity,
+      remainingStock,
+      revenue,
+      profit
+    };
+  };
 
-  // Calculate selling price with VAT
-  useEffect(() => {
-    setSellingPriceGross(sellingPriceNet * (1 + vatRate));
-  }, [sellingPriceNet, vatRate]);
+  // Calculate all derived values using the centralized function
+  const calculatedValues = calculateAllValues(quantity, sellingPriceNet);
 
-  // Calculate actual margin
-  useEffect(() => {
-    if (sellingPriceNet > 0) {
-      const margin = ((sellingPriceNet - unitCost) / sellingPriceNet) * 100;
-      setActualMargin(margin);
-    }
-  }, [sellingPriceNet, unitCost]);
-
-  // Calculate sales results (3/5 sold)
-  useEffect(() => {
-    const sold = Math.floor(quantity * (3/5));
-    setSoldQuantity(sold);
-    setRemainingStock(quantity - sold);
-    setRevenue(sold * sellingPriceNet);
-    setProfit(revenue - totalCost);
-  }, [quantity, sellingPriceNet, totalCost, revenue]);
+  const {
+    unitCost,
+    totalCost,
+    maxQuantity,
+    sellingPriceGross,
+    actualMargin,
+    soldQuantity,
+    remainingStock,
+    revenue,
+    profit
+  } = calculatedValues;
 
   // Calculate optimal selling price for target margin
   const calculateOptimalPrice = () => {
