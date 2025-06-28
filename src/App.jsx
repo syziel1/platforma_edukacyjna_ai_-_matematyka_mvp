@@ -13,19 +13,12 @@ import EcoTshirtLesson from './pages/EcoTshirtLesson';
 import JungleGamePage from './pages/JungleGamePage';
 import PowersRootsPage from './pages/PowersRootsPage';
 import { useAuth } from './contexts/AuthContext';
-import { useGlobalTimer } from './contexts/GlobalTimerContext';
 import { useLanguage } from './contexts/LanguageContext';
 
 function App() {
   const { user } = useAuth();
-  const { stopLearning } = useGlobalTimer();
   const { currentLanguage } = useLanguage();
   const location = useLocation();
-
-  // Stop learning timer when app starts
-  useEffect(() => {
-    stopLearning();
-  }, [stopLearning]);
 
   // Check if we're on landing page
   const isLandingPage = location.pathname === '/';
