@@ -16,11 +16,64 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
   const [feedback, setFeedback] = useState({});
   const [showResults, setShowResults] = useState(false);
 
-  // Correct answers for water tank optimization
-  const correctAnswers = {
-    radiusDerivative: 'dV/dr = 2πrh - 2πr²/h', // Simplified form
-    heightDerivative: 'dV/dh = πr² - 2πr²/h²', // Simplified form  
-    optimalProportions: 'h = 2r' // Height equals diameter
+  // Improved answer validation functions
+  const validateRadiusDerivative = (answer) => {
+    const cleanAnswer = answer.toLowerCase().replace(/\s/g, '');
+    
+    // Accept various correct formulations
+    const correctPatterns = [
+      /h\s*=\s*2\s*r/,           // h = 2r
+      /h\s*=\s*2\*r/,            // h = 2*r
+      /wysokość\s*=\s*2\s*\*\s*promień/,
+      /wysokość\s*równa\s*się\s*średnicy/,
+      /h\s*równa\s*się\s*2r/,
+      /2\s*r/,                   // Just "2r"
+      /dwukrotność\s*promienia/,
+      /wysokość\s*to\s*podwojony\s*promień/
+    ];
+    
+    return correctPatterns.some(pattern => pattern.test(cleanAnswer));
+  };
+
+  const validateHeightDerivative = (answer) => {
+    const cleanAnswer = answer.toLowerCase().replace(/\s/g, '');
+    
+    // Accept various correct formulations
+    const correctPatterns = [
+      /h\s*=\s*2\s*r/,
+      /wysokość\s*wpływa\s*na\s*objętość/,
+      /większa\s*wysokość.*większa\s*objętość/,
+      /πr²/,                     // Mathematical formula fragment
+      /pi\s*r\s*kwadrat/,
+      /powierzchnia\s*podstawy/,
+      /2\s*r/
+    ];
+    
+    return correctPatterns.some(pattern => pattern.test(cleanAnswer));
+  };
+
+  const validateOptimalProportions = (answer) => {
+    const cleanAnswer = answer.toLowerCase().replace(/\s/g, '');
+    
+    // More rigorous validation for optimal proportions
+    const correctPatterns = [
+      /^h\s*=\s*2\s*r$/,         // Exact: h = 2r
+      /^h\s*=\s*2\*r$/,          // Exact: h = 2*r
+      /^2\s*r$/,                 // Exact: 2r
+      /^2$/,                     // Just the number 2
+      /^h\/r\s*=\s*2$/,          // h/r = 2
+      /^wysokość\s*=\s*średnica$/,
+      /^wysokość\s*=\s*2\s*promień$/
+    ];
+    
+    // Also check for numeric ratio
+    const numericMatch = cleanAnswer.match(/(\d+(?:\.\d+)?)/);
+    if (numericMatch) {
+      const value = parseFloat(numericMatch[1]);
+      return Math.abs(value - 2) < 0.1; // Allow small tolerance
+    }
+    
+    return correctPatterns.some(pattern => pattern.test(cleanAnswer));
   };
 
   const handleAnswerChange = (field, value) => {
@@ -34,9 +87,14 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
     const newFeedback = {};
     let allCorrect = true;
 
-    // Check radius derivative (simplified check)
-    const radiusAnswer = answers.radiusDerivative.toLowerCase().replace(/\s/g, '');
-    if (radiusAnswer.includes('2πrh') || radiusAnswer.includes('h=2r') || radiusAnswer.includes('2r')) {
+    // Check radius derivative with improved validation
+    if (!answers.radiusDerivative.trim()) {
+      newFeedback.radiusDerivative = {
+        correct: false,
+        message: 'Proszę podać odpowiedź'
+      };
+      allCorrect = false;
+    } else if (validateRadiusDerivative(answers.radiusDerivative)) {
       newFeedback.radiusDerivative = {
         correct: true,
         message: 'Poprawnie! ✅'
@@ -44,14 +102,19 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
     } else {
       newFeedback.radiusDerivative = {
         correct: false,
-        message: 'Niepoprawnie. Wskazówka: Rozważ relację między r i h w optymalnym zbiorniku'
+        message: 'Niepoprawnie. Wskazówka: Rozważ relację między r i h w optymalnym zbiorniku (h = 2r)'
       };
       allCorrect = false;
     }
 
-    // Check height derivative (simplified check)
-    const heightAnswer = answers.heightDerivative.toLowerCase().replace(/\s/g, '');
-    if (heightAnswer.includes('πr²') || heightAnswer.includes('h=2r') || heightAnswer.includes('2r')) {
+    // Check height derivative with improved validation
+    if (!answers.heightDerivative.trim()) {
+      newFeedback.heightDerivative = {
+        correct: false,
+        message: 'Proszę podać odpowiedź'
+      };
+      allCorrect = false;
+    } else if (validateHeightDerivative(answers.heightDerivative)) {
       newFeedback.heightDerivative = {
         correct: true,
         message: 'Poprawnie! ✅'
@@ -59,14 +122,19 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
     } else {
       newFeedback.heightDerivative = {
         correct: false,
-        message: 'Niepoprawnie. Wskazówka: Rozważ jak wysokość wpływa na objętość'
+        message: 'Niepoprawnie. Wskazówka: Rozważ jak wysokość wpływa na objętość (większa wysokość = większa objętość, ale mniejszy promień)'
       };
       allCorrect = false;
     }
 
-    // Check optimal proportions
-    const proportionsAnswer = answers.optimalProportions.toLowerCase().replace(/\s/g, '');
-    if (proportionsAnswer.includes('h=2r') || proportionsAnswer.includes('h/r=2') || proportionsAnswer === '2') {
+    // Check optimal proportions with strict validation
+    if (!answers.optimalProportions.trim()) {
+      newFeedback.optimalProportions = {
+        correct: false,
+        message: 'Proszę podać odpowiedź'
+      };
+      allCorrect = false;
+    } else if (validateOptimalProportions(answers.optimalProportions)) {
       newFeedback.optimalProportions = {
         correct: true,
         message: 'Poprawnie! ✅'
@@ -74,7 +142,7 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
     } else {
       newFeedback.optimalProportions = {
         correct: false,
-        message: 'Niepoprawnie. Prawidłowa odpowiedź: h = 2r (wysokość = średnica)'
+        message: 'Niepoprawnie. Prawidłowa odpowiedź: h = 2r (wysokość = średnica podstawy)'
       };
       allCorrect = false;
     }
@@ -260,7 +328,7 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
                   type="text"
                   value={answers.radiusDerivative}
                   onChange={(e) => handleAnswerChange('radiusDerivative', e.target.value)}
-                  placeholder="Opisz relację między r a V..."
+                  placeholder="Opisz relację między r a V... (np. h = 2r)"
                   className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color ${
                     showResults 
                       ? feedback.radiusDerivative?.correct 
@@ -314,7 +382,7 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
                   type="text"
                   value={answers.optimalProportions}
                   onChange={(e) => handleAnswerChange('optimalProportions', e.target.value)}
-                  placeholder="h = ? × r"
+                  placeholder="h = ? × r (np. h = 2r lub po prostu 2)"
                   className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color ${
                     showResults 
                       ? feedback.optimalProportions?.correct 
