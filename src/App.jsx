@@ -13,7 +13,7 @@ import EcoTshirtLesson from './pages/EcoTshirtLesson';
 import JungleGamePage from './pages/JungleGamePage';
 import PowersRootsPage from './pages/PowersRootsPage';
 import { useAuth } from './contexts/AuthContext';
-import { useGlobalTimer } from './hooks/useGlobalTimer';
+import { useGlobalTimer } from './contexts/GlobalTimerContext';
 import { useLanguage } from './contexts/LanguageContext';
 
 function App() {
