@@ -15,7 +15,7 @@ import { useSettings } from '../contexts/SettingsContext';
 const JungleGame = ({ onBack, startWithModeSelector = false }) => {
   const { t } = useLanguage();
   const { playSound } = useSoundEffects();
-  const { stopLearning } = useGlobalTimer();
+  const { stopLearning, timeElapsed, formattedTime } = useGlobalTimer(); // DODANE: timeElapsed, formattedTime
   const { settings } = useSettings();
   
   const {
@@ -30,7 +30,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
     handleGameEnd,
     calculateGrassClearedPercentage,
     showMessage,
-    formatTime
+    formatTime // USUNIĘTE: używamy formatTime z useGlobalTimer
   } = useJungleGame(startWithModeSelector);
 
   const handleCancel = () => {
@@ -328,12 +328,12 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
                     </div>
                   </div>
 
-                  {/* Time */}
+                  {/* Time - NAPRAWIONE: używamy globalnego timera */}
                   <div className="bg-blue-100 p-2 md:p-4 rounded-lg border border-blue-300">
                     <div className="text-center">
                       <div className="text-blue-800 font-bold text-xs md:text-base mb-1">{t('time')}</div>
                       <div className="text-blue-700 text-lg md:text-xl font-bold">
-                        {formatTime(gameState.timeElapsed)}
+                        {formattedTime}
                       </div>
                       <div className="text-blue-600 text-xs">⏱️ {t('elapsed')}</div>
                     </div>

@@ -145,7 +145,6 @@ export const useJungleGame = (startWithModeSelector = false) => {
         visibleBoardData: [], // Currently visible portion
         playerPosition: { row: 0, col: 0, direction: 'S' },
         score: 0,
-        timeElapsed: 0,
         gameStartTime: null,
         showModeSelector: true,
         selectedMode: null,
@@ -166,7 +165,6 @@ export const useJungleGame = (startWithModeSelector = false) => {
       visibleBoardData: [],
       playerPosition: { row: 0, col: 0, direction: 'S' },
       score: 0,
-      timeElapsed: 0,
       gameStartTime: null,
       showModeSelector: true,
       selectedMode: null,
@@ -205,21 +203,8 @@ export const useJungleGame = (startWithModeSelector = false) => {
   }, [gameState.fullBoardData, gameState.currentViewSize, gameState.selectedMode, 
       gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, saveBoardState]);
 
-  // Timer effect
-  useEffect(() => {
-    let timer;
-    if (!gameState.showModeSelector && !gameState.showWelcome && !gameState.showInstructions && !gameState.showQuestion) {
-      timer = setInterval(() => {
-        setGameState(prev => ({
-          ...prev,
-          timeElapsed: prev.timeElapsed + 1
-        }));
-      }, 1000);
-    }
-    return () => {
-      if (timer) clearInterval(timer);
-    };
-  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, gameState.showQuestion]);
+  // USUNIĘTE: Lokalny timer - używamy globalnego timera z useGlobalTimer
+  // Timer effect został usunięty, ponieważ używamy globalnego timera
 
   const calculateCellScore = (row, col, isBonus = false) => {
     const baseScore = row + col + 2;
@@ -270,6 +255,7 @@ export const useJungleGame = (startWithModeSelector = false) => {
     }, duration);
   };
 
+  // ZMIENIONE: Używamy globalnego timera zamiast lokalnego
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
