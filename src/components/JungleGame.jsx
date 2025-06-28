@@ -8,7 +8,7 @@ import InstructionsModal from './GameComponents/InstructionsModal';
 import GameModeSelector from './GameComponents/GameModeSelector';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useSoundEffects } from '../hooks/useSoundEffects';
-import { useGlobalTimer } from '../hooks/useGlobalTimer';
+import { useGlobalTimer } from '../contexts/GlobalTimerContext';
 import { useJungleGame } from '../hooks/useJungleGame';
 import { useSettings } from '../contexts/SettingsContext';
 
