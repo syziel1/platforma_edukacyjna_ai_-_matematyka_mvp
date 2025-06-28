@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Clock, Video, Calendar, RotateCcw, User, X } from 'lucide-react';
-import { useGlobalTimer } from '../../hooks/useGlobalTimer';
+import { useGlobalTimer } from '../../contexts/GlobalTimerContext';
 import { mentorAvailability } from '../../config/mentorAvailability';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
