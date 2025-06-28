@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Calendar, Clock, TrendingUp, Award, ChevronLeft, ChevronRight, BarChart3 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useGlobalTimer } from '../hooks/useGlobalTimer';
+import { useGlobalTimer } from '../contexts/GlobalTimerContext';
 
 const LearningStatsModal = ({ isOpen, onClose }) => {
   const { t } = useLanguage();
