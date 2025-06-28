@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LessonLayout from '../components/Layout/LessonLayout';
 import WaterTankContent from '../components/WaterTankContent';
-import { useGlobalTimer } from '../hooks/useGlobalTimer';
+import { useGlobalTimer } from '../contexts/GlobalTimerContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const WaterTankLesson = () => {
