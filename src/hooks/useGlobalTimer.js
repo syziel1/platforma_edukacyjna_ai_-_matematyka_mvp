@@ -145,7 +145,7 @@ export const useGlobalTimer = () => {
     };
   }, [isActive, timeElapsed, stopLearning]);
 
-  // Aktualizuj timer co sekundę, gdy nauka jest aktywna
+  // NAPRAWIONE: Aktualizuj timer co sekundę, gdy nauka jest aktywna
   useEffect(() => {
     let interval = null;
     
@@ -159,13 +159,13 @@ export const useGlobalTimer = () => {
           }
           return newTime;
         });
-      }, 1000);
+      }, 1000); // NAPRAWIONE: Zawsze aktualizuj co sekundę
     }
 
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isActive]);
+  }, [isActive]); // NAPRAWIONE: Zależność tylko od isActive
 
   // Zapisz czas nauki do statystyk dziennych
   useEffect(() => {

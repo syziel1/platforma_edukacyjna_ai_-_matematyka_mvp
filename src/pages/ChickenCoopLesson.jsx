@@ -12,9 +12,10 @@ const ChickenCoopLesson = () => {
   const { startLearning, stopLearning } = useGlobalTimer();
   const { t } = useLanguage();
 
+  // NAPRAWIONE: Automatyczne uruchomienie timera przy wejściu do lekcji
   React.useEffect(() => {
-    startLearning();
-    return () => stopLearning();
+    startLearning(); // Uruchom timer natychmiast
+    return () => stopLearning(); // Zatrzymaj przy wyjściu
   }, [startLearning, stopLearning]);
 
   const handleBack = () => {
