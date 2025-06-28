@@ -28,21 +28,26 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
     }
   }, [isOpen]);
 
-  // Update today's learning time (replace, don't add)
+  // Update today's learning time (replace, don't add) - NAPRAWIONE: używamy funkcyjnej formy setState
   useEffect(() => {
     if (isOpen && timeElapsed > 0 && isActive) {
       const today = new Date().toISOString().split('T')[0];
-      const currentData = { ...learningData };
-      
-      // Set today's time (convert seconds to minutes) - replace, don't add
       const todayMinutes = Math.floor(timeElapsed / 60);
+      
       if (todayMinutes > 0) {
-        currentData[today] = todayMinutes; // Replace instead of adding
-        setLearningData(currentData);
-        localStorage.setItem('dailyLearningStats', JSON.stringify(currentData));
+        setLearningData(prevData => {
+          const currentData = { ...prevData };
+          // Set today's time (convert seconds to minutes) - replace, don't add
+          currentData[today] = todayMinutes; // Replace instead of adding
+          
+          // Save to localStorage
+          localStorage.setItem('dailyLearningStats', JSON.stringify(currentData));
+          
+          return currentData;
+        });
       }
     }
-  }, [isOpen, timeElapsed, learningData, isActive]);
+  }, [isOpen, timeElapsed, isActive]); // NAPRAWIONE: usunięto learningData z zależności
 
   if (!isOpen) return null;
 
