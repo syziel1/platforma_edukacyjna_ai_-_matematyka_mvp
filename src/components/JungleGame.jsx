@@ -10,11 +10,13 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useSoundEffects } from '../hooks/useSoundEffects';
 import { useGlobalTimer } from '../hooks/useGlobalTimer';
 import { useJungleGame } from '../hooks/useJungleGame';
+import { useSettings } from '../contexts/SettingsContext';
 
 const JungleGame = ({ onBack, startWithModeSelector = false }) => {
   const { t } = useLanguage();
   const { playSound } = useSoundEffects();
   const { stopLearning } = useGlobalTimer();
+  const { settings } = useSettings();
   
   const {
     gameState,
@@ -306,7 +308,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
                   playerPosition={gameState.playerPosition}
                   currentLevelSize={gameState.currentViewSize}
                   level={gameState.currentViewSize}
-                  showGrassPercentage={gameState.settings?.showGrassPercentage}
+                  showGrassPercentage={settings.showGrassPercentage}
                 />
               </div>
             </div>
