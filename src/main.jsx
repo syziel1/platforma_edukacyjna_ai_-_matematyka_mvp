@@ -8,6 +8,7 @@ import { AuthProvider } from './contexts/AuthContext.jsx'
 import { ProgressProvider } from './contexts/ProgressContext.jsx'
 import { SettingsProvider } from './contexts/SettingsContext.jsx'
 import { GameRecordsProvider } from './contexts/GameRecordsContext.jsx'
+import { GlobalTimerProvider } from './contexts/GlobalTimerContext.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -16,9 +17,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <LanguageProvider>
           <ProgressProvider>
             <SettingsProvider>
-              <GameRecordsProvider>
-                <App />
-              </GameRecordsProvider>
+              <GlobalTimerProvider>
+                <GameRecordsProvider>
+                  <App />
+                </GameRecordsProvider>
+              </GlobalTimerProvider>
             </SettingsProvider>
           </ProgressProvider>
         </LanguageProvider>

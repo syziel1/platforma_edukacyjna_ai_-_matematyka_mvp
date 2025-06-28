@@ -1,7 +1,17 @@
-import { useState, useEffect } from 'react';
-import { useSettings } from '../contexts/SettingsContext';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useSettings } from './SettingsContext';
+
+const GlobalTimerContext = createContext();
 
 export const useGlobalTimer = () => {
+  const context = useContext(GlobalTimerContext);
+  if (!context) {
+    throw new Error('useGlobalTimer must be used within a GlobalTimerProvider');
+  }
+  return context;
+};
+
+export const GlobalTimerProvider = ({ children }) => {
   const { settings } = useSettings();
   
   // Sprawdź czy timer powinien być zresetowany ze względu na zmianę dnia
@@ -143,7 +153,7 @@ export const useGlobalTimer = () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [isActive, timeElapsed, stopLearning]);
+  }, [isActive, timeElapsed]);
 
   // Aktualizuj timer co sekundę, gdy nauka jest aktywna
   useEffect(() => {
@@ -217,7 +227,7 @@ export const useGlobalTimer = () => {
     resetTimer();
   };
 
-  return {
+  const value = {
     timeElapsed,
     formattedTime: formatTime(timeElapsed),
     isActive,
@@ -228,4 +238,10 @@ export const useGlobalTimer = () => {
     startLearning,
     stopLearning
   };
+
+  return (
+    <GlobalTimerContext.Provider value={value}>
+      {children}
+    </GlobalTimerContext.Provider>
+  );
 };
