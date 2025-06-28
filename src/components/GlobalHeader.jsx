@@ -1,7 +1,7 @@
 import React from 'react';
 import { Video, ArrowLeft, Clock, User } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useGlobalTimer } from '../hooks/useGlobalTimer';
+import { useGlobalTimer } from '../contexts/GlobalTimerContext';
 import { useMentorStatus } from '../hooks/useMentorStatus';
 
 const GlobalHeader = ({ title, onBack, showBackButton = false }) => {
