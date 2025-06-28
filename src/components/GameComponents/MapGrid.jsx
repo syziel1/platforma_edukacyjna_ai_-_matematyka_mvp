@@ -267,10 +267,10 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level, showGrass
                   </div>
                 )}
                 
-                {/* Grass percentage display */}
+                {/* NAPRAWIONE: Grass percentage display - przywrócona funkcjonalność */}
                 {showGrassPercentage && cellData.grass < 100 && cellData.grass > 0 && (
                   <div 
-                    className="absolute top-0 left-0 font-bold text-white bg-black/50 px-1 rounded-br"
+                    className="absolute top-0 left-0 font-bold text-white bg-black/50 px-1 rounded-br z-20"
                     style={{ fontSize: `${Math.max(8, cellSize * 0.2)}px` }}
                   >
                     {Math.round(cellData.grass)}%
@@ -279,7 +279,7 @@ const MapGrid = ({ boardData, playerPosition, currentLevelSize, level, showGrass
                 
                 {/* Player indicator with enhanced styling */}
                 {isPlayerHere && (
-                  <div className="absolute player-indicator">
+                  <div className="absolute player-indicator z-30">
                     <div 
                       className="border-transparent player-arrow"
                       style={{
