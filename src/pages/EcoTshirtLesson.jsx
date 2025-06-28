@@ -12,10 +12,9 @@ const EcoTshirtLesson = () => {
   const { startLearning, stopLearning } = useGlobalTimer();
   const { t } = useLanguage();
 
-  // NAPRAWIONE: Automatyczne uruchomienie timera przy wejściu do lekcji
   React.useEffect(() => {
-    startLearning(); // Uruchom timer natychmiast
-    return () => stopLearning(); // Zatrzymaj przy wyjściu
+    startLearning();
+    return () => stopLearning();
   }, [startLearning, stopLearning]);
 
   const handleBack = () => {

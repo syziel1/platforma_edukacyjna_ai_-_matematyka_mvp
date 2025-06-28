@@ -309,7 +309,7 @@ export const useJungleGame = (startWithModeSelector = false) => {
       showInstructions: false
     }));
     
-    // NAPRAWIONE: Start learning timer when game actually starts
+    // Start learning timer when game actually starts
     startLearning();
     
     // Initialize board when game starts
@@ -420,12 +420,12 @@ export const useJungleGame = (startWithModeSelector = false) => {
     }
   };
 
-  // NAPRAWIONE: Start learning timer when game actually starts (nie w modalu)
+  // Start learning timer when game actually starts
   useEffect(() => {
-    if (!gameState.showModeSelector && !gameState.showWelcome && !gameState.showInstructions && gameState.selectedMode) {
+    if (!gameState.showModeSelector && !gameState.showWelcome && !gameState.showInstructions) {
       startLearning();
     }
-  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, gameState.selectedMode, startLearning]);
+  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, startLearning]);
 
   return {
     gameState,
