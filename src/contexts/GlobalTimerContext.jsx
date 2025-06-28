@@ -120,8 +120,8 @@ export const GlobalTimerProvider = ({ children }) => {
             const now = Date.now();
             const timeSinceLastActivity = now - parseInt(lastActivity);
             
-            // Jeśli minęło więcej niż 30 minut, zatrzymaj liczenie czasu
-            if (timeSinceLastActivity > 30 * 60 * 1000) {
+            // Jeśli minęło więcej niż 5 minut, zatrzymaj liczenie czasu
+            if (timeSinceLastActivity > 35 * 60 * 1000) {
               stopLearning();
             } else {
               localStorage.setItem('lastActivity', now.toString());
