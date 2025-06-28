@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const EcoTshirtSimulator = () => {
@@ -111,7 +111,7 @@ const EcoTshirtSimulator = () => {
             <h4 className="font-semibold text-blue-800 mb-2">💰 {t('startupBudget')}</h4>
             <div className="text-2xl font-bold text-blue-700">{formatCurrency(budget)}</div>
             <div className="text-sm text-blue-600 mt-1">
-              {t('baseCost')}: {formatCurrency(baseCost)} | {t('discount')}: {formatPercent(discountRate * 100)} ({t('discountThreshold')} {discountThreshold} szt.)
+              Koszt bazowy: {formatCurrency(baseCost)} | Rabat: {formatPercent(discountRate * 100)} (powyżej {discountThreshold} szt.)
             </div>
           </div>
 
@@ -162,7 +162,7 @@ const EcoTshirtSimulator = () => {
                 onClick={calculateOptimalPrice}
                 className="w-full bg-nav-bg text-white py-2 px-4 rounded-md hover:bg-nav-bg/90 transition-colors text-sm"
               >
-                {t('setOptimalPrice')} {formatPercent(targetMargin * 100)}
+                Ustaw cenę dla marży {formatPercent(targetMargin * 100)}
               </button>
             </div>
           </div>
@@ -172,7 +172,7 @@ const EcoTshirtSimulator = () => {
         <div className="space-y-4">
           {/* Production Costs */}
           <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-            <h4 className="font-semibold text-orange-800 mb-3">🏭 {t('productionCost')}</h4>
+            <h4 className="font-semibold text-orange-800 mb-3">🏭 Koszty produkcji</h4>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-orange-700">{t('unitCost')}:</span>
@@ -183,7 +183,7 @@ const EcoTshirtSimulator = () => {
                 <span className="font-medium text-orange-800">{formatCurrency(totalCost)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-orange-700">{t('remainingBudget')}:</span>
+                <span className="text-orange-700">Pozostały budżet:</span>
                 <span className={`font-medium ${budget - totalCost >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {formatCurrency(budget - totalCost)}
                 </span>
@@ -193,7 +193,7 @@ const EcoTshirtSimulator = () => {
 
           {/* Pricing Analysis */}
           <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-            <h4 className="font-semibold text-purple-800 mb-3">💰 {t('priceAnalysis')}</h4>
+            <h4 className="font-semibold text-purple-800 mb-3">💰 Analiza cen</h4>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-purple-700">{t('netPrice')}:</span>
@@ -218,7 +218,7 @@ const EcoTshirtSimulator = () => {
 
           {/* Sales Results */}
           <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-            <h4 className="font-semibold text-green-800 mb-3">📊 {t('monthlyResults')} (3/5 {t('sold')})</h4>
+            <h4 className="font-semibold text-green-800 mb-3">📊 {t('monthlyResults')} (3/5 sprzedane)</h4>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-green-700">{t('soldQuantity')}:</span>
@@ -247,24 +247,24 @@ const EcoTshirtSimulator = () => {
       <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className={`rounded-md p-4 ${totalCost <= budget ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
           <h4 className={`font-semibold mb-2 ${totalCost <= budget ? 'text-green-800' : 'text-red-800'}`}>
-            {totalCost <= budget ? '✅ ' + t('productionPossible') : '❌ ' + t('budgetExceeded')}
+            {totalCost <= budget ? '✅ Produkcja możliwa' : '❌ Przekroczony budżet'}
           </h4>
           <p className={`text-sm ${totalCost <= budget ? 'text-green-700' : 'text-red-700'}`}>
             {totalCost <= budget 
-              ? t('canProduceWithinBudget', { quantity })
-              : t('reduceQuantityOrFindCheaper')
+              ? `Możesz wyprodukować ${quantity} koszulek w ramach budżetu.`
+              : `Zmniejsz ilość lub znajdź tańszego dostawcę.`
             }
           </p>
         </div>
 
         <div className={`rounded-md p-4 ${actualMargin >= targetMargin * 100 ? 'bg-blue-50 border border-blue-200' : 'bg-yellow-50 border border-yellow-200'}`}>
           <h4 className={`font-semibold mb-2 ${actualMargin >= targetMargin * 100 ? 'text-blue-800' : 'text-yellow-800'}`}>
-            {actualMargin >= targetMargin * 100 ? '🎯 ' + t('marginAchieved') : '⚠️ ' + t('lowMargin')}
+            {actualMargin >= targetMargin * 100 ? '🎯 Marża osiągnięta' : '⚠️ Niska marża'}
           </h4>
           <p className={`text-sm ${actualMargin >= targetMargin * 100 ? 'text-blue-700' : 'text-yellow-700'}`}>
             {actualMargin >= targetMargin * 100 
-              ? t('marginHigherThanTarget', { margin: formatPercent(actualMargin) })
-              : t('increasePriceOrReduceCosts')
+              ? `Marża ${formatPercent(actualMargin)} jest wyższa od docelowej.`
+              : `Zwiększ cenę lub zmniejsz koszty produkcji.`
             }
           </p>
         </div>
