@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 // import { translations } from '../locales';
+import { useTranslation } from 'react-i18next';
 import i18n from 'i18next';
 
 // Function to detect user's language based on location
@@ -25,13 +26,14 @@ const LanguageContext = createContext();
 // Language Provider Component
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState(() => detectUserLanguage());
+  const { t, i18n: i18nInstance } = useTranslation('common');
 
   // Save language preference when it changes
   useEffect(() => {
     localStorage.setItem('userLanguage', language);
-    // Also update i18next language
-    i18n.changeLanguage(language);
-  }, [language]);
+    // Użyj instancji i18n z hooka do zmiany języka
+    i18nInstance.changeLanguage(language);
+  }, [language, i18nInstance]);
 
   const switchLanguage = () => {
     const newLang = language === 'pl' ? 'en' : 'pl';
@@ -44,16 +46,16 @@ export const LanguageProvider = ({ children }) => {
     }
   };
 
-  const t = (key, params = {}) => {
-    let translation = translations[language][key] || key;
+//  const t = (key, params = {}) => {
+    //let translation = translations[language][key] || key;
     
     // Replace parameters in translation
-    Object.keys(params).forEach(param => {
-      translation = translation.replace(`{${param}}`, params[param]);
-    });
+    //Object.keys(params).forEach(param => {
+      //translation = translation.replace(`{${param}}`, params[param]);
+    //});
     
-    return translation;
-  };
+    //return translation;
+  //};
 
   const value = {
     language,
