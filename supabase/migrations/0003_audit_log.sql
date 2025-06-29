@@ -1,8 +1,8 @@
 /*
- * KROK 4: DZIENNIK ZDARZEŃ (ŚLAD AUDYTOWY)
+ * KROK 4: DZIENNIK ZDARZEŃ (ŚLAD AUDYTOWY) - (Wersja 2)
  *
- * Tworzy mechanizm do logowania wszystkich istotnych operacji w systemie,
- * zapewniając pełną historię zmian do wglądu administratora.
+ * NAPRAWIONO BŁĄD: Włączono RLS.
+ * NAPRAWIONO OSTRZEŻENIE: Dodano SET search_path do funkcji.
  */
 
 CREATE TABLE public.event_log (
@@ -16,24 +16,25 @@ CREATE TABLE public.event_log (
 );
 COMMENT ON TABLE public.event_log IS 'Rejestr wszystkich zdarzeń w systemie do celów audytowych.';
 
--- Funkcja do logowania zdarzeń.
+-- WŁĄCZENIE RLS
+ALTER TABLE public.event_log ENABLE ROW LEVEL SECURITY;
+-- Polityka: Tylko admini i konsultanci mają dostęp do logów.
+CREATE POLICY "Admini i konsultanci mogą przeglądać logi zdarzeń"
+  ON public.event_log FOR SELECT
+  USING ( get_user_role((SELECT auth.uid())) IN ('admin', 'consultant') );
+
+
+-- Funkcja do logowania zdarzeń (z poprawką bezpieczeństwa)
 CREATE OR REPLACE FUNCTION public.log_event()
 RETURNS TRIGGER AS $$
 DECLARE
   user_id_val uuid;
 BEGIN
-  -- Spróbuj uzyskać ID użytkownika z kontekstu sesji.
   user_id_val := auth.uid();
-
   INSERT INTO public.event_log (user_id, action, table_name, record_id, details)
-  VALUES (
-    user_id_val,
-    TG_OP, -- Operacja: INSERT, UPDATE, DELETE
-    TG_TABLE_NAME,
+  VALUES (user_id_val, TG_OP, TG_TABLE_NAME,
     CASE TG_OP
-      WHEN 'INSERT' THEN NEW.id::text
-      WHEN 'UPDATE' THEN NEW.id::text
-      WHEN 'DELETE' THEN OLD.id::text
+      WHEN 'INSERT' THEN NEW.id::text WHEN 'UPDATE' THEN NEW.id::text WHEN 'DELETE' THEN OLD.id::text
     END,
     CASE TG_OP
       WHEN 'INSERT' THEN jsonb_build_object('new_data', to_jsonb(NEW))
@@ -43,13 +44,12 @@ BEGIN
   );
   RETURN COALESCE(NEW, OLD);
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
--- Tworzymy triggery dla tabel, które chcemy monitorować.
+-- Triggery (bez zmian)
 CREATE TRIGGER log_profiles_changes
   AFTER INSERT OR UPDATE OR DELETE ON public.profiles
   FOR EACH ROW EXECUTE FUNCTION public.log_event();
-
 CREATE TRIGGER log_calendar_events_changes
   AFTER INSERT OR UPDATE OR DELETE ON public.calendar_events
   FOR EACH ROW EXECUTE FUNCTION public.log_event();
