@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Play, ArrowRight, ArrowLeft, CheckCircle, TrendingUp } from 'lucide-react';
 import EcoTshirtSimulator from './EcoTshirtSimulator';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
   const { t } = useLanguage();
+  const { t: tEco } = useTranslation('ecoTshirt');
   
   // State for answers
   const [answers, setAnswers] = useState({
@@ -110,7 +112,7 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
           <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
             <h3 className="text-lg font-semibold text-text-color mb-4 flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-nav-bg" />
-              {t('ecoTshirtIntro')}
+              {tEco('ecoTshirtIntro')}
             </h3>
             <div className="rounded-lg aspect-video mb-4 bg-black">
               <video 
@@ -149,7 +151,7 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
         return (
           <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
             <h3 className="text-lg font-semibold text-text-color mb-4">
-              {t('ecoTshirtProblem')}
+              {tEco('ecoTshirtProblem')}
             </h3>
             <div className="prose prose-sm max-w-none mb-6 text-text-color">
               <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-4">
@@ -277,8 +279,7 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
             <div className="space-y-4 mb-6">
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  <strong>Zadanie 1:</strong> Oblicz maksymalną liczbę koszulek, którą możesz wyprodukować 
-                  za 1000 zł (uwzględnij rabat 15% przy zamówieniu powyżej 30 sztuk)
+                  <strong>Zadanie 1:</strong> {tEco('task1')}
                 </label>
                 <input
                   type="text"
@@ -299,14 +300,13 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
                   </p>
                 )}
                 <p className="text-xs text-text-color/60 mt-1">
-                  Wskazówka: Sprawdź czy opłaca się zamówić więcej niż 30 sztuk (koszt z rabatem: 25 × 0,85 = 21,25 zł)
+                  {tEco('businessTip1')}
                 </p>
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  <strong>Zadanie 2:</strong> Przy marży 35%, jaka powinna być cena netto i brutto koszulki?
-                  (koszt produkcji z rabatem: 21,25 zł)
+                  <strong>Zadanie 2:</strong> {tEco('task2')}
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
@@ -351,14 +351,13 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
                   </div>
                 </div>
                 <p className="text-xs text-text-color/60 mt-1">
-                  Wskazówka: Marża 35% oznacza, że koszt = 65% ceny sprzedaży. Cena netto = 21,25 ÷ 0,65
+                  {tEco('businessTip2')}
                 </p>
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  <strong>Zadanie 3:</strong> Po sprzedaniu 3/5 wyprodukowanych koszulek (47 × 3/5 = 28,2 ≈ 28 szt.), 
-                  jaki jest Twój przychód i zysk/strata?
+                  <strong>Zadanie 3:</strong> {tEco('task3')}
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
@@ -403,7 +402,7 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
                   </div>
                 </div>
                 <p className="text-xs text-text-color/60 mt-1">
-                  Wskazówka: Przychód = 28 × cena netto. Zysk = Przychód - Koszty całkowite (1000 zł)
+                  {tEco('businessTip3')}
                 </p>
               </div>
             </div>
@@ -420,9 +419,7 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
                 </div>
                 <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded">
                   <p className="text-sm text-yellow-800">
-                    <strong>💡 Wniosek biznesowy:</strong> Startup ponosi stratę w pierwszym miesiącu, 
-                    co jest normalne. Aby osiągnąć rentowność, musisz sprzedać więcej koszulek 
-                    lub zwiększyć cenę sprzedaży.
+                    <strong>💡 {tEco('businessConclusion')}</strong>
                   </p>
                 </div>
               </div>
@@ -440,7 +437,7 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
                 className="bg-nav-bg text-white px-6 py-2 rounded-md hover:bg-nav-bg/90 transition-colors flex items-center gap-2"
               >
                 <CheckCircle className="w-4 h-4" />
-                Sprawdź odpowiedzi
+                {t('checkAnswer')}
               </button>
             </div>
           </div>

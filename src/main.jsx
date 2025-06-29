@@ -10,6 +10,9 @@ import { SettingsProvider } from './contexts/SettingsContext.jsx'
 import { GameRecordsProvider } from './contexts/GameRecordsContext.jsx'
 import { GlobalTimerProvider } from './contexts/GlobalTimerContext.jsx'
 
+// Import i18n configuration
+import './i18n'
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>

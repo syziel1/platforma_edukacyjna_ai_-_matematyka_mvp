@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 const EcoTshirtSimulator = () => {
   const { t } = useLanguage();
+  const { t: tEco } = useTranslation('ecoTshirt');
 
   // Startup parameters
   const [budget] = useState(1000);
@@ -100,7 +102,7 @@ const EcoTshirtSimulator = () => {
   return (
     <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
       <h3 className="text-lg font-semibold text-text-color mb-4">
-        {t('businessSimulator')} - Eko-Koszulka
+        {tEco('businessSimulator')} - Eko-Koszulka
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -108,7 +110,7 @@ const EcoTshirtSimulator = () => {
         <div className="space-y-6">
           {/* Budget Overview */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h4 className="font-semibold text-blue-800 mb-2">💰 {t('startupBudget')}</h4>
+            <h4 className="font-semibold text-blue-800 mb-2">💰 {tEco('startupBudget')}</h4>
             <div className="text-2xl font-bold text-blue-700">{formatCurrency(budget)}</div>
             <div className="text-sm text-blue-600 mt-1">
               Koszt bazowy: {formatCurrency(baseCost)} | Rabat: {formatPercent(discountRate * 100)} (powyżej {discountThreshold} szt.)
@@ -117,11 +119,11 @@ const EcoTshirtSimulator = () => {
 
           {/* Production Planning */}
           <div>
-            <h4 className="font-semibold text-text-color mb-3">📦 {t('calculateProduction')}</h4>
+            <h4 className="font-semibold text-text-color mb-3">📦 {tEco('calculateProduction')}</h4>
             <div className="space-y-3">
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  {t('quantity')}: {quantity} szt.
+                  {tEco('quantity')}: {quantity} szt.
                 </label>
                 <input
                   type="range"
@@ -142,11 +144,11 @@ const EcoTshirtSimulator = () => {
 
           {/* Pricing */}
           <div>
-            <h4 className="font-semibold text-text-color mb-3">💵 {t('calculatePrice')}</h4>
+            <h4 className="font-semibold text-text-color mb-3">💵 {tEco('calculatePrice')}</h4>
             <div className="space-y-3">
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  {t('netPrice')}: {formatCurrency(sellingPriceNet)}
+                  {tEco('netPrice')}: {formatCurrency(sellingPriceNet)}
                 </label>
                 <input
                   type="range"
@@ -175,11 +177,11 @@ const EcoTshirtSimulator = () => {
             <h4 className="font-semibold text-orange-800 mb-3">🏭 Koszty produkcji</h4>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-orange-700">{t('unitCost')}:</span>
+                <span className="text-orange-700">{tEco('unitCost')}:</span>
                 <span className="font-medium text-orange-800">{formatCurrency(unitCost)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-orange-700">{t('totalCost')}:</span>
+                <span className="text-orange-700">{tEco('totalCost')}:</span>
                 <span className="font-medium text-orange-800">{formatCurrency(totalCost)}</span>
               </div>
               <div className="flex justify-between">
@@ -196,21 +198,21 @@ const EcoTshirtSimulator = () => {
             <h4 className="font-semibold text-purple-800 mb-3">💰 Analiza cen</h4>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-purple-700">{t('netPrice')}:</span>
+                <span className="text-purple-700">{tEco('netPrice')}:</span>
                 <span className="font-medium text-purple-800">{formatCurrency(sellingPriceNet)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-purple-700">{t('grossPrice')} (+23% VAT):</span>
+                <span className="text-purple-700">{tEco('grossPrice')} (+23% VAT):</span>
                 <span className="font-medium text-purple-800">{formatCurrency(sellingPriceGross)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-purple-700">{t('actualMargin')}:</span>
+                <span className="text-purple-700">{tEco('actualMargin')}:</span>
                 <span className={`font-medium ${actualMargin >= targetMargin * 100 ? 'text-green-600' : 'text-red-600'}`}>
                   {formatPercent(actualMargin)}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-purple-700">{t('targetMargin')}:</span>
+                <span className="text-purple-700">{tEco('targetMargin')}:</span>
                 <span className="font-medium text-purple-600">{formatPercent(targetMargin * 100)}</span>
               </div>
             </div>
@@ -218,22 +220,22 @@ const EcoTshirtSimulator = () => {
 
           {/* Sales Results */}
           <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-            <h4 className="font-semibold text-green-800 mb-3">📊 {t('monthlyResults')} (3/5 sprzedane)</h4>
+            <h4 className="font-semibold text-green-800 mb-3">📊 {tEco('monthlyResults')} (3/5 sprzedane)</h4>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-green-700">{t('soldQuantity')}:</span>
+                <span className="text-green-700">{tEco('soldQuantity')}:</span>
                 <span className="font-medium text-green-800">{soldQuantity} szt.</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-green-700">{t('remainingStock')}:</span>
+                <span className="text-green-700">{tEco('remainingStock')}:</span>
                 <span className="font-medium text-green-800">{remainingStock} szt.</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-green-700">{t('revenue')}:</span>
+                <span className="text-green-700">{tEco('revenue')}:</span>
                 <span className="font-medium text-green-800">{formatCurrency(revenue)}</span>
               </div>
               <div className="flex justify-between border-t border-green-200 pt-2">
-                <span className="text-green-700 font-medium">{t('profitLoss')}:</span>
+                <span className="text-green-700 font-medium">{tEco('profitLoss')}:</span>
                 <span className={`font-bold ${profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {profit >= 0 ? '+' : ''}{formatCurrency(profit)}
                 </span>

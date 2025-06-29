@@ -4,6 +4,7 @@ import LessonLayout from '../components/Layout/LessonLayout';
 import EcoTshirtContent from '../components/EcoTshirtContent';
 import { useGlobalTimer } from '../contexts/GlobalTimerContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 const EcoTshirtLesson = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -11,6 +12,7 @@ const EcoTshirtLesson = () => {
   const navigate = useNavigate();
   const { startLearning, stopLearning } = useGlobalTimer();
   const { t } = useLanguage();
+  const { t: tEco } = useTranslation('ecoTshirt');
 
   React.useEffect(() => {
     startLearning();
@@ -28,7 +30,7 @@ const EcoTshirtLesson = () => {
 
   return (
     <LessonLayout
-      title={t('ecoTshirtTitle')}
+      title={tEco('ecoTshirtTitle')}
       onBack={handleBack}
       currentStep={currentStep}
       totalSteps={totalSteps}

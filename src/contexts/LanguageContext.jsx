@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { translations } from '../locales';
+import i18n from 'i18next';
 
 // Function to detect user's language based on location
 const detectUserLanguage = () => {
@@ -28,10 +29,13 @@ export const LanguageProvider = ({ children }) => {
   // Save language preference when it changes
   useEffect(() => {
     localStorage.setItem('userLanguage', language);
+    // Also update i18next language
+    i18n.changeLanguage(language);
   }, [language]);
 
   const switchLanguage = () => {
-    setLanguage(prevLang => prevLang === 'pl' ? 'en' : 'pl');
+    const newLang = language === 'pl' ? 'en' : 'pl';
+    setLanguage(newLang);
   };
 
   const setLanguageDirectly = (newLanguage) => {
