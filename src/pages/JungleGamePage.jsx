@@ -9,10 +9,10 @@ const JungleGamePage = () => {
   const { t } = useTranslation('jungleGame');
   const { stopLearning } = useGlobalTimer();
 
+  // Stop learning timer when page is initially loaded
+  // The game component will start the timer when the actual game starts
   React.useEffect(() => {
-    // Stop learning timer when landing page is opened
     stopLearning();
-    return () => {};
   }, [stopLearning]);
 
   const handleBack = () => {

@@ -303,14 +303,14 @@ export const useJungleGame = (startWithModeSelector = false) => {
   };
 
   const handleStartGame = () => {
+    // Start learning timer when game actually starts
+    startLearning();
+    
     setGameState(prev => ({
       ...prev,
       showWelcome: false,
       showInstructions: false
     }));
-    
-    // Start learning timer when game actually starts
-    startLearning();
     
     // Initialize board when game starts
     if (gameState.selectedMode) {
@@ -419,13 +419,6 @@ export const useJungleGame = (startWithModeSelector = false) => {
       }
     }
   };
-
-  // Start learning timer when game actually starts
-  useEffect(() => {
-    if (!gameState.showModeSelector && !gameState.showWelcome && !gameState.showInstructions) {
-      startLearning();
-    }
-  }, [gameState.showModeSelector, gameState.showWelcome, gameState.showInstructions, startLearning]);
 
   return {
     gameState,
