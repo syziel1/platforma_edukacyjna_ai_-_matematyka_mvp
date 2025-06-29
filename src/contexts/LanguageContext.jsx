@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-// import { translations } from '../locales';
+import { translations } from '../locales';
 import i18n from 'i18next';
 
 // Function to detect user's language based on location
