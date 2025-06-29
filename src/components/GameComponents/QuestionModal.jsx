@@ -33,7 +33,7 @@ const QuestionModal = ({
     if (question) {
       // Add a prefix based on the current language
       const prefix = currentLanguage === 'en' ? 'What is ': 'Ile to ';
-      const questionText = prefix + formatQuestion().display + ' ?';
+      const questionText = prefix + formatQuestionForSpeech(question);
       speakIfEnabled(questionText);
     }
   }, [question, playSound, speakIfEnabled, currentLanguage]);
@@ -134,6 +134,7 @@ const QuestionModal = ({
     return wrongAnswersCount + 1; // 1x, 2x, 3x
   };
 
+  // Format question for display
   const formatQuestion = () => {
     if (!question || !question.questionData) {
       return { display: question?.question || '', symbol: '=' };
@@ -155,6 +156,33 @@ const QuestionModal = ({
         return { display: `√${questionData.num1}`, symbol: '=' };
       default:
         return { display: question.question, symbol: '=' };
+    }
+  };
+
+  // Format question for speech (text-to-speech)
+  const formatQuestionForSpeech = (question) => {
+    if (!question || !question.questionData) {
+      return question?.question || '';
+    }
+
+    const { questionData } = question;
+    const lang = currentLanguage;
+    
+    switch(questionData.operation) {
+      case 'addition':
+        return `${questionData.num1} ${lang === 'pl' ? 'plus' : 'plus'} ${questionData.num2}`;
+      case 'subtraction':
+        return `${questionData.num1} ${lang === 'pl' ? 'minus' : 'minus'} ${questionData.num2}`;
+      case 'multiplication':
+        return `${questionData.num1} ${lang === 'pl' ? 'razy' : 'times'} ${questionData.num2}`;
+      case 'division':
+        return `${questionData.num1} ${lang === 'pl' ? 'podzielić przez' : 'divided by'} ${questionData.num2}`;
+      case 'exponentiation':
+        return `${questionData.num1} ${lang === 'pl' ? 'do potęgi' : 'to the power of'} ${questionData.num2}`;
+      case 'square-root':
+        return `${lang === 'pl' ? 'pierwiastek kwadratowy z' : 'square root of'} ${questionData.num1}`;
+      default:
+        return question.question;
     }
   };
 
