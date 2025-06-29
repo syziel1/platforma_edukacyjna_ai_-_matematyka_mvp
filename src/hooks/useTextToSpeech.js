@@ -56,30 +56,27 @@ export const useTextToSpeech = () => {
         throw new Error("Cleaned text is empty.");
       }
 
-      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${settings.textToSpeechVoice}`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'audio/mpeg',
-          'Content-Type': 'application/json',
-          'xi-api-key': apiKey
-        },
-        body: JSON.stringify({
-          text: formattedText,
-          model_id: "eleven_multilingual_v2",
-          voice_settings: {
-            stability: 0.5,
-            similarity_boost: 0.5,
-            speed: settings.textToSpeechSpeed || 1.0
-          }
-        })
+      // Konfiguracja dla nowej biblioteki
+      const voice = new Voice({
+        voiceId: settings.textToSpeechVoice,
+        apiKey: apiKey,
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Text-to-speech service error (${response.status}): ${errorText}`);
-      }
+      const voiceSettings = new VoiceSettings({
+        stability: 0.5,
+        similarityBoost: 0.5,
+        style: 0,
+        useSpeakerBoost: true,
+      });
 
-      const audioBlob = await response.blob();
+      // Generowanie audio za pomocą nowej biblioteki
+      const audioBlob = await voice.textToSpeechStream({
+        textInput: formattedText,
+        voiceSettings: voiceSettings,
+        modelId: "eleven_multilingual_v2",
+        speed: settings.textToSpeechSpeed || 1.0,
+      });
+
       const audioUrl = URL.createObjectURL(audioBlob);
       const audioPlayer = new Audio(audioUrl);
       audioPlayer.volume = settings.volume || 0.5;
