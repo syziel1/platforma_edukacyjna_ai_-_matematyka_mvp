@@ -12,6 +12,8 @@ import EcoTshirtLesson from './pages/EcoTshirtLesson';
 import JungleGamePage from './pages/JungleGamePage';
 import PowersRootsPage from './pages/PowersRootsPage';
 import TeacherDashboardPage from './components/TeacherDashboard/TeacherDashboardPage';
+import TeacherListPage from './pages/TeacherListPage';
+import TeacherCalendarPage from './pages/TeacherCalendarPage';
 
 // Auth components
 import RoleSelectionPage from './components/Auth/RoleSelectionPage';
@@ -77,6 +79,10 @@ function App() {
           
           {/* Teacher Dashboard */}
           <Route path="/teacher-dashboard" element={<TeacherDashboardPage />} />
+          
+          {/* Lesson Booking Routes */}
+          <Route path="/teachers" element={<TeacherListPage />} />
+          <Route path="/teacher/:id" element={<TeacherCalendarPage />} />
           
           {/* Main App Routes */}
           <Route path="/cockpit" element={<CockpitPage />} />

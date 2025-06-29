@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, Calendar, Settings, LogOut, LogIn, Home, Info, BookOpen, BarChart3, PenTool, GraduationCap } from 'lucide-react';
+import { Menu, Calendar, Settings, LogOut, LogIn, Home, Info, BookOpen, BarChart3, PenTool, GraduationCap, Users } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import SettingsModal from './SettingsModal';
@@ -76,6 +76,13 @@ const NavigationPanel = () => {
     }
   };
 
+  const handleFindTeacher = () => {
+    navigate('/teachers');
+    if (window.innerWidth < 768) {
+      setIsExpanded(false);
+    }
+  };
+
   const handleLogin = () => {
     navigate('/login');
     if (window.innerWidth < 768) {
@@ -117,6 +124,16 @@ const NavigationPanel = () => {
       action: handleLessonsList,
       isActive: location.pathname === '/lessons'
     });
+
+    // Find Teacher - for students and guardians
+    if (user && (user.role === 'student' || user.role === 'guardian')) {
+      baseItems.push({
+        icon: Users,
+        label: t('findTeacher'),
+        action: handleFindTeacher,
+        isActive: location.pathname.startsWith('/teacher')
+      });
+    }
 
     // Add Day Plan only if user is logged in
     if (user) {
