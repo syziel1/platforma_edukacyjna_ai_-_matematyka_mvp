@@ -11,6 +11,7 @@ import WaterTankLesson from './pages/WaterTankLesson';
 import EcoTshirtLesson from './pages/EcoTshirtLesson';
 import JungleGamePage from './pages/JungleGamePage';
 import PowersRootsPage from './pages/PowersRootsPage';
+import TeacherDashboardPage from './components/TeacherDashboard/TeacherDashboardPage';
 
 // Auth components
 import RoleSelectionPage from './components/Auth/RoleSelectionPage';
@@ -73,6 +74,9 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
+          
+          {/* Teacher Dashboard */}
+          <Route path="/teacher-dashboard" element={<TeacherDashboardPage />} />
           
           {/* Main App Routes */}
           <Route path="/cockpit" element={<CockpitPage />} />

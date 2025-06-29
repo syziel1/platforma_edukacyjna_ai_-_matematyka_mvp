@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, Calendar, Settings, LogOut, LogIn, Home, Info, BookOpen, BarChart3, PenTool } from 'lucide-react';
+import { Menu, Calendar, Settings, LogOut, LogIn, Home, Info, BookOpen, BarChart3, PenTool, GraduationCap } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import SettingsModal from './SettingsModal';
@@ -62,6 +62,13 @@ const NavigationPanel = () => {
     }
   };
 
+  const handleTeacherDashboard = () => {
+    navigate('/teacher-dashboard');
+    if (window.innerWidth < 768) {
+      setIsExpanded(false);
+    }
+  };
+
   const handleLessonsList = () => {
     navigate('/lessons');
     if (window.innerWidth < 768) {
@@ -76,7 +83,7 @@ const NavigationPanel = () => {
     }
   };
 
-  // Build menu items dynamically based on user login status
+  // Build menu items dynamically based on user login status and role
   const getMenuItems = () => {
     const baseItems = [
       { 
@@ -90,15 +97,26 @@ const NavigationPanel = () => {
         label: t('explorerCockpit'), 
         action: handleCockpit,
         isActive: location.pathname === '/cockpit'
-      },
-      // StartScreen - lessons list
-      { 
-        icon: BookOpen, 
-        label: t('lessonsList'), 
-        action: handleLessonsList,
-        isActive: location.pathname === '/lessons'
       }
     ];
+
+    // Add Teacher Dashboard if user is a teacher
+    if (user && user.role === 'teacher') {
+      baseItems.push({
+        icon: GraduationCap,
+        label: 'Kokpit nauczyciela',
+        action: handleTeacherDashboard,
+        isActive: location.pathname === '/teacher-dashboard'
+      });
+    }
+
+    // StartScreen - lessons list
+    baseItems.push({ 
+      icon: BookOpen, 
+      label: t('lessonsList'), 
+      action: handleLessonsList,
+      isActive: location.pathname === '/lessons'
+    });
 
     // Add Day Plan only if user is logged in
     if (user) {
@@ -205,6 +223,15 @@ const NavigationPanel = () => {
                 <p className="font-medium text-white overflow-hidden text-ellipsis">
                   {decodeHtmlEntities(user.name)}
                 </p>
+                {user.role && (
+                  <p className="text-xs text-white/50">
+                    {user.role === 'teacher' ? 'Nauczyciel' : 
+                     user.role === 'student' ? 'Uczeń' : 
+                     user.role === 'guardian' ? 'Opiekun' : 
+                     user.role === 'admin' ? 'Administrator' : 
+                     user.role}
+                  </p>
+                )}
               </div>
             </div>
           </div>

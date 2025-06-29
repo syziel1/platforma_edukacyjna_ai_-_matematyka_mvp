@@ -65,8 +65,12 @@ const AuthCallback = () => {
             profile: profile
           });
 
-          // Redirect to cockpit
-          navigate('/cockpit');
+          // Redirect based on user role
+          if (profile?.role === 'teacher') {
+            navigate('/teacher-dashboard');
+          } else {
+            navigate('/cockpit');
+          }
         } else {
           navigate('/login?error=no_session');
         }
