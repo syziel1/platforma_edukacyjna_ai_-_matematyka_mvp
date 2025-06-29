@@ -22,22 +22,25 @@ export const SettingsProvider = ({ children }) => {
       textToSpeechSpeed: 1.0
     };
 
-    const saved = localStorage.getItem('gameSettings');
-    if (saved) {
-      try {
+    try {
+      const saved = localStorage.getItem('gameSettings');
+      if (saved) {
         const parsedSettings = JSON.parse(saved);
         // Merge saved settings with default settings to ensure all properties exist
         return { ...defaultSettings, ...parsedSettings };
-      } catch (error) {
-        console.warn('Failed to parse saved settings, using defaults:', error);
-        return defaultSettings;
       }
+    } catch (error) {
+      console.warn('Failed to parse saved settings, using defaults:', error);
     }
     return defaultSettings;
   });
 
   useEffect(() => {
-    localStorage.setItem('gameSettings', JSON.stringify(settings));
+    try {
+      localStorage.setItem('gameSettings', JSON.stringify(settings));
+    } catch (error) {
+      console.warn('Failed to save settings to localStorage:', error);
+    }
   }, [settings]);
 
   const updateSetting = (key, value) => {
@@ -76,11 +79,12 @@ export const SettingsProvider = ({ children }) => {
   };
 
   const resetGameState = () => {
-    // Remove game state from localStorage
-    localStorage.removeItem('jungleGameState');
-    
-    // Optionally trigger a page reload to reset the game completely
-    // window.location.reload();
+    try {
+      // Remove game state from localStorage
+      localStorage.removeItem('jungleGameState');
+    } catch (error) {
+      console.warn('Failed to reset game state:', error);
+    }
   };
 
   return (

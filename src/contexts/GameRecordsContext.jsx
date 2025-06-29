@@ -70,7 +70,11 @@ export const GameRecordsProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    localStorage.setItem('gameRecords', JSON.stringify(records));
+    try {
+      localStorage.setItem('gameRecords', JSON.stringify(records));
+    } catch (error) {
+      console.warn('Failed to save game records to localStorage:', error);
+    }
   }, [records]);
 
   const updateJungleGameScore = (score, timeSpent) => {
