@@ -1,8 +1,16 @@
 import React, { useEffect, useRef } from 'react';
 import { ArrowRight, Clock, HelpCircle, Frown, User, Zap, Target, Play, Calendar, MessageCircle } from 'lucide-react';
+import { useGlobalTimer } from '../contexts/GlobalTimerContext';
 
 const LandingPagePL = ({ onEnterApp }) => {
   const audioRef = useRef(null);
+  const { stopLearning } = useGlobalTimer();
+
+  // Stop learning timer when landing page is opened
+  useEffect(() => {
+    stopLearning();
+    return () => {};
+  }, [stopLearning]);
 
   // Auto-play welcome audio when component mounts
   useEffect(() => {

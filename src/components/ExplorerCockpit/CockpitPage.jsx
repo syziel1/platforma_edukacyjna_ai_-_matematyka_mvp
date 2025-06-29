@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useProgress } from '../../contexts/ProgressContext';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useGlobalTimer } from '../../contexts/GlobalTimerContext';
 import { mentorAvailability } from '../../config/mentorAvailability';
 import { KnowledgeMapModal } from '../KnowledgeSpace';
 import LeftColumn from './LeftColumn';
@@ -15,8 +16,15 @@ const CockpitPage = () => {
   const { user } = useAuth();
   const { getProgress } = useProgress();
   const { t } = useLanguage();
+  const { stopLearning } = useGlobalTimer();
   const navigate = useNavigate();
   const [showKnowledgeMap, setShowKnowledgeMap] = useState(false);
+
+  // Stop learning timer when cockpit page is opened
+  useEffect(() => {
+    stopLearning();
+    return () => {};
+  }, [stopLearning]);
 
   const [cockpitData, setCockpitData] = useState({
     mentorSession: null,
