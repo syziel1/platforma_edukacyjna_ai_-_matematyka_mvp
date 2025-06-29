@@ -1,4 +1,5 @@
 import { useLanguage } from '../contexts/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 // Game mode configurations
 export const createGameModeConfig = (t) => ({
@@ -90,6 +91,6 @@ export const createGameModeConfig = (t) => ({
 
 // Hook to get game mode configuration with translations
 export const useGameModeConfig = () => {
-  const { t } = useLanguage();
-  return createGameModeConfig(t);
+  const { t: tJungle } = useTranslation('jungleGame');
+  return createGameModeConfig(tJungle);
 };
