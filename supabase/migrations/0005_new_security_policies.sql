@@ -15,7 +15,7 @@ BEGIN
   SELECT role::text INTO user_role_val FROM public.profiles WHERE id = user_id;
   RETURN user_role_val;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 
 -- 1. Czyszczenie i tworzenie polityk dla tabeli `profiles`
