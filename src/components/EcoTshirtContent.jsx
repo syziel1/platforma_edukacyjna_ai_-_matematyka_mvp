@@ -170,7 +170,7 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
               
               <div className="bg-accent-secondary/10 border border-accent-secondary/30 rounded-md p-4 mt-4">
                 <h4 className="font-semibold text-accent-secondary mb-2">🧮 {tEco('mathConcepts')}:</h4>
-                <ul className="text-sm text-accent-secondary space-y-1">
+                <ul className="text-sm text-text-color space-y-1">
                   <li>• {tEco('percentages')}</li>
                   <li>• {tEco('fractions')}</li>
                   <li>• {tEco('financialAnalysis')}</li>
