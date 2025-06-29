@@ -90,6 +90,16 @@ const NavigationPanel = () => {
     }
   };
 
+  const handleLogout = (e) => {
+    e.preventDefault();
+    if (window.confirm(t('logoutConfirm') || 'Are you sure you want to log out?')) {
+      logout();
+      if (window.innerWidth < 768) {
+        setIsExpanded(false);
+      }
+    }
+  };
+
   // Build menu items dynamically based on user login status and role
   const getMenuItems = () => {
     const baseItems = [
@@ -171,7 +181,7 @@ const NavigationPanel = () => {
       { 
         icon: user ? LogOut : LogIn, 
         label: user ? t('logout') : t('login'), 
-        action: user ? logout : handleLogin
+        action: user ? handleLogout : handleLogin
       }
     );
 
@@ -269,8 +279,8 @@ const NavigationPanel = () => {
           {menuItems.slice(1).map((item, index) => ( // Skip first item (Menu) in sidebar
             <button
               key={index}
-              onClick={() => {
-                item.action();
+              onClick={(e) => {
+                item.action(e);
                 if (window.innerWidth < 768) {
                   setIsExpanded(false);
                 }

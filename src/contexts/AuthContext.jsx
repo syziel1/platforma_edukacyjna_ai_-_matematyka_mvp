@@ -77,8 +77,19 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Error signing out:', error);
+        throw error;
+      }
+      setUser(null);
+      // Redirect to home page after logout
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Logout failed:', error);
+      alert('Logout failed. Please try again.');
+    }
   };
 
   return (
