@@ -1,5 +1,5 @@
 import React from 'react';
-import { Award, ArrowRight, Calendar, Fire } from 'lucide-react';
+import { Award, ArrowRight, Calendar, Siren as Fire } from 'lucide-react';
 import { useGameRecords } from '../../contexts/GameRecordsContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import Badge from './Badge';
