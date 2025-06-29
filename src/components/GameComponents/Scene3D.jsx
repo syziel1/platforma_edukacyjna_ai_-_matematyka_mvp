@@ -1,5 +1,6 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 const Scene3D = ({ 
   boardData, 
