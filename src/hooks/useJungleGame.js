@@ -186,14 +186,11 @@ export const useJungleGame = (startWithModeSelector = false) => {
     const boardState = loadOrCreateBoard(mode);
     const visibleBoard = extractVisibleBoard(boardState.boardData, boardState.currentViewSize);
     
-    setGameState(prev => ({
-      ...prev,
+    return {
       fullBoardData: boardState.boardData,
       visibleBoardData: visibleBoard,
-      currentViewSize: boardState.currentViewSize,
-      playerPosition: { row: 0, col: 0, direction: 'S' },
-      gameStartTime: Date.now()
-    }));
+      currentViewSize: boardState.currentViewSize
+    };
   }, [loadOrCreateBoard, extractVisibleBoard]);
 
   // Save board state whenever it changes
@@ -302,19 +299,26 @@ export const useJungleGame = (startWithModeSelector = false) => {
     }));
   };
 
+  // FIXED: Combined state updates into a single atomic operation
   const handleStartGame = () => {
     // Start learning timer when game actually starts
     startLearning();
     
-    setGameState(prev => ({
-      ...prev,
-      showWelcome: false,
-      showInstructions: false
-    }));
-    
-    // Initialize board when game starts
     if (gameState.selectedMode) {
-      initializeGameBoard(gameState.selectedMode);
+      // Initialize board data
+      const boardData = initializeGameBoard(gameState.selectedMode);
+      
+      // Update state in a single operation
+      setGameState(prev => ({
+        ...prev,
+        showWelcome: false,
+        showInstructions: false,
+        fullBoardData: boardData.fullBoardData,
+        visibleBoardData: boardData.visibleBoardData,
+        currentViewSize: boardData.currentViewSize,
+        playerPosition: { row: 0, col: 0, direction: 'S' },
+        gameStartTime: Date.now()
+      }));
     }
   };
 
