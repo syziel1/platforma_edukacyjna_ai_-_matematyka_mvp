@@ -28,9 +28,9 @@ DROP FUNCTION IF EXISTS public.update_updated_at_column() CASCADE;
 -- =================================================================
 -- == KROK 2: DEFINICJE TYPÓW (ENUMS) ==============================
 -- =================================================================
---CREATE TYPE public.user_role AS ENUM ('admin', 'consultant', 'teacher', 'student', 'guardian');
-CREATE TYPE public.event_status AS ENUM ('pending', 'confirmed', 'cancelled', 'completed');
-CREATE TYPE public.event_type AS ENUM ('individual_lesson', 'group_lesson', 'consultation');
+-- CREATE TYPE public.user_role AS ENUM ('admin', 'consultant', 'teacher', 'student', 'guardian');
+-- CREATE TYPE public.event_status AS ENUM ('pending', 'confirmed', 'cancelled', 'completed');
+-- CREATE TYPE public.event_type AS ENUM ('individual_lesson', 'group_lesson', 'consultation');
 
 -- =================================================================
 -- == KROK 3: BEZPIECZNE TWORZENIE FUNKCJI ==========================
