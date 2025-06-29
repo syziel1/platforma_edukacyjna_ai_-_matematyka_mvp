@@ -2,11 +2,11 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import GlobalHeader from '../components/GlobalHeader';
 import PowersRoots from '../components/Formulas/PowersRoots';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 const PowersRootsPage = () => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t } = useTranslation('common');
 
   const handleBack = () => {
     navigate('/cockpit');

@@ -128,6 +128,18 @@ export default {
   'powersRootsTitle': 'Formulas: Powers & Roots',
   'powersRootsDesc': 'Interactive formulas and definitions of powers and roots.',
   
+  // Navigation
+  'menu': 'Menu',
+  'dayPlan': 'Day Plan',
+  'settings': 'Settings',
+  'aboutProject': 'About Project',
+  'logout': 'Sign out',
+  'login': 'Sign in',
+  'skipLogin': 'Continue without signing in',
+  'hint': 'Hint',
+  'language': 'Language',
+  'welcome': 'Welcome',
+  
   // Settings
   'soundEffects': 'Sound Effects',
   'volume': 'Volume',
@@ -149,11 +161,28 @@ export default {
   'lessonTitle': 'Task: Optimal Chicken Coop',
   'nextBreak': 'Next break in:',
   
+  // Steps
+  'step': 'Step',
+  'understood': 'I understand',
+  'endExploration': 'End experimentation',
+  'goToFormal': 'Go to solution',
+  'startExploration': 'Start experimentation',
+  'continue': 'Continue',
+  'checkAnswer': 'Check Answer',
+  
   // Break suggestions
   'breakSuggestions': 'Break suggestions:\n• Short walk\n• Eye exercises\n• Drink water\n• Stretch',
 
   // Auth
   'loginPrompt': 'Sign in with Google to save your progress.',
   'loginError': 'Login failed. Please try again.',
-  'language': 'Language'
+  
+  // Chat
+  'aiMentor': 'AI Assistant',
+  'typeMessage': 'Type a question...',
+  'send': 'Send',
+  'chatWelcomeMessage': 'Hello! I am your AI mentor. Ask me a question about mathematics or the lesson.',
+  'chatErrorMessage': 'Sorry, there was an error communicating with AI. Please try again in a moment.',
+  'chatWaitMessage': 'Please wait...',
+  'chatConfigError': 'Configuration error - missing API key.'
 }

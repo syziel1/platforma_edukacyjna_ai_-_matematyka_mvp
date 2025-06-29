@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 const WaterTankVisualization = () => {
-  const { t } = useLanguage();
+  const { t: tWater } = useTranslation('waterTank');
 
   // --- REPAIRED LOGIC: Use a clear material limit (max surface area) ---
   const [maxAllowedSurfaceArea] = useState(() => Math.floor(Math.random() * (400 - 100 + 1)) + 100);
@@ -47,7 +47,7 @@ const WaterTankVisualization = () => {
   return (
     <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
       <h3 className="text-lg font-semibold text-text-color mb-4">
-        {t('waterTankExploration')}
+        {tWater('waterTankExploration')}
       </h3>
 
       {/* Simple 2D Side View Visualization */}
@@ -73,7 +73,7 @@ const WaterTankVisualization = () => {
 
             {/* Tank label */}
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-bold text-gray-700 bg-white/80 px-2 py-1 rounded">
-              Zbiornik
+              {tWater('tank')}
             </div>
           </div>
 
@@ -140,7 +140,7 @@ const WaterTankVisualization = () => {
       <div className="space-y-4 mb-6">
         <div>
           <label className="block text-sm font-medium text-text-color mb-2">
-            {t('tankRadius')}: {formatNumber(radius)}m
+            {tWater('tankRadius')}: {formatNumber(radius)}m
           </label>
           <input
             type="range" min={minDimension} max={maxDimension} step="0.1"
@@ -151,7 +151,7 @@ const WaterTankVisualization = () => {
         
         <div>
           <label className="block text-sm font-medium text-text-color mb-2">
-            {t('tankHeight')}: {formatNumber(height)}m
+            {tWater('tankHeight')}: {formatNumber(height)}m
           </label>
           <input
             type="range" min={minDimension} max={maxDimension} step="0.1"
@@ -164,13 +164,13 @@ const WaterTankVisualization = () => {
       {/* Data Display */}
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div className={`bg-bg-light p-3 rounded-md border ${isOverLimit ? 'border-red-500/50' : 'border-transparent'}`}>
-          <div className="text-sm text-text-color/70">{t('surfaceArea')}</div>
+          <div className="text-sm text-text-color/70">{tWater('surfaceArea')}</div>
           <div className={`text-lg font-semibold ${isOverLimit ? 'text-red-500' : 'text-text-color'}`}>
             {formatNumber(currentSurfaceArea)} / {formatNumber(maxAllowedSurfaceArea)} m²
           </div>
         </div>
         <div className="bg-bg-light p-3 rounded-md">
-          <div className="text-sm text-text-color/70">{t('tankVolume')}</div>
+          <div className="text-sm text-text-color/70">{tWater('tankVolume')}</div>
           <div className="text-lg font-semibold text-text-color">{formatNumber(volume)} m³</div>
         </div>
       </div>
@@ -178,7 +178,7 @@ const WaterTankVisualization = () => {
       {/* Informational Message */}
       <div className={`rounded-md p-3 text-center ${isOverLimit ? 'bg-red-500/20 border border-red-500/50' : 'bg-accent-primary/10 border border-accent-primary/30'}`}>
         <p className="text-sm font-medium text-text-color">
-          {isOverLimit ? "Przekroczono limit materiału!" : "Spróbuj zmaksymalizować objętość w ramach limitu materiału."}
+          {isOverLimit ? tWater('materialLimitExceeded') : tWater('maximizeVolumeWithinLimit')}
         </p>
       </div>
     </div>

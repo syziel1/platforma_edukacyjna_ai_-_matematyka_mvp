@@ -128,6 +128,18 @@ export default {
   'powersRootsTitle': 'Wzory: Potęgi i pierwiastki',
   'powersRootsDesc': 'Interaktywne wzory i definicje potęg i pierwiastków.',
   
+  // Navigation
+  'menu': 'Menu',
+  'dayPlan': 'Plan dnia',
+  'settings': 'Ustawienia',
+  'aboutProject': 'O projekcie',
+  'logout': 'Wyloguj się',
+  'login': 'Zaloguj się',
+  'skipLogin': 'Kontynuuj bez logowania',
+  'hint': 'Wskazówka',
+  'language': 'Język',
+  'welcome': 'Witaj',
+  
   // Settings
   'soundEffects': 'Efekty dźwiękowe',
   'volume': 'Głośność',
@@ -149,11 +161,28 @@ export default {
   'lessonTitle': 'Zadanie: Optymalny kurnik',
   'nextBreak': 'Następna przerwa za:',
   
+  // Steps
+  'step': 'Krok',
+  'understood': 'Rozumiem',
+  'endExploration': 'Zakończ eksperymentowanie',
+  'goToFormal': 'Przejdź do rozwiązania',
+  'startExploration': 'Rozpocznij eksperymentowanie',
+  'continue': 'Dalej',
+  'checkAnswer': 'Sprawdź odpowiedź',
+  
   // Break suggestions
   'breakSuggestions': 'Sugestie na przerwę:\n• Krótki spacer\n• Ćwiczenia oczu\n• Napij się wody\n• Rozciągnij się',
 
   // Auth
   'loginPrompt': 'Zaloguj się kontem Google, aby zapisywać swoje postępy.',
   'loginError': 'Błąd logowania. Spróbuj ponownie.',
-  'language': 'Język'
+  
+  // Chat
+  'aiMentor': 'Asystent AI',
+  'typeMessage': 'Napisz pytanie...',
+  'send': 'Wyślij',
+  'chatWelcomeMessage': 'Cześć! Jestem twoim mentorem AI. Zadaj mi pytanie o matematykę lub lekcję.',
+  'chatErrorMessage': 'Przepraszam, wystąpił błąd podczas komunikacji z AI. Spróbuj ponownie za chwilę.',
+  'chatWaitMessage': 'Proszę czekać...',
+  'chatConfigError': 'Błąd konfiguracji - brak klucza API.'
 }

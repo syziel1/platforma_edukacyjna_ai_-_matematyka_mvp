@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Play, ArrowRight, ArrowLeft, CheckCircle } from 'lucide-react';
 import WaterTankVisualization from './WaterTankVisualization';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 const WaterTankContent = ({ currentStep, setCurrentStep }) => {
-  const { t } = useLanguage();
+  const { t } = useTranslation('common');
+  const { t: tWater } = useTranslation('waterTank');
   
   // State for answers
   const [answers, setAnswers] = useState({
@@ -91,18 +92,18 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
     if (!answers.radiusDerivative.trim()) {
       newFeedback.radiusDerivative = {
         correct: false,
-        message: 'Proszę podać odpowiedź'
+        message: tWater('enterAnswer')
       };
       allCorrect = false;
     } else if (validateRadiusDerivative(answers.radiusDerivative)) {
       newFeedback.radiusDerivative = {
         correct: true,
-        message: 'Poprawnie! ✅'
+        message: tWater('correct')
       };
     } else {
       newFeedback.radiusDerivative = {
         correct: false,
-        message: 'Niepoprawnie. Wskazówka: Rozważ relację między r i h w optymalnym zbiorniku (h = 2r)'
+        message: tWater('incorrectRadius')
       };
       allCorrect = false;
     }
@@ -111,18 +112,18 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
     if (!answers.heightDerivative.trim()) {
       newFeedback.heightDerivative = {
         correct: false,
-        message: 'Proszę podać odpowiedź'
+        message: tWater('enterAnswer')
       };
       allCorrect = false;
     } else if (validateHeightDerivative(answers.heightDerivative)) {
       newFeedback.heightDerivative = {
         correct: true,
-        message: 'Poprawnie! ✅'
+        message: tWater('correct')
       };
     } else {
       newFeedback.heightDerivative = {
         correct: false,
-        message: 'Niepoprawnie. Wskazówka: Rozważ jak wysokość wpływa na objętość (większa wysokość = większa objętość, ale mniejszy promień)'
+        message: tWater('incorrectHeight')
       };
       allCorrect = false;
     }
@@ -131,18 +132,18 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
     if (!answers.optimalProportions.trim()) {
       newFeedback.optimalProportions = {
         correct: false,
-        message: 'Proszę podać odpowiedź'
+        message: tWater('enterAnswer')
       };
       allCorrect = false;
     } else if (validateOptimalProportions(answers.optimalProportions)) {
       newFeedback.optimalProportions = {
         correct: true,
-        message: 'Poprawnie! ✅'
+        message: tWater('correct')
       };
     } else {
       newFeedback.optimalProportions = {
         correct: false,
-        message: 'Niepoprawnie. Prawidłowa odpowiedź: h = 2r (wysokość = średnica podstawy)'
+        message: tWater('incorrectProportions')
       };
       allCorrect = false;
     }
@@ -152,9 +153,9 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
 
     // Show overall feedback
     if (allCorrect) {
-      alert('🎉 Gratulacje! Odkryłeś optymalną proporcję zbiornika: wysokość = średnica podstawy!');
+      alert(tWater('allCorrect'));
     } else {
-      alert('📚 Niektóre odpowiedzi wymagają poprawy. Sprawdź wskazówki i spróbuj ponownie.');
+      alert(tWater('someIncorrect'));
     }
   };
 
@@ -164,7 +165,7 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
         return (
           <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
             <h3 className="text-lg font-semibold text-text-color mb-4">
-              {t('waterTankIntro')}
+              {tWater('waterTankIntro')}
             </h3>
             <div className="rounded-lg aspect-video mb-4 bg-black">
               <video 
@@ -177,7 +178,7 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
                 <div className="bg-text-color/90 rounded-lg aspect-video flex items-center justify-center">
                   <div className="text-center text-white">
                     <Play className="w-16 h-16 mx-auto mb-2 opacity-70" />
-                    <p className="text-sm opacity-70">Twoja przeglądarka nie obsługuje wideo</p>
+                    <p className="text-sm opacity-70">{tWater('browserNotSupport')}</p>
                   </div>
                 </div>
               </video>
@@ -195,26 +196,20 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
         return (
           <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
             <h3 className="text-lg font-semibold text-text-color mb-4">
-              {t('waterTankProblem')}
+              {tWater('waterTankProblem')}
             </h3>
             <div className="prose prose-sm max-w-none mb-6 text-text-color">
               <p className="leading-relaxed mb-4">
-                Firma produkująca zbiorniki na wodę chce zoptymalizować swoje produkty. 
-                Mają ograniczoną ilość materiału na każdy zbiornik i chcą, żeby zbiornik 
-                pomieścił jak najwięcej wody.
+                {tWater('problemDescription')}
               </p>
               <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mt-4">
                 <p className="text-sm text-blue-800">
-                  <strong>Zadanie:</strong> Znajdź najlepsze proporcje cylindrycznego zbiornika 
-                  (stosunek wysokości do promienia), żeby zmieścił jak najwięcej wody przy 
-                  ograniczonej ilości materiału.
+                  <strong>{tWater('task')}:</strong> {tWater('problemTask')}
                 </p>
               </div>
               <div className="bg-accent-secondary/10 border border-accent-secondary/30 rounded-md p-4 mt-4">
                 <p className="text-sm text-accent-secondary">
-                  💡 <strong>{t('hint')}:</strong> Pomyśl o tym, jak zmienia się objętość 
-                  w zależności od proporcji wysokości do promienia. Czy zbiornik powinien być 
-                  wysoki i wąski, czy niski i szeroki?
+                  💡 <strong>{t('hint')}:</strong> {tWater('problemHint')}
                 </p>
               </div>
             </div>
@@ -223,7 +218,7 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
                 onClick={() => setCurrentStep(1)}
                 className="bg-nav-bg/20 text-text-color px-6 py-2 rounded-md hover:bg-nav-bg/40 transition-colors flex items-center gap-2"
               >
-                <ArrowLeft className="w-4 h-4" /> Wstecz
+                <ArrowLeft className="w-4 h-4" /> {tWater('back')}
               </button>
               <button
                 onClick={() => setCurrentStep(3)}
@@ -244,7 +239,7 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
                 onClick={() => setCurrentStep(2)}
                 className="bg-nav-bg/20 text-text-color px-6 py-2 rounded-md hover:bg-nav-bg/40 transition-colors flex items-center gap-2"
               >
-                <ArrowLeft className="w-4 h-4" /> Wstecz
+                <ArrowLeft className="w-4 h-4" /> {tWater('back')}
               </button>
               <button
                 onClick={() => setCurrentStep(4)}
@@ -260,39 +255,35 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
         return (
           <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
             <h3 className="text-lg font-semibold text-text-color mb-4">
-              Analiza geometryczna
+              {tWater('geometricAnalysis')}
             </h3>
             <div className="prose prose-sm max-w-none mb-6 text-text-color">
               <p className="leading-relaxed mb-4">
-                Teraz przeanalizujmy problem geometrycznie, bez używania pochodnych.
+                {tWater('geometricAnalysisDesc')}
               </p>
               
               <div className="bg-bg-light p-4 rounded-md mb-4">
-                <h4 className="font-semibold mb-2">Wzory podstawowe:</h4>
+                <h4 className="font-semibold mb-2">{tWater('basicFormulas')}:</h4>
                 <p className="font-mono text-sm text-text-color mb-2">
-                  <strong>Objętość cylindra:</strong> V = π × r² × h
+                  <strong>{tWater('cylinderVolume')}:</strong> V = π × r² × h
                 </p>
                 <p className="font-mono text-sm text-text-color mb-2">
-                  <strong>Powierzchnia materiału:</strong> A = 2πr² + 2πrh
+                  <strong>{tWater('materialSurface')}:</strong> A = 2πr² + 2πrh
                 </p>
                 <p className="text-sm text-text-color/70">
-                  gdzie r = promień podstawy, h = wysokość
+                  {tWater('whereFormula')}
                 </p>
               </div>
 
               <div className="bg-green-50 border border-green-200 rounded-md p-4 mb-4">
-                <h4 className="font-semibold mb-2 text-green-800">Kluczowe spostrzeżenie:</h4>
+                <h4 className="font-semibold mb-2 text-green-800">{tWater('keyInsight')}:</h4>
                 <p className="text-sm text-green-700 leading-relaxed">
-                  Gdy mamy stałą ilość materiału, najlepsze proporcje to gdy <strong>wysokość 
-                  równa się średnicy podstawy</strong> (h = 2r). To oznacza, że zbiornik 
-                  powinien być "kwadratowy\" w przekroju pionowym.
+                  {tWater('keyInsightDesc')}
                 </p>
               </div>
 
               <p className="leading-relaxed">
-                To można sprawdzić eksperymentalnie lub przez porównanie różnych proporcji. 
-                Zbiorniki zbyt wysokie mają małą podstawę, a zbyt płaskie mają za dużą powierzchnię 
-                górną i dolną w stosunku do objętości.
+                {tWater('experimentalVerification')}
               </p>
             </div>
             <div className="flex justify-between">
@@ -300,13 +291,13 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
                 onClick={() => setCurrentStep(3)}
                 className="bg-nav-bg/20 text-text-color px-6 py-2 rounded-md hover:bg-nav-bg/40 transition-colors flex items-center gap-2"
               >
-                <ArrowLeft className="w-4 h-4" /> Wstecz
+                <ArrowLeft className="w-4 h-4" /> {tWater('back')}
               </button>
               <button
                 onClick={() => setCurrentStep(5)}
                 className="bg-accent-primary text-white px-6 py-2 rounded-md hover:bg-accent-primary/90 transition-colors flex items-center gap-2"
               >
-                Przejdź do zadań <ArrowRight className="w-4 h-4" />
+                {tWater('goToTasks')} <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -316,19 +307,18 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
         return (
           <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
             <h3 className="text-lg font-semibold text-text-color mb-4">
-              Zadania praktyczne
+              {tWater('practicalTasks')}
             </h3>
             <div className="space-y-4 mb-6">
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  <strong>Zadanie 1:</strong> Opisz matematycznie, jak zmienia się objętość względem promienia 
-                  (możesz użyć intuicji geometrycznej zamiast pochodnych)
+                  <strong>{tWater('task')} 1:</strong> {tWater('task1')}
                 </label>
                 <input
                   type="text"
                   value={answers.radiusDerivative}
                   onChange={(e) => handleAnswerChange('radiusDerivative', e.target.value)}
-                  placeholder="Opisz relację między r a V... (np. h = 2r)"
+                  placeholder={tWater('task1Placeholder')}
                   className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color ${
                     showResults 
                       ? feedback.radiusDerivative?.correct 
@@ -343,19 +333,19 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
                   </p>
                 )}
                 <p className="text-xs text-text-color/60 mt-1">
-                  Wskazówka: Większy promień = większa podstawa, ale mniej materiału na wysokość
+                  {tWater('task1Hint')}
                 </p>
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  <strong>Zadanie 2:</strong> Opisz matematycznie, jak zmienia się objętość względem wysokości
+                  <strong>{tWater('task')} 2:</strong> {tWater('task2')}
                 </label>
                 <input
                   type="text"
                   value={answers.heightDerivative}
                   onChange={(e) => handleAnswerChange('heightDerivative', e.target.value)}
-                  placeholder="Opisz relację między h a V..."
+                  placeholder={tWater('task2Placeholder')}
                   className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color ${
                     showResults 
                       ? feedback.heightDerivative?.correct 
@@ -370,19 +360,19 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
                   </p>
                 )}
                 <p className="text-xs text-text-color/60 mt-1">
-                  Wskazówka: Większa wysokość = większa objętość, ale mniejszy promień podstawy
+                  {tWater('task2Hint')}
                 </p>
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  <strong>Zadanie 3:</strong> Jaka jest optymalna relacja między wysokością a promieniem?
+                  <strong>{tWater('task')} 3:</strong> {tWater('task3')}
                 </label>
                 <input
                   type="text"
                   value={answers.optimalProportions}
                   onChange={(e) => handleAnswerChange('optimalProportions', e.target.value)}
-                  placeholder="h = ? × r (np. h = 2r lub po prostu 2)"
+                  placeholder={tWater('task3Placeholder')}
                   className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-accent-primary/50 text-text-color ${
                     showResults 
                       ? feedback.optimalProportions?.correct 
@@ -397,25 +387,23 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
                   </p>
                 )}
                 <p className="text-xs text-text-color/60 mt-1">
-                  Wskazówka: Pomyśl o "kwadratowym" przekroju pionowym zbiornika
+                  {tWater('task3Hint')}
                 </p>
               </div>
             </div>
 
             {showResults && (
               <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <h4 className="font-semibold text-blue-800 mb-2">📋 Podsumowanie rozwiązania:</h4>
+                <h4 className="font-semibold text-blue-800 mb-2">📋 {tWater('solutionSummary')}</h4>
                 <div className="text-sm text-blue-700 space-y-1">
-                  <p>• Optymalna relacja: <strong>h = 2r</strong> (wysokość = średnica)</p>
-                  <p>• Przykład: jeśli r = 3m, to h = 6m</p>
-                  <p>• Objętość takiego zbiornika: <strong>V = π × 3² × 6 = 54π ≈ 169,6 m³</strong></p>
-                  <p>• Powierzchnia materiału: <strong>A = 2π × 3² + 2π × 3 × 6 = 54π ≈ 169,6 m²</strong></p>
+                  <p>• {tWater('optimalRelation')}</p>
+                  <p>• {tWater('example')}</p>
+                  <p>• {tWater('volumeCalculation')}</p>
+                  <p>• {tWater('surfaceCalculation')}</p>
                 </div>
                 <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded">
                   <p className="text-sm text-yellow-800">
-                    <strong>💡 Wniosek inżynierski:</strong> Zbiornik o proporcjach h = 2r wykorzystuje materiał 
-                    najefektywniej, maksymalizując objętość przy minimalnym zużyciu materiału. 
-                    To dlatego wiele rzeczywistych zbiorników ma podobne proporcje!
+                    <strong>💡 {tWater('engineeringConclusion')}</strong>
                   </p>
                 </div>
               </div>
@@ -426,7 +414,7 @@ const WaterTankContent = ({ currentStep, setCurrentStep }) => {
                 onClick={() => setCurrentStep(4)}
                 className="bg-nav-bg/20 text-text-color px-6 py-2 rounded-md hover:bg-nav-bg/40 transition-colors flex items-center gap-2"
               >
-                <ArrowLeft className="w-4 h-4" /> Wstecz
+                <ArrowLeft className="w-4 h-4" /> {tWater('back')}
               </button>
               <button
                 onClick={checkAnswers}

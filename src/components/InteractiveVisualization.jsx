@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 const InteractiveVisualization = () => {
-  const { t } = useLanguage();
+  const { t: tChicken } = useTranslation('chickenCoop');
   
   // Generate random fence length between 10 and 100
   const [maxFence] = useState(() => Math.floor(Math.random() * (100 - 10 + 1)) + 10);
@@ -60,7 +60,7 @@ const InteractiveVisualization = () => {
   return (
     <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
       <h3 className="text-lg font-semibold text-text-color mb-4">
-        {t('step3Title')}
+        {tChicken('step3Title')}
       </h3>
 
       <div className="mb-6 flex justify-center">
@@ -83,7 +83,7 @@ const InteractiveVisualization = () => {
                 ? 'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
                 : 'top-full left-1/2 transform -translate-x-1/2 mt-2'
             }`}>
-            Chicken Coop
+            {tChicken('chickenCoop')}
           </div>
 
           <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-sm text-text-color">
@@ -98,7 +98,7 @@ const InteractiveVisualization = () => {
       <div className="space-y-4 mb-6">
         <div>
           <label className="block text-sm font-medium text-text-color mb-2">
-            {t('sideA')}: {formatNumber(sideA)}m
+            {tChicken('sideA')}: {formatNumber(sideA)}m
           </label>
           <input
             type="range"
@@ -113,7 +113,7 @@ const InteractiveVisualization = () => {
 
         <div>
           <label className="block text-sm font-medium text-text-color mb-2">
-            {t('sideB')}: {formatNumber(sideB)}m
+            {tChicken('sideB')}: {formatNumber(sideB)}m
           </label>
           <input
             type="range"
@@ -145,7 +145,7 @@ const InteractiveVisualization = () => {
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div className="bg-bg-light p-3 rounded-md">
           <div className="text-sm text-text-color/70">
-            {t('usedFence')}
+            {tChicken('usedFence')}
           </div>
           <div className="text-lg font-semibold text-text-color">
             {formatNumber(perimeter)} / {maxFence} m
@@ -154,7 +154,7 @@ const InteractiveVisualization = () => {
 
         <div className="bg-bg-light p-3 rounded-md">
           <div className="text-sm text-text-color/70">
-            {t('chickenArea')}
+            {tChicken('chickenArea')}
           </div>
           <div className="text-lg font-semibold text-text-color">
             {formatNumber(area)} m&sup2;
@@ -164,7 +164,7 @@ const InteractiveVisualization = () => {
 
       <div className={`rounded-md p-3 ${isNearMax ? 'bg-accent-secondary/20 border border-accent-secondary/50' : 'bg-accent-primary/10 border border-accent-primary/30'}`}>
         <p className="text-sm font-medium text-text-color">
-          {isNearMax ? t('isMaximum') : t('tryMaximize')}
+          {isNearMax ? tChicken('isMaximum') : tChicken('tryMaximize')}
         </p>
       </div>
     </div>

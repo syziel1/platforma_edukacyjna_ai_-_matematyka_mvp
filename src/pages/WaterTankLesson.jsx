@@ -3,14 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import LessonLayout from '../components/Layout/LessonLayout';
 import WaterTankContent from '../components/WaterTankContent';
 import { useGlobalTimer } from '../contexts/GlobalTimerContext';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 const WaterTankLesson = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 5;
   const navigate = useNavigate();
   const { startLearning, stopLearning } = useGlobalTimer();
-  const { t } = useLanguage();
+  const { t } = useTranslation('common');
+  const { t: tWater } = useTranslation('waterTank');
 
   React.useEffect(() => {
     startLearning();
