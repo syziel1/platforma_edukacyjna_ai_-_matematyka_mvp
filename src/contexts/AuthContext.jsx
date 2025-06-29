@@ -18,27 +18,45 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Get initial session
     const getInitialSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (session?.user) {
-        // Get user profile
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
+      try {
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) {
+          console.error('Error getting session:', sessionError);
+          setLoading(false);
+          return;
+        }
+        
+        if (session?.user) {
+          try {
+            // Get user profile
+            const { data: profile, error: profileError } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', session.user.id)
+              .single();
 
-        setUser({
-          id: session.user.id,
-          email: session.user.email,
-          name: profile ? `${profile.first_name} ${profile.last_name}` : session.user.email,
-          picture: session.user.user_metadata?.avatar_url,
-          role: profile?.role,
-          profile: profile
-        });
+            if (profileError && profileError.code !== 'PGRST116') {
+              console.error('Error fetching profile:', profileError);
+            }
+
+            setUser({
+              id: session.user.id,
+              email: session.user.email,
+              name: profile ? `${profile.first_name} ${profile.last_name}` : session.user.email,
+              picture: session.user.user_metadata?.avatar_url,
+              role: profile?.role,
+              profile: profile
+            });
+          } catch (error) {
+            console.error('Error in profile fetching process:', error);
+          }
+        }
+      } catch (error) {
+        console.error('Error in session initialization:', error);
+      } finally {
+        setLoading(false);
       }
-      
-      setLoading(false);
     };
 
     getInitialSession();
@@ -46,30 +64,49 @@ export const AuthProvider = ({ children }) => {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        if (session?.user) {
-          // Get user profile
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', session.user.id)
-            .single();
+        try {
+          if (session?.user) {
+            try {
+              // Get user profile
+              const { data: profile, error: profileError } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', session.user.id)
+                .single();
 
-          setUser({
-            id: session.user.id,
-            email: session.user.email,
-            name: profile ? `${profile.first_name} ${profile.last_name}` : session.user.email,
-            picture: session.user.user_metadata?.avatar_url,
-            role: profile?.role,
-            profile: profile
-          });
-        } else {
-          setUser(null);
+              if (profileError && profileError.code !== 'PGRST116') {
+                console.error('Error fetching profile on auth change:', profileError);
+              }
+
+              setUser({
+                id: session.user.id,
+                email: session.user.email,
+                name: profile ? `${profile.first_name} ${profile.last_name}` : session.user.email,
+                picture: session.user.user_metadata?.avatar_url,
+                role: profile?.role,
+                profile: profile
+              });
+            } catch (error) {
+              console.error('Error in profile update process:', error);
+            }
+          } else {
+            setUser(null);
+          }
+        } catch (error) {
+          console.error('Error in auth state change handler:', error);
+        } finally {
+          setLoading(false);
         }
-        setLoading(false);
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      try {
+        subscription.unsubscribe();
+      } catch (error) {
+        console.error('Error unsubscribing from auth changes:', error);
+      }
+    };
   }, []);
 
   const login = (userData) => {
