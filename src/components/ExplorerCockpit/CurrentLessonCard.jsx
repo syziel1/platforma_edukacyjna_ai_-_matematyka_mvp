@@ -4,6 +4,16 @@ import { useTranslation } from 'react-i18next';
 
 const CurrentLessonCard = ({ lesson, onContinueLesson }) => {
   const { t } = useTranslation('common');
+  const { t: tChicken } = useTranslation('chickenCoop');
+  
+  // Function to get the proper translation for the current step
+  const getStepTranslation = (stepKey) => {
+    // Check if it's a step key pattern like "step1Title"
+    if (stepKey && stepKey.match(/^step\d+Title$/)) {
+      return tChicken(stepKey);
+    }
+    return stepKey;
+  };
   
   return (
     <div className="bg-bg-card rounded-xl p-6 shadow-lg border border-bg-neutral">
@@ -53,7 +63,7 @@ const CurrentLessonCard = ({ lesson, onContinueLesson }) => {
       {/* Aktualny krok */}
       <div className="mb-6 p-3 bg-blue-50 rounded-lg border border-blue-200">
         <p className="text-blue-800 font-medium text-sm">
-          <strong>{t('currentStep')}:</strong> {lesson.currentStep}
+          <strong>{t('currentStep')}:</strong> {getStepTranslation(lesson.currentStep)}
         </p>
       </div>
 
