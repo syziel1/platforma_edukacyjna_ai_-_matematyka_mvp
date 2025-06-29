@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useSettings } from '../contexts/SettingsContext';
+import { Voice, VoiceSettings } from '@elevenlabs/elevenlabs-js';
 
 // Module-level lock to prevent multiple simultaneous speech requests
 let isCurrentlySpeaking = false;
