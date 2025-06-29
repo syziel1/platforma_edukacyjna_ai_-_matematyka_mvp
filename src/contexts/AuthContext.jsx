@@ -44,8 +44,10 @@ export const AuthProvider = ({ children }) => {
 
             if (profileError) {
               console.error('Error fetching profile:', profileError);
-              if (profileError.code !== 'PGRST116') {
-                // PGRST116 is "no rows returned" which is expected for new users
+              // If profile doesn't exist, we'll still proceed with basic user info
+              if (profileError.code === 'PGRST116') { // No rows returned
+                console.log('No profile found for user, using basic info');
+              } else {
                 console.error('Profile fetch error details:', profileError);
               }
             }
@@ -57,7 +59,7 @@ export const AuthProvider = ({ children }) => {
               email: session.user.email,
               name: profile ? `${profile.first_name} ${profile.last_name}` : session.user.email,
               picture: session.user.user_metadata?.avatar_url,
-              role: profile?.role,
+              role: profile?.role || 'student', // Default to student if no role
               profile: profile
             };
             
@@ -65,6 +67,13 @@ export const AuthProvider = ({ children }) => {
             setUser(userData);
           } catch (error) {
             console.error('Error in profile fetching process:', error);
+            // Still set basic user data even if profile fetch fails
+            setUser({
+              id: session.user.id,
+              email: session.user.email,
+              name: session.user.email,
+              role: 'student' // Default role
+            });
           }
         } else {
           console.log('No user in session');
@@ -85,6 +94,13 @@ export const AuthProvider = ({ children }) => {
       async (event, session) => {
         console.log('Auth state changed:', event, session ? 'Session exists' : 'No session');
         
+        if (event === 'SIGNED_OUT') {
+          console.log('User signed out, clearing user data');
+          setUser(null);
+          setLoading(false);
+          return;
+        }
+        
         try {
           if (session?.user) {
             console.log('User found in updated session, fetching profile...');
@@ -98,7 +114,10 @@ export const AuthProvider = ({ children }) => {
 
               if (profileError) {
                 console.error('Error fetching profile on auth change:', profileError);
-                if (profileError.code !== 'PGRST116') {
+                // If profile doesn't exist, we'll still proceed with basic user info
+                if (profileError.code === 'PGRST116') { // No rows returned
+                  console.log('No profile found for user, using basic info');
+                } else {
                   console.error('Profile fetch error details:', profileError);
                 }
               }
@@ -110,7 +129,7 @@ export const AuthProvider = ({ children }) => {
                 email: session.user.email,
                 name: profile ? `${profile.first_name} ${profile.last_name}` : session.user.email,
                 picture: session.user.user_metadata?.avatar_url,
-                role: profile?.role,
+                role: profile?.role || 'student', // Default to student if no role
                 profile: profile
               };
               
@@ -118,6 +137,13 @@ export const AuthProvider = ({ children }) => {
               setUser(userData);
             } catch (error) {
               console.error('Error in profile update process:', error);
+              // Still set basic user data even if profile fetch fails
+              setUser({
+                id: session.user.id,
+                email: session.user.email,
+                name: session.user.email,
+                role: 'student' // Default role
+              });
             }
           } else {
             console.log('No user in updated session, clearing user data');
@@ -125,6 +151,8 @@ export const AuthProvider = ({ children }) => {
           }
         } catch (error) {
           console.error('Error in auth state change handler:', error);
+          // Ensure we're not stuck in loading state
+          setUser(null);
         } finally {
           setLoading(false);
         }

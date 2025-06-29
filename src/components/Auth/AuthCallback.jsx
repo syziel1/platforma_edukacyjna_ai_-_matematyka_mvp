@@ -33,50 +33,65 @@ const AuthCallback = () => {
           
           // Get or create user profile
           console.log('Fetching user profile...');
-          let { data: profile, error: profileError } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', user.id)
-            .single();
-
-          console.log('Profile fetch result:', profileError ? `Error: ${profileError.message}` : 'Profile found');
+          let profile = null;
+          let profileError = null;
+          
+          try {
+            const result = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', user.id)
+              .single();
+              
+            profile = result.data;
+            profileError = result.error;
+            
+            console.log('Profile fetch result:', profileError ? `Error: ${profileError.message}` : 'Profile found');
+          } catch (fetchError) {
+            console.error('Unexpected error fetching profile:', fetchError);
+            // Continue with profile creation even if fetch fails
+          }
 
           // If profile doesn't exist, create it (for OAuth users)
-          if (profileError && profileError.code === 'PGRST116') {
+          if (!profile || (profileError && profileError.code === 'PGRST116')) {
             console.log('Profile not found, creating new profile');
             const role = searchParams.get('role') || 'student';
             
             console.log('Creating profile with role:', role);
-            const { data: newProfile, error: createError } = await supabase
-              .from('profiles')
-              .insert({
-                id: user.id,
-                first_name: user.user_metadata?.full_name?.split(' ')[0] || user.user_metadata?.name || '',
-                last_name: user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
-                role: role,
-                phone_number: user.user_metadata?.phone || ''
-              })
-              .select()
-              .single();
+            try {
+              const { data: newProfile, error: createError } = await supabase
+                .from('profiles')
+                .insert({
+                  id: user.id,
+                  first_name: user.user_metadata?.full_name?.split(' ')[0] || user.user_metadata?.name || '',
+                  last_name: user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
+                  role: role,
+                  phone_number: user.user_metadata?.phone || ''
+                })
+                .select()
+                .single();
 
-            if (createError) {
-              console.error('Profile creation error:', createError);
-              navigate('/login?error=profile_creation_failed');
-              return;
+              if (createError) {
+                console.error('Profile creation error:', createError);
+                // Continue even if profile creation fails
+              } else {
+                console.log('New profile created successfully');
+                profile = newProfile;
+              }
+            } catch (createError) {
+              console.error('Unexpected error creating profile:', createError);
+              // Continue even if profile creation fails
             }
-
-            console.log('New profile created successfully');
-            profile = newProfile;
           }
 
-          // Update auth context
+          // Update auth context with whatever data we have
           console.log('Updating auth context with user data');
           login({
             id: user.id,
             email: user.email,
             name: profile ? `${profile.first_name} ${profile.last_name}` : user.email,
             picture: user.user_metadata?.avatar_url,
-            role: profile?.role,
+            role: profile?.role || 'student', // Default to student if no role
             profile: profile
           });
 

@@ -36,13 +36,19 @@ const LoginPage = () => {
         }
         
         console.log('Session check result:', data.session ? 'Session exists' : 'No session');
+        
+        // If session exists, redirect to cockpit
+        if (data.session) {
+          console.log('Active session found, redirecting to cockpit');
+          navigate('/cockpit');
+        }
       } catch (err) {
         console.error('Unexpected error checking session:', err);
       }
     };
     
     checkExistingSession();
-  }, []);
+  }, [navigate]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -93,11 +99,6 @@ const LoginPage = () => {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password
-      }, {
-        options: {
-          // Set session persistence based on rememberMe
-          persistSession: formData.rememberMe
-        }
       });
 
       if (error) {
@@ -126,6 +127,7 @@ const LoginPage = () => {
 
           if (profileError) {
             console.error('Profile fetch error:', profileError);
+            // Continue even if profile fetch fails
           }
 
           console.log('Profile data:', profile ? 'Profile found' : 'No profile found');
@@ -136,7 +138,7 @@ const LoginPage = () => {
             email: data.user.email,
             name: profile ? `${profile.first_name} ${profile.last_name}` : data.user.email,
             picture: data.user.user_metadata?.avatar_url,
-            role: profile?.role,
+            role: profile?.role || 'student', // Default to student if no role
             profile: profile
           };
           
@@ -148,7 +150,8 @@ const LoginPage = () => {
           navigate('/cockpit');
         } catch (profileError) {
           console.error('Error processing profile after login:', profileError);
-          setErrors({ general: 'Wystąpił błąd podczas pobierania profilu. Spróbuj ponownie.' });
+          // Still redirect to cockpit even if profile fetch fails
+          navigate('/cockpit');
         }
       }
     } catch (error) {
