@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
@@ -19,6 +19,30 @@ const LoginPage = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Debug: Log when component mounts
+  useEffect(() => {
+    console.log('LoginPage mounted');
+    
+    // Check if we have a session already
+    const checkExistingSession = async () => {
+      try {
+        console.log('Checking for existing session...');
+        const { data, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Session check error:', error);
+          return;
+        }
+        
+        console.log('Session check result:', data.session ? 'Session exists' : 'No session');
+      } catch (err) {
+        console.error('Unexpected error checking session:', err);
+      }
+    };
+    
+    checkExistingSession();
+  }, []);
 
   const validateForm = () => {
     const newErrors = {};
@@ -63,12 +87,21 @@ const LoginPage = () => {
     setErrors({});
 
     try {
+      console.log('Attempting to sign in with email/password...');
+      console.log('Remember me option:', formData.rememberMe);
+      
       const { data, error } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password
+      }, {
+        options: {
+          // Set session persistence based on rememberMe
+          persistSession: formData.rememberMe
+        }
       });
 
       if (error) {
+        console.error('Login error:', error);
         if (error.message.includes('Invalid login credentials')) {
           setErrors({ general: 'Nieprawidłowy adres e-mail lub hasło' });
         } else if (error.message.includes('Email not confirmed')) {
@@ -79,29 +112,47 @@ const LoginPage = () => {
         return;
       }
 
+      console.log('Sign in successful, user data:', data.user ? 'User exists' : 'No user data');
+
       if (data.user) {
-        // Get user profile data
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', data.user.id)
-          .single();
+        try {
+          // Get user profile data
+          console.log('Fetching user profile...');
+          const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', data.user.id)
+            .single();
 
-        // Update auth context
-        login({
-          id: data.user.id,
-          email: data.user.email,
-          name: profile ? `${profile.first_name} ${profile.last_name}` : data.user.email,
-          picture: data.user.user_metadata?.avatar_url,
-          role: profile?.role,
-          profile: profile
-        });
+          if (profileError) {
+            console.error('Profile fetch error:', profileError);
+          }
 
-        // Redirect to cockpit
-        navigate('/cockpit');
+          console.log('Profile data:', profile ? 'Profile found' : 'No profile found');
+
+          // Update auth context
+          const userData = {
+            id: data.user.id,
+            email: data.user.email,
+            name: profile ? `${profile.first_name} ${profile.last_name}` : data.user.email,
+            picture: data.user.user_metadata?.avatar_url,
+            role: profile?.role,
+            profile: profile
+          };
+          
+          console.log('Updating auth context with user data');
+          login(userData);
+
+          // Redirect to cockpit
+          console.log('Redirecting to cockpit');
+          navigate('/cockpit');
+        } catch (profileError) {
+          console.error('Error processing profile after login:', profileError);
+          setErrors({ general: 'Wystąpił błąd podczas pobierania profilu. Spróbuj ponownie.' });
+        }
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Unexpected login error:', error);
       setErrors({ general: 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.' });
     } finally {
       setIsLoading(false);
@@ -110,6 +161,8 @@ const LoginPage = () => {
 
   const handleOAuthSignIn = async (provider) => {
     try {
+      console.log(`Initiating OAuth sign-in with ${provider}...`);
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
@@ -118,10 +171,11 @@ const LoginPage = () => {
       });
 
       if (error) {
+        console.error(`${provider} OAuth error:`, error);
         setErrors({ general: `Błąd logowania przez ${provider}: ${error.message}` });
       }
     } catch (error) {
-      console.error(`${provider} OAuth error:`, error);
+      console.error(`Unexpected ${provider} OAuth error:`, error);
       setErrors({ general: `Wystąpił błąd podczas logowania przez ${provider}` });
     }
   };

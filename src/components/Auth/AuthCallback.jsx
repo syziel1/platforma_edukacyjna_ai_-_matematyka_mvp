@@ -9,9 +9,14 @@ const AuthCallback = () => {
   const { login } = useAuth();
 
   useEffect(() => {
+    console.log('AuthCallback component mounted');
+    
     const handleAuthCallback = async () => {
       try {
+        console.log('Processing auth callback...');
+        
         // Get the session from the URL
+        console.log('Getting session from Supabase...');
         const { data, error } = await supabase.auth.getSession();
         
         if (error) {
@@ -20,20 +25,28 @@ const AuthCallback = () => {
           return;
         }
 
+        console.log('Session data received:', data.session ? 'Session exists' : 'No session');
+
         if (data.session) {
           const user = data.session.user;
+          console.log('User found in session, ID:', user.id);
           
           // Get or create user profile
+          console.log('Fetching user profile...');
           let { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('*')
             .eq('id', user.id)
             .single();
 
+          console.log('Profile fetch result:', profileError ? `Error: ${profileError.message}` : 'Profile found');
+
           // If profile doesn't exist, create it (for OAuth users)
           if (profileError && profileError.code === 'PGRST116') {
+            console.log('Profile not found, creating new profile');
             const role = searchParams.get('role') || 'student';
             
+            console.log('Creating profile with role:', role);
             const { data: newProfile, error: createError } = await supabase
               .from('profiles')
               .insert({
@@ -52,10 +65,12 @@ const AuthCallback = () => {
               return;
             }
 
+            console.log('New profile created successfully');
             profile = newProfile;
           }
 
           // Update auth context
+          console.log('Updating auth context with user data');
           login({
             id: user.id,
             email: user.email,
@@ -67,15 +82,18 @@ const AuthCallback = () => {
 
           // Redirect based on user role
           if (profile?.role === 'teacher') {
+            console.log('Redirecting to teacher dashboard');
             navigate('/teacher-dashboard');
           } else {
+            console.log('Redirecting to cockpit');
             navigate('/cockpit');
           }
         } else {
+          console.log('No session found, redirecting to login');
           navigate('/login?error=no_session');
         }
       } catch (error) {
-        console.error('Auth callback error:', error);
+        console.error('Auth callback unexpected error:', error);
         navigate('/login?error=callback_failed');
       }
     };
