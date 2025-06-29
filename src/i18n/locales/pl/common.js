@@ -46,6 +46,29 @@ export default {
   'mentorAvailableDesc': 'Otrzymaj spersonalizowaną pomoc od naszego doświadczonego mentora matematyki. Zaplanuj sesje jeden na jeden, aby wzmocnić swoją naukę.',
   'signInToAccess': '🔒 Zaloguj się, aby uzyskać dostęp do funkcji mentora',
   
+  // Month names
+  'month_1': 'Styczeń',
+  'month_2': 'Luty',
+  'month_3': 'Marzec',
+  'month_4': 'Kwiecień',
+  'month_5': 'Maj',
+  'month_6': 'Czerwiec',
+  'month_7': 'Lipiec',
+  'month_8': 'Sierpień',
+  'month_9': 'Wrzesień',
+  'month_10': 'Październik',
+  'month_11': 'Listopad',
+  'month_12': 'Grudzień',
+  
+  // Day names
+  'day_0': 'Niedziela',
+  'day_1': 'Poniedziałek',
+  'day_2': 'Wtorek',
+  'day_3': 'Środa',
+  'day_4': 'Czwartek',
+  'day_5': 'Piątek',
+  'day_6': 'Sobota',
+  
   // Interactive Whiteboard
   'openInNewTab': 'Otwórz w nowej karcie',
   'loadingWhiteboard': 'Ładowanie tablicy interaktywnej...',

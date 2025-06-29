@@ -1,7 +1,10 @@
 import React from 'react';
 import { X, Github, Linkedin, Calendar, Users, Target, Lightbulb } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const AboutProjectModal = ({ isOpen, onClose }) => {
+  const { t } = useLanguage();
+  
   if (!isOpen) return null;
 
   const handleScheduleMeeting = () => {
@@ -18,6 +21,12 @@ const AboutProjectModal = ({ isOpen, onClose }) => {
 
   const handleTechClick = (url) => {
     window.open(url, '_blank');
+  };
+
+  // Get current month name
+  const getCurrentMonthName = () => {
+    const currentMonth = new Date().getMonth() + 1; // getMonth() returns 0-11
+    return t(`month_${currentMonth}`);
   };
 
   return (

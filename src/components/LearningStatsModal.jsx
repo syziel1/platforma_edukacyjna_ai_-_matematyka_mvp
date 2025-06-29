@@ -160,10 +160,11 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
 
   const calendarDays = getCalendarData();
   const stats = calculateStats();
-  const monthNames = [
-    'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
-    'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'
-  ];
+  
+  // Use translated month names
+  const getMonthName = (monthIndex) => {
+    return t(`month_${monthIndex + 1}`);
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -231,7 +232,7 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
             </button>
             
             <h3 className="text-xl font-bold text-text-color">
-              {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+              {getMonthName(currentDate.getMonth())} {currentDate.getFullYear()}
             </h3>
             
             <button
@@ -246,9 +247,9 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
           <div className="bg-gray-50 rounded-lg p-4">
             {/* Day headers */}
             <div className="grid grid-cols-7 gap-1 mb-2">
-              {['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'Sb'].map(day => (
-                <div key={day} className="text-center text-sm font-medium text-gray-600 p-2">
-                  {day}
+              {[0, 1, 2, 3, 4, 5, 6].map(dayIndex => (
+                <div key={dayIndex} className="text-center text-sm font-medium text-gray-600 p-2">
+                  {t(`day_${dayIndex}`).substring(0, 2)}
                 </div>
               ))}
             </div>

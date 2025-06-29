@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, AlertCircle, User, Users, MessageSquare, Clock, Calendar as CalendarIcon } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const UpcomingEventsWidget = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -105,7 +107,7 @@ const UpcomingEventsWidget = () => {
     return {
       date: date.toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' }),
       time: date.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
-      dayName: date.toLocaleDateString('pl-PL', { weekday: 'long' }),
+      dayName: t(`day_${date.getDay()}`),
       isToday: isToday(date),
       isTomorrow: isTomorrow(date)
     };
@@ -155,9 +157,9 @@ const UpcomingEventsWidget = () => {
   // Get event date display
   const getDateDisplay = (dateInfo) => {
     if (dateInfo.isToday) {
-      return <span className="font-medium text-green-600">Dzisiaj</span>;
+      return <span className="font-medium text-green-600">{t('today')}</span>;
     } else if (dateInfo.isTomorrow) {
-      return <span className="font-medium text-blue-600">Jutro</span>;
+      return <span className="font-medium text-blue-600">{t('tomorrow')}</span>;
     } else {
       return <span>{dateInfo.date} ({dateInfo.dayName})</span>;
     }
