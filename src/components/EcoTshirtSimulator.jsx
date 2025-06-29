@@ -14,7 +14,7 @@ const EcoTshirtSimulator = () => {
 
   // User inputs
   const [quantity, setQuantity] = useState(35);
-  const [sellingPriceNet, setSellingPriceNet] = useState(32.31);
+  const [sellingPriceNet, setSellingPriceNet] = useState(32.69);
 
   // Centralized calculation function to ensure consistency
   const calculateAllValues = (currentQuantity, currentSellingPriceNet) => {

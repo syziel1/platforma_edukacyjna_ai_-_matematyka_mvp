@@ -18,13 +18,38 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
   const [feedback, setFeedback] = useState({});
   const [showResults, setShowResults] = useState(false);
 
-  // Correct answers (calculated based on the business case)
-  const correctAnswers = {
-    maxQuantity: 47, // 1000 / (25 * 0.85) = 47.06, rounded down
-    netPrice: 32.31, // 21.25 / (1 - 0.35) = 32.31
-    grossPrice: 39.74, // 32.31 * 1.23 = 39.74
-    revenue: 913.68, // 47 * (3/5) * 32.31 = 28.2 * 32.31 = 913.68
-    profit: -86.32 // 913.68 - 1000 = -86.32 (loss)
+  // Centralized calculation function to ensure consistency with simulator
+  const calculateCorrectAnswers = () => {
+    // Business parameters
+    const budget = 1000;
+    const baseCost = 25;
+    const discountThreshold = 30;
+    const discountRate = 0.15;
+    const targetMargin = 0.35;
+    const vatRate = 0.23;
+    
+    // Calculate unit cost with discount (since we'll order more than 30)
+    const unitCost = baseCost * (1 - discountRate); // 21.25
+    
+    // Calculate maximum quantity
+    const maxQuantity = Math.floor(budget / unitCost); // 47.06 -> 47
+    
+    // Calculate optimal selling price for target margin
+    const netPrice = unitCost / (1 - targetMargin); // 21.25 / 0.65 = 32.69
+    const grossPrice = netPrice * (1 + vatRate); // 32.69 * 1.23 = 40.21
+    
+    // Calculate sales results (3/5 sold)
+    const soldQuantity = Math.floor(maxQuantity * (3/5)); // 47 * 0.6 = 28.2 -> 28
+    const revenue = soldQuantity * netPrice; // 28 * 32.69 = 915.32
+    const profit = revenue - budget; // 915.32 - 1000 = -84.68
+    
+    return {
+      maxQuantity: maxQuantity, // 47
+      netPrice: netPrice, // 32.69
+      grossPrice: grossPrice, // 40.21
+      revenue: revenue, // 915.32
+      profit: profit // -84.68
+    };
   };
 
   const handleAnswerChange = (field, value) => {
@@ -37,6 +62,9 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
   const checkAnswers = () => {
     const newFeedback = {};
     let allCorrect = true;
+    
+    // Get dynamically calculated correct answers
+    const correctAnswers = calculateCorrectAnswers();
 
     // Check each answer with tolerance
     Object.keys(correctAnswers).forEach(key => {
@@ -385,10 +413,10 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
                 <h4 className="font-semibold text-blue-800 mb-2">📋 Podsumowanie wyników:</h4>
                 <div className="text-sm text-blue-700 space-y-1">
                   <p>• Maksymalna produkcja: <strong>47 koszulek</strong> (1000 ÷ 21,25 = 47,06)</p>
-                  <p>• Cena netto: <strong>32,31 zł</strong> (21,25 ÷ 0,65 = 32,31)</p>
-                  <p>• Cena brutto: <strong>39,74 zł</strong> (32,31 × 1,23 = 39,74)</p>
-                  <p>• Przychód: <strong>913,68 zł</strong> (28 × 32,31 = 904,68)</p>
-                  <p>• Wynik: <strong>Strata 86,32 zł</strong> (904,68 - 1000 = -95,32)</p>
+                  <p>• Cena netto: <strong>32,69 zł</strong> (21,25 ÷ 0,65 = 32,69)</p>
+                  <p>• Cena brutto: <strong>40,21 zł</strong> (32,69 × 1,23 = 40,21)</p>
+                  <p>• Przychód: <strong>915,32 zł</strong> (28 × 32,69 = 915,32)</p>
+                  <p>• Wynik: <strong>Strata 84,68 zł</strong> (915,32 - 1000 = -84,68)</p>
                 </div>
                 <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded">
                   <p className="text-sm text-yellow-800">
