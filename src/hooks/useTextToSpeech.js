@@ -32,10 +32,17 @@ export const useTextToSpeech = () => {
         throw new Error('ElevenLabs API key not found. Text-to-speech disabled.');
       }
 
-      // Clean text to prevent issues
+      // Clean text to prevent issues - but preserve mathematical terms
       const cleanText = text
         .replace(/<[^>]*>/g, '')
         .replace(/[^\w\s.,!?;:\-ąćęłńóśźżĄĆĘŁŃÓŚŹŻ+\-×÷=^√%()]/g, '')
+        .replace(/\+/g, ' plus ')
+        .replace(/\-/g, ' minus ')
+        .replace(/\×/g, ' times ')
+        .replace(/\÷/g, ' divided by ')
+        .replace(/\^/g, ' to the power of ')
+        .replace(/√/g, ' square root of ')
+        .replace(/\=/g, ' equals ')
         .trim();
 
       if (!cleanText) {
