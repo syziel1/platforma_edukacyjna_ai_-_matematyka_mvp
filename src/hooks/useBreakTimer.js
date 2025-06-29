@@ -4,14 +4,23 @@ export const useBreakTimer = (breakIntervalMinutes = 25) => {
   const [timeUntilBreak, setTimeUntilBreak] = useState(breakIntervalMinutes * 60);
   const [showBreakAlert, setShowBreakAlert] = useState(false);
   const [isLearningActive, setIsLearningActive] = useState(() => {
-    return localStorage.getItem('isLearningActive') === 'true';
+    try {
+      return localStorage.getItem('isLearningActive') === 'true';
+    } catch (error) {
+      console.warn('Error reading learning active state:', error);
+      return false;
+    }
   });
 
   // Nasłuchuj na zmiany statusu nauki
   useEffect(() => {
     const checkLearningStatus = () => {
-      const active = localStorage.getItem('isLearningActive') === 'true';
-      setIsLearningActive(active);
+      try {
+        const active = localStorage.getItem('isLearningActive') === 'true';
+        setIsLearningActive(active);
+      } catch (error) {
+        console.warn('Error checking learning status:', error);
+      }
     };
 
     // Sprawdzaj co sekundę
@@ -25,19 +34,27 @@ export const useBreakTimer = (breakIntervalMinutes = 25) => {
     let timer;
     
     if (isLearningActive) {
-      // Wczytaj zapisany czas do przerwy
-      const savedBreakTime = localStorage.getItem('timeUntilBreak');
-      if (savedBreakTime && !showBreakAlert) {
-        setTimeUntilBreak(parseInt(savedBreakTime, 10));
+      try {
+        // Wczytaj zapisany czas do przerwy
+        const savedBreakTime = localStorage.getItem('timeUntilBreak');
+        if (savedBreakTime && !showBreakAlert) {
+          setTimeUntilBreak(parseInt(savedBreakTime, 10));
+        }
+      } catch (error) {
+        console.warn('Error loading break timer:', error);
       }
       
       timer = setInterval(() => {
         setTimeUntilBreak(prev => {
           const newTime = prev <= 1 ? breakIntervalMinutes * 60 : prev - 1;
           
-          // Zapisz czas do przerwy co 5 sekund
-          if (newTime % 5 === 0) {
-            localStorage.setItem('timeUntilBreak', newTime.toString());
+          try {
+            // Zapisz czas do przerwy co 5 sekund
+            if (newTime % 5 === 0) {
+              localStorage.setItem('timeUntilBreak', newTime.toString());
+            }
+          } catch (error) {
+            console.warn('Error saving break timer:', error);
           }
           
           // Pokaż alert o przerwie
@@ -56,10 +73,17 @@ export const useBreakTimer = (breakIntervalMinutes = 25) => {
   }, [breakIntervalMinutes, isLearningActive, showBreakAlert]);
 
   const resetTimer = () => {
-    const newTime = breakIntervalMinutes * 60;
-    setTimeUntilBreak(newTime);
-    localStorage.setItem('timeUntilBreak', newTime.toString());
-    setShowBreakAlert(false);
+    try {
+      const newTime = breakIntervalMinutes * 60;
+      setTimeUntilBreak(newTime);
+      localStorage.setItem('timeUntilBreak', newTime.toString());
+      setShowBreakAlert(false);
+    } catch (error) {
+      console.warn('Error resetting break timer:', error);
+      // Still update the state even if localStorage fails
+      setTimeUntilBreak(breakIntervalMinutes * 60);
+      setShowBreakAlert(false);
+    }
   };
 
   const handleBreakTaken = (resetGlobalTimer) => {

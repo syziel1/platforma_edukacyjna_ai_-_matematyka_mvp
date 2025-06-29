@@ -12,12 +12,21 @@ export const useProgress = () => {
 
 export const ProgressProvider = ({ children }) => {
   const [progress, setProgress] = useState(() => {
-    const saved = localStorage.getItem('lessonProgress');
-    return saved ? JSON.parse(saved) : {};
+    try {
+      const saved = localStorage.getItem('lessonProgress');
+      return saved ? JSON.parse(saved) : {};
+    } catch (error) {
+      console.warn('Failed to parse lesson progress from localStorage:', error);
+      return {};
+    }
   });
 
   useEffect(() => {
-    localStorage.setItem('lessonProgress', JSON.stringify(progress));
+    try {
+      localStorage.setItem('lessonProgress', JSON.stringify(progress));
+    } catch (error) {
+      console.warn('Failed to save lesson progress to localStorage:', error);
+    }
   }, [progress]);
 
   const updateProgress = (lessonId, step) => {

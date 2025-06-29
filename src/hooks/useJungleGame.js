@@ -85,35 +85,41 @@ export const useJungleGame = (startWithModeSelector = false) => {
 
   // Load or create board for specific mode
   const loadOrCreateBoard = useCallback((mode) => {
-    const storageKey = getUserStorageKey(mode);
-    const saved = localStorage.getItem(storageKey);
-    
-    if (saved) {
-      try {
-        const parsedData = JSON.parse(saved);
-        
-        // Apply grass growth based on days passed
-        if (parsedData.lastPlayed) {
-          const lastPlayedDate = new Date(parsedData.lastPlayed);
-          const now = new Date();
-          const daysPassed = Math.floor((now - lastPlayedDate) / (1000 * 60 * 60 * 24));
+    try {
+      const storageKey = getUserStorageKey(mode);
+      const saved = localStorage.getItem(storageKey);
+      
+      if (saved) {
+        try {
+          const parsedData = JSON.parse(saved);
           
-          if (daysPassed > 0) {
-            // Apply grass growth formula: height = height * (1.05)^days, max 100%
-            parsedData.boardData = parsedData.boardData.map(cell => ({
-              ...cell,
-              grass: Math.min(100, cell.grass * Math.pow(1.05, daysPassed))
-            }));
+          // Apply grass growth based on days passed
+          if (parsedData.lastPlayed) {
+            const lastPlayedDate = new Date(parsedData.lastPlayed);
+            const now = new Date();
+            const daysPassed = Math.floor((now - lastPlayedDate) / (1000 * 60 * 60 * 24));
+            
+            if (daysPassed > 0) {
+              // Apply grass growth formula: height = height * (1.05)^days, max 100%
+              parsedData.boardData = parsedData.boardData.map(cell => ({
+                ...cell,
+                grass: Math.min(100, cell.grass * Math.pow(1.05, daysPassed))
+              }));
+            }
           }
+          
+          return parsedData;
+        } catch (error) {
+          console.error('Error parsing board data:', error);
+          // Fall through to create new board
         }
-        
-        return parsedData;
-      } catch (error) {
-        console.error('Error loading board data:', error);
       }
+    } catch (error) {
+      console.warn('Error loading board from localStorage:', error);
+      // Fall through to create new board
     }
     
-    // Create new board if none exists
+    // Create new board if none exists or there was an error
     const newBoardData = createInitialBoard(mode);
     const newBoardState = {
       boardData: newBoardData,
@@ -121,19 +127,28 @@ export const useJungleGame = (startWithModeSelector = false) => {
       lastPlayed: new Date().toISOString()
     };
     
-    localStorage.setItem(storageKey, JSON.stringify(newBoardState));
+    try {
+      localStorage.setItem(getUserStorageKey(mode), JSON.stringify(newBoardState));
+    } catch (error) {
+      console.warn('Error saving new board to localStorage:', error);
+    }
+    
     return newBoardState;
   }, [createInitialBoard, getUserStorageKey, user]);
 
   // Save board state for specific mode
   const saveBoardState = useCallback((mode, boardData, viewSize) => {
-    const storageKey = getUserStorageKey(mode);
-    const boardState = {
-      boardData: boardData,
-      currentViewSize: viewSize,
-      lastPlayed: new Date().toISOString()
-    };
-    localStorage.setItem(storageKey, JSON.stringify(boardState));
+    try {
+      const storageKey = getUserStorageKey(mode);
+      const boardState = {
+        boardData: boardData,
+        currentViewSize: viewSize,
+        lastPlayed: new Date().toISOString()
+      };
+      localStorage.setItem(storageKey, JSON.stringify(boardState));
+    } catch (error) {
+      console.warn('Error saving board state to localStorage:', error);
+    }
   }, [getUserStorageKey]);
 
   // Initialize game state
