@@ -1,9 +1,9 @@
 import React from 'react';
 import { BookOpen, ArrowRight } from 'lucide-react';
-import { useLanguage } from '../../contexts/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 const CurrentLessonCard = ({ lesson, onContinueLesson }) => {
-  const { t } = useLanguage();
+  const { t } = useTranslation('common');
   
   return (
     <div className="bg-bg-card rounded-xl p-6 shadow-lg border border-bg-neutral">
