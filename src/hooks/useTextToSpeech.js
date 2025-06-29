@@ -32,20 +32,26 @@ export const useTextToSpeech = () => {
         throw new Error('ElevenLabs API key not found. Text-to-speech disabled.');
       }
 
-      // Clean text to prevent issues - but preserve mathematical terms
-      const cleanText = text
+      // Format mathematical expressions for speech
+      const formattedText = text
+        // First, clean HTML tags
         .replace(/<[^>]*>/g, '')
-        .replace(/[^\w\s.,!?;:\-ąćęłńóśźżĄĆĘŁŃÓŚŹŻ+\-×÷=^√%()]/g, '')
-        .replace(/\+/g, ' plus ')
-        .replace(/\-/g, ' minus ')
-        .replace(/\×/g, ' times ')
-        .replace(/\÷/g, ' divided by ')
-        .replace(/\^/g, ' to the power of ')
-        .replace(/√/g, ' square root of ')
-        .replace(/\=/g, ' equals ')
+        // Format mathematical operations for speech
+        .replace(/(\d+)\s*\*\s*(\d+)/g, '$1 times $2')
+        .replace(/(\d+)\s*×\s*(\d+)/g, '$1 times $2')
+        .replace(/(\d+)\s*\+\s*(\d+)/g, '$1 plus $2')
+        .replace(/(\d+)\s*\-\s*(\d+)/g, '$1 minus $2')
+        .replace(/(\d+)\s*\/\s*(\d+)/g, '$1 divided by $2')
+        .replace(/(\d+)\s*÷\s*(\d+)/g, '$1 divided by $2')
+        .replace(/(\d+)\s*\^\s*(\d+)/g, '$1 to the power of $2')
+        .replace(/(\d+)\^(\d+)/g, '$1 to the power of $2')
+        .replace(/√\s*(\d+)/g, 'square root of $1')
+        .replace(/=\s*(\d+)/g, 'equals $1')
+        // Remove any remaining special characters
+        .replace(/[^\w\s.,!?;:\-ąćęłńóśźżĄĆĘŁŃÓŚŹŻ()]/g, ' ')
         .trim();
 
-      if (!cleanText) {
+      if (!formattedText) {
         throw new Error("Cleaned text is empty.");
       }
 
@@ -57,7 +63,7 @@ export const useTextToSpeech = () => {
           'xi-api-key': apiKey
         },
         body: JSON.stringify({
-          text: cleanText,
+          text: formattedText,
           model_id: "eleven_multilingual_v2",
           voice_settings: {
             stability: 0.5,
