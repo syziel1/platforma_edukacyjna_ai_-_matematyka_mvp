@@ -1,9 +1,11 @@
 import React from 'react';
 import { X } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 const InstructionsModal = ({ selectedMode, gameModeConfig, onBack, onStart, onCancel }) => {
   const { t } = useLanguage();
+  const { t: tJungle } = useTranslation('jungleGame');
   const modeInfo = gameModeConfig[selectedMode];
   
   const getModeIcon = (mode) => {
@@ -45,40 +47,40 @@ const InstructionsModal = ({ selectedMode, gameModeConfig, onBack, onStart, onCa
         <div className="text-center mb-6">
           <div className="text-3xl md:text-4xl mb-3">{getModeIcon(selectedMode)}</div>
           <h2 className="text-xl md:text-2xl font-bold mb-2 text-gray-800">
-            {t('gameInstructions', { operation: modeInfo?.name })}
+            {tJungle('gameInstructions', { operation: modeInfo?.name })}
           </h2>
         </div>
 
         <div className="space-y-4 mb-6 text-sm md:text-base">
           <div>
-            <h4 className="font-semibold text-gray-800 mb-2">🎮 {t('controls')}</h4>
+            <h4 className="font-semibold text-gray-800 mb-2">🎮 {tJungle('controls')}</h4>
             <div className="bg-gray-50 p-3 rounded-lg">
-              <p className="mb-2">{t('controlsDesc')}</p>
+              <p className="mb-2">{tJungle('controlsDesc')}</p>
               <ul className="ml-4 space-y-1 text-gray-700">
-                <li><strong>⬆️</strong> {t('arrowUp')}</li>
-                <li><strong>⬅️</strong> {t('arrowLeft')}</li>
-                <li><strong>➡️</strong> {t('arrowRight')}</li>
+                <li><strong>⬆️</strong> {tJungle('arrowUp')}</li>
+                <li><strong>⬅️</strong> {tJungle('arrowLeft')}</li>
+                <li><strong>➡️</strong> {tJungle('arrowRight')}</li>
                 <li><strong>ESC</strong> Exit game or close dialogs</li>
               </ul>
             </div>
           </div>
 
           <div>
-            <h4 className="font-semibold text-gray-800 mb-2">🌱 {t('gameRules')}</h4>
+            <h4 className="font-semibold text-gray-800 mb-2">🌱 {tJungle('gameRules')}</h4>
             <div className="bg-gray-50 p-3 rounded-lg space-y-2 text-gray-700">
-              <p>• {t('solveToMove', { operation: modeInfo?.name.toLowerCase() })}</p>
-              <p>• <span className="text-green-600 font-medium">{t('correctAnswer')}</span></p>
-              <p>• <span className="text-red-600 font-medium">{t('wrongAnswer')}</span></p>
-              <p>• {t('clearedFields')}</p>
+              <p>• {tJungle('solveToMove', { operation: modeInfo?.name.toLowerCase() })}</p>
+              <p>• <span className="text-green-600 font-medium">{tJungle('correctAnswer')}</span></p>
+              <p>• <span className="text-red-600 font-medium">{tJungle('wrongAnswer')}</span></p>
+              <p>• {tJungle('clearedFields')}</p>
             </div>
           </div>
 
           <div>
-            <h4 className="font-semibold text-gray-800 mb-2">🏆 {t('gameGoal')}</h4>
+            <h4 className="font-semibold text-gray-800 mb-2">🏆 {tJungle('gameGoal')}</h4>
             <div className="bg-gray-50 p-3 rounded-lg space-y-2 text-gray-700">
-              <p>• {t('discoverLevels')}</p>
-              <p>• {t('findBonuses')}</p>
-              <p>• {t('practiceOperations', { operation: modeInfo?.name.toLowerCase() })}</p>
+              <p>• {tJungle('discoverLevels')}</p>
+              <p>• {tJungle('findBonuses')}</p>
+              <p>• {tJungle('practiceOperations', { operation: modeInfo?.name.toLowerCase() })}</p>
             </div>
           </div>
         </div>
@@ -88,14 +90,14 @@ const InstructionsModal = ({ selectedMode, gameModeConfig, onBack, onStart, onCa
             onClick={onStart}
             className={`w-full text-white py-3 px-6 rounded-md transition-colors text-lg font-medium ${getButtonColor(selectedMode)}`}
           >
-            🚀 {t('startGame')}
+            🚀 {tJungle('startGame')}
           </button>
           
           <button
             onClick={onBack}
             className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 px-6 rounded-md transition-colors text-base font-medium"
           >
-            ⬅️ {t('back')}
+            ⬅️ {tJungle('back')}
           </button>
         </div>
 

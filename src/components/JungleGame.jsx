@@ -7,6 +7,7 @@ import WelcomeModal from './GameComponents/WelcomeModal';
 import InstructionsModal from './GameComponents/InstructionsModal';
 import GameModeSelector from './GameComponents/GameModeSelector';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useTranslation } from 'react-i18next';
 import { useSoundEffects } from '../hooks/useSoundEffects';
 import { useGlobalTimer } from '../contexts/GlobalTimerContext';
 import { useJungleGame } from '../hooks/useJungleGame';
@@ -14,6 +15,7 @@ import { useSettings } from '../contexts/SettingsContext';
 
 const JungleGame = ({ onBack, startWithModeSelector = false }) => {
   const { t } = useLanguage();
+  const { t: tJungle } = useTranslation('jungleGame');
   const { playSound } = useSoundEffects();
   const { stopLearning } = useGlobalTimer();
   const { settings } = useSettings();
@@ -87,14 +89,14 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
       }
       
       // If in main game, show confirmation dialog
-      if (confirm(t('exitGameConfirm'))) {
+      if (confirm(tJungle('exitGameConfirm'))) {
         if (gameState.score > 0 && gameState.gameStartTime) {
           handleGameEnd();
         }
         handleCancel();
       }
     }
-  }, [gameState, handleCancel, handleGameEnd, t]);
+  }, [gameState, handleCancel, handleGameEnd, tJungle]);
 
   const handleKeyPress = useCallback((e) => {
     if (gameState.showModeSelector || gameState.showWelcome || gameState.showInstructions || gameState.showQuestion) return;
@@ -151,7 +153,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
             }));
 
             playSound('bonus');
-            showMessage(`${t('bonusCollected')} +${bonusScore} ${t('points')}!`, 2000);
+            showMessage(`${tJungle('bonusCollected')} +${bonusScore} ${tJungle('points')}!`, 2000);
           } else {
             // Normal movement
             setGameState(prev => ({
@@ -176,7 +178,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
         }
       } else {
         playSound('error');
-        showMessage(t('cannotGo'), 1500);
+        showMessage(tJungle('cannotGo'), 1500);
       }
     } else if (e.key === 'ArrowLeft') {
       const dirs = ['N', 'W', 'S', 'E'];
@@ -203,7 +205,7 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
         }
       }));
     }
-  }, [gameState, t, playSound]);
+  }, [gameState, tJungle, playSound]);
 
   // Combined keyboard event handler
   React.useEffect(() => {
@@ -320,40 +322,40 @@ const JungleGame = ({ onBack, startWithModeSelector = false }) => {
                   {/* Points */}
                   <div className="bg-green-100 p-2 md:p-4 rounded-lg border border-green-300">
                     <div className="text-center">
-                      <div className="text-green-800 font-bold text-xs md:text-base mb-1">{t('points')}</div>
+                      <div className="text-green-800 font-bold text-xs md:text-base mb-1">{tJungle('points')}</div>
                       <div className="text-green-700 text-lg md:text-xl font-bold">
                         {gameState.score}
                       </div>
-                      <div className="text-green-600 text-xs">🏆 {t('earned')}</div>
+                      <div className="text-green-600 text-xs">🏆 {tJungle('earned')}</div>
                     </div>
                   </div>
 
                   {/* Time */}
                   <div className="bg-blue-100 p-2 md:p-4 rounded-lg border border-blue-300">
                     <div className="text-center">
-                      <div className="text-blue-800 font-bold text-xs md:text-base mb-1">{t('time')}</div>
+                      <div className="text-blue-800 font-bold text-xs md:text-base mb-1">{tJungle('time')}</div>
                       <div className="text-blue-700 text-lg md:text-xl font-bold">
                         {formatTime(gameState.timeElapsed)}
                       </div>
-                      <div className="text-blue-600 text-xs">⏱️ {t('elapsed')}</div>
+                      <div className="text-blue-600 text-xs">⏱️ {tJungle('elapsed')}</div>
                     </div>
                   </div>
 
                   {/* Grass Cleared Percentage */}
                   <div className="bg-purple-100 p-2 md:p-4 rounded-lg border border-purple-300">
                     <div className="text-center">
-                      <div className="text-purple-800 font-bold text-xs md:text-base mb-1">{t('grassCleared')}</div>
+                      <div className="text-purple-800 font-bold text-xs md:text-base mb-1">{tJungle('grassCleared')}</div>
                       <div className="text-purple-700 text-lg md:text-xl font-bold">
                         {calculateGrassClearedPercentage()}%
                       </div>
-                      <div className="text-purple-600 text-xs">🌱 {t('cleared')}</div>
+                      <div className="text-purple-600 text-xs">🌱 {tJungle('cleared')}</div>
                     </div>
                   </div>
 
                   {/* Level */}
                   <div className="bg-orange-100 p-2 md:p-4 rounded-lg border border-orange-300">
                     <div className="text-center">
-                      <div className="text-orange-800 font-bold text-xs md:text-base mb-1">{t('level')}</div>
+                      <div className="text-orange-800 font-bold text-xs md:text-base mb-1">{tJungle('level')}</div>
                       <div className="text-orange-700 text-lg md:text-xl font-bold">
                         {gameState.currentViewSize}×{gameState.currentViewSize}
                       </div>

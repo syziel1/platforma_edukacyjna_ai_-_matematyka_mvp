@@ -1,9 +1,11 @@
 import React from 'react';
 import { X } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 const WelcomeModal = ({ selectedMode, gameModeConfig, onStart, onShowInstructions, onCancel }) => {
   const { t } = useLanguage();
+  const { t: tJungle } = useTranslation('jungleGame');
   const modeInfo = gameModeConfig[selectedMode];
   
   const getModeIcon = (mode) => {
@@ -94,16 +96,16 @@ const WelcomeModal = ({ selectedMode, gameModeConfig, onStart, onShowInstruction
         <div className="text-center mb-6">
           <div className="text-4xl md:text-6xl mb-4">{getModeIcon(selectedMode)}</div>
           <h2 className={`text-2xl md:text-3xl font-bold mb-2 ${getModeColor(selectedMode)}`}>
-            {t('welcomeToJungle', { operation: modeInfo?.name })}
+            {tJungle('welcomeToJungle', { operation: modeInfo?.name })}
           </h2>
           <p className="text-gray-600 text-base md:text-lg">
-            {t('mathAdventure', { operation: modeInfo?.name.toLowerCase() })}
+            {tJungle('mathAdventure', { operation: modeInfo?.name.toLowerCase() })}
           </p>
         </div>
         
         <div className="bg-gray-50 rounded-lg p-4 md:p-6 mb-6">
           <h3 className="font-bold text-gray-800 mb-3 text-center text-sm md:text-base">
-            🎯 {t('exampleTasks')}
+            🎯 {tJungle('exampleTasks')}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {getExamples(selectedMode)}
@@ -115,14 +117,14 @@ const WelcomeModal = ({ selectedMode, gameModeConfig, onStart, onShowInstruction
             onClick={onStart}
             className={`w-full text-white py-3 px-6 rounded-md transition-colors text-lg font-medium ${getButtonColor(selectedMode)}`}
           >
-            🚀 {t('startAdventure', { operation: modeInfo?.name.toLowerCase() })}
+            🚀 {tJungle('startAdventure', { operation: modeInfo?.name.toLowerCase() })}
           </button>
           
           <button
             onClick={onShowInstructions}
             className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 px-6 rounded-md transition-colors text-base font-medium"
           >
-            📖 {t('showInstructions')}
+            📖 {tJungle('showInstructions')}
           </button>
         </div>
 
