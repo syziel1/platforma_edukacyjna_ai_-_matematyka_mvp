@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useProgress } from '../../contexts/ProgressContext';
-import { useLanguage } from '../../contexts/LanguageContext';
+// import { useLanguage } from '../../contexts/LanguageContext';
 import { mentorAvailability } from '../../config/mentorAvailability';
 import { KnowledgeMapModal } from '../KnowledgeSpace';
 import LeftColumn from './LeftColumn';
