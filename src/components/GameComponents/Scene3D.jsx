@@ -12,6 +12,7 @@ const Scene3D = ({
   gameModeConfig 
 }) => {
   const { t } = useLanguage();
+  const { t: tJungle } = useTranslation('jungleGame');
   const { row: pr, col: pc, direction: pdir } = playerPosition;
   const [animationTrigger, setAnimationTrigger] = useState(0);
 
@@ -310,18 +311,18 @@ const Scene3D = ({
                   <div className="flex items-center justify-center mb-1">
                     <span className="text-lg mr-1">{getModeIcon(selectedMode)}</span>
                     <div className="text-sm font-bold text-gray-800">
-                      {t('task')}
+                      {tJungle('task')}
                     </div>
                   </div>
                   <div 
                     className="text-lg font-bold mb-1"
                     style={{ color: getModeColor(selectedMode) }}
                   >
-                    +{calculateCellPoints(cellData)} {t('points')}
+                    +{calculateCellPoints(cellData)} {tJungle('points')}
                   </div>
                   {/* Click/Touch indicator */}
                   <div className="text-xs text-gray-500 mt-1 opacity-75">
-                    {t('pressUpToSolve')}
+                    {tJungle('pressUpToSolve')}
                   </div>
                 </div>
               </div>
