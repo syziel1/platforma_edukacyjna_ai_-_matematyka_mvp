@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Send, Bot, ChevronUp } from 'lucide-react';
+import { Send, Bot, ChevronUp, Trash2 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useTextToSpeech } from '../hooks/useTextToSpeech';
@@ -52,6 +52,19 @@ const ChatPanel = ({ isMobile = false }) => {
     }
   }, [messages, storageKey]);
 
+  // Funkcja do czyszczenia historii czatu
+  const handleClearChat = () => {
+    if (window.confirm(t('clearChatConfirm') || 'Are you sure you want to clear the chat history?')) {
+      const welcomeMessage = t('chatWelcomeMessage');
+      setMessages([{
+        id: Date.now(),
+        type: 'ai',
+        content: welcomeMessage,
+        timestamp: new Date().toISOString()
+      }]);
+      speakIfEnabled(welcomeMessage);
+    }
+  };
 
   const generateGeminiResponse = async (userInput) => {
     if (isLoading) return t('chatWaitMessage');
@@ -208,11 +221,18 @@ const ChatPanel = ({ isMobile = false }) => {
 
   return (
     <div className="bg-ai-bg shadow-lg w-full h-full flex flex-col">
-      <div className="p-4 border-b border-ai-bg/50 bg-ai-bg">
+      <div className="p-4 border-b border-ai-bg/50 bg-ai-bg flex justify-between items-center">
         <div className="flex items-center gap-2">
           <Bot className="w-5 h-5 text-nav-bg" />
           <h3 className="font-semibold text-text-color">{t('aiMentor')}</h3>
         </div>
+        <button
+          onClick={handleClearChat}
+          className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
+          title={t('clearChat') || "Clear chat history"}
+        >
+          <Trash2 className="w-4 h-4" />
+        </button>
       </div>
 
       <div className="flex-1 p-4 overflow-y-auto space-y-4">

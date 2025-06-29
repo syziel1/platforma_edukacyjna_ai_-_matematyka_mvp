@@ -207,5 +207,7 @@ export default {
   'chatWelcomeMessage': 'Cześć! Jestem twoim mentorem AI. Zadaj mi pytanie o matematykę lub lekcję.',
   'chatErrorMessage': 'Przepraszam, wystąpił błąd podczas komunikacji z AI. Spróbuj ponownie za chwilę.',
   'chatWaitMessage': 'Proszę czekać...',
-  'chatConfigError': 'Błąd konfiguracji - brak klucza API.'
+  'chatConfigError': 'Błąd konfiguracji - brak klucza API.',
+  'clearChat': 'Wyczyść historię czatu',
+  'clearChatConfirm': 'Czy na pewno chcesz wyczyścić historię czatu? Tej operacji nie można cofnąć.'
 }

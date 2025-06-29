@@ -207,5 +207,7 @@ export default {
   'chatWelcomeMessage': 'Hello! I am your AI mentor. Ask me a question about mathematics or the lesson.',
   'chatErrorMessage': 'Sorry, there was an error communicating with AI. Please try again in a moment.',
   'chatWaitMessage': 'Please wait...',
-  'chatConfigError': 'Configuration error - missing API key.'
+  'chatConfigError': 'Configuration error - missing API key.',
+  'clearChat': 'Clear chat history',
+  'clearChatConfirm': 'Are you sure you want to clear the chat history? This action cannot be undone.'
 }
