@@ -90,13 +90,15 @@ const NavigationPanel = () => {
     }
   };
 
-  const handleLogout = (e) => {
-    e.preventDefault();
-    if (window.confirm(t('logoutConfirm') || 'Are you sure you want to log out?')) {
-      logout();
+  const handleLogout = async () => {
+    try {
+      await logout();
       if (window.innerWidth < 768) {
         setIsExpanded(false);
       }
+    } catch (error) {
+      console.error('Logout error:', error);
+      alert('Wystąpił problem podczas wylogowywania. Spróbuj ponownie.');
     }
   };
 
@@ -203,12 +205,7 @@ const NavigationPanel = () => {
         {menuItems.map((item, index) => (
           <button
             key={index}
-            onClick={() => {
-              item.action();
-              if (index !== 0) { // Don't close menu when clicking menu toggle
-                setIsExpanded(false);
-              }
-            }}
+            onClick={item.action}
             className={`text-white p-2 ${item.isActive ? 'bg-white/20 rounded-md' : ''}`}
             title={item.label}
           >
@@ -279,12 +276,7 @@ const NavigationPanel = () => {
           {menuItems.slice(1).map((item, index) => ( // Skip first item (Menu) in sidebar
             <button
               key={index}
-              onClick={(e) => {
-                item.action(e);
-                if (window.innerWidth < 768) {
-                  setIsExpanded(false);
-                }
-              }}
+              onClick={item.action}
               className={`w-full flex items-center gap-3 p-3 rounded-md hover:bg-nav-bg/80 transition-colors mb-1 ${
                 !isExpanded ? 'justify-center' : ''
               } ${item.isActive ? 'bg-white/20' : ''}`}

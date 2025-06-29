@@ -162,6 +162,7 @@ export default {
   'hint': 'Hint',
   'language': 'Language',
   'welcome': 'Welcome',
+  'logoutConfirm': 'Are you sure you want to sign out?',
   
   // Settings
   'soundEffects': 'Sound Effects',

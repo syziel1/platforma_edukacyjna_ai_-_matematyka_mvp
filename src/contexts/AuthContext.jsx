@@ -84,11 +84,12 @@ export const AuthProvider = ({ children }) => {
         throw error;
       }
       setUser(null);
-      // Redirect to home page after logout
+      // Navigate to home page after successful logout
       window.location.href = '/';
+      return true;
     } catch (error) {
       console.error('Logout failed:', error);
-      alert('Logout failed. Please try again.');
+      throw error;
     }
   };
 

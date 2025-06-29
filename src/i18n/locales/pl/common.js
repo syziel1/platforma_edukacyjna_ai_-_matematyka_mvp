@@ -162,6 +162,7 @@ export default {
   'hint': 'Wskazówka',
   'language': 'Język',
   'welcome': 'Witaj',
+  'logoutConfirm': 'Czy na pewno chcesz się wylogować?',
   
   // Settings
   'soundEffects': 'Efekty dźwiękowe',
