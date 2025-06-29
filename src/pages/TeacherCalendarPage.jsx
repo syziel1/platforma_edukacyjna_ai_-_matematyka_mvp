@@ -189,20 +189,6 @@ const TeacherCalendarPage = () => {
     return types[type] || type;
   };
   
-  // Get event type icon
-  const getEventTypeIcon = (type) => {
-    switch (type) {
-      case 'individual_lesson':
-        return <User className="w-4 h-4" />;
-      case 'group_lesson':
-        return <Users className="w-4 h-4" />;
-      case 'consultation':
-        return <MessageSquare className="w-4 h-4" />;
-      default:
-        return <Calendar className="w-4 h-4" />;
-    }
-  };
-  
   return (
     <div className="min-h-screen bg-bg-main flex flex-col">
       <GlobalHeader 
