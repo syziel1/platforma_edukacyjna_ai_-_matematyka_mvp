@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 const JungleGamePage = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation('jungleGame');
+  const { t } = useTranslation('common');
 
   const handleBack = () => {
     navigate('/cockpit');
