@@ -35,6 +35,12 @@ export const GameRecordsProvider = ({ children }) => {
         bestEfficiency: null,
         completions: 0,
         lastCompleted: null
+      },
+      learningStreaks: {
+        currentStreak: 0,
+        bestStreak: 0,
+        lastLearningDate: null,
+        streakAchievements: []
       }
     };
 
@@ -59,6 +65,10 @@ export const GameRecordsProvider = ({ children }) => {
           waterTank: {
             ...defaultRecords.waterTank,
             ...(parsedData.waterTank || {})
+          },
+          learningStreaks: {
+            ...defaultRecords.learningStreaks,
+            ...(parsedData.learningStreaks || {})
           }
         };
       }
@@ -76,6 +86,98 @@ export const GameRecordsProvider = ({ children }) => {
       console.warn('Failed to save game records to localStorage:', error);
     }
   }, [records]);
+
+  // Check and update learning streak daily
+  useEffect(() => {
+    const checkLearningStreak = () => {
+      try {
+        // Get today's date in YYYY-MM-DD format
+        const today = new Date().toISOString().split('T')[0];
+        
+        // Get daily learning stats
+        const savedStats = localStorage.getItem('dailyLearningStats');
+        if (!savedStats) return;
+        
+        const stats = JSON.parse(savedStats);
+        const todayMinutes = stats[today] || 0;
+        
+        // Only count days with at least 5 minutes of learning
+        if (todayMinutes < 5) return;
+        
+        setRecords(prev => {
+          const { lastLearningDate, currentStreak, bestStreak, streakAchievements } = prev.learningStreaks;
+          
+          // If this is the first learning day or it's a new day
+          if (!lastLearningDate || lastLearningDate !== today) {
+            // Check if it's consecutive with the previous day
+            let newStreak = currentStreak;
+            let newAchievements = [...streakAchievements];
+            
+            if (!lastLearningDate) {
+              // First time learning
+              newStreak = 1;
+            } else {
+              // Check if yesterday
+              const lastDate = new Date(lastLearningDate);
+              const todayDate = new Date(today);
+              const diffTime = Math.abs(todayDate - lastDate);
+              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+              
+              if (diffDays === 1) {
+                // Consecutive day
+                newStreak += 1;
+                
+                // Check for streak achievements
+                if (newStreak === 3 && !newAchievements.includes('streak-3')) {
+                  newAchievements.push('streak-3');
+                }
+                if (newStreak === 5 && !newAchievements.includes('streak-5')) {
+                  newAchievements.push('streak-5');
+                }
+                if (newStreak === 7 && !newAchievements.includes('streak-7')) {
+                  newAchievements.push('streak-7');
+                }
+                if (newStreak === 14 && !newAchievements.includes('streak-14')) {
+                  newAchievements.push('streak-14');
+                }
+                if (newStreak === 30 && !newAchievements.includes('streak-30')) {
+                  newAchievements.push('streak-30');
+                }
+              } else if (diffDays > 1) {
+                // Streak broken
+                newStreak = 1;
+              }
+            }
+            
+            // Update best streak if needed
+            const newBestStreak = Math.max(bestStreak, newStreak);
+            
+            return {
+              ...prev,
+              learningStreaks: {
+                currentStreak: newStreak,
+                bestStreak: newBestStreak,
+                lastLearningDate: today,
+                streakAchievements: newAchievements
+              }
+            };
+          }
+          
+          return prev;
+        });
+      } catch (error) {
+        console.warn('Error updating learning streak:', error);
+      }
+    };
+    
+    // Check streak on component mount
+    checkLearningStreak();
+    
+    // Set up interval to check periodically (every 5 minutes)
+    const interval = setInterval(checkLearningStreak, 5 * 60 * 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   const updateJungleGameScore = (score, timeSpent) => {
     setRecords(prev => {
@@ -146,6 +248,7 @@ export const GameRecordsProvider = ({ children }) => {
 
   const getAchievementInfo = (achievementId) => {
     const achievements = {
+      // Game achievements
       'first-game': {
         name: 'First Step',
         description: 'Complete your first game',
@@ -175,6 +278,33 @@ export const GameRecordsProvider = ({ children }) => {
         name: 'Jungle Veteran',
         description: 'Play 50 games',
         icon: '🎖️'
+      },
+      
+      // Learning streak achievements
+      'streak-3': {
+        name: 'Learning Habit',
+        description: '3 days learning streak',
+        icon: '🔥'
+      },
+      'streak-5': {
+        name: 'Dedicated Learner',
+        description: '5 days learning streak',
+        icon: '📚'
+      },
+      'streak-7': {
+        name: 'Weekly Champion',
+        description: '7 days learning streak',
+        icon: '🏅'
+      },
+      'streak-14': {
+        name: 'Fortnight Scholar',
+        description: '14 days learning streak',
+        icon: '🧠'
+      },
+      'streak-30': {
+        name: 'Knowledge Master',
+        description: '30 days learning streak',
+        icon: '🎓'
       }
     };
     
@@ -182,14 +312,33 @@ export const GameRecordsProvider = ({ children }) => {
   };
 
   const getAllAchievements = () => {
-    return records.jungleGame.achievements.map(id => ({
+    // Combine achievements from all sources
+    const gameAchievements = records.jungleGame.achievements.map(id => ({
       id,
-      ...getAchievementInfo(id)
+      ...getAchievementInfo(id),
+      source: 'game'
     }));
+    
+    const streakAchievements = records.learningStreaks.streakAchievements.map(id => ({
+      id,
+      ...getAchievementInfo(id),
+      source: 'streak'
+    }));
+    
+    // Combine and sort by most recent first (assuming the arrays are already in chronological order)
+    return [...gameAchievements, ...streakAchievements];
   };
 
   const getRecentAchievements = (limit = 4) => {
     return getAllAchievements().slice(-limit);
+  };
+
+  const getCurrentStreak = () => {
+    return records.learningStreaks.currentStreak;
+  };
+
+  const getBestStreak = () => {
+    return records.learningStreaks.bestStreak;
   };
 
   const resetRecords = () => {
@@ -216,6 +365,12 @@ export const GameRecordsProvider = ({ children }) => {
         bestEfficiency: null,
         completions: 0,
         lastCompleted: null
+      },
+      learningStreaks: {
+        currentStreak: 0,
+        bestStreak: 0,
+        lastLearningDate: null,
+        streakAchievements: []
       }
     });
   };
@@ -228,6 +383,8 @@ export const GameRecordsProvider = ({ children }) => {
       getAchievementInfo,
       getAllAchievements,
       getRecentAchievements,
+      getCurrentStreak,
+      getBestStreak,
       resetRecords
     }}>
       {children}

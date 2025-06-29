@@ -115,6 +115,14 @@ export default {
   // Achievements Widget
   'recentAchievements': 'Recent Achievements',
   'playGamesEarnAchievements': 'Play games to earn your first achievements!',
+  'learningStreak': 'Learning Streak',
+  'days': 'days',
+  'bestStreak': 'Best streak',
+  'startLearningStreak': 'Start learning today to begin your streak!',
+  'streakAchievement3': 'Keep going! {{days}} more days for your first streak achievement!',
+  'streakAchievement5': 'Almost there! {{days}} more days to reach 5-day streak!',
+  'streakAchievement7': 'Keep it up! {{days}} more days to reach 7-day streak!',
+  'keepStreak': 'Amazing streak! Keep learning daily to maintain it!',
   
   // Learning Statistics Modal
   'learningStatistics': 'Learning Statistics',

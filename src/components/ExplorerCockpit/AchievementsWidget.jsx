@@ -1,14 +1,16 @@
 import React from 'react';
-import { Award, ArrowRight } from 'lucide-react';
+import { Award, ArrowRight, Calendar, Fire } from 'lucide-react';
 import { useGameRecords } from '../../contexts/GameRecordsContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import Badge from './Badge';
 
 const AchievementsWidget = () => {
-  const { getRecentAchievements, getAllAchievements } = useGameRecords();
+  const { getRecentAchievements, getAllAchievements, getCurrentStreak, getBestStreak } = useGameRecords();
   const { t } = useLanguage();
   const recentBadges = getRecentAchievements(4);
   const totalBadgeCount = getAllAchievements().length;
+  const currentStreak = getCurrentStreak();
+  const bestStreak = getBestStreak();
 
   return (
     <div className="bg-bg-card rounded-xl p-6 shadow-lg border border-bg-neutral">
@@ -17,7 +19,52 @@ const AchievementsWidget = () => {
         {t('recentAchievements')} ({totalBadgeCount})
       </h4>
       
-      {/* Kontener odznak */}
+      {/* Learning streak display */}
+      <div className="mb-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg p-4 border border-orange-200">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Fire className={`w-5 h-5 ${currentStreak > 0 ? 'text-orange-500' : 'text-gray-400'}`} />
+            <span className="font-medium text-text-color">{t('learningStreak')}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span className={`text-xl font-bold ${currentStreak > 0 ? 'text-orange-500' : 'text-gray-400'}`}>
+              {currentStreak}
+            </span>
+            <span className="text-sm text-text-color/70">{t('days')}</span>
+          </div>
+        </div>
+        
+        {bestStreak > 0 && (
+          <div className="mt-2 text-xs text-text-color/70 flex justify-between">
+            <span>{t('bestStreak')}</span>
+            <span className="font-medium">{bestStreak} {t('days')}</span>
+          </div>
+        )}
+        
+        {currentStreak === 0 ? (
+          <p className="mt-2 text-xs text-text-color/70">
+            {t('startLearningStreak')}
+          </p>
+        ) : currentStreak < 3 ? (
+          <p className="mt-2 text-xs text-orange-600">
+            {t('streakAchievement3', { days: 3 - currentStreak })}
+          </p>
+        ) : currentStreak < 5 ? (
+          <p className="mt-2 text-xs text-orange-600">
+            {t('streakAchievement5', { days: 5 - currentStreak })}
+          </p>
+        ) : currentStreak < 7 ? (
+          <p className="mt-2 text-xs text-orange-600">
+            {t('streakAchievement7', { days: 7 - currentStreak })}
+          </p>
+        ) : (
+          <p className="mt-2 text-xs text-orange-600">
+            {t('keepStreak')}
+          </p>
+        )}
+      </div>
+      
+      {/* Badges container */}
       <div className="mb-4">
         {recentBadges.length > 0 ? (
           <div className="grid grid-cols-5 gap-2 mb-3">

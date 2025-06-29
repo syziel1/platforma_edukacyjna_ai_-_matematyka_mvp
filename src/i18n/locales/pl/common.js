@@ -115,6 +115,14 @@ export default {
   // Achievements Widget
   'recentAchievements': 'Ostatnie Osiągnięcia',
   'playGamesEarnAchievements': 'Graj w gry, aby zdobyć swoje pierwsze osiągnięcia!',
+  'learningStreak': 'Seria dni nauki',
+  'days': 'dni',
+  'bestStreak': 'Najlepsza seria',
+  'startLearningStreak': 'Zacznij naukę dzisiaj, aby rozpocząć serię!',
+  'streakAchievement3': 'Tak trzymaj! Jeszcze {{days}} dni do pierwszego osiągnięcia!',
+  'streakAchievement5': 'Prawie tam! Jeszcze {{days}} dni do osiągnięcia 5-dniowej serii!',
+  'streakAchievement7': 'Świetnie! Jeszcze {{days}} dni do osiągnięcia 7-dniowej serii!',
+  'keepStreak': 'Niesamowita seria! Kontynuuj codzienną naukę, aby ją utrzymać!',
   
   // Learning Statistics Modal
   'learningStatistics': 'Statystyki Nauki',

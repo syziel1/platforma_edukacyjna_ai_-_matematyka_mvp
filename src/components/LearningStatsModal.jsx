@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, Clock, TrendingUp, Award, ChevronLeft, ChevronRight, BarChart3 } from 'lucide-react';
+import { X, Calendar, Clock, TrendingUp, Award, ChevronLeft, ChevronRight, BarChart3, Fire } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useGlobalTimer } from '../contexts/GlobalTimerContext';
+import { useGameRecords } from '../contexts/GameRecordsContext';
 
 const LearningStatsModal = ({ isOpen, onClose }) => {
   const { t } = useLanguage();
   const { timeElapsed, isActive } = useGlobalTimer();
+  const { getCurrentStreak, getBestStreak } = useGameRecords();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [learningData, setLearningData] = useState({});
 
   // Load learning data from localStorage
   useEffect(() => {
     const loadLearningData = () => {
-      const saved = localStorage.getItem('dailyLearningStats');
-      if (saved) {
-        try {
+      try {
+        const saved = localStorage.getItem('dailyLearningStats');
+        if (saved) {
           setLearningData(JSON.parse(saved));
-        } catch (error) {
-          console.error('Error loading learning data:', error);
-          setLearningData({});
         }
+      } catch (error) {
+        console.error('Error loading learning data:', error);
+        setLearningData({});
       }
     };
 
@@ -41,7 +43,11 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
           currentData[today] = todayMinutes; // Replace instead of adding
           
           // Save to localStorage
-          localStorage.setItem('dailyLearningStats', JSON.stringify(currentData));
+          try {
+            localStorage.setItem('dailyLearningStats', JSON.stringify(currentData));
+          } catch (error) {
+            console.warn('Failed to save learning data to localStorage:', error);
+          }
           
           return currentData;
         });
@@ -116,46 +122,17 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
     const totalMinutes = currentMonthData.reduce((sum, [, minutes]) => sum + minutes, 0);
     const activeDays = currentMonthData.filter(([, minutes]) => minutes > 0).length;
     const averageMinutes = activeDays > 0 ? Math.round(totalMinutes / activeDays) : 0;
-    const longestStreak = calculateLongestStreak();
+    const longestStreak = getBestStreak();
+    const currentStreak = getCurrentStreak();
 
     return {
       totalHours: Math.floor(totalMinutes / 60),
       totalMinutes: totalMinutes % 60,
       activeDays,
       averageMinutes,
-      longestStreak
+      longestStreak,
+      currentStreak
     };
-  };
-
-  // Calculate longest learning streak
-  const calculateLongestStreak = () => {
-    const sortedDates = Object.keys(learningData)
-      .filter(date => learningData[date] > 0)
-      .sort();
-
-    let maxStreak = 0;
-    let currentStreak = 0;
-    let lastDate = null;
-
-    for (const dateStr of sortedDates) {
-      const currentDate = new Date(dateStr);
-      
-      if (lastDate) {
-        const dayDiff = Math.floor((currentDate - lastDate) / (1000 * 60 * 60 * 24));
-        if (dayDiff === 1) {
-          currentStreak++;
-        } else {
-          maxStreak = Math.max(maxStreak, currentStreak);
-          currentStreak = 1;
-        }
-      } else {
-        currentStreak = 1;
-      }
-      
-      lastDate = currentDate;
-    }
-    
-    return Math.max(maxStreak, currentStreak);
   };
 
   const calendarDays = getCalendarData();
@@ -208,17 +185,15 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
             </div>
             
             <div className="bg-orange-50 p-4 rounded-lg border border-orange-200 text-center">
-              <Award className="w-6 h-6 text-orange-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-orange-800">{stats.longestStreak}</div>
-              <div className="text-sm text-orange-600">{t('longestStreak')}</div>
+              <Fire className="w-6 h-6 text-orange-600 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-orange-800">{stats.currentStreak}</div>
+              <div className="text-sm text-orange-600">{t('learningStreak')}</div>
             </div>
             
             <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 text-center">
-              <Clock className="w-6 h-6 text-yellow-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-yellow-800">
-                {Math.floor(timeElapsed / 60)}m
-              </div>
-              <div className="text-sm text-yellow-600">{t('todaysSession')}</div>
+              <Award className="w-6 h-6 text-yellow-600 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-yellow-800">{stats.longestStreak}</div>
+              <div className="text-sm text-yellow-600">{t('longestStreak')}</div>
             </div>
           </div>
 
