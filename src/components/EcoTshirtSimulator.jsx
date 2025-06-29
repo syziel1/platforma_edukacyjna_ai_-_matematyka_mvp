@@ -113,7 +113,7 @@ const EcoTshirtSimulator = () => {
             <h4 className="font-semibold text-blue-800 mb-2">💰 {tEco('startupBudget')}</h4>
             <div className="text-2xl font-bold text-blue-700">{formatCurrency(budget)}</div>
             <div className="text-sm text-blue-600 mt-1">
-              Koszt bazowy: {formatCurrency(baseCost)} | Rabat: {formatPercent(discountRate * 100)} (powyżej {discountThreshold} szt.)
+              {tEco('baseCost')}: {formatCurrency(baseCost)} | {tEco('discount')}: {formatPercent(discountRate * 100)} ({tEco('above')} {discountThreshold} {tEco('pieces')})
             </div>
           </div>
 
@@ -123,7 +123,7 @@ const EcoTshirtSimulator = () => {
             <div className="space-y-3">
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  {tEco('quantity')}: {quantity} szt.
+                  {tEco('quantity')}: {quantity} {tEco('pieces')}
                 </label>
                 <input
                   type="range"
@@ -164,7 +164,7 @@ const EcoTshirtSimulator = () => {
                 onClick={calculateOptimalPrice}
                 className="w-full bg-nav-bg text-white py-2 px-4 rounded-md hover:bg-nav-bg/90 transition-colors text-sm"
               >
-                Ustaw cenę dla marży {formatPercent(targetMargin * 100)}
+                {tEco('setPriceForMargin')} {formatPercent(targetMargin * 100)}
               </button>
             </div>
           </div>
@@ -174,7 +174,7 @@ const EcoTshirtSimulator = () => {
         <div className="space-y-4">
           {/* Production Costs */}
           <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-            <h4 className="font-semibold text-orange-800 mb-3">🏭 Koszty produkcji</h4>
+            <h4 className="font-semibold text-orange-800 mb-3">🏭 {tEco('productionCosts')}</h4>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-orange-700">{tEco('unitCost')}:</span>
@@ -185,7 +185,7 @@ const EcoTshirtSimulator = () => {
                 <span className="font-medium text-orange-800">{formatCurrency(totalCost)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-orange-700">Pozostały budżet:</span>
+                <span className="text-orange-700">{tEco('remainingBudget')}:</span>
                 <span className={`font-medium ${budget - totalCost >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {formatCurrency(budget - totalCost)}
                 </span>
@@ -195,7 +195,7 @@ const EcoTshirtSimulator = () => {
 
           {/* Pricing Analysis */}
           <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-            <h4 className="font-semibold text-purple-800 mb-3">💰 Analiza cen</h4>
+            <h4 className="font-semibold text-purple-800 mb-3">💰 {tEco('priceAnalysis')}</h4>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-purple-700">{tEco('netPrice')}:</span>
@@ -220,15 +220,15 @@ const EcoTshirtSimulator = () => {
 
           {/* Sales Results */}
           <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-            <h4 className="font-semibold text-green-800 mb-3">📊 {tEco('monthlyResults')} (3/5 sprzedane)</h4>
+            <h4 className="font-semibold text-green-800 mb-3">📊 {tEco('monthlyResults')} (3/5 {tEco('sold')})</h4>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-green-700">{tEco('soldQuantity')}:</span>
-                <span className="font-medium text-green-800">{soldQuantity} szt.</span>
+                <span className="font-medium text-green-800">{soldQuantity} {tEco('pieces')}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-green-700">{tEco('remainingStock')}:</span>
-                <span className="font-medium text-green-800">{remainingStock} szt.</span>
+                <span className="font-medium text-green-800">{remainingStock} {tEco('pieces')}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-green-700">{tEco('revenue')}:</span>
@@ -249,24 +249,24 @@ const EcoTshirtSimulator = () => {
       <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className={`rounded-md p-4 ${totalCost <= budget ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
           <h4 className={`font-semibold mb-2 ${totalCost <= budget ? 'text-green-800' : 'text-red-800'}`}>
-            {totalCost <= budget ? '✅ Produkcja możliwa' : '❌ Przekroczony budżet'}
+            {totalCost <= budget ? `✅ ${tEco('productionPossible')}` : `❌ ${tEco('budgetExceeded')}`}
           </h4>
           <p className={`text-sm ${totalCost <= budget ? 'text-green-700' : 'text-red-700'}`}>
             {totalCost <= budget 
-              ? `Możesz wyprodukować ${quantity} koszulek w ramach budżetu.`
-              : `Zmniejsz ilość lub znajdź tańszego dostawcę.`
+              ? tEco('canProduceWithinBudget', { quantity })
+              : tEco('reduceQuantityOrFindCheaper')
             }
           </p>
         </div>
 
         <div className={`rounded-md p-4 ${actualMargin >= targetMargin * 100 ? 'bg-blue-50 border border-blue-200' : 'bg-yellow-50 border border-yellow-200'}`}>
           <h4 className={`font-semibold mb-2 ${actualMargin >= targetMargin * 100 ? 'text-blue-800' : 'text-yellow-800'}`}>
-            {actualMargin >= targetMargin * 100 ? '🎯 Marża osiągnięta' : '⚠️ Niska marża'}
+            {actualMargin >= targetMargin * 100 ? `🎯 ${tEco('marginAchieved')}` : `⚠️ ${tEco('lowMargin')}`}
           </h4>
           <p className={`text-sm ${actualMargin >= targetMargin * 100 ? 'text-blue-700' : 'text-yellow-700'}`}>
             {actualMargin >= targetMargin * 100 
-              ? `Marża ${formatPercent(actualMargin)} jest wyższa od docelowej.`
-              : `Zwiększ cenę lub zmniejsz koszty produkcji.`
+              ? tEco('marginHigherThanTarget', { margin: formatPercent(actualMargin) })
+              : tEco('increasePriceOrReduceCosts')
             }
           </p>
         </div>

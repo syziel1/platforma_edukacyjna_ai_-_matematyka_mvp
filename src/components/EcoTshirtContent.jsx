@@ -77,18 +77,18 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
       if (isNaN(userAnswer)) {
         newFeedback[key] = {
           correct: false,
-          message: 'Wprowadź liczbę'
+          message: tEco('enterNumber')
         };
         allCorrect = false;
       } else if (Math.abs(userAnswer - correctAnswer) <= tolerance) {
         newFeedback[key] = {
           correct: true,
-          message: 'Poprawnie! ✅'
+          message: tEco('correct')
         };
       } else {
         newFeedback[key] = {
           correct: false,
-          message: `Niepoprawnie. Prawidłowa odpowiedź: ${correctAnswer.toFixed(2).replace('.', ',')}`
+          message: `${tEco('incorrect')} ${correctAnswer.toFixed(2).replace('.', ',')}`
         };
         allCorrect = false;
       }
@@ -99,9 +99,9 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
 
     // Show overall feedback
     if (allCorrect) {
-      alert('🎉 Gratulacje! Wszystkie odpowiedzi są poprawne! Masz talent do biznesu!');
+      alert(tEco('allCorrect'));
     } else {
-      alert('📚 Niektóre odpowiedzi wymagają poprawy. Sprawdź wskazówki i spróbuj ponownie.');
+      alert(tEco('someIncorrect'));
     }
   };
 
@@ -126,16 +126,15 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
                 <div className="bg-text-color/90 rounded-lg aspect-video flex items-center justify-center">
                   <div className="text-center text-white">
                     <Play className="w-16 h-16 mx-auto mb-2 opacity-70" />
-                    <p className="text-sm opacity-70">Twoja przeglądarka nie obsługuje wideo</p>
+                    <p className="text-sm opacity-70">{tEco('browserNotSupport')}</p>
                   </div>
                 </div>
               </video>
             </div>
             <div className="bg-green-50 border border-green-200 rounded-md p-4 mb-4">
-              <h4 className="font-semibold text-green-800 mb-2">🌱 Startup "Eko-Koszulka"</h4>
+              <h4 className="font-semibold text-green-800 mb-2">🌱 {tEco('startupName')}</h4>
               <p className="text-sm text-green-700 leading-relaxed">
-                Zakładasz własny, mały startup produkujący ekologiczne koszulki z nadrukami generowanymi przez AI. 
-                Musisz podejmować mądre decyzje finansowe, aby Twoja firma przetrwała pierwszy kwartał i zaczęła przynosić zyski.
+                {tEco('startupDescription')}
               </p>
             </div>
             <button
@@ -155,30 +154,27 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
             </h3>
             <div className="prose prose-sm max-w-none mb-6 text-text-color">
               <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-4">
-                <h4 className="font-semibold text-blue-800 mb-3">📊 Problemy do rozwiązania:</h4>
+                <h4 className="font-semibold text-blue-800 mb-3">{tEco('problemsToSolve')}:</h4>
                 <div className="space-y-3 text-sm text-blue-700">
                   <div>
-                    <strong>1. Budżet i Produkcja:</strong> Masz 1000 zł budżetu. Koszt jednej koszulki to 25 zł, 
-                    ale przy zamówieniu powyżej 30 sztuk dostawca oferuje 15% rabatu. Ile koszulek możesz maksymalnie wyprodukować?
+                    <strong>1. {tEco('budgetAndProduction')}:</strong> {tEco('budgetAndProductionDesc')}
                   </div>
                   <div>
-                    <strong>2. Cena i Zysk:</strong> Chcesz, aby Twoja marża na każdej koszulce wynosiła 35%. 
-                    Jaka powinna być cena sprzedaży netto i brutto (uwzględniając 23% VAT)?
+                    <strong>2. {tEco('priceAndProfit')}:</strong> {tEco('priceAndProfitDesc')}
                   </div>
                   <div>
-                    <strong>3. Analiza Sprzedaży:</strong> Po pierwszym miesiącu sprzedałeś 3/5 wyprodukowanych koszulek. 
-                    Ile sztuk zostało w magazynie? Jaki jest Twój przychód i zysk/strata do tej pory?
+                    <strong>3. {tEco('salesAnalysis')}:</strong> {tEco('salesAnalysisDesc')}
                   </div>
                 </div>
               </div>
               
               <div className="bg-accent-secondary/10 border border-accent-secondary/30 rounded-md p-4 mt-4">
-                <h4 className="font-semibold text-accent-secondary mb-2">🧮 Koncepcje matematyczne:</h4>
+                <h4 className="font-semibold text-accent-secondary mb-2">🧮 {tEco('mathConcepts')}:</h4>
                 <ul className="text-sm text-accent-secondary space-y-1">
-                  <li>• Procenty (rabaty, marże, VAT)</li>
-                  <li>• Ułamki zwykłe i dziesiętne</li>
-                  <li>• Podstawy analizy finansowej (przychód, koszty, zysk)</li>
-                  <li>• Interpretacja danych</li>
+                  <li>• {tEco('percentages')}</li>
+                  <li>• {tEco('fractions')}</li>
+                  <li>• {tEco('financialAnalysis')}</li>
+                  <li>• {tEco('dataInterpretation')}</li>
                 </ul>
               </div>
             </div>
@@ -187,7 +183,7 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
                 onClick={() => setCurrentStep(1)}
                 className="bg-nav-bg/20 text-text-color px-6 py-2 rounded-md hover:bg-nav-bg/40 transition-colors flex items-center gap-2"
               >
-                <ArrowLeft className="w-4 h-4" /> Wstecz
+                <ArrowLeft className="w-4 h-4" /> {tEco('back')}
               </button>
               <button
                 onClick={() => setCurrentStep(3)}
@@ -208,7 +204,7 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
                 onClick={() => setCurrentStep(2)}
                 className="bg-nav-bg/20 text-text-color px-6 py-2 rounded-md hover:bg-nav-bg/40 transition-colors flex items-center gap-2"
               >
-                <ArrowLeft className="w-4 h-4" /> Wstecz
+                <ArrowLeft className="w-4 h-4" /> {tEco('back')}
               </button>
               <button
                 onClick={() => setCurrentStep(4)}
@@ -224,33 +220,32 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
         return (
           <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
             <h3 className="text-lg font-semibold text-text-color mb-4">
-              Analiza finansowa i wzory
+              {tEco('financialAnalysisAndFormulas')}
             </h3>
             <div className="prose prose-sm max-w-none mb-6 text-text-color">
               <div className="bg-bg-light p-4 rounded-md mb-4">
-                <h4 className="font-semibold mb-3">📈 Kluczowe wzory biznesowe:</h4>
+                <h4 className="font-semibold mb-3">📈 {tEco('keyBusinessFormulas')}:</h4>
                 <div className="space-y-2 font-mono text-sm text-text-color">
-                  <p><strong>Koszt z rabatem:</strong> Koszt = Cena × (1 - Rabat%)</p>
-                  <p><strong>Marża:</strong> Marża% = (Cena sprzedaży - Koszt) / Cena sprzedaży × 100%</p>
-                  <p><strong>Cena brutto:</strong> Cena brutto = Cena netto × (1 + VAT%)</p>
-                  <p><strong>Przychód:</strong> Przychód = Ilość sprzedana × Cena jednostkowa</p>
-                  <p><strong>Zysk:</strong> Zysk = Przychód - Koszty całkowite</p>
+                  <p><strong>{tEco('discountedCost')}:</strong> {tEco('discountedCostFormula')}</p>
+                  <p><strong>{tEco('margin')}:</strong> {tEco('marginFormula')}</p>
+                  <p><strong>{tEco('grossPrice')}:</strong> {tEco('grossPriceFormula')}</p>
+                  <p><strong>{tEco('revenue')}:</strong> {tEco('revenueFormula')}</p>
+                  <p><strong>{tEco('profit')}:</strong> {tEco('profitFormula')}</p>
                 </div>
               </div>
 
               <div className="bg-green-50 border border-green-200 rounded-md p-4 mb-4">
-                <h4 className="font-semibold mb-2 text-green-800">💡 Kluczowe spostrzeżenia:</h4>
+                <h4 className="font-semibold mb-2 text-green-800">💡 {tEco('keyInsights')}:</h4>
                 <ul className="text-sm text-green-700 leading-relaxed space-y-2">
-                  <li>• <strong>Rabat ilościowy</strong> znacząco wpływa na opłacalność produkcji</li>
-                  <li>• <strong>Marża 35%</strong> oznacza, że koszt stanowi 65% ceny sprzedaży</li>
-                  <li>• <strong>VAT 23%</strong> zwiększa cenę końcową dla klienta</li>
-                  <li>• <strong>Analiza sprzedaży</strong> pokazuje rzeczywistą rentowność biznesu</li>
+                  <li>• <strong>{tEco('quantityDiscount')}</strong> {tEco('quantityDiscountEffect')}</li>
+                  <li>• <strong>{tEco('margin35')}</strong> {tEco('margin35Meaning')}</li>
+                  <li>• <strong>{tEco('vat23')}</strong> {tEco('vat23Effect')}</li>
+                  <li>• <strong>{tEco('salesAnalysis')}</strong> {tEco('salesAnalysisShows')}</li>
                 </ul>
               </div>
 
               <p className="leading-relaxed">
-                W prawdziwym biznesie musisz również uwzględnić koszty stałe (wynajem, marketing, 
-                wynagrodzenia), sezonowość sprzedaży i konkurencję na rynku.
+                {tEco('realBusinessConsiderations')}
               </p>
             </div>
             <div className="flex justify-between">
@@ -258,13 +253,13 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
                 onClick={() => setCurrentStep(3)}
                 className="bg-nav-bg/20 text-text-color px-6 py-2 rounded-md hover:bg-nav-bg/40 transition-colors flex items-center gap-2"
               >
-                <ArrowLeft className="w-4 h-4" /> Wstecz
+                <ArrowLeft className="w-4 h-4" /> {tEco('back')}
               </button>
               <button
                 onClick={() => setCurrentStep(5)}
                 className="bg-nav-bg text-white px-6 py-2 rounded-md hover:bg-nav-bg/90 transition-colors flex items-center gap-2"
               >
-                Przejdź do zadań <ArrowRight className="w-4 h-4" />
+                {tEco('goToTasks')} <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -274,18 +269,18 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
         return (
           <div className="bg-bg-card rounded-lg p-6 shadow-sm border border-bg-neutral">
             <h3 className="text-lg font-semibold text-text-color mb-4">
-              Zadania praktyczne
+              {tEco('practicalTasks')}
             </h3>
             <div className="space-y-4 mb-6">
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  <strong>Zadanie 1:</strong> {tEco('task1')}
+                  <strong>{tEco('task')} 1:</strong> {tEco('task1')}
                 </label>
                 <input
                   type="text"
                   value={answers.maxQuantity}
                   onChange={(e) => handleAnswerChange('maxQuantity', e.target.value)}
-                  placeholder="Maksymalna liczba koszulek = ..."
+                  placeholder={tEco('maxQuantityPlaceholder')}
                   className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-nav-bg/50 text-text-color ${
                     showResults 
                       ? feedback.maxQuantity?.correct 
@@ -306,7 +301,7 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
               
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  <strong>Zadanie 2:</strong> {tEco('task2')}
+                  <strong>{tEco('task')} 2:</strong> {tEco('task2')}
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
@@ -314,7 +309,7 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
                       type="text"
                       value={answers.netPrice}
                       onChange={(e) => handleAnswerChange('netPrice', e.target.value)}
-                      placeholder="Cena netto = ... zł"
+                      placeholder={tEco('netPricePlaceholder')}
                       className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-nav-bg/50 text-text-color ${
                         showResults 
                           ? feedback.netPrice?.correct 
@@ -334,7 +329,7 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
                       type="text"
                       value={answers.grossPrice}
                       onChange={(e) => handleAnswerChange('grossPrice', e.target.value)}
-                      placeholder="Cena brutto = ... zł"
+                      placeholder={tEco('grossPricePlaceholder')}
                       className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-nav-bg/50 text-text-color ${
                         showResults 
                           ? feedback.grossPrice?.correct 
@@ -357,7 +352,7 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
               
               <div>
                 <label className="block text-sm font-medium text-text-color mb-2">
-                  <strong>Zadanie 3:</strong> {tEco('task3')}
+                  <strong>{tEco('task')} 3:</strong> {tEco('task3')}
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
@@ -365,7 +360,7 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
                       type="text"
                       value={answers.revenue}
                       onChange={(e) => handleAnswerChange('revenue', e.target.value)}
-                      placeholder="Przychód = ... zł"
+                      placeholder={tEco('revenuePlaceholder')}
                       className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-nav-bg/50 text-text-color ${
                         showResults 
                           ? feedback.revenue?.correct 
@@ -385,7 +380,7 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
                       type="text"
                       value={answers.profit}
                       onChange={(e) => handleAnswerChange('profit', e.target.value)}
-                      placeholder="Zysk/Strata = ... zł"
+                      placeholder={tEco('profitLossPlaceholder')}
                       className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-nav-bg/50 text-text-color ${
                         showResults 
                           ? feedback.profit?.correct 
@@ -409,13 +404,13 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
 
             {showResults && (
               <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <h4 className="font-semibold text-blue-800 mb-2">📋 Podsumowanie wyników:</h4>
+                <h4 className="font-semibold text-blue-800 mb-2">📋 {tEco('resultsSummary')}:</h4>
                 <div className="text-sm text-blue-700 space-y-1">
-                  <p>• Maksymalna produkcja: <strong>47 koszulek</strong> (1000 ÷ 21,25 = 47,06)</p>
-                  <p>• Cena netto: <strong>32,69 zł</strong> (21,25 ÷ 0,65 = 32,69)</p>
-                  <p>• Cena brutto: <strong>40,21 zł</strong> (32,69 × 1,23 = 40,21)</p>
-                  <p>• Przychód: <strong>915,32 zł</strong> (28 × 32,69 = 915,32)</p>
-                  <p>• Wynik: <strong>Strata 84,68 zł</strong> (915,32 - 1000 = -84,68)</p>
+                  <p>• {tEco('maxProduction')}: <strong>47 {tEco('pieces')}</strong> (1000 ÷ 21,25 = 47,06)</p>
+                  <p>• {tEco('netPrice')}: <strong>32,69 zł</strong> (21,25 ÷ 0,65 = 32,69)</p>
+                  <p>• {tEco('grossPrice')}: <strong>40,21 zł</strong> (32,69 × 1,23 = 40,21)</p>
+                  <p>• {tEco('revenue')}: <strong>915,32 zł</strong> (28 × 32,69 = 915,32)</p>
+                  <p>• {tEco('result')}: <strong>{tEco('loss')} 84,68 zł</strong> (915,32 - 1000 = -84,68)</p>
                 </div>
                 <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded">
                   <p className="text-sm text-yellow-800">
@@ -430,7 +425,7 @@ const EcoTshirtContent = ({ currentStep, setCurrentStep }) => {
                 onClick={() => setCurrentStep(4)}
                 className="bg-nav-bg/20 text-text-color px-6 py-2 rounded-md hover:bg-nav-bg/40 transition-colors flex items-center gap-2"
               >
-                <ArrowLeft className="w-4 h-4" /> Wstecz
+                <ArrowLeft className="w-4 h-4" /> {tEco('back')}
               </button>
               <button
                 onClick={checkAnswers}
