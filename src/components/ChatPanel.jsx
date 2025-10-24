@@ -3,6 +3,7 @@ import { Send, Bot, ChevronUp, Trash2 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useTextToSpeech } from '../hooks/useTextToSpeech';
+import { callSecureApi } from '../lib/apiClient';
 
 // ZMIANA: Importujemy react-markdown i plugin GFM
 import ReactMarkdown from 'react-markdown';
@@ -70,12 +71,6 @@ const ChatPanel = ({ isMobile = false }) => {
     if (isLoading) return t('chatWaitMessage');
     setIsLoading(true);
 
-    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-    if (!apiKey) {
-      console.error('Missing Gemini API key');
-      return t('chatConfigError');
-    }
-
     const contextPrompt = `
       Conversation context:
       - You are an AI mentor on an educational platform for learning mathematics.
@@ -93,23 +88,17 @@ const ChatPanel = ({ isMobile = false }) => {
       4. In ${currentLanguage === 'pl' ? 'Polish' : 'English'} language.
     `;
 
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-    const payload = {
-      contents: [{
-        role: "user",
-        parts: [{
-          text: contextPrompt
-        }]
-      }]
-    };
-
     try {
-      const response = await fetch(apiUrl, {
+      const response = await callSecureApi('/ai/chat', {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({
+          prompt: contextPrompt,
+          locale: currentLanguage,
+          history: messages.map(m => ({ role: m.type, content: m.content }))
+        })
       });
 
       if (!response.ok) {
@@ -118,19 +107,17 @@ const ChatPanel = ({ isMobile = false }) => {
       }
 
       const result = await response.json();
-      
-      if (!result.candidates || !result.candidates[0]?.content?.parts) {
-        throw new Error('Invalid API response structure');
+
+      if (!result || typeof result.reply !== 'string') {
+        throw new Error('Invalid proxy response structure');
       }
 
-      const text = result.candidates[0].content.parts[0]?.text;
-      if (!text) {
-        throw new Error('No text in API response');
-      }
-
-      return text;
+      return result.reply;
     } catch (error) {
       console.error('Gemini API Error:', error);
+      if (typeof error?.message === 'string' && error.message.includes('Secure proxy URL')) {
+        return t('chatConfigError');
+      }
       return t('chatErrorMessage');
     } finally {
       setIsLoading(false);

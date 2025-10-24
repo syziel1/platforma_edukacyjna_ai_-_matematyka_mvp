@@ -8,17 +8,27 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables');
 }
 
-console.log('Initializing Supabase client');
+const createEphemeralStorage = () => {
+  const store = new Map();
+
+  return {
+    getItem: (key) => (store.has(key) ? store.get(key) : null),
+    setItem: (key, value) => {
+      store.set(key, value);
+    },
+    removeItem: (key) => {
+      store.delete(key);
+    }
+  };
+};
+
+const storage = typeof window !== 'undefined' ? createEphemeralStorage() : undefined;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
-    persistSession: true,
+    persistSession: false,
     detectSessionInUrl: true,
-    storageKey: 'edu-future-auth-token',
-    storage: window.localStorage
+    storage
   }
 });
-
-// Debug: Log when Supabase client is initialized
-console.log('Supabase client initialized');

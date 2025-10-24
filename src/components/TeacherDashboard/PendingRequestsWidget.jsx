@@ -97,11 +97,17 @@ const PendingRequestsWidget = () => {
 
   // Handle confirm/reject actions
   const handleConfirm = async (eventId) => {
+    if (!user) {
+      console.warn('Attempted to confirm event without authenticated user.');
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from('calendar_events')
         .update({ status: 'confirmed' })
-        .eq('id', eventId);
+        .eq('id', eventId)
+        .eq('teacher_id', user.id);
 
       if (error) throw error;
 
@@ -125,11 +131,17 @@ const PendingRequestsWidget = () => {
   };
 
   const handleReject = async (eventId) => {
+    if (!user) {
+      console.warn('Attempted to reject event without authenticated user.');
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from('calendar_events')
         .update({ status: 'cancelled' })
-        .eq('id', eventId);
+        .eq('id', eventId)
+        .eq('teacher_id', user.id);
 
       if (error) throw error;
 
