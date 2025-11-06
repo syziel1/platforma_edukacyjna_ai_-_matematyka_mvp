@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { callSecureApi } from './lib/apiClient';
 
 const VoiceAssistantTest = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -11,28 +12,18 @@ const VoiceAssistantTest = () => {
     setSuccess(null);
 
     try {
-      const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY;
-      if (!apiKey) {
-        throw new Error("Nie znaleziono klucza API dla ElevenLabs. Sprawdź plik .env");
-      }
-
       console.log("Rozpoczynam generowanie audio...");
 
-      // Używamy fetch API zamiast biblioteki ElevenLabs
-      const response = await fetch('https://api.elevenlabs.io/v1/text-to-speech/ZT9u07TYPVl83ejeLakq', {
+      const response = await callSecureApi('/tts/speak', {
         method: 'POST',
         headers: {
           'Accept': 'audio/mpeg',
-          'Content-Type': 'application/json',
-          'xi-api-key': apiKey
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          text: "Witaj w Edu Future! Czas na naukę matematyki.",
-          model_id: "eleven_multilingual_v2",
-          voice_settings: {
-            stability: 0.5,
-            similarity_boost: 0.5
-          }
+          text: 'Witaj w Edu Future! Czas na naukę matematyki.',
+          voice: 'ZT9u07TYPVl83ejeLakq',
+          model: 'eleven_multilingual_v2'
         })
       });
 

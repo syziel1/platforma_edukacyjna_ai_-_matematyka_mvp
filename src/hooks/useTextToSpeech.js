@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useSettings } from '../contexts/SettingsContext';
+import { callSecureApi } from '../lib/apiClient';
 
 // Module-level lock to prevent multiple simultaneous speech requests
 let isCurrentlySpeaking = false;
@@ -27,11 +28,6 @@ export const useTextToSpeech = () => {
         isCurrentlySpeaking = false;
       }, 15000);
 
-      const apiKey = import.meta.env.VITE_ELEVENLABS_API_KEY;
-      if (!apiKey) {
-        throw new Error('ElevenLabs API key not found. Text-to-speech disabled.');
-      }
-
       // Format mathematical expressions for speech
       const formattedText = text
         // First, clean HTML tags
@@ -55,21 +51,17 @@ export const useTextToSpeech = () => {
         throw new Error("Cleaned text is empty.");
       }
 
-      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${settings.textToSpeechVoice}`, {
+      const response = await callSecureApi('/tts/speak', {
         method: 'POST',
         headers: {
           'Accept': 'audio/mpeg',
-          'Content-Type': 'application/json',
-          'xi-api-key': apiKey
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           text: formattedText,
-          model_id: "eleven_multilingual_v2",
-          voice_settings: {
-            stability: 0.5,
-            similarity_boost: 0.5,
-            speed: settings.textToSpeechSpeed || 1.0
-          }
+          voice: settings.textToSpeechVoice,
+          model: 'eleven_multilingual_v2',
+          speed: settings.textToSpeechSpeed || 1.0
         })
       });
 

@@ -63,7 +63,12 @@ const AvailabilityWidget = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
+    if (!user) {
+      console.warn('Attempted to modify availability without an authenticated user.');
+      return;
+    }
+
     // Validate time range
     if (formData.startTime >= formData.endTime) {
       setToast({
@@ -84,7 +89,8 @@ const AvailabilityWidget = () => {
             start_time: formData.startTime,
             end_time: formData.endTime
           })
-          .eq('id', editingSlot.id);
+          .eq('id', editingSlot.id)
+          .eq('teacher_id', user.id);
 
         if (error) throw error;
         
@@ -136,6 +142,11 @@ const AvailabilityWidget = () => {
 
   // Handle slot deletion
   const handleDelete = async (slotId) => {
+    if (!user) {
+      console.warn('Attempted to delete availability without an authenticated user.');
+      return;
+    }
+
     if (!confirm('Czy na pewno chcesz usunąć ten slot dostępności?')) {
       return;
     }
@@ -144,7 +155,8 @@ const AvailabilityWidget = () => {
       const { error } = await supabase
         .from('availability_slots')
         .delete()
-        .eq('id', slotId);
+        .eq('id', slotId)
+        .eq('teacher_id', user.id);
 
       if (error) throw error;
       
