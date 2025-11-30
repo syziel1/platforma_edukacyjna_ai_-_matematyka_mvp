@@ -315,7 +315,6 @@ const ConstellationMap = () => {
             } else if (d.url.includes('multiply-divide')) {
               window.location.href = '/#multiplication-game';
             } else {
-              console.log(`Navigate to: ${d.url}`);
               // For now, just show an alert for unimplemented lessons
               alert(`Lekcja "${d.label}" będzie dostępna wkrótce!`);
             }

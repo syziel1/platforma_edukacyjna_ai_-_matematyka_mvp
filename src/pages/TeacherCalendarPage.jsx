@@ -62,7 +62,6 @@ const TeacherCalendarPage = () => {
         // Fetch available slots for the selected date
         await fetchAvailableSlots(selectedDate);
       } catch (err) {
-        console.error('Error fetching teacher data:', err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -88,8 +87,7 @@ const TeacherCalendarPage = () => {
       if (error) throw error;
       
       setAvailableSlots(data || []);
-    } catch (err) {
-      console.error('Error fetching available slots:', err);
+    } catch {
       setError('Nie udało się pobrać dostępnych terminów');
     }
   };
@@ -173,8 +171,7 @@ const TeacherCalendarPage = () => {
       
       // Refresh available slots
       fetchAvailableSlots(selectedDate);
-    } catch (err) {
-      console.error('Error creating booking:', err);
+    } catch {
       alert(t('bookingError'));
     }
   };

@@ -47,8 +47,7 @@ const ForgotPasswordPage = () => {
       }
 
       setEmailSent(true);
-    } catch (error) {
-      console.error('Password reset error:', error);
+    } catch {
       setErrors({ general: 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.' });
     } finally {
       setIsLoading(false);

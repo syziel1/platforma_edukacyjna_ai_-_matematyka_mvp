@@ -12,9 +12,6 @@ export const useTextToSpeech = () => {
   const speak = useCallback(async (text) => {
     // Block if speech is disabled, no text is provided, or another speech is in progress.
     if (!settings.textToSpeechEnabled || !text || isCurrentlySpeaking) {
-      if (isCurrentlySpeaking) {
-        console.log('TTS request blocked: another speech is already in progress.');
-      }
       return;
     }
 
@@ -24,7 +21,6 @@ export const useTextToSpeech = () => {
       
       // Safety timeout to release the lock after 15 seconds in case of an issue
       speechTimeoutId = setTimeout(() => {
-        console.warn('TTS lock released by timeout.');
         isCurrentlySpeaking = false;
       }, 15000);
 

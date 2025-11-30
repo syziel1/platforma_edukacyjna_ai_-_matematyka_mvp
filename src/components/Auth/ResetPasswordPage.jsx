@@ -92,8 +92,7 @@ const ResetPasswordPage = () => {
       }
 
       setResetSuccess(true);
-    } catch (error) {
-      console.error('Password update error:', error);
+    } catch {
       setErrors({ general: 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.' });
     } finally {
       setIsLoading(false);
