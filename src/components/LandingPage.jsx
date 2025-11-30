@@ -20,9 +20,8 @@ const LandingPage = ({ onEnterApp }) => {
           audioRef.current.volume = 0.7; // Set volume to 70%
           await audioRef.current.play();
         }
-      } catch (error) {
-        // Auto-play might be blocked by browser policy
-        console.log('Auto-play was prevented by browser policy');
+      } catch {
+        // Auto-play might be blocked by browser policy - this is expected behavior
       }
     };
 

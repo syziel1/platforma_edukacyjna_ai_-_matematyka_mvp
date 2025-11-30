@@ -20,30 +20,22 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Debug: Log when component mounts
+  // Check if we have a session already
   useEffect(() => {
-    console.log('LoginPage mounted');
-    
-    // Check if we have a session already
     const checkExistingSession = async () => {
       try {
-        console.log('Checking for existing session...');
         const { data, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error('Session check error:', error);
           return;
         }
         
-        console.log('Session check result:', data.session ? 'Session exists' : 'No session');
-        
         // If session exists, redirect to cockpit
         if (data.session) {
-          console.log('Active session found, redirecting to cockpit');
           navigate('/cockpit');
         }
-      } catch (err) {
-        console.error('Unexpected error checking session:', err);
+      } catch {
+        // Silent fail for session check
       }
     };
     
@@ -93,16 +85,12 @@ const LoginPage = () => {
     setErrors({});
 
     try {
-      console.log('Attempting to sign in with email/password...');
-      console.log('Remember me option:', formData.rememberMe);
-      
       const { data, error } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password
       });
 
       if (error) {
-        console.error('Login error:', error);
         if (error.message.includes('Invalid login credentials')) {
           setErrors({ general: 'Nieprawidłowy adres e-mail lub hasło' });
         } else if (error.message.includes('Email not confirmed')) {
@@ -113,24 +101,19 @@ const LoginPage = () => {
         return;
       }
 
-      console.log('Sign in successful, user data:', data.user ? 'User exists' : 'No user data');
-
       if (data.user) {
         try {
           // Get user profile data
-          console.log('Fetching user profile...');
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('*')
             .eq('id', data.user.id)
             .single();
 
+          // Continue even if profile fetch fails
           if (profileError) {
-            console.error('Profile fetch error:', profileError);
-            // Continue even if profile fetch fails
+            // Profile fetch error is not critical
           }
-
-          console.log('Profile data:', profile ? 'Profile found' : 'No profile found');
 
           // Update auth context
           const userData = {
@@ -142,20 +125,16 @@ const LoginPage = () => {
             profile: profile
           };
           
-          console.log('Updating auth context with user data');
           login(userData);
 
           // Redirect to cockpit
-          console.log('Redirecting to cockpit');
           navigate('/cockpit');
-        } catch (profileError) {
-          console.error('Error processing profile after login:', profileError);
+        } catch {
           // Still redirect to cockpit even if profile fetch fails
           navigate('/cockpit');
         }
       }
-    } catch (error) {
-      console.error('Unexpected login error:', error);
+    } catch {
       setErrors({ general: 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.' });
     } finally {
       setIsLoading(false);
@@ -164,8 +143,6 @@ const LoginPage = () => {
 
   const handleOAuthSignIn = async (provider) => {
     try {
-      console.log(`Initiating OAuth sign-in with ${provider}...`);
-      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
@@ -174,11 +151,9 @@ const LoginPage = () => {
       });
 
       if (error) {
-        console.error(`${provider} OAuth error:`, error);
         setErrors({ general: `Błąd logowania przez ${provider}: ${error.message}` });
       }
-    } catch (error) {
-      console.error(`Unexpected ${provider} OAuth error:`, error);
+    } catch {
       setErrors({ general: `Wystąpił błąd podczas logowania przez ${provider}` });
     }
   };

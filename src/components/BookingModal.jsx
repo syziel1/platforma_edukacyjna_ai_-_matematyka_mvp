@@ -63,8 +63,8 @@ const BookingModal = ({ teacher, slot, subjectId, subjects, onClose, onSubmit })
               participantIds: [data[0].student_id]
             }));
           }
-        } catch (err) {
-          console.error('Error fetching children:', err);
+        } catch {
+          // Silent fail for children fetch
         } finally {
           setLoading(false);
         }

@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Eye, EyeOff, ArrowLeft, User, GraduationCap, Users } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import { useLanguage } from '../../contexts/LanguageContext';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { t } = useLanguage();
   
   const role = searchParams.get('role') || 'student';
   
@@ -138,8 +136,7 @@ const RegisterPage = () => {
       }
 
       setRegistrationSuccess(true);
-    } catch (error) {
-      console.error('Registration error:', error);
+    } catch {
       setErrors({ general: 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.' });
     } finally {
       setIsLoading(false);
@@ -161,8 +158,7 @@ const RegisterPage = () => {
       if (error) {
         setErrors({ general: `Błąd logowania przez ${provider}: ${error.message}` });
       }
-    } catch (error) {
-      console.error(`${provider} OAuth error:`, error);
+    } catch {
       setErrors({ general: `Wystąpił błąd podczas logowania przez ${provider}` });
     }
   };

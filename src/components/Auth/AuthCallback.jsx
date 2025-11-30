@@ -9,30 +9,20 @@ const AuthCallback = () => {
   const { login } = useAuth();
 
   useEffect(() => {
-    console.log('AuthCallback component mounted');
-    
     const handleAuthCallback = async () => {
       try {
-        console.log('Processing auth callback...');
-        
         // Get the session from the URL
-        console.log('Getting session from Supabase...');
         const { data, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error('Auth callback error:', error);
           navigate('/login?error=auth_callback_failed');
           return;
         }
 
-        console.log('Session data received:', data.session ? 'Session exists' : 'No session');
-
         if (data.session) {
           const user = data.session.user;
-          console.log('User found in session, ID:', user.id);
           
           // Get or create user profile
-          console.log('Fetching user profile...');
           let profile = null;
           let profileError = null;
           
@@ -45,19 +35,14 @@ const AuthCallback = () => {
               
             profile = result.data;
             profileError = result.error;
-            
-            console.log('Profile fetch result:', profileError ? `Error: ${profileError.message}` : 'Profile found');
-          } catch (fetchError) {
-            console.error('Unexpected error fetching profile:', fetchError);
+          } catch {
             // Continue with profile creation even if fetch fails
           }
 
           // If profile doesn't exist, create it (for OAuth users)
           if (!profile || (profileError && profileError.code === 'PGRST116')) {
-            console.log('Profile not found, creating new profile');
             const role = searchParams.get('role') || 'student';
             
-            console.log('Creating profile with role:', role);
             try {
               const { data: newProfile, error: createError } = await supabase
                 .from('profiles')
@@ -71,21 +56,15 @@ const AuthCallback = () => {
                 .select()
                 .single();
 
-              if (createError) {
-                console.error('Profile creation error:', createError);
-                // Continue even if profile creation fails
-              } else {
-                console.log('New profile created successfully');
+              if (!createError) {
                 profile = newProfile;
               }
-            } catch (createError) {
-              console.error('Unexpected error creating profile:', createError);
+            } catch {
               // Continue even if profile creation fails
             }
           }
 
           // Update auth context with whatever data we have
-          console.log('Updating auth context with user data');
           login({
             id: user.id,
             email: user.email,
@@ -97,18 +76,14 @@ const AuthCallback = () => {
 
           // Redirect based on user role
           if (profile?.role === 'teacher') {
-            console.log('Redirecting to teacher dashboard');
             navigate('/teacher-dashboard');
           } else {
-            console.log('Redirecting to cockpit');
             navigate('/cockpit');
           }
         } else {
-          console.log('No session found, redirecting to login');
           navigate('/login?error=no_session');
         }
-      } catch (error) {
-        console.error('Auth callback unexpected error:', error);
+      } catch {
         navigate('/login?error=callback_failed');
       }
     };

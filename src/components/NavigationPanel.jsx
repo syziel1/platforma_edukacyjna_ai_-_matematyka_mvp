@@ -96,8 +96,7 @@ const NavigationPanel = () => {
       if (window.innerWidth < 768) {
         setIsExpanded(false);
       }
-    } catch (error) {
-      console.error('Logout error:', error);
+    } catch {
       alert('Wystąpił problem podczas wylogowywania. Spróbuj ponownie.');
     }
   };

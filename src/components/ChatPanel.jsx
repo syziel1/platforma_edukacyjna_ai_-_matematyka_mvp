@@ -35,8 +35,7 @@ const ChatPanel = ({ isMobile = false }) => {
         }]);
         speakIfEnabled(welcomeMessage);
       }
-    } catch (error) {
-        console.error("Failed to parse chat history from localStorage", error);
+    } catch {
         const welcomeMessage = t('chatWelcomeMessage');
         setMessages([{
           id: 1,
@@ -114,7 +113,6 @@ const ChatPanel = ({ isMobile = false }) => {
 
       return result.reply;
     } catch (error) {
-      console.error('Gemini API Error:', error);
       if (typeof error?.message === 'string' && error.message.includes('Secure proxy URL')) {
         return t('chatConfigError');
       }

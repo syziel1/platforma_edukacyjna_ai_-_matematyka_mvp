@@ -52,8 +52,7 @@ const TeacherListPage = () => {
         
         if (teachersError) throw teachersError;
         setTeachers(teachersData);
-      } catch (err) {
-        console.error('Error fetching data:', err);
+      } catch {
         setError('Nie udało się pobrać listy nauczycieli');
       } finally {
         setLoading(false);
