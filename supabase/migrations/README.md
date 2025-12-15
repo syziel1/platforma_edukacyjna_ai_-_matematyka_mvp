@@ -95,7 +95,7 @@ Jeśli wolisz zautomatyzować proces, możesz użyć Supabase CLI:
 
 ```bash
 # 1. Najpierw ręcznie utwórz typy ENUM przez SQL Editor
-# (Zobacz dokumentacja w docs/SUPABASE_SETUP.md)
+# (Zobacz dokumentację w docs/SUPABASE_SETUP.md)
 
 # 2. Zaloguj się i połącz z projektem
 supabase login

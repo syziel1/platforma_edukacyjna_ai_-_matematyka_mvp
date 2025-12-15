@@ -161,7 +161,7 @@ Funkcja `get_available_time_slots`:
 - Przyjmuje jako parametry: ID nauczyciela, datę docelową i długość slotu (domyślnie 60 minut)
 - Zwraca listę dostępnych okienek czasowych
 - Uwzględnia harmonogram nauczyciela (`availability_slots`)
-- Wykluwa już zarezerwowane terminy (`calendar_events` ze statusem `confirmed`)
+- Wyklucza już zarezerwowane terminy (`calendar_events` ze statusem `confirmed`)
 
 ---
 
