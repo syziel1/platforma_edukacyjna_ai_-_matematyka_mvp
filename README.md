@@ -28,9 +28,9 @@ Na obecnym etapie MVP, projekt jest budowany z wykorzystaniem następujących te
 
 * **[React.js](https://reactjs.org/)** - Biblioteka JavaScript do budowy interfejsu użytkownika.
 * **[Vite](https://vitejs.dev/)** - Narzędzie do budowania frontendu.
+* **[Supabase](https://supabase.com/)** - Backend as a Service (BaaS) - baza danych PostgreSQL, autentykacja i API.
 * **[Google Gemini API](https://ai.google.dev/)** - Silnik dla naszego inteligentnego mentora AI.
 * **[Google Identity Services](https://developers.google.com/identity)** - Do autentykacji użytkowników.
-* **(Backend i Baza Danych w trakcie definiowania)**
 
 ---
 
@@ -45,6 +45,7 @@ Upewnij się, że masz zainstalowany Node.js oraz npm (lub yarn).
     ```sh
     npm install npm@latest -g
     ```
+* **Konto Supabase** - Projekt wymaga aktywnej bazy danych Supabase. Zobacz: [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)
 
 #### Instalacja
 
@@ -60,17 +61,28 @@ Upewnij się, że masz zainstalowany Node.js oraz npm (lub yarn).
     ```sh
     npm install
     ```
-4.  **Skonfiguruj zmienne środowiskowe:**
+4.  **Skonfiguruj bazę danych Supabase:**
+    Przed uruchomieniem aplikacji, musisz skonfigurować bazę danych Supabase.
+    Szczegółowa instrukcja znajduje się w: **[docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)**
+
+5.  **Skonfiguruj zmienne środowiskowe:**
     Utwórz plik `.env` w głównym katalogu projektu. Następnie dodaj swoje klucze API:
     ```
+    VITE_SUPABASE_URL="TWOJ_SUPABASE_URL"
+    VITE_SUPABASE_ANON_KEY="TWOJ_SUPABASE_ANON_KEY"
     VITE_GOOGLE_CLIENT_ID="TWOJ_GOOGLE_CLIENT_ID"
     VITE_GEMINI_API_KEY="TWOJ_GEMINI_API_KEY"
     ```
-5.  **Uruchom serwer deweloperski:**
+6.  **Uruchom serwer deweloperski:**
     ```sh
     npm run dev
     ```
     Aplikacja będzie dostępna pod adresem `http://localhost:5173` (lub innym podanym w konsoli).
+
+#### Dokumentacja techniczna
+
+* **[Konfiguracja Supabase](docs/SUPABASE_SETUP.md)** - Kompletna instrukcja konfiguracji bazy danych
+* **[Migracje bazy danych](supabase/migrations/README.md)** - Opis struktury i kolejności migracji
 
 ---
 
