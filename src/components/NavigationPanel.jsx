@@ -112,6 +112,7 @@ const NavigationPanel = () => {
     <>
       {/* Mobile Top Menu Bar - Fixed */}
       <div className="fixed md:hidden top-0 left-0 right-0 bg-nav-bg h-16 flex items-center justify-around px-4 z-50">
+        {/* Show first 5 items in mobile menu bar (Menu icon excluded) */}
         {menuItems.slice(0, 5).map((item, index) => (
           <button
             key={index}
