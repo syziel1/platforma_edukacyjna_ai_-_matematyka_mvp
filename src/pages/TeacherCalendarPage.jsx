@@ -9,7 +9,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 const TeacherCalendarPage = () => {
   const { id: teacherId } = useParams();
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const navigate = useNavigate();
   const { t } = useLanguage();
   
@@ -122,13 +122,7 @@ const TeacherCalendarPage = () => {
   
   // Handle slot selection
   const handleSlotSelect = (slot) => {
-    if (!user) {
-      // Redirect to login if not logged in
-      if (confirm(t('loginToBook'))) {
-        navigate('/login');
-      }
-      return;
-    }
+    // Wyłączone sprawdzanie logowania: każdy może rezerwować
     
     // Calculate end time (1 hour after start time)
     const startTime = new Date(slot);

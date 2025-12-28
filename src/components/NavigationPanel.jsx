@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, Calendar, Settings, LogOut, LogIn, Home, Info, BookOpen, BarChart3, PenTool, GraduationCap, Users } from 'lucide-react';
-import { useLanguage } from '../contexts/LanguageContext';
+ // import { useAuth } from '../contexts/AuthContext';
 import { useAuth } from '../contexts/AuthContext';
 import SettingsModal from './SettingsModal';
 import AboutProjectModal from './AboutProjectModal';
@@ -15,7 +15,7 @@ const NavigationPanel = () => {
   const [showLearningStats, setShowLearningStats] = useState(false);
   const [showWhiteboard, setShowWhiteboard] = useState(false);
   const { t } = useLanguage();
-  const { user, logout } = useAuth();
+   // const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -102,92 +102,24 @@ const NavigationPanel = () => {
   };
 
   // Build menu items dynamically based on user login status and role
-  const getMenuItems = () => {
-    const baseItems = [
-      { 
-        icon: Menu,
-        label: t('menu'),
-        action: () => setIsExpanded(!isExpanded)
-      },
-      // Explorer Cockpit available for everyone
-      { 
-        icon: Home, 
-        label: t('explorerCockpit'), 
-        action: handleCockpit,
-        isActive: location.pathname === '/cockpit'
-      }
-    ];
-
-    // Add Teacher Dashboard if user is a teacher
-    if (user && user.role === 'teacher') {
-      baseItems.push({
-        icon: GraduationCap,
-        label: 'Kokpit nauczyciela',
-        action: handleTeacherDashboard,
-        isActive: location.pathname === '/teacher-dashboard'
-      });
-    }
-
-    // StartScreen - lessons list
-    baseItems.push({ 
-      icon: BookOpen, 
-      label: t('lessonsList'), 
-      action: handleLessonsList,
-      isActive: location.pathname === '/lessons'
-    });
-
-    // Find Teacher - for students and guardians
-    if (user && (user.role === 'student' || user.role === 'guardian')) {
-      baseItems.push({
-        icon: Users,
-        label: t('findTeacher'),
-        action: handleFindTeacher,
-        isActive: location.pathname.startsWith('/teacher')
-      });
-    }
-
-    // Add Day Plan only if user is logged in
-    if (user) {
-      baseItems.push({
-        icon: Calendar, 
-        label: t('dayPlan'), 
-        action: handleDayPlan 
-      });
-    }
-
-    // Add Interactive Whiteboard - now available for everyone
-    baseItems.push({
-      icon: PenTool,
-      label: t('interactiveWhiteboard'),
-      action: handleWhiteboard
-    });
-
-    // Add remaining items
-    baseItems.push(
-      {
-        icon: BarChart3,
-        label: t('learningStats'),
-        action: handleLearningStats
-      },
-      { 
-        icon: Info, 
-        label: t('aboutProject'), 
-        action: handleAboutProject
-      },
-      { 
-        icon: Settings, 
-        label: t('settings'), 
-        action: handleSettings
-      },
-      { 
-        icon: user ? LogOut : LogIn, 
-        label: user ? t('logout') : t('login'), 
-        action: user ? handleLogout : handleLogin
-      }
-    );
-
-    return baseItems;
-  };
+   // Menu nie zawiera już logowania/wylogowania
+   const getMenuItems = () => {
+     const baseItems = [
+       { 
+         icon: Menu,
+         label: t('menu'),
+         action: () => setIsExpanded(!isExpanded)
+       },
+       // Explorer Cockpit available for everyone
+       { 
+         icon: Home, 
+         label: t('explorerCockpit'), 
+         action: handleCockpit,
+         isActive: location.pathname === '/cockpit'
+       }
+     ];
+     return baseItems;
+   };
 
   const menuItems = getMenuItems();
 

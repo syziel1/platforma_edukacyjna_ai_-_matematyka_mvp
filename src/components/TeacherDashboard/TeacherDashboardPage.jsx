@@ -7,26 +7,7 @@ import AvailabilityWidget from './AvailabilityWidget';
 import GlobalHeader from '../GlobalHeader';
 
 const TeacherDashboardPage = () => {
-  const { user, loading } = useAuth();
-  const navigate = useNavigate();
-
-  // Redirect if user is not a teacher
-  useEffect(() => {
-    if (!loading && (!user || user.role !== 'teacher')) {
-      navigate('/login');
-    }
-  }, [user, loading, navigate]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-bg-main flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-primary mx-auto mb-4"></div>
-          <p className="text-text-color">Ładowanie...</p>
-        </div>
-      </div>
-    );
-  }
+  // Logowanie wyłączone: nie sprawdzamy usera ani nie przekierowujemy
 
   if (!user || user.role !== 'teacher') {
     return null; // Will redirect in useEffect
