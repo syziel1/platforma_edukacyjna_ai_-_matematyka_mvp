@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, Calendar, Settings, LogOut, LogIn, Home, Info, BookOpen, BarChart3, PenTool, GraduationCap, Users } from 'lucide-react';
- // import { useAuth } from '../contexts/AuthContext';
-import { useAuth } from '../contexts/AuthContext';
+import { Menu, Settings, Home, Info, BookOpen, BarChart3, PenTool } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 import SettingsModal from './SettingsModal';
 import AboutProjectModal from './AboutProjectModal';
 import LearningStatsModal from './LearningStatsModal';
@@ -15,17 +14,8 @@ const NavigationPanel = () => {
   const [showLearningStats, setShowLearningStats] = useState(false);
   const [showWhiteboard, setShowWhiteboard] = useState(false);
   const { t } = useLanguage();
-   // const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
-  const handleDayPlan = () => {
-    if (user) {
-      window.open('https://calendar.google.com', '_blank');
-    } else {
-      alert(t('signInToAccess'));
-    }
-  };
 
   const handleSettings = () => {
     setShowSettings(true);
@@ -62,13 +52,6 @@ const NavigationPanel = () => {
     }
   };
 
-  const handleTeacherDashboard = () => {
-    navigate('/teacher-dashboard');
-    if (window.innerWidth < 768) {
-      setIsExpanded(false);
-    }
-  };
-
   const handleLessonsList = () => {
     navigate('/lessons');
     if (window.innerWidth < 768) {
@@ -76,64 +59,60 @@ const NavigationPanel = () => {
     }
   };
 
-  const handleFindTeacher = () => {
-    navigate('/teachers');
-    if (window.innerWidth < 768) {
-      setIsExpanded(false);
-    }
-  };
-
-  const handleLogin = () => {
-    navigate('/login');
-    if (window.innerWidth < 768) {
-      setIsExpanded(false);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      if (window.innerWidth < 768) {
-        setIsExpanded(false);
+  // Build menu items
+  const getMenuItems = () => {
+    return [
+      { 
+        icon: Menu,
+        label: t('menu'),
+        action: () => setIsExpanded(!isExpanded)
+      },
+      { 
+        icon: Home, 
+        label: t('explorerCockpit'), 
+        action: handleCockpit,
+        isActive: location.pathname === '/cockpit'
+      },
+      { 
+        icon: BookOpen, 
+        label: t('lessons'), 
+        action: handleLessonsList,
+        isActive: location.pathname === '/lessons'
+      },
+      { 
+        icon: BarChart3, 
+        label: t('learningStats'), 
+        action: handleLearningStats,
+        isActive: false
+      },
+      { 
+        icon: PenTool, 
+        label: t('whiteboard'), 
+        action: handleWhiteboard,
+        isActive: false
+      },
+      { 
+        icon: Info, 
+        label: t('aboutProject'), 
+        action: handleAboutProject,
+        isActive: false
+      },
+      { 
+        icon: Settings, 
+        label: t('settings'), 
+        action: handleSettings,
+        isActive: false
       }
-    } catch {
-      alert('Wystąpił problem podczas wylogowywania. Spróbuj ponownie.');
-    }
+    ];
   };
-
-  // Build menu items dynamically based on user login status and role
-   // Menu nie zawiera już logowania/wylogowania
-   const getMenuItems = () => {
-     const baseItems = [
-       { 
-         icon: Menu,
-         label: t('menu'),
-         action: () => setIsExpanded(!isExpanded)
-       },
-       // Explorer Cockpit available for everyone
-       { 
-         icon: Home, 
-         label: t('explorerCockpit'), 
-         action: handleCockpit,
-         isActive: location.pathname === '/cockpit'
-       }
-     ];
-     return baseItems;
-   };
 
   const menuItems = getMenuItems();
-
-  const decodeHtmlEntities = (str) => {
-    const parser = new DOMParser();
-    const dom = parser.parseFromString('<!doctype html><body>' + str, 'text/html');
-    return dom.body.textContent || '';
-  };
 
   return (
     <>
       {/* Mobile Top Menu Bar - Fixed */}
       <div className="fixed md:hidden top-0 left-0 right-0 bg-nav-bg h-16 flex items-center justify-around px-4 z-50">
-        {menuItems.map((item, index) => (
+        {menuItems.slice(0, 5).map((item, index) => (
           <button
             key={index}
             onClick={item.action}
@@ -161,36 +140,6 @@ const NavigationPanel = () => {
             <Menu className="w-5 h-5 text-white" />
           </button>
         </div>
-
-        {/* User Info */}
-        {isExpanded && user && (
-          <div className="p-4 border-b border-nav-bg/50">
-            <div className="flex items-center gap-3">
-              {user.picture && (
-                <img 
-                  src={user.picture} 
-                  alt={decodeHtmlEntities(user.name)} 
-                  className="w-10 h-10 rounded-full"
-                />
-              )}
-              <div>
-                <p className="text-sm text-white/70">{t('welcome')}</p>
-                <p className="font-medium text-white overflow-hidden text-ellipsis">
-                  {decodeHtmlEntities(user.name)}
-                </p>
-                {user.role && (
-                  <p className="text-xs text-white/50">
-                    {user.role === 'teacher' ? 'Nauczyciel' : 
-                     user.role === 'student' ? 'Uczeń' : 
-                     user.role === 'guardian' ? 'Opiekun' : 
-                     user.role === 'admin' ? 'Administrator' : 
-                     user.role}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Logo/Brand */}
         {isExpanded && (
