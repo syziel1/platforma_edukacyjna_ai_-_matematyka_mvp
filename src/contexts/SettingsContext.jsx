@@ -29,8 +29,8 @@ export const SettingsProvider = ({ children }) => {
         // Merge saved settings with default settings to ensure all properties exist
         return { ...defaultSettings, ...parsedSettings };
       }
-    } catch (error) {
-      console.warn('Failed to parse saved settings, using defaults:', error);
+    } catch {
+      // Silent fail - use defaults
     }
     return defaultSettings;
   });
@@ -38,8 +38,8 @@ export const SettingsProvider = ({ children }) => {
   useEffect(() => {
     try {
       localStorage.setItem('gameSettings', JSON.stringify(settings));
-    } catch (error) {
-      console.warn('Failed to save settings to localStorage:', error);
+    } catch {
+      // Silent fail for localStorage
     }
   }, [settings]);
 
@@ -82,8 +82,8 @@ export const SettingsProvider = ({ children }) => {
     try {
       // Remove game state from localStorage
       localStorage.removeItem('jungleGameState');
-    } catch (error) {
-      console.warn('Failed to reset game state:', error);
+    } catch {
+      // Silent fail for localStorage
     }
   };
 

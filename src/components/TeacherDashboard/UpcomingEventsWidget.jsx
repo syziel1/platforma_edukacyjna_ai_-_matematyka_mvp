@@ -64,8 +64,7 @@ const UpcomingEventsWidget = () => {
       }));
 
       setUpcomingEvents(enrichedData);
-    } catch (err) {
-      console.error('Error fetching upcoming events:', err);
+    } catch {
       setError('Nie udało się pobrać nadchodzących wydarzeń');
     } finally {
       setLoading(false);

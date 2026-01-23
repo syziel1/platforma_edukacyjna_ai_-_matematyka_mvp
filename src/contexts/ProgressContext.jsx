@@ -15,8 +15,7 @@ export const ProgressProvider = ({ children }) => {
     try {
       const saved = localStorage.getItem('lessonProgress');
       return saved ? JSON.parse(saved) : {};
-    } catch (error) {
-      console.warn('Failed to parse lesson progress from localStorage:', error);
+    } catch {
       return {};
     }
   });
@@ -24,8 +23,8 @@ export const ProgressProvider = ({ children }) => {
   useEffect(() => {
     try {
       localStorage.setItem('lessonProgress', JSON.stringify(progress));
-    } catch (error) {
-      console.warn('Failed to save lesson progress to localStorage:', error);
+    } catch {
+      // Silent fail for localStorage
     }
   }, [progress]);
 

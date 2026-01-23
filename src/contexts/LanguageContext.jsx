@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-// import { translations } from '../locales';
 import { useTranslation } from 'react-i18next';
 import i18n from 'i18next';
 
@@ -45,17 +44,6 @@ export const LanguageProvider = ({ children }) => {
       setLanguage(newLanguage);
     }
   };
-
-//  const t = (key, params = {}) => {
-    //let translation = translations[language][key] || key;
-    
-    // Replace parameters in translation
-    //Object.keys(params).forEach(param => {
-      //translation = translation.replace(`{${param}}`, params[param]);
-    //});
-    
-    //return translation;
-  //};
 
   const value = {
     language,

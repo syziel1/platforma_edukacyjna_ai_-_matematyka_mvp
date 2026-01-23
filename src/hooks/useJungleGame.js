@@ -109,13 +109,11 @@ export const useJungleGame = (startWithModeSelector = false) => {
           }
           
           return parsedData;
-        } catch (error) {
-          console.error('Error parsing board data:', error);
+        } catch {
           // Fall through to create new board
         }
       }
-    } catch (error) {
-      console.warn('Error loading board from localStorage:', error);
+    } catch {
       // Fall through to create new board
     }
     
@@ -129,8 +127,8 @@ export const useJungleGame = (startWithModeSelector = false) => {
     
     try {
       localStorage.setItem(getUserStorageKey(mode), JSON.stringify(newBoardState));
-    } catch (error) {
-      console.warn('Error saving new board to localStorage:', error);
+    } catch {
+      // Silent fail for localStorage
     }
     
     return newBoardState;
@@ -146,8 +144,8 @@ export const useJungleGame = (startWithModeSelector = false) => {
         lastPlayed: new Date().toISOString()
       };
       localStorage.setItem(storageKey, JSON.stringify(boardState));
-    } catch (error) {
-      console.warn('Error saving board state to localStorage:', error);
+    } catch {
+      // Silent fail for localStorage
     }
   }, [getUserStorageKey]);
 

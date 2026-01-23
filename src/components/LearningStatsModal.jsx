@@ -19,8 +19,7 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
         if (saved) {
           setLearningData(JSON.parse(saved));
         }
-      } catch (error) {
-        console.error('Error loading learning data:', error);
+      } catch {
         setLearningData({});
       }
     };
@@ -45,8 +44,8 @@ const LearningStatsModal = ({ isOpen, onClose }) => {
           // Save to localStorage
           try {
             localStorage.setItem('dailyLearningStats', JSON.stringify(currentData));
-          } catch (error) {
-            console.warn('Failed to save learning data to localStorage:', error);
+          } catch {
+            // Silent fail for localStorage
           }
           
           return currentData;
