@@ -5,5 +5,11 @@ export default defineConfig({
   plugins: [react()],
   define: {
     'process.env.NODE_ENV': '"development"'
+  },
+  optimizeDeps: {
+    exclude: ['@excalidraw/excalidraw']
+  },
+  build: {
+    chunkSizeWarningLimit: 1000
   }
 })
