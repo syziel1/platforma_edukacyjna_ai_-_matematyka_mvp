@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, BookOpen, Filter, X, AlertCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { useAuth } from '../contexts/AuthContext';
+// import { useAuth } from '../contexts/AuthContext';
 import GlobalHeader from '../components/GlobalHeader';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const TeacherListPage = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const navigate = useNavigate();
   const { t } = useLanguage();
   
