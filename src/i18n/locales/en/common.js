@@ -188,6 +188,14 @@ export default {
   'textToSpeechDesc': 'Automatic text reading using AI',
   'voiceSelection': 'Voice Selection',
   'speechSpeed': 'Speech Speed',
+  'voicesAvailableFor': 'Voices available for Polish language',
+  'voicesAvailableForEn': 'Voices available for English language',
+  'testVoice': 'Test Voice',
+  'updateAvailable': 'New version available! Click "Update" to install.',
+  'latestVersion': 'You have the latest version of the app.',
+  'swNotRegistered': 'Service Worker is not registered.',
+  'updateCheckError': 'Failed to check for updates.',
+  'voiceSampleText': 'Welcome to Edu-Future! This is a voice sample with your new settings.',
   
   // Lesson Header
   'lessonTitle': 'Task: Optimal Chicken Coop',

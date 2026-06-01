@@ -58,10 +58,8 @@ const SettingsModal = ({ isOpen, onClose }) => {
 
   // Function to play voice sample
   const playVoiceSample = () => {
-    const sampleText = currentLanguage === 'pl' 
-      ? 'Witaj w Edu-Future! To jest próbka głosu w nowych ustawieniach.'
-      : 'Welcome to Edu-Future! This is a voice sample with your new settings.';
-    
+    const sampleText = t('voiceSampleText');
+
     // Use speak directly to bypass the enabled check since we want to test the voice
     speak(sampleText);
   };
@@ -222,9 +220,9 @@ const SettingsModal = ({ isOpen, onClose }) => {
                     ))}
                   </select>
                   <p className="text-xs text-text-color/60 mt-1">
-                    {currentLanguage === 'pl' 
-                      ? 'Głosy dostępne dla języka polskiego'
-                      : 'Voices available for English language'
+                    {currentLanguage === 'pl'
+                      ? t('voicesAvailableFor')
+                      : t('voicesAvailableForEn')
                     }
                   </p>
                 </div>
@@ -257,7 +255,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                     className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition-colors font-medium text-sm flex items-center justify-center gap-2"
                   >
                     <Mic className="w-4 h-4" />
-                    {currentLanguage === 'pl' ? 'Przetestuj głos' : 'Test Voice'}
+                    {t('testVoice')}
                   </button>
                 </div>
               </div>

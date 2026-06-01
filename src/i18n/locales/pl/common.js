@@ -188,6 +188,14 @@ export default {
   'textToSpeechDesc': 'Automatyczne odczytywanie tekstu za pomocą AI',
   'voiceSelection': 'Wybór głosu',
   'speechSpeed': 'Prędkość mowy',
+  'voicesAvailableFor': 'Głosy dostępne dla języka polskiego',
+  'voicesAvailableForEn': 'Głosy dostępne dla języka angielskiego',
+  'testVoice': 'Przetestuj głos',
+  'updateAvailable': 'Dostępna nowa wersja! Kliknij "Aktualizuj" aby zainstalować.',
+  'latestVersion': 'Masz najnowszą wersję aplikacji.',
+  'swNotRegistered': 'Service Worker nie jest zarejestrowany.',
+  'updateCheckError': 'Nie udało się sprawdzić aktualizacji.',
+  'voiceSampleText': 'Witaj w Edu-Future! To jest próbka głosu w nowych ustawieniach.',
   
   // Lesson Header
   'lessonTitle': 'Zadanie: Optymalny kurnik',
