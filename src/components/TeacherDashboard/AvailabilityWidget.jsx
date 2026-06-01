@@ -45,8 +45,7 @@ const AvailabilityWidget = () => {
       if (error) throw error;
 
       setAvailabilitySlots(data);
-    } catch (err) {
-      console.error('Error fetching availability slots:', err);
+    } catch {
       setError('Nie udało się pobrać harmonogramu dostępności');
     } finally {
       setLoading(false);
@@ -65,7 +64,6 @@ const AvailabilityWidget = () => {
     e.preventDefault();
 
     if (!user) {
-      console.warn('Attempted to modify availability without an authenticated user.');
       return;
     }
 
@@ -130,8 +128,7 @@ const AvailabilityWidget = () => {
       
       // Refresh data
       fetchAvailabilitySlots();
-    } catch (err) {
-      console.error('Error saving availability slot:', err);
+    } catch {
       setToast({
         show: true,
         message: 'Nie udało się zapisać slotu dostępności',
@@ -143,7 +140,6 @@ const AvailabilityWidget = () => {
   // Handle slot deletion
   const handleDelete = async (slotId) => {
     if (!user) {
-      console.warn('Attempted to delete availability without an authenticated user.');
       return;
     }
 
@@ -168,8 +164,7 @@ const AvailabilityWidget = () => {
         message: 'Slot dostępności został usunięty',
         type: 'info'
       });
-    } catch (err) {
-      console.error('Error deleting availability slot:', err);
+    } catch {
       setToast({
         show: true,
         message: 'Nie udało się usunąć slotu dostępności',

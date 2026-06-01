@@ -1,27 +1,27 @@
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { useSettings } from '../contexts/SettingsContext';
 import { callSecureApi } from '../lib/apiClient';
-
-// Module-level lock to prevent multiple simultaneous speech requests
-let isCurrentlySpeaking = false;
-let speechTimeoutId = null;
 
 export const useTextToSpeech = () => {
   const { settings } = useSettings();
 
+  // Lock to prevent multiple simultaneous speech requests (using ref instead of module-level state)
+  const isCurrentlySpeakingRef = useRef(false);
+  const speechTimeoutIdRef = useRef(null);
+
   const speak = useCallback(async (text) => {
     // Block if speech is disabled, no text is provided, or another speech is in progress.
-    if (!settings.textToSpeechEnabled || !text || isCurrentlySpeaking) {
+    if (!settings.textToSpeechEnabled || !text || isCurrentlySpeakingRef.current) {
       return;
     }
 
     try {
       // Set the lock
-      isCurrentlySpeaking = true;
-      
+      isCurrentlySpeakingRef.current = true;
+
       // Safety timeout to release the lock after 15 seconds in case of an issue
-      speechTimeoutId = setTimeout(() => {
-        isCurrentlySpeaking = false;
+      speechTimeoutIdRef.current = setTimeout(() => {
+        isCurrentlySpeakingRef.current = false;
       }, 15000);
 
       // Format mathematical expressions for speech
@@ -73,25 +73,21 @@ export const useTextToSpeech = () => {
       
       // Function to release the lock and clean up resources
       const releaseLock = () => {
-        isCurrentlySpeaking = false;
-        clearTimeout(speechTimeoutId);
+        isCurrentlySpeakingRef.current = false;
+        clearTimeout(speechTimeoutIdRef.current);
         URL.revokeObjectURL(audioUrl);
       };
 
       // Release lock on 'ended' or 'error' events
       audioPlayer.addEventListener('ended', releaseLock);
-      audioPlayer.addEventListener('error', (e) => {
-        console.error('Audio playback error:', e);
-        releaseLock();
-      });
+      audioPlayer.addEventListener('error', releaseLock);
 
       await audioPlayer.play();
 
-    } catch (error) {
-      console.warn('Text-to-speech failed:', error.message);
+    } catch {
       // Ensure lock is released on any exception
-      isCurrentlySpeaking = false;
-      if (speechTimeoutId) clearTimeout(speechTimeoutId);
+      isCurrentlySpeakingRef.current = false;
+      if (speechTimeoutIdRef.current) clearTimeout(speechTimeoutIdRef.current);
     }
   }, [settings.textToSpeechEnabled, settings.textToSpeechVoice, settings.textToSpeechSpeed, settings.volume]);
 

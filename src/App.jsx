@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import NavigationPanel from './components/NavigationPanel';
 import GlobalHeader from './components/GlobalHeader';
 import LandingPage from './components/LandingPage';
@@ -30,6 +30,7 @@ function App() {
   const { user, loading } = useAuth();
   const { currentLanguage } = useLanguage();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Check if we're on landing page or auth pages
   const isLandingPage = location.pathname === '/';
@@ -60,13 +61,13 @@ function App() {
       <div className={`flex-1 flex flex-col ${!isLandingPage && !isAuthPage ? 'ml-0 md:ml-16' : ''}`}>
         <Routes>
           {/* Landing Page */}
-          <Route 
-            path="/" 
+          <Route
+            path="/"
             element={
-              currentLanguage === 'pl' ? 
-                <LandingPagePL onEnterApp={() => window.location.href = '/cockpit'} /> : 
-                <LandingPage onEnterApp={() => window.location.href = '/cockpit'} />
-            } 
+              currentLanguage === 'pl' ?
+                <LandingPagePL onEnterApp={() => navigate('/cockpit')} /> :
+                <LandingPage onEnterApp={() => navigate('/cockpit')} />
+            }
           />
           
           {/* Auth Routes */}

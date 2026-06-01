@@ -12,19 +12,6 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
   const [viewModeEnabled, setViewModeEnabled] = useState(false);
   const [whiteboardData, setWhiteboardData] = useState(null);
 
-  // Load saved whiteboard data on component mount
-  // useEffect(() => {
-  //   const savedData = localStorage.getItem('interactiveWhiteboardData');
-  //   if (savedData) {
-  //     try {
-  //       const parsedData = JSON.parse(savedData);
-  //       setWhiteboardData(parsedData);
-  //     } catch (error) {
-  //       console.warn('Failed to load whiteboard data:', error);
-  //     }
-  //   }
-  // }, []);
-
   // Load saved whiteboard data when the modal opens & API is ready
   useEffect(() => {
     if (isOpen && excalidrawAPI) {
@@ -49,8 +36,8 @@ const InteractiveWhiteboard = ({ isOpen, onClose }) => {
     try {
       localStorage.setItem('interactiveWhiteboardData', JSON.stringify(dataToSave));
       setWhiteboardData(dataToSave);
-    } catch (error) {
-      console.warn('Failed to save whiteboard data:', error);
+    } catch {
+      // Silent fail for localStorage
     }
   }
 

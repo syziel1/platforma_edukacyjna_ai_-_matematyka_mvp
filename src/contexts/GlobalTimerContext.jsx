@@ -19,11 +19,10 @@ export const GlobalTimerProvider = ({ children }) => {
     try {
       const lastDate = localStorage.getItem('lastLearningDate');
       if (!lastDate) return false;
-      
+
       const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
       return lastDate !== today;
-    } catch (error) {
-      console.warn('Error checking last learning date:', error);
+    } catch {
       return false;
     }
   };
@@ -36,17 +35,16 @@ export const GlobalTimerProvider = ({ children }) => {
         try {
           localStorage.setItem('learningTimeElapsed', '0');
           localStorage.setItem('lastLearningDate', new Date().toISOString().split('T')[0]);
-        } catch (error) {
-          console.warn('Error resetting timer for new day:', error);
+        } catch {
+          // Silent fail for localStorage
         }
         return 0;
       }
-      
+
       // Wczytaj zapisany czas nauki
       const savedTime = localStorage.getItem('learningTimeElapsed');
       return savedTime ? parseInt(savedTime, 10) : 0;
-    } catch (error) {
-      console.warn('Error initializing timer state:', error);
+    } catch {
       return 0;
     }
   });
@@ -54,8 +52,7 @@ export const GlobalTimerProvider = ({ children }) => {
   const [isActive, setIsActive] = useState(() => {
     try {
       return localStorage.getItem('isLearningActive') === 'true';
-    } catch (error) {
-      console.warn('Error checking if learning is active:', error);
+    } catch {
       return false;
     }
   });
@@ -65,8 +62,8 @@ export const GlobalTimerProvider = ({ children }) => {
     try {
       const today = new Date().toISOString().split('T')[0];
       localStorage.setItem('lastLearningDate', today);
-    } catch (error) {
-      console.warn('Error saving current date:', error);
+    } catch {
+      // Silent fail for localStorage
     }
   }, []);
 
@@ -79,12 +76,12 @@ export const GlobalTimerProvider = ({ children }) => {
         localStorage.setItem('learningTimeElapsed', '0');
         localStorage.setItem('lastLearningDate', new Date().toISOString().split('T')[0]);
       }
-      
+
       localStorage.setItem('isLearningActive', 'true');
       localStorage.setItem('lastActivity', Date.now().toString());
       setIsActive(true);
-    } catch (error) {
-      console.warn('Error starting learning timer:', error);
+    } catch {
+      // Silent fail for localStorage
     }
   };
 
@@ -96,8 +93,7 @@ export const GlobalTimerProvider = ({ children }) => {
       // Zapisz aktualny czas nauki przed zatrzymaniem
       localStorage.setItem('learningTimeElapsed', timeElapsed.toString());
       setIsActive(false);
-    } catch (error) {
-      console.warn('Error stopping learning timer:', error);
+    } catch {
       setIsActive(false);
     }
   };
@@ -111,8 +107,8 @@ export const GlobalTimerProvider = ({ children }) => {
         if (timeElapsed % 5 === 0) {
           localStorage.setItem('learningTimeElapsed', timeElapsed.toString());
         }
-      } catch (error) {
-        console.warn('Error updating last activity:', error);
+      } catch {
+        // Silent fail for localStorage
       }
     }
   }, [timeElapsed, isActive]);
@@ -123,8 +119,8 @@ export const GlobalTimerProvider = ({ children }) => {
       if (isActive) {
         try {
           localStorage.setItem('lastActivity', Date.now().toString());
-        } catch (error) {
-          console.warn('Error updating activity timestamp:', error);
+        } catch {
+          // Silent fail for localStorage
         }
       }
     };
@@ -159,7 +155,7 @@ export const GlobalTimerProvider = ({ children }) => {
             const lastActivity = localStorage.getItem('lastActivity');
             if (lastActivity) {
               const now = Date.now();
-              const timeSinceLastActivity = now - parseInt(lastActivity);
+              const timeSinceLastActivity = now - parseInt(lastActivity, 10);
               
               // Jeśli minęło więcej niż 5 minut, zatrzymaj liczenie czasu
               if (timeSinceLastActivity > 35 * 60 * 1000) {
@@ -177,8 +173,8 @@ export const GlobalTimerProvider = ({ children }) => {
             }
           }
         }
-      } catch (error) {
-        console.warn('Error handling visibility change:', error);
+      } catch {
+        // Silent fail for visibility change handling
       }
     };
 
@@ -189,8 +185,8 @@ export const GlobalTimerProvider = ({ children }) => {
           localStorage.setItem('lastActivity', Date.now().toString());
           localStorage.setItem('learningTimeElapsed', timeElapsed.toString());
         }
-      } catch (error) {
-        console.warn('Error handling before unload:', error);
+      } catch {
+        // Silent fail for beforeunload handling
       }
     };
 
@@ -215,8 +211,8 @@ export const GlobalTimerProvider = ({ children }) => {
           if (newTime % 5 === 0) {
             try {
               localStorage.setItem('learningTimeElapsed', newTime.toString());
-            } catch (error) {
-              console.warn('Error saving learning time:', error);
+            } catch {
+              // Silent fail for localStorage
             }
           }
           return newTime;
@@ -240,8 +236,8 @@ export const GlobalTimerProvider = ({ children }) => {
         // Zapisz czas w minutach
         stats[today] = Math.floor(timeElapsed / 60);
         localStorage.setItem('dailyLearningStats', JSON.stringify(stats));
-      } catch (error) {
-        console.warn('Error saving daily learning stats:', error);
+      } catch {
+        // Silent fail for localStorage
       }
     }
   }, [timeElapsed, isActive]);
@@ -264,8 +260,8 @@ export const GlobalTimerProvider = ({ children }) => {
       localStorage.setItem('lastActivity', Date.now().toString());
       localStorage.setItem('isLearningActive', 'true');
       setIsActive(true);
-    } catch (error) {
-      console.warn('Error resetting timer:', error);
+    } catch {
+      // Silent fail for localStorage
     }
   };
 
@@ -275,8 +271,7 @@ export const GlobalTimerProvider = ({ children }) => {
       localStorage.setItem('isLearningActive', 'false');
       localStorage.setItem('lastActivity', Date.now().toString());
       localStorage.setItem('learningTimeElapsed', timeElapsed.toString());
-    } catch (error) {
-      console.warn('Error pausing timer:', error);
+    } catch {
       setIsActive(false);
     }
   };
@@ -286,8 +281,8 @@ export const GlobalTimerProvider = ({ children }) => {
       setIsActive(true);
       localStorage.setItem('isLearningActive', 'true');
       localStorage.setItem('lastActivity', Date.now().toString());
-    } catch (error) {
-      console.warn('Error resuming timer:', error);
+    } catch {
+      // Silent fail for localStorage
     }
   };
 

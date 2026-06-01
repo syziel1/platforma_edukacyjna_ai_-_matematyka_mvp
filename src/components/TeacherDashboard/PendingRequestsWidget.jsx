@@ -58,8 +58,7 @@ const PendingRequestsWidget = () => {
       }));
 
       setPendingRequests(enrichedData);
-    } catch (err) {
-      console.error('Error fetching pending requests:', err);
+    } catch {
       setError('Nie udało się pobrać oczekujących próśb o lekcje');
     } finally {
       setLoading(false);
@@ -98,7 +97,6 @@ const PendingRequestsWidget = () => {
   // Handle confirm/reject actions
   const handleConfirm = async (eventId) => {
     if (!user) {
-      console.warn('Attempted to confirm event without authenticated user.');
       return;
     }
 
@@ -120,8 +118,7 @@ const PendingRequestsWidget = () => {
         message: 'Lekcja została potwierdzona!',
         type: 'success'
       });
-    } catch (err) {
-      console.error('Error confirming event:', err);
+    } catch {
       setToast({
         show: true,
         message: 'Nie udało się potwierdzić lekcji',
@@ -132,7 +129,6 @@ const PendingRequestsWidget = () => {
 
   const handleReject = async (eventId) => {
     if (!user) {
-      console.warn('Attempted to reject event without authenticated user.');
       return;
     }
 
@@ -154,8 +150,7 @@ const PendingRequestsWidget = () => {
         message: 'Lekcja została odrzucona',
         type: 'info'
       });
-    } catch (err) {
-      console.error('Error rejecting event:', err);
+    } catch {
       setToast({
         show: true,
         message: 'Nie udało się odrzucić lekcji',
