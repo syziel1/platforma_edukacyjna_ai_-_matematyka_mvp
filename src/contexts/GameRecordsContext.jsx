@@ -72,18 +72,18 @@ export const GameRecordsProvider = ({ children }) => {
           }
         };
       }
-    } catch (error) {
-      console.warn('Failed to parse game records from localStorage:', error);
+    } catch {
+      // Silent fail - use defaults
     }
-    
+
     return defaultRecords;
   });
 
   useEffect(() => {
     try {
       localStorage.setItem('gameRecords', JSON.stringify(records));
-    } catch (error) {
-      console.warn('Failed to save game records to localStorage:', error);
+    } catch {
+      // Silent fail for localStorage
     }
   }, [records]);
 
@@ -165,8 +165,8 @@ export const GameRecordsProvider = ({ children }) => {
           
           return prev;
         });
-      } catch (error) {
-        console.warn('Error updating learning streak:', error);
+      } catch {
+        // Silent fail for learning streak update
       }
     };
     

@@ -6,8 +6,7 @@ export const useBreakTimer = (breakIntervalMinutes = 25) => {
   const [isLearningActive, setIsLearningActive] = useState(() => {
     try {
       return localStorage.getItem('isLearningActive') === 'true';
-    } catch (error) {
-      console.warn('Error reading learning active state:', error);
+    } catch {
       return false;
     }
   });
@@ -18,8 +17,8 @@ export const useBreakTimer = (breakIntervalMinutes = 25) => {
       try {
         const active = localStorage.getItem('isLearningActive') === 'true';
         setIsLearningActive(active);
-      } catch (error) {
-        console.warn('Error checking learning status:', error);
+      } catch {
+        // Silent fail for localStorage
       }
     };
 
@@ -40,21 +39,21 @@ export const useBreakTimer = (breakIntervalMinutes = 25) => {
         if (savedBreakTime && !showBreakAlert) {
           setTimeUntilBreak(parseInt(savedBreakTime, 10));
         }
-      } catch (error) {
-        console.warn('Error loading break timer:', error);
+      } catch {
+        // Silent fail for localStorage
       }
-      
+
       timer = setInterval(() => {
         setTimeUntilBreak(prev => {
           const newTime = prev <= 1 ? breakIntervalMinutes * 60 : prev - 1;
-          
+
           try {
             // Zapisz czas do przerwy co 5 sekund
             if (newTime % 5 === 0) {
               localStorage.setItem('timeUntilBreak', newTime.toString());
             }
-          } catch (error) {
-            console.warn('Error saving break timer:', error);
+          } catch {
+            // Silent fail for localStorage
           }
           
           // Pokaż alert o przerwie
@@ -78,8 +77,7 @@ export const useBreakTimer = (breakIntervalMinutes = 25) => {
       setTimeUntilBreak(newTime);
       localStorage.setItem('timeUntilBreak', newTime.toString());
       setShowBreakAlert(false);
-    } catch (error) {
-      console.warn('Error resetting break timer:', error);
+    } catch {
       // Still update the state even if localStorage fails
       setTimeUntilBreak(breakIntervalMinutes * 60);
       setShowBreakAlert(false);

@@ -94,8 +94,8 @@ export const useSoundEffects = () => {
           oscillator.start(audioContext.currentTime);
           oscillator.stop(audioContext.currentTime + 0.2);
       }
-    } catch (error) {
-      console.warn('Sound playback failed:', error);
+    } catch {
+      // Silent fail for audio playback
     }
   }, [settings.soundEnabled, settings.volume]);
 
